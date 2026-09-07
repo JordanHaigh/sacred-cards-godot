@@ -28,6 +28,7 @@ var _turn_number: int = 0
 var _status: String = STATUS_SETUP
 var _phase: String = PHASE_DRAW
 var _winner_id: String = ""
+var _last_transition_error: String = ""
 var _pending_actions: Array[Dictionary] = []
 var _pending_effects: Array[Dictionary] = []
 var _battle_history: Array[Dictionary] = []
@@ -56,6 +57,10 @@ var winner_id: String:
 	get:
 		return _winner_id
 
+var last_transition_error: String:
+	get:
+		return _last_transition_error
+
 
 func _init(
 		initial_ruleset: Resource = null,
@@ -82,18 +87,52 @@ func start() -> bool:
 
 
 func set_phase(next_phase: String) -> bool:
-	if _status != STATUS_IN_PROGRESS or not _is_valid_phase(next_phase):
-		return false
+	return transition_to_phase(next_phase)
+
+
+func transition_to_phase(next_phase: String) -> bool:
+	_last_transition_error = ""
+	if _status != STATUS_IN_PROGRESS:
+		return _reject_transition("Phase transitions require an in-progress duel.")
+	if not _is_valid_phase(next_phase):
+		return _reject_transition("Unknown duel phase '%s'." % next_phase)
+	if not _is_legal_phase_transition(_phase, next_phase):
+		return _reject_transition("Cannot transition from '%s' to '%s'." % [_phase, next_phase])
 	_phase = next_phase
 	return true
 
 
+func advance_phase() -> bool:
+	match _phase:
+		PHASE_DRAW:
+			return transition_to_phase(PHASE_MAIN)
+		PHASE_MAIN:
+			return transition_to_phase(PHASE_BATTLE)
+		PHASE_BATTLE:
+			return transition_to_phase(PHASE_END)
+		PHASE_END:
+			return advance_turn()
+	return _reject_transition("Cannot advance from unknown phase '%s'." % _phase)
+
+
+func end_turn() -> bool:
+	if _phase == PHASE_MAIN or _phase == PHASE_BATTLE:
+		if not transition_to_phase(PHASE_END):
+			return false
+	return advance_turn()
+
+
 func advance_turn() -> bool:
-	if _status != STATUS_IN_PROGRESS or _player_order.size() != 2:
-		return false
+	_last_transition_error = ""
+	if _status != STATUS_IN_PROGRESS:
+		return _reject_transition("Turn advancement requires an in-progress duel.")
+	if _phase != PHASE_END:
+		return _reject_transition("A turn can advance only from the end phase.")
+	if _player_order.size() != 2:
+		return _reject_transition("Turn advancement requires exactly two players.")
 	var active_index := _player_order.find(_active_player_id)
 	if active_index < 0:
-		return false
+		return _reject_transition("The active player is not registered in the duel.")
 	_active_player_id = _player_order[(active_index + 1) % _player_order.size()]
 	_turn_number += 1
 	_phase = PHASE_DRAW
@@ -224,6 +263,17 @@ func _rule_value(property_name: String, fallback: int) -> int:
 
 func _is_valid_phase(candidate_phase: String) -> bool:
 	return candidate_phase in [PHASE_DRAW, PHASE_MAIN, PHASE_BATTLE, PHASE_END]
+
+
+func _is_legal_phase_transition(current_phase: String, next_phase: String) -> bool:
+	return (current_phase == PHASE_DRAW and next_phase == PHASE_MAIN) \
+		or (current_phase == PHASE_MAIN and next_phase in [PHASE_BATTLE, PHASE_END]) \
+		or (current_phase == PHASE_BATTLE and next_phase == PHASE_END)
+
+
+func _reject_transition(message: String) -> bool:
+	_last_transition_error = message
+	return false
 
 
 func _serialize_ruleset() -> Dictionary:

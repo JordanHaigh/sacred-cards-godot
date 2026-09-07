@@ -23,7 +23,7 @@ func _init() -> void:
 	higher_attack.get_player("player_one").place_monster(blue_eyes)
 	higher_attack.get_player("player_two").place_monster(battle_ox)
 	var resolver = BATTLE_RESOLVER_SCRIPT.new(database, matchups, "Field", 500)
-	higher_attack.set_phase("battle")
+	_enter_battle(higher_attack)
 	var result = resolver.resolve(higher_attack, "player_one", 0, "player_two", 0)
 	if not result.success or result.outcome != "attacker_win" or not result.defender_destroyed:
 		_fail("Higher ATK should destroy the defending monster: success=%s outcome=%s error=%s attacker=%d defender=%d." % [result.success, result.outcome, result.error, result.attacker_adjusted_power, result.defender_adjusted_power])
@@ -40,7 +40,7 @@ func _init() -> void:
 	strong_defender.set("battle_position", "defense")
 	defense_duel.get_player("player_one").place_monster(weak_attacker)
 	defense_duel.get_player("player_two").place_monster(strong_defender)
-	defense_duel.set_phase("battle")
+	_enter_battle(defense_duel)
 	var defense_result = BATTLE_RESOLVER_SCRIPT.new(database, matchups, "Sea", 500).resolve(defense_duel, "player_one", 0, "player_two", 0)
 	if defense_result.outcome != "defender_win" or not defense_result.attacker_destroyed or defense_result.life_point_damage != 300:
 		_fail("Attack-vs-defense should destroy the weaker attacker and apply the difference: outcome=%s attacker=%d defender=%d damage=%d." % [defense_result.outcome, defense_result.attacker_adjusted_power, defense_result.defender_adjusted_power, defense_result.life_point_damage])
@@ -50,7 +50,7 @@ func _init() -> void:
 	var direct_attacker = CARD_INSTANCE_SCRIPT.new(1)
 	direct_attacker.initialize_from_database(database)
 	direct_duel.get_player("player_one").place_monster(direct_attacker)
-	direct_duel.set_phase("battle")
+	_enter_battle(direct_duel)
 	var direct_result = resolver.resolve(direct_duel, "player_one", 0, "player_two")
 	if not direct_result.direct_attack or direct_result.outcome != "direct_attack" or direct_result.life_point_damage != 3000:
 		_fail("Direct attack should apply the attacker's ATK to empty-field LP.")
@@ -65,7 +65,7 @@ func _init() -> void:
 	matchup_defender.current_attack = 1700
 	matchup_duel.get_player("player_one").place_monster(matchup_attacker)
 	matchup_duel.get_player("player_two").place_monster(matchup_defender)
-	matchup_duel.set_phase("battle")
+	_enter_battle(matchup_duel)
 	var mountain_resolver = BATTLE_RESOLVER_SCRIPT.new(database, matchups, "Mountains", 500)
 	var matchup_result = mountain_resolver.resolve(matchup_duel, "player_one", 0, "player_two", 0)
 	if matchup_result.type_environment_outcome != 1 or matchup_result.matchup_bonus != 500 or matchup_result.outcome != "attacker_win":
@@ -87,6 +87,11 @@ func _new_duel(rules: Resource):
 	var duel = DUEL_STATE_SCRIPT.new(rules, "player_one", "player_two")
 	duel.start()
 	return duel
+
+
+func _enter_battle(duel: Object) -> void:
+	duel.advance_phase()
+	duel.advance_phase()
 
 
 func _fail(message: String) -> void:

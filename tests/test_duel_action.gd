@@ -18,18 +18,15 @@ func _init() -> void:
 		_fail("Duel should start before actions are executed.")
 		return
 
-	if not duel.set_phase("main"):
-		_fail("Duel should enter main phase for illegal-action validation.")
-		return
-	var wrong_phase_draw = DUEL_ACTION_SCRIPT.draw("player_one")
-	if wrong_phase_draw.execute(duel) or wrong_phase_draw.last_error.is_empty():
-		_fail("Illegal draw phase actions should fail with a reason.")
-		return
-	if not duel.set_phase("draw") or not DUEL_ACTION_SCRIPT.draw("player_one").execute(duel):
+	if not DUEL_ACTION_SCRIPT.draw("player_one").execute(duel):
 		_fail("A draw action should execute during the draw phase.")
 		return
 	if player_one.hand_size() != 1 or duel.phase != "main":
 		_fail("Draw action did not update authoritative state.")
+		return
+	var wrong_phase_draw = DUEL_ACTION_SCRIPT.draw("player_one")
+	if wrong_phase_draw.execute(duel) or wrong_phase_draw.last_error.is_empty():
+		_fail("Illegal draw phase actions should fail with a reason.")
 		return
 
 	var bad_summon = DUEL_ACTION_SCRIPT.summon("player_one", 301, "Monster")

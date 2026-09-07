@@ -42,7 +42,7 @@ func _init() -> void:
 		_fail("Pending effects and battle history were not recorded.")
 		return
 
-	if not duel.advance_turn() or duel.active_player_id != "player_two" or duel.turn_number != 2 or duel.phase != "draw":
+	if not duel.end_turn() or duel.active_player_id != "player_two" or duel.turn_number != 2 or duel.phase != "draw":
 		_fail("Turn advancement should switch players and return to draw phase.")
 		return
 	if duel.pop_pending_action()["kind"] != "draw" or duel.pop_pending_effect()["kind"] != "field_modifier":

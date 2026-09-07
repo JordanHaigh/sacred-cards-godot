@@ -21,7 +21,7 @@ func _init() -> void:
 	equal_defender.current_attack = 1800
 	equal_duel.get_player("player_one").place_monster(equal_attacker)
 	equal_duel.get_player("player_two").place_monster(equal_defender)
-	equal_duel.set_phase("battle")
+	_enter_battle(equal_duel)
 	var equal_result = _resolver(database, matchups, "Sea").resolve(equal_duel, "player_one", 0, "player_two", 0)
 	if equal_result.outcome != "draw" or equal_result.attacker_destroyed or equal_result.defender_destroyed or equal_result.life_point_damage != 0:
 		_fail("Equal effective attack powers should produce a no-damage draw.")
@@ -35,7 +35,7 @@ func _init() -> void:
 	defense_win_defender.current_defense = 2000
 	defense_win_duel.get_player("player_one").place_monster(defense_win_attacker)
 	defense_win_duel.get_player("player_two").place_monster(defense_win_defender)
-	defense_win_duel.set_phase("battle")
+	_enter_battle(defense_win_duel)
 	var defense_win_result = _resolver(database, matchups, "Sea").resolve(defense_win_duel, "player_one", 0, "player_two", 0)
 	if defense_win_result.outcome != "attacker_win" or not defense_win_result.defender_destroyed or defense_win_result.life_point_damage != 400:
 		_fail("Higher attack power should win against a defense-position monster and report the difference.")
@@ -46,7 +46,7 @@ func _init() -> void:
 	var blocking_monster = _card(database, 26)
 	blocked_direct_duel.get_player("player_one").place_monster(blocked_direct_attacker)
 	blocked_direct_duel.get_player("player_two").place_monster(blocking_monster)
-	blocked_direct_duel.set_phase("battle")
+	_enter_battle(blocked_direct_duel)
 	var blocked_direct_result = _resolver(database, matchups, "Sea").resolve(blocked_direct_duel, "player_one", 0, "player_two")
 	if blocked_direct_result.success or "empty defending monster field" not in blocked_direct_result.error:
 		_fail("Direct attack should be rejected while a defending monster remains.")
@@ -56,7 +56,7 @@ func _init() -> void:
 	var face_down_attacker = _card(database, 1)
 	face_down_attacker.set("face_state", "face_down")
 	face_down_duel.get_player("player_one").place_monster(face_down_attacker)
-	face_down_duel.set_phase("battle")
+	_enter_battle(face_down_duel)
 	var face_down_result = _resolver(database, matchups, "Sea").resolve(face_down_duel, "player_one", 0, "player_two")
 	if face_down_result.success or "face-up attack-position" not in face_down_result.error:
 		_fail("Face-down monsters should not be allowed to attack.")
@@ -69,7 +69,7 @@ func _init() -> void:
 	disadvantage_defender.current_attack = 1700
 	disadvantage_duel.get_player("player_one").place_monster(fairy_attacker)
 	disadvantage_duel.get_player("player_two").place_monster(disadvantage_defender)
-	disadvantage_duel.set_phase("battle")
+	_enter_battle(disadvantage_duel)
 	var disadvantage_result = _resolver(database, matchups, "Dark").resolve(disadvantage_duel, "player_one", 0, "player_two", 0)
 	if disadvantage_result.type_environment_outcome != 2 or disadvantage_result.matchup_bonus != -500 or disadvantage_result.outcome != "defender_win":
 		_fail("Configured attacker disadvantage should give the defender the matchup edge.")
@@ -79,7 +79,7 @@ func _init() -> void:
 	var terminal_attacker = _card(database, 1)
 	terminal_attacker.current_attack = 8000
 	terminal_duel.get_player("player_one").place_monster(terminal_attacker)
-	terminal_duel.set_phase("battle")
+	_enter_battle(terminal_duel)
 	var terminal_result = _resolver(database, matchups, "Sea").resolve(terminal_duel, "player_one", 0, "player_two")
 	if terminal_duel.status != "finished" or terminal_duel.winner_id != "player_one" or terminal_result.life_point_damage != 8000:
 		_fail("Lethal direct damage should finish the duel with the attacker as winner.")
@@ -97,6 +97,11 @@ func _new_duel(rules: Resource):
 	var duel = DUEL_STATE_SCRIPT.new(rules, "player_one", "player_two")
 	duel.start()
 	return duel
+
+
+func _enter_battle(duel: Object) -> void:
+	duel.advance_phase()
+	duel.advance_phase()
 
 
 func _card(database: Object, card_id: int):

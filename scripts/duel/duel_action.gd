@@ -92,7 +92,7 @@ func execute(duel_state: Object) -> bool:
 			duel_state.set_phase(PHASE_MAIN)
 			return true
 		ACTION_END_TURN:
-			return duel_state.advance_turn()
+			return duel_state.end_turn()
 		ACTION_SUMMON:
 			var summon_card = _card_in_hand(player)
 			var summon_zone := int(_payload.get("zone_index", -1))
