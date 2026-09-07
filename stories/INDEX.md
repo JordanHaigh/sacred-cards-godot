@@ -7,7 +7,7 @@ Codex must execute exactly one story per iteration.
 | [SC-001](SC-001.md) | P0 | DONE | — | Initialize Godot Project Architecture |
 | [SC-101](SC-101.md) | P0 | DONE | SC-001 | Discover Existing Card JSON Schema |
 | [SC-102](SC-102.md) | P0 | DONE | SC-101 | Implement CardDefinition |
-| [SC-103](SC-103.md) | P0 | TODO | SC-102 | Implement CardDatabase |
+| [SC-103](SC-103.md) | P0 | DONE | SC-102 | Implement CardDatabase |
 | [SC-104](SC-104.md) | P0 | TODO | SC-102 | Implement CardInstance |
 | [SC-201](SC-201.md) | P0 | DONE | SC-001 | Create DuelRuleSet |
 | [SC-202](SC-202.md) | P0 | DONE | SC-201, SC-103 | Implement Sacred Cards Matchup System |
