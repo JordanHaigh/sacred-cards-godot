@@ -19,3 +19,9 @@ Use CONFIRMED / ASSUMED / NEEDS VERIFICATION labels for uncertain mechanics.
 - **ASSUMED:** The source archive's `Magician` label maps to the dataset's `Spellcaster` type; `Pyro`, `Aqua`, and `Shadow` map to the dataset's `Fire`, `Water`, and `Dark` alignment labels.
 - **ASSUMED:** An explicit type/environment advantage resolves as attacker advantage, an explicit disadvantage resolves as defender advantage, and unconfigured pairs are neutral.
 - **NEEDS VERIFICATION:** Exact battle-stat scaling and the interaction order between environment effects and guardian-star superiority belong in later battle-resolution rules.
+
+## SC-304 Battle Resolver
+
+- **ASSUMED:** A winning matchup edge adds 500 to the advantaged side's effective battle power; a defender edge adds the same bonus to the defender. This value is configurable on `BattleResolver` until exact scaling is verified.
+- **ASSUMED:** Attack-vs-attack applies the power difference as LP damage to the losing player; attack-vs-defense applies the difference to the attacking player when the defender's effective DEF is higher.
+- **ASSUMED:** A successful attack destroys the losing monster and sends it to that player's graveyard; equal effective powers produce a draw with no destruction or LP damage.
