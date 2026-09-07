@@ -1,0 +1,40 @@
+[gd_resource type="Resource" script_class="CardMatchupRules" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/rules/card_matchup_rules.gd" id="1_card_matchup_rules"]
+
+[resource]
+script = ExtResource("1_card_matchup_rules")
+type_environment_advantages = {
+"Aqua": ["Sea"],
+"Beast-Warrior": ["Forest", "Field"],
+"Dinosaur": ["Wasteland"],
+"Dragon": ["Mountains"],
+"Fiend": ["Dark"],
+"Fish": ["Sea"],
+"Insect": ["Forest"],
+"Plant": ["Forest"],
+"Rock": ["Wasteland"],
+"Sea Serpent": ["Sea"],
+"Spellcaster": ["Dark"],
+"Thunder": ["Mountains", "Sea"],
+"Warrior": ["Field"],
+"Winged Beast": ["Mountains"],
+"Zombie": ["Wasteland"],
+}
+type_environment_disadvantages = {
+"Fairy": ["Dark"],
+"Machine": ["Sea"],
+"Pyro": ["Sea"],
+}
+guardian_star_superiority = {
+"Dark": ["Light"],
+"Dreams": ["Dark"],
+"Earth": ["Thunder"],
+"Fiend": ["Dreams"],
+"Fire": ["Forest"],
+"Forest": ["Wind"],
+"Light": ["Fiend"],
+"Thunder": ["Water"],
+"Water": ["Fire"],
+"Wind": ["Earth"],
+}
