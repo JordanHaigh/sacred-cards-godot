@@ -15,7 +15,7 @@ Codex must execute exactly one story per iteration.
 | [SC-302](SC-302.md) | P0 | DONE | SC-301, SC-201 | Implement DuelState |
 | [SC-303](SC-303.md) | P0 | DONE | SC-302 | Implement Duel Action API |
 | [SC-304](SC-304.md) | P0 | DONE | SC-202, SC-302 | Implement BattleResolver |
-| [SC-401](SC-401.md) | P0 | TODO | SC-304 | Add Battle Resolver Unit Tests |
+| [SC-401](SC-401.md) | P0 | DONE | SC-304 | Add Battle Resolver Unit Tests |
 | [SC-402](SC-402.md) | P0 | TODO | SC-202 | Add Matchup Matrix Tests |
 | [SC-1601](SC-1601.md) | P0 | TODO | SC-304, SC-305, SC-306, SC-401, SC-801, SC-901, SC-903 | Complete Playable Duel Vertical Slice |
 | [SC-203](SC-203.md) | P1 | TODO | SC-201 | Document Exact Sacred Cards Rules |
