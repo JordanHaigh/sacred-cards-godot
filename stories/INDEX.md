@@ -12,7 +12,7 @@ Codex must execute exactly one story per iteration.
 | [SC-201](SC-201.md) | P0 | DONE | SC-001 | Create DuelRuleSet |
 | [SC-202](SC-202.md) | P0 | DONE | SC-201, SC-103 | Implement Sacred Cards Matchup System |
 | [SC-301](SC-301.md) | P0 | DONE | SC-103, SC-104 | Implement DuelPlayerState |
-| [SC-302](SC-302.md) | P0 | TODO | SC-301, SC-201 | Implement DuelState |
+| [SC-302](SC-302.md) | P0 | DONE | SC-301, SC-201 | Implement DuelState |
 | [SC-303](SC-303.md) | P0 | TODO | SC-302 | Implement Duel Action API |
 | [SC-304](SC-304.md) | P0 | TODO | SC-202, SC-302 | Implement BattleResolver |
 | [SC-401](SC-401.md) | P0 | TODO | SC-304 | Add Battle Resolver Unit Tests |
