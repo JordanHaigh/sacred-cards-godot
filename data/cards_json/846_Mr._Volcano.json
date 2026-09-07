@@ -1,0 +1,15 @@
+{
+  "id": 846,
+  "card": "Mr. Volcano",
+  "link": "/wiki/Mr._Volcano_(TSC)",
+  "dc": 116,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Pyro",
+  "alignment": "Fire",
+  "level": 5,
+  "atk": 2100,
+  "def": 1300,
+  "password": 31477025,
+  "description": "A gentleman who is skilled in the exotic art of pyrotechnics.\nWhile he is mild-mannered, he has a terrible temper."
+}

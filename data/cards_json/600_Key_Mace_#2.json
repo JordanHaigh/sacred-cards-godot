@@ -1,0 +1,15 @@
+{
+  "id": 600,
+  "card": "Key Mace #2",
+  "link": "/wiki/Key_Mace_2_(TSC)",
+  "dc": 121,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Dark",
+  "level": 4,
+  "atk": 1050,
+  "def": 1200,
+  "password": 20541432,
+  "description": "A small doll that can seal the goodness in the hearts of people.\nIt does so to change them into minions of evil."
+}

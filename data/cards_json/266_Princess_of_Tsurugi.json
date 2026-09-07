@@ -1,0 +1,15 @@
+{
+  "id": 266,
+  "card": "Princess of Tsurugi",
+  "link": "/wiki/Princess_of_Tsurugi_(TSC)",
+  "dc": 72,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Warrior",
+  "alignment": "Wind",
+  "level": 3,
+  "atk": 900,
+  "def": 700,
+  "password": 51371017,
+  "description": "A princess who is skilled at the use and handling of many swords.\nIndeed, her sword-fighting ability is considerable."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 33,
+  "card": "Judge Man",
+  "link": "/wiki/Judge_Man_(TSC)",
+  "dc": 150,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Warrior",
+  "alignment": "Light",
+  "level": 6,
+  "atk": 2200,
+  "def": 1500,
+  "password": 30113682,
+  "description": "A warrior that detests battles without a clear outcome.\nA blow from its huge club is extremely powerful."
+}

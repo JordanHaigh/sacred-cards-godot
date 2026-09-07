@@ -1,0 +1,15 @@
+{
+  "id": 155,
+  "card": "Larvas",
+  "link": "/wiki/Larvas_(TSC)",
+  "dc": 87,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Beast",
+  "alignment": "Forest",
+  "level": 3,
+  "atk": 800,
+  "def": 1000,
+  "password": 94675535,
+  "description": "A monstrous bird that moves with darting quickness.\nIt binds and squeezes the foe with its long and thin arms."
+}

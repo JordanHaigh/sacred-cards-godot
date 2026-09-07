@@ -1,0 +1,15 @@
+{
+  "id": 590,
+  "card": "Beaked Snake",
+  "link": "/wiki/Beaked_Snake_(TSC)",
+  "dc": 72,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Reptile",
+  "alignment": "Water",
+  "level": 3,
+  "atk": 800,
+  "def": 900,
+  "password": 6103114,
+  "description": "A massive constrictor snake with an impressive beak.\nIt binds its foe with its long body and pecks away unopposed."
+}

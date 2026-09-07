@@ -1,0 +1,15 @@
+{
+  "id": 383,
+  "card": "Parrot Dragon",
+  "link": "/wiki/Parrot_Dragon_(TSC)",
+  "dc": 86,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Dragon",
+  "alignment": "Wind",
+  "level": 5,
+  "atk": 2000,
+  "def": 1300,
+  "password": 62762898,
+  "description": "A sharp - beaked dragon from the world of American comics.\nDon't be taken in by its adorable appearance."
+}

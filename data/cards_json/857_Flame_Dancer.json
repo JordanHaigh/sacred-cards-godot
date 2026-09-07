@@ -1,0 +1,15 @@
+{
+  "id": 857,
+  "card": "Flame Dancer",
+  "link": "/wiki/Flame_Dancer_(TSC)",
+  "dc": 33,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Pyro",
+  "alignment": "Fire",
+  "level": 2,
+  "atk": 550,
+  "def": 450,
+  "password": 12883044,
+  "description": "A fiery creature that swings a rope of fire as it approaches.\nDon't make the mistake of catching this creature's one eye."
+}

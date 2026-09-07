@@ -1,0 +1,15 @@
+{
+  "id": 205,
+  "card": "Dorover",
+  "link": "/wiki/Dorover_(TSC)",
+  "dc": 72,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Aqua",
+  "alignment": "Water",
+  "level": 3,
+  "atk": 900,
+  "def": 800,
+  "password": 24194033,
+  "description": "A revolting monster that has a body made of horrid slime.\nIt attacks by spewing horrible toxic gases."
+}

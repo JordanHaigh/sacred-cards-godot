@@ -1,0 +1,15 @@
+{
+  "id": 741,
+  "card": "Lord of D.",
+  "link": "/wiki/Lord_of_D._(TSC)",
+  "dc": 121,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Spellcaster",
+  "alignment": "Dark",
+  "level": 4,
+  "atk": 1200,
+  "def": 1100,
+  "password": 17985575,
+  "description": "A monstrous magician that wears a large, concealing cape.\nIt has the power to rule over many of the dragons."
+}

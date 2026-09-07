@@ -1,0 +1,15 @@
+{
+  "id": 877,
+  "card": "Exarion Universe",
+  "link": "/wiki/Exarion_Universe_(TSC)",
+  "dc": 289,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Beast-Warrior",
+  "alignment": "Dark",
+  "level": 4,
+  "atk": 1800,
+  "def": 1900,
+  "password": 63749102,
+  "description": "A centaurlike being that has the power to hit the opponent\nwith LP loss identical to its ATK. It then powers down."
+}

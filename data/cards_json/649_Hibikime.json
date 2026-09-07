@@ -1,0 +1,15 @@
+{
+  "id": 649,
+  "card": "Hibikime",
+  "link": "/wiki/Hibikime_(TSC)",
+  "dc": 172,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Warrior",
+  "alignment": "Dark",
+  "level": 4,
+  "atk": 1450,
+  "def": 1000,
+  "password": 64501875,
+  "description": "A warrior who emits a horrible noise that echoes harshly.\nThe racket distracts foes into a standstill."
+}

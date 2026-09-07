@@ -1,0 +1,15 @@
+{
+  "id": 578,
+  "card": "Leo Wizard",
+  "link": "/wiki/Leo_Wizard_(TSC)",
+  "dc": 5,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Spellcaster",
+  "alignment": "Dark",
+  "level": 5,
+  "atk": 1350,
+  "def": 1200,
+  "password": 4392470,
+  "description": "A mysterious magician that cloaks itself with a black cape.\nIts identity is a talking lion beast."
+}

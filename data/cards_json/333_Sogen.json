@@ -1,0 +1,15 @@
+{
+  "id": 333,
+  "card": "Sogen",
+  "link": "/wiki/Sogen_(TSC)",
+  "dc": 40,
+  "card_type": "Magic",
+  "monsterType": null,
+  "type": null,
+  "alignment": null,
+  "level": 0,
+  "atk": 0,
+  "def": 0,
+  "password": 86318356,
+  "description": "A spell card that changes the field into a grassy meadow.\nIt benefits beast warriors and warriors."
+}

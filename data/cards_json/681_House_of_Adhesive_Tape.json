@@ -1,0 +1,15 @@
+{
+  "id": 681,
+  "card": "House of Adhesive Tape",
+  "link": "/wiki/House_of_Adhesive_Tape_(TSC)",
+  "dc": 0,
+  "card_type": "Trap",
+  "monsterType": null,
+  "type": null,
+  "alignment": null,
+  "level": 0,
+  "atk": 0,
+  "def": 0,
+  "password": 15083728,
+  "description": "Atrap cardthat is deadly to low-poweredmonstersthatattackit.\nIf the monster'sATKis 500 or lower, the trapwipes it out."
+}

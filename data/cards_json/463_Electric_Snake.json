@@ -1,0 +1,15 @@
+{
+  "id": 463,
+  "card": "Electric Snake",
+  "link": "/wiki/Electric_Snake_(TSC)",
+  "dc": 72,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Thunder",
+  "alignment": "Thunder",
+  "level": 3,
+  "atk": 800,
+  "def": 900,
+  "password": 11324436,
+  "description": "A cobra that generates electricity from all over its body.\nIt stores power inside an orb at the end of its tail."
+}

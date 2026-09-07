@@ -1,0 +1,15 @@
+{
+  "id": 32,
+  "card": "Two-Headed King Rex",
+  "link": "/wiki/Two-Headed_King_Rex_(TSC)",
+  "dc": 207,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Dinosaur",
+  "alignment": "Earth",
+  "level": 4,
+  "atk": 1600,
+  "def": 1200,
+  "password": 94119974,
+  "description": "A two-headed dinosaur that can attack in two directions at once.\nIt is among the stronger of the dinosaur cards."
+}

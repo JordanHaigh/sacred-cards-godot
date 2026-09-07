@@ -1,0 +1,15 @@
+{
+  "id": 549,
+  "card": "Frog the Jam",
+  "link": "/wiki/Frog_the_Jam_(TSC)",
+  "dc": 47,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Aqua",
+  "alignment": "Water",
+  "level": 2,
+  "atk": 700,
+  "def": 500,
+  "password": 68638985,
+  "description": "A furtive slime that is in the shape of a frog's head.\nIt attacks by singing loudly in an awful croak."
+}

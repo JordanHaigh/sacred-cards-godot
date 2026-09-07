@@ -1,0 +1,15 @@
+{
+  "id": 526,
+  "card": "Neck Hunter",
+  "link": "/wiki/Neck_Hunter_(TSC)",
+  "dc": 61,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Fiend",
+  "level": 6,
+  "atk": 1750,
+  "def": 1900,
+  "password": 70084224,
+  "description": "A cyclopean fiend that decapitates foes with its scythe.\nIt can also shoot a beam of energy from its eye."
+}

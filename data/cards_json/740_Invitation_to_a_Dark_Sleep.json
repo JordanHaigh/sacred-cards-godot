@@ -1,0 +1,15 @@
+{
+  "id": 740,
+  "card": "Invitation to a Dark Sleep",
+  "link": "/wiki/Invitation_to_a_Dark_Sleep_(TSC)",
+  "dc": 41,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Spellcaster",
+  "alignment": "Dreams",
+  "level": 5,
+  "atk": 1500,
+  "def": 1800,
+  "password": 52675689,
+  "description": "A masked magician that summons black, sleep-inducing clouds.\nIt can make all monsters on the foe's field fall asleep."
+}

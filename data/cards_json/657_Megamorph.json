@@ -1,0 +1,15 @@
+{
+  "id": 657,
+  "card": "Megamorph",
+  "link": "/wiki/Megamorph_(TSC)",
+  "dc": 255,
+  "card_type": "Magic",
+  "monsterType": null,
+  "type": null,
+  "alignment": null,
+  "level": 0,
+  "atk": 0,
+  "def": 0,
+  "password": 22046459,
+  "description": "A spell that gigantically transforms a monster on the field.\nThe chosen monster is made much more powerful."
+}

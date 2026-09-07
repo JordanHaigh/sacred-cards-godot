@@ -1,0 +1,15 @@
+{
+  "id": 11,
+  "card": "Sword Arm of Dragon",
+  "link": "/wiki/Sword_Arm_of_Dragon_(TSC)",
+  "dc": 95,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Dinosaur",
+  "alignment": "Earth",
+  "level": 6,
+  "atk": 1750,
+  "def": 2030,
+  "password": 13069066,
+  "description": "A dinosaur that bristles with swordlike spikes all over.\nIt attacks by recklessly ramming its foe."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 5,
+  "card": "Ryu-Kishin",
+  "link": "/wiki/Ryu-Kishin_(TSC)",
+  "dc": 87,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Wind",
+  "level": 3,
+  "atk": 1000,
+  "def": 500,
+  "password": 15303296,
+  "description": "It disguises itself as a statue and strikes from the shadows.\nIt is also fleet of foot and adept at fleeing."
+}

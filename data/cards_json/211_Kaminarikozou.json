@@ -1,0 +1,15 @@
+{
+  "id": 211,
+  "card": "Kaminarikozou",
+  "link": "/wiki/Kaminarikozou_(TSC)",
+  "dc": 47,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Thunder",
+  "alignment": "Thunder",
+  "level": 2,
+  "atk": 700,
+  "def": 600,
+  "password": 15510988,
+  "description": "A young monster that keeps lightning charged in its body.\nIt can turn dangerous if anyone were to make it cry."
+}

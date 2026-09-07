@@ -1,0 +1,15 @@
+{
+  "id": 213,
+  "card": "Aqua Madoor",
+  "link": "/wiki/Aqua_Madoor_(TSC)",
+  "dc": 319,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Spellcaster",
+  "alignment": "Water",
+  "level": 4,
+  "atk": 1200,
+  "def": 2000,
+  "password": 85639257,
+  "description": "A masked magician with the power to manipulate water.\nIt creates thick walls of water to crush foes."
+}

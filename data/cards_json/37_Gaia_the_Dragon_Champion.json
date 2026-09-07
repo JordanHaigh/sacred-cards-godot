@@ -1,0 +1,15 @@
+{
+  "id": 37,
+  "card": "Gaia the Dragon Champion",
+  "link": "/wiki/Gaia_the_Dragon_Champion_(TSC)",
+  "dc": 30,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Dragon",
+  "alignment": "Wind",
+  "level": 7,
+  "atk": 2600,
+  "def": 2100,
+  "password": 66889139,
+  "description": "A powerful knight that sits astride its dragon steer.\nThe knight's power and the dragon's speed combine for best effect."
+}

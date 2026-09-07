@@ -1,0 +1,15 @@
+{
+  "id": 389,
+  "card": "Giltia the D. Knight",
+  "link": "/wiki/Giltia_the_D._Knight_(TSC)",
+  "dc": 50,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Warrior",
+  "alignment": "Light",
+  "level": 5,
+  "atk": 1850,
+  "def": 1500,
+  "password": 51828629,
+  "description": "A sorcererlike knight who uses magic to attack his foes.\nHe bears a spear that is said to steal the souls of victims."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 618,
+  "card": "Warrior of Tradition",
+  "link": "/wiki/Warrior_of_Tradition_(TSC)",
+  "dc": 61,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Warrior",
+  "alignment": "Dark",
+  "level": 6,
+  "atk": 1900,
+  "def": 1700,
+  "password": 56413937,
+  "description": "A female warrior who is drenched in the blood of her victims.\nShe wanders battlefields, having lost the chance to die."
+}

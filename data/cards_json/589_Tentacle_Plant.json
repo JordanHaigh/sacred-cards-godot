@@ -1,0 +1,15 @@
+{
+  "id": 589,
+  "card": "Tentacle Plant",
+  "link": "/wiki/Tentacle_Plant_(TSC)",
+  "dc": 37,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Plant",
+  "alignment": "Forest",
+  "level": 2,
+  "atk": 500,
+  "def": 600,
+  "password": 60715406,
+  "description": "A carnivorous plant that has an outgrowth of tentacles.\nIt attacks anyone nearby by extending its tentacles."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 112,
+  "card": "That Which Feeds on Life",
+  "link": "/wiki/That_Which_Feeds_on_Life_(TSC)",
+  "dc": 121,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Dark",
+  "level": 4,
+  "atk": 1200,
+  "def": 1000,
+  "password": 52367652,
+  "description": "A voracious fiend that eats the souls of all living things.\nThe souls it consumes become its energy."
+}

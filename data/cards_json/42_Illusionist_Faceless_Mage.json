@@ -1,0 +1,15 @@
+{
+  "id": 42,
+  "card": "Illusionist Faceless Mage",
+  "link": "/wiki/Illusionist_Faceless_Mage_(TSC)",
+  "dc": 150,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Spellcaster",
+  "alignment": "Dreams",
+  "level": 5,
+  "atk": 1200,
+  "def": 2200,
+  "password": 28546905,
+  "description": "An odd being without a face but with heads on both its shoulders.\nIt can stop all enemies on the field from moving the next turn."
+}

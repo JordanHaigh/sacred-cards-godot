@@ -1,0 +1,15 @@
+{
+  "id": 483,
+  "card": "Garvas",
+  "link": "/wiki/Garvas_(TSC)",
+  "dc": 86,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Beast",
+  "alignment": "Forest",
+  "level": 6,
+  "atk": 2000,
+  "def": 1700,
+  "password": 69780745,
+  "description": "A ferocious lion beast that has a powerful set of wings.\nIt is the embodiment of evil."
+}

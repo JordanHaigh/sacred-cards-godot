@@ -1,0 +1,15 @@
+{
+  "id": 529,
+  "card": "Flame Cerebrus",
+  "link": "/wiki/Flame_Cerebrus_(TSC)",
+  "dc": 116,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Pyro",
+  "alignment": "Forest",
+  "level": 6,
+  "atk": 2100,
+  "def": 1800,
+  "password": 60862676,
+  "description": "A triple-headed dog that is ablaze all over its body.\nIt executes foes with the fires of the underworld."
+}

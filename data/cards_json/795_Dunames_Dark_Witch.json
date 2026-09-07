@@ -1,0 +1,15 @@
+{
+  "id": 795,
+  "card": "Dunames Dark Witch",
+  "link": "/wiki/Dunames_Dark_Witch_(TSC)",
+  "dc": 260,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fairy",
+  "alignment": "Light",
+  "level": 4,
+  "atk": 1800,
+  "def": 1050,
+  "password": 12493482,
+  "description": "A courageous fairy of light that has a strong sense of justice.\nShe will not run from any battle against the forces of darkness."
+}

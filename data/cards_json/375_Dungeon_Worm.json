@@ -1,0 +1,15 @@
+{
+  "id": 375,
+  "card": "Dungeon Worm",
+  "link": "/wiki/Dungeon_Worm_(TSC)",
+  "dc": 41,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Insect",
+  "alignment": "Earth",
+  "level": 5,
+  "atk": 1800,
+  "def": 1500,
+  "password": 51228280,
+  "description": "A gargantuan worm that lurks underground in labyrinths.\nIt swallows anyone walking above it whole with its huge mouth."
+}

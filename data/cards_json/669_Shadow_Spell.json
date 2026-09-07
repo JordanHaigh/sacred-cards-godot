@@ -1,0 +1,15 @@
+{
+  "id": 669,
+  "card": "Shadow Spell",
+  "link": "/wiki/Shadow_Spell_(TSC)",
+  "dc": 150,
+  "card_type": "Magic",
+  "monsterType": null,
+  "type": null,
+  "alignment": null,
+  "level": 0,
+  "atk": 0,
+  "def": 0,
+  "password": 29267084,
+  "description": "A spell that weakens all the monsters on the foe's field.\nEvery enemy monster's level is lowered by two."
+}

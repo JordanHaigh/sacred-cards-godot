@@ -1,0 +1,15 @@
+{
+  "id": 354,
+  "card": "Stuffed Animal",
+  "link": "/wiki/Stuffed_Animal_(TSC)",
+  "dc": 121,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Warrior",
+  "alignment": "Fiend",
+  "level": 3,
+  "atk": 1200,
+  "def": 900,
+  "password": 71068263,
+  "description": "A deceptive monster that is disguised as an adorable teddy bear.\nIt bites the unwary with its zippered mouth."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 162,
+  "card": "Tainted Wisdom",
+  "link": "/wiki/Tainted_Wisdom_(TSC)",
+  "dc": 130,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Fiend",
+  "level": 3,
+  "atk": 1250,
+  "def": 800,
+  "password": 28725004,
+  "description": "A malignant brain that attacks foes with stabbing tentacles.\nIt absorbs the brain cells of foes and makes them its own."
+}

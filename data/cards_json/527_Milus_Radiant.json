@@ -1,0 +1,15 @@
+{
+  "id": 527,
+  "card": "Milus Radiant",
+  "link": "/wiki/Milus_Radiant_(TSC)",
+  "dc": 16,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Beast",
+  "alignment": "Forest",
+  "level": 1,
+  "atk": 300,
+  "def": 250,
+  "password": 7489323,
+  "description": "A deceptive beast that appears to be the picture of cuteness.\nHowever, it is cruel and vicious in reality."
+}

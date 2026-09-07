@@ -1,0 +1,15 @@
+{
+  "id": 221,
+  "card": "Kumootoko",
+  "link": "/wiki/Kumootoko_(TSC)",
+  "dc": 161,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Insect",
+  "alignment": "Forest",
+  "level": 3,
+  "atk": 700,
+  "def": 1400,
+  "password": 56283725,
+  "description": "An enormous spider that grew not only cunning, but intelligent.\nIt sprays silk from its mouth to hold foes immobile."
+}

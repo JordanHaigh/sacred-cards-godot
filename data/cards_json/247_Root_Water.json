@@ -1,0 +1,15 @@
+{
+  "id": 247,
+  "card": "Root Water",
+  "link": "/wiki/Root_Water_(TSC)",
+  "dc": 72,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fish",
+  "alignment": "Water",
+  "level": 3,
+  "atk": 900,
+  "def": 800,
+  "password": 39004808,
+  "description": "An amphibian creature that avoids notice by lurking in the waves.\nIt creates massive, dark tidal waves to attack."
+}

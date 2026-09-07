@@ -1,0 +1,15 @@
+{
+  "id": 814,
+  "card": "Banisher of the Light",
+  "link": "/wiki/Banisher_of_the_Light_(TSC)",
+  "dc": 319,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fairy",
+  "alignment": "Light",
+  "level": 3,
+  "atk": 100,
+  "def": 2000,
+  "password": 61528025,
+  "description": "A forbidding figure that has been made the guardian of light.\nHe has been commanded to banish those who serve the dark side."
+}

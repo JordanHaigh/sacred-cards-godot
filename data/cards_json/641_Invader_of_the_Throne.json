@@ -1,0 +1,15 @@
+{
+  "id": 641,
+  "card": "Invader of the Throne",
+  "link": "/wiki/Invader_of_the_Throne_(TSC)",
+  "dc": 233,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Warrior",
+  "alignment": "Earth",
+  "level": 4,
+  "atk": 1350,
+  "def": 1700,
+  "password": 3056267,
+  "description": "A devious, power-hungry woman who is unsatisfied as a queen.\nShe hungers for the throne in the absence of the king."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 538,
+  "card": "Niwatori",
+  "link": "/wiki/Niwatori_(TSC)",
+  "dc": 72,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Winged Beast",
+  "alignment": "Forest",
+  "level": 3,
+  "atk": 900,
+  "def": 800,
+  "password": 7805359,
+  "description": "A gargantuan bird that can swallow its enemies whole and alive.\nIt absorbs what it eats as its energy."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 869,
+  "card": "Amazon Sword Woman",
+  "link": "/wiki/Amazon_Sword_Woman_(TSC)",
+  "dc": 14,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Warrior",
+  "alignment": "Earth",
+  "level": 5,
+  "atk": 1500,
+  "def": 1600,
+  "password": 94004268,
+  "description": "A female warrior who is an expert at battling with a sword.\nShe easily wields a heavy sword in one hand."
+}

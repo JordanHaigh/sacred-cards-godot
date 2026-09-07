@@ -1,0 +1,15 @@
+{
+  "id": 182,
+  "card": "Masked Clown",
+  "link": "/wiki/Masked_Clown_(TSC)",
+  "dc": 47,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Warrior",
+  "alignment": "Dark",
+  "level": 2,
+  "atk": 500,
+  "def": 700,
+  "password": 77581312,
+  "description": "A masked warrior that prances about in the dance of death.\nWhile it is dancing, it hacks at its foe with its scythe."
+}

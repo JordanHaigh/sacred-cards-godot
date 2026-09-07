@@ -1,0 +1,15 @@
+{
+  "id": 15,
+  "card": "Flame Swordsman",
+  "link": "/wiki/Flame_Swordsman_(TSC)",
+  "dc": 41,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Warrior",
+  "alignment": "Fire",
+  "level": 5,
+  "atk": 1800,
+  "def": 1600,
+  "password": 45231177,
+  "description": "A swordsman that bears a fiery sword deadly to all dinosaurs.\nIt has the power to wipe out all dinosaurs on the foe's field."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 500,
+  "card": "Dragon Seeker",
+  "link": "/wiki/Dragon_Seeker_(TSC)",
+  "dc": 116,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Fiend",
+  "alignment": "Fiend",
+  "level": 6,
+  "atk": 2000,
+  "def": 2100,
+  "password": 28563545,
+  "description": "An enormous fiend that is a scourge to dragons of all kinds.\nIt can destroy every dragon on the opponent's field."
+}

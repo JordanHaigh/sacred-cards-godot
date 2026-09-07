@@ -1,0 +1,15 @@
+{
+  "id": 806,
+  "card": "Gearfried the Iron Knight",
+  "link": "/wiki/Gearfried_the_Iron_Knight_(TSC)",
+  "dc": 260,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Warrior",
+  "alignment": "Earth",
+  "level": 4,
+  "atk": 1800,
+  "def": 1600,
+  "password": 423705,
+  "description": "A warrior that has been constructed out of tensile steel.\nIts steel hands have sharp cutting edges."
+}

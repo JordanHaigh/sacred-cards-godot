@@ -1,0 +1,15 @@
+{
+  "id": 478,
+  "card": "Insect Soldiers of the Sky",
+  "link": "/wiki/Insect_Soldiers_of_the_Sky_(TSC)",
+  "dc": 87,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Insect",
+  "alignment": "Wind",
+  "level": 3,
+  "atk": 1000,
+  "def": 800,
+  "password": 7019529,
+  "description": "A soldier among insects that possess the ability to fly.\nIt gathers in an angry swarm with others to raid enemies."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 547,
+  "card": "Griggle",
+  "link": "/wiki/Griggle_(TSC)",
+  "dc": 19,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Plant",
+  "alignment": "Forest",
+  "level": 1,
+  "atk": 350,
+  "def": 300,
+  "password": 95744531,
+  "description": "A small, odd plant creature with an unruly mass of leaves on its head.\nIt twirls around to attack with the leaves and flick seeds."
+}

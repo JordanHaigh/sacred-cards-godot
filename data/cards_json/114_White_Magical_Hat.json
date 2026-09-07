@@ -1,0 +1,15 @@
+{
+  "id": 114,
+  "card": "White Magical Hat",
+  "link": "/wiki/White_Magical_Hat_(TSC)",
+  "dc": 87,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Spellcaster",
+  "alignment": "Light",
+  "level": 3,
+  "atk": 1000,
+  "def": 700,
+  "password": 15150365,
+  "description": "A mystical thief with a dazzling white cape and top hat.\nDespite his eye-catching attire, he has never been caught."
+}

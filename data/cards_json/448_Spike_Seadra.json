@@ -1,0 +1,15 @@
+{
+  "id": 448,
+  "card": "Spike Seadra",
+  "link": "/wiki/Spike_Seadra_(TSC)",
+  "dc": 14,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Sea Serpent",
+  "alignment": "Thunder",
+  "level": 5,
+  "atk": 1600,
+  "def": 1300,
+  "password": 85326399,
+  "description": "A maned sea dragon that has spikes on its body for skewering.\nOnce they are embedded in the foe, it discharges electricity."
+}

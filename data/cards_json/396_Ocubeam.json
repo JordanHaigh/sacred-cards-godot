@@ -1,0 +1,15 @@
+{
+  "id": 396,
+  "card": "Ocubeam",
+  "link": "/wiki/Ocubeam_(TSC)",
+  "dc": 19,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fairy",
+  "alignment": "Wind",
+  "level": 5,
+  "atk": 1550,
+  "def": 1650,
+  "password": 86088138,
+  "description": "A fearsome being that keeps watch with big ears and eye.\nDespite its terrifying appearance, it is a fairy."
+}

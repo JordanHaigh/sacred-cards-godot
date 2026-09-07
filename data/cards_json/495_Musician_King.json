@@ -1,0 +1,15 @@
+{
+  "id": 495,
+  "card": "Musician King",
+  "link": "/wiki/Musician_King_(TSC)",
+  "dc": 32,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Spellcaster",
+  "alignment": "Light",
+  "level": 5,
+  "atk": 1750,
+  "def": 1500,
+  "password": 56907389,
+  "description": "A musical master whose guitar playing is unmatched by others.\nHe attacks by generating ultrasonic waves."
+}

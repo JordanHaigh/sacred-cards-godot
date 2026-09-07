@@ -1,0 +1,15 @@
+{
+  "id": 261,
+  "card": "Wicked Mirror",
+  "link": "/wiki/Wicked_Mirror_(TSC)",
+  "dc": 47,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Dreams",
+  "level": 2,
+  "atk": 700,
+  "def": 600,
+  "password": 15150371,
+  "description": "A fiendish mirror that hypnotizes all that peer into its depths.\nBy putting its foes to sleep, it can avoid having to fight."
+}

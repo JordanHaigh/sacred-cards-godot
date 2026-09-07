@@ -1,0 +1,15 @@
+{
+  "id": 224,
+  "card": "Trap Master",
+  "link": "/wiki/Trap_Master_(TSC)",
+  "dc": 103,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Warrior",
+  "alignment": "Dark",
+  "level": 3,
+  "atk": 500,
+  "def": 1100,
+  "password": 46461247,
+  "description": "A masked warrior who is an expert at setting deadly traps.\nHe can set an Acid Trap Hole on an open spot on the own fiel"
+}

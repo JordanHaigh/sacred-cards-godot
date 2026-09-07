@@ -1,0 +1,15 @@
+{
+  "id": 367,
+  "card": "Jirai Gumo",
+  "link": "/wiki/Jirai_Gumo_(TSC)",
+  "dc": 384,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Insect",
+  "alignment": "Forest",
+  "level": 4,
+  "atk": 2200,
+  "def": 100,
+  "password": 94773007,
+  "description": "A stealthy spider that lurks out of sight under the ground.\nIt makes prey out of anything that passes over its lair."
+}

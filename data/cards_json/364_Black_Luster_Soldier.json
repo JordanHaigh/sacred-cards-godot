@@ -1,0 +1,15 @@
+{
+  "id": 364,
+  "card": "Black Luster Soldier",
+  "link": "/wiki/Black_Luster_Soldier_(TSC)",
+  "dc": 255,
+  "card_type": "Monster",
+  "monsterType": "Ritual Monster",
+  "type": "Warrior",
+  "alignment": "Divine",
+  "level": 8,
+  "atk": 3000,
+  "def": 2500,
+  "password": 5405694,
+  "description": "The strongest of all warriors, it suitably wears black.\nIt equals the Blue-Eyes White Dragon in ability."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 243,
+  "card": "Water Element",
+  "link": "/wiki/Water_Element_(TSC)",
+  "dc": 72,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Aqua",
+  "alignment": "Water",
+  "level": 3,
+  "atk": 900,
+  "def": 700,
+  "password": 3732747,
+  "description": "A delicate and feminine elemental that makes its home in water.\nShe obscures visibility by enveloping her surroundings with a fog."
+}

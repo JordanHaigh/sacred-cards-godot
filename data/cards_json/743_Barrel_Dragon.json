@@ -1,0 +1,15 @@
+{
+  "id": 743,
+  "card": "Barrel Dragon",
+  "link": "/wiki/Barrel_Dragon_(TSC)",
+  "dc": 30,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Machine",
+  "alignment": "Dark",
+  "level": 7,
+  "atk": 2600,
+  "def": 2200,
+  "password": 81480460,
+  "description": "A mechanical dragon fitted with cannons. It can wipe out up to 3\nmonsters on the opponent's field with a 2-in-1 success rate."
+}

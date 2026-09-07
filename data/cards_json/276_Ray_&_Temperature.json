@@ -1,0 +1,15 @@
+{
+  "id": 276,
+  "card": "Ray & Temperature",
+  "link": "/wiki/Ray_%26_Temperature_(TSC)",
+  "dc": 87,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fairy",
+  "alignment": "Wind",
+  "level": 3,
+  "atk": 1000,
+  "def": 1000,
+  "password": 85309439,
+  "description": "A friendly and supportive twosome of the north wind and the sun.\nThey attack with cutting winds and a harsh thermal ray."
+}

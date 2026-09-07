@@ -1,0 +1,15 @@
+{
+  "id": 273,
+  "card": "Ancient Tree of Enlightenment",
+  "link": "/wiki/Ancient_Tree_of_Enlightenment_(TSC)",
+  "dc": 183,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Plant",
+  "alignment": "Forest",
+  "level": 3,
+  "atk": 600,
+  "def": 1500,
+  "password": 86421986,
+  "description": "An ancient tree that grew enlightened over many long years.\nIt uses its vast knowledge to avoid many kinds of attack."
+}

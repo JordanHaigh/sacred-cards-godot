@@ -1,0 +1,15 @@
+{
+  "id": 20,
+  "card": "Left Arm of the Forbidden One",
+  "link": "/wiki/Left_Arm_of_the_Forbidden_One_(TSC)",
+  "dc": 66,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Spellcaster",
+  "alignment": "Dark",
+  "level": 1,
+  "atk": 200,
+  "def": 300,
+  "password": 7902349,
+  "description": "One of the five limbs of Exodia, the forbidden monster.\nIf all five cards gather in the hand of the player, he wins."
+}

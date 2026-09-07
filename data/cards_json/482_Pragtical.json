@@ -1,0 +1,15 @@
+{
+  "id": 482,
+  "card": "Pragtical",
+  "link": "/wiki/Pragtical_(TSC)",
+  "dc": 61,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Dinosaur",
+  "alignment": "Earth",
+  "level": 5,
+  "atk": 1900,
+  "def": 1500,
+  "password": 33691040,
+  "description": "A dinosaur with spikes on its long tail and atop its head.\nThe attacks it throws with the spikes are very strong. Beware."
+}

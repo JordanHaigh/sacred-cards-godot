@@ -1,0 +1,15 @@
+{
+  "id": 138,
+  "card": "Dragon Statue",
+  "link": "/wiki/Dragon_Statue_(TSC)",
+  "dc": 103,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Warrior",
+  "alignment": "Earth",
+  "level": 3,
+  "atk": 1100,
+  "def": 900,
+  "password": 9197735,
+  "description": "A stone statue of a warrior with the soul of a dragon.\nIt cleaves foes with its prized sword."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 769,
+  "card": "Wall of Illusion",
+  "link": "/wiki/Wall_of_Illusion_(TSC)",
+  "dc": 274,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Dreams",
+  "level": 4,
+  "atk": 1000,
+  "def": 1850,
+  "password": 13945283,
+  "description": "An enchanted wall that shows illusory visions to its foes.\nIt befuddles foes into making their attacks go astray."
+}

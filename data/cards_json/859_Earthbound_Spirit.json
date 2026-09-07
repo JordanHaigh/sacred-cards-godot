@@ -1,0 +1,15 @@
+{
+  "id": 859,
+  "card": "Earthbound Spirit",
+  "link": "/wiki/Earthbound_Spirit_(TSC)",
+  "dc": 319,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Earth",
+  "level": 4,
+  "atk": 500,
+  "def": 2000,
+  "password": 67105242,
+  "description": "A fiendish spirit that cannot take leave from earth.\nIt is made from the souls of soldiers vanquished in battle."
+}

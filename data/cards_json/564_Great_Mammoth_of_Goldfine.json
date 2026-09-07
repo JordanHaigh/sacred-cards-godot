@@ -1,0 +1,15 @@
+{
+  "id": 564,
+  "card": "Great Mammoth of Goldfine",
+  "link": "/wiki/Great_Mammoth_of_Goldfine_(TSC)",
+  "dc": 150,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Zombie",
+  "alignment": "Fiend",
+  "level": 6,
+  "atk": 2200,
+  "def": 1800,
+  "password": 54622031,
+  "description": "A zombie mammoth whose bones gleam in a dazzling gold.\nIt is very rare sight to behold."
+}

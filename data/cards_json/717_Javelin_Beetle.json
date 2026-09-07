@@ -1,0 +1,15 @@
+{
+  "id": 717,
+  "card": "Javelin Beetle",
+  "link": "/wiki/Javelin_Beetle_(TSC)",
+  "dc": 255,
+  "card_type": "Monster",
+  "monsterType": "Ritual Monster",
+  "type": "Insect",
+  "alignment": "Divine",
+  "level": 8,
+  "atk": 2450,
+  "def": 2550,
+  "password": 26932788,
+  "description": "A hardy beetle that is both strong on attack and defense.\nIf it traps a foe with its pincers, the enemy is cut in half."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 271,
+  "card": "Megirus Light",
+  "link": "/wiki/Megirus_Light_(TSC)",
+  "dc": 72,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Dark",
+  "level": 3,
+  "atk": 900,
+  "def": 600,
+  "password": 23032273,
+  "description": "A creepy fiend with blue eyes that shine with an ill light.\nThe evil light of its eyes inflicts damage."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 376,
+  "card": "Monster Tamer",
+  "link": "/wiki/Monster_Tamer_(TSC)",
+  "dc": 41,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Warrior",
+  "alignment": "Forest",
+  "level": 5,
+  "atk": 1800,
+  "def": 1600,
+  "password": 97612389,
+  "description": "A warrior who is skilled at handling Dungeon Worms in duels.\nHe can power up all Dungeon Worms on the player's field."
+}

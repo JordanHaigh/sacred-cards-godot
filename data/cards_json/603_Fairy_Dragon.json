@@ -1,0 +1,15 @@
+{
+  "id": 603,
+  "card": "Fairy Dragon",
+  "link": "/wiki/Fairy_Dragon_(TSC)",
+  "dc": 121,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Dragon",
+  "alignment": "Light",
+  "level": 4,
+  "atk": 1100,
+  "def": 1200,
+  "password": 20315854,
+  "description": "A diminutive and extremely pretty dragon with dainty wings.\nAmong the fairies, it is surprisingly strong."
+}

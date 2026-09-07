@@ -1,0 +1,15 @@
+{
+  "id": 95,
+  "card": "Crass Clown",
+  "link": "/wiki/Crass_Clown_(TSC)",
+  "dc": 161,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Dreams",
+  "level": 4,
+  "atk": 1350,
+  "def": 1400,
+  "password": 93889755,
+  "description": "A malevolent clown that dances in the circus of darkness.\nThose that see its dance loses energy and strength."
+}

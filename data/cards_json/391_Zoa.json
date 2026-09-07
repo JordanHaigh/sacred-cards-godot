@@ -1,0 +1,15 @@
+{
+  "id": 391,
+  "card": "Zoa",
+  "link": "/wiki/Zoa_(TSC)",
+  "dc": 30,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Fiend",
+  "level": 7,
+  "atk": 2600,
+  "def": 1900,
+  "password": 24311372,
+  "description": "A fiendish monster that can be made even more powerful.\nIt reaches full potential by becoming metalized as a machine."
+}

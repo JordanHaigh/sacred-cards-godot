@@ -1,0 +1,15 @@
+{
+  "id": 858,
+  "card": "Zombyra the Dark",
+  "link": "/wiki/Zombyra_the_Dark_(TSC)",
+  "dc": 350,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Warrior",
+  "alignment": "Dark",
+  "level": 4,
+  "atk": 2100,
+  "def": 500,
+  "password": 88472456,
+  "description": "A superhero on the dark side. In return for for powering\ndown, he can destroy one monster on the foe's field."
+}

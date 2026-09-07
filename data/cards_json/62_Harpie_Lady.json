@@ -1,0 +1,15 @@
+{
+  "id": 62,
+  "card": "Harpie Lady",
+  "link": "/wiki/Harpie_Lady_(TSC)",
+  "dc": 161,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Winged Beast",
+  "alignment": "Wind",
+  "level": 4,
+  "atk": 1300,
+  "def": 1400,
+  "password": 76812113,
+  "description": "A female monster that is half bird and half human.\nIt can power up Harpie's Pet Dragons on the own field."
+}

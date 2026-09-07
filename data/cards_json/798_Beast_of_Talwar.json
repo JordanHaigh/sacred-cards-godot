@@ -1,0 +1,15 @@
+{
+  "id": 798,
+  "card": "Beast of Talwar",
+  "link": "/wiki/Beast_of_Talwar_(TSC)",
+  "dc": 12,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Fiend",
+  "level": 7,
+  "atk": 2400,
+  "def": 2150,
+  "password": 11761845,
+  "description": "A fiend that bears a weapon that is highly exclusive for use.\nEven among fiends, only the swordplay experts may touch it."
+}

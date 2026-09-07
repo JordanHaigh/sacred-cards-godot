@@ -1,0 +1,15 @@
+{
+  "id": 173,
+  "card": "Dark Prisoner",
+  "link": "/wiki/Dark_Prisoner_(TSC)",
+  "dc": 87,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Dark",
+  "level": 3,
+  "atk": 600,
+  "def": 1000,
+  "password": 89558090,
+  "description": "A furtive, dark fiend that cleverly manipulates light.\nIt uses the reflections of light to hide itself from sight."
+}

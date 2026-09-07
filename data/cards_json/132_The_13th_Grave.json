@@ -1,0 +1,15 @@
+{
+  "id": 132,
+  "card": "The 13th Grave",
+  "link": "/wiki/The_13th_Grave_(TSC)",
+  "dc": 121,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Zombie",
+  "alignment": "Fiend",
+  "level": 3,
+  "atk": 1200,
+  "def": 900,
+  "password": 32864,
+  "description": "A shambling skeleton of a zombie risen from death's sleep.\nIt came from a supposedly unfilled plot, the 13th in a cemetery."
+}

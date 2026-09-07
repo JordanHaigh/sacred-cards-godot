@@ -1,0 +1,15 @@
+{
+  "id": 508,
+  "card": "Cyber Saurus",
+  "link": "/wiki/Cyber_Saurus_(TSC)",
+  "dc": 41,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Machine",
+  "alignment": "Earth",
+  "level": 5,
+  "atk": 1800,
+  "def": 1400,
+  "password": 89112729,
+  "description": "A machine in the form of a dinosaur with mismatched arms.\nOne arm is fitted with a beam weapon."
+}

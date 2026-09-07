@@ -1,0 +1,15 @@
+{
+  "id": 216,
+  "card": "Dryad",
+  "link": "/wiki/Dryad_(TSC)",
+  "dc": 161,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Spellcaster",
+  "alignment": "Forest",
+  "level": 4,
+  "atk": 1200,
+  "def": 1400,
+  "password": 84916669,
+  "description": "An ethereal and devout elemental nymph of the forests.\nShe prevents the foe from moving with the help of plants."
+}

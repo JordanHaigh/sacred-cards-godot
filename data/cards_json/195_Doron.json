@@ -1,0 +1,15 @@
+{
+  "id": 195,
+  "card": "Doron",
+  "link": "/wiki/Doron_(TSC)",
+  "dc": 72,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Warrior",
+  "alignment": "Water",
+  "level": 2,
+  "atk": 900,
+  "def": 500,
+  "password": 756652,
+  "description": "A striped warrior that can create a copy of itself in battle.\nIt can do so if there is an empty spot on the player's field."
+}

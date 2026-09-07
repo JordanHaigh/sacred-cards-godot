@@ -1,0 +1,15 @@
+{
+  "id": 551,
+  "card": "Dark Elf",
+  "link": "/wiki/Dark_Elf_(TSC)",
+  "dc": 319,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Spellcaster",
+  "alignment": "Dark",
+  "level": 4,
+  "atk": 2000,
+  "def": 800,
+  "password": 21417692,
+  "description": "A black-hearted elf that loves to fight above all else.\nIt can be a troublesome enemy if it gets to strike first."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 207,
+  "card": "Droll Bird",
+  "link": "/wiki/Droll_Bird_(TSC)",
+  "dc": 37,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Winged Beast",
+  "alignment": "Wind",
+  "level": 2,
+  "atk": 600,
+  "def": 500,
+  "password": 97973387,
+  "description": "A curious bird that has a large, flat, and broad beak.\nIt looses loud cries to startle timid foes."
+}

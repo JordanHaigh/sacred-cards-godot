@@ -1,0 +1,15 @@
+{
+  "id": 278,
+  "card": "Petit Moth",
+  "link": "/wiki/Petit_Moth_(TSC)",
+  "dc": 16,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Insect",
+  "alignment": "Forest",
+  "level": 1,
+  "atk": 300,
+  "def": 200,
+  "password": 58192742,
+  "description": "A minute insect larva with numerous eyelike markings.\nIt is impossible to tell what it would look like when it is grown."
+}

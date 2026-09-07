@@ -1,0 +1,15 @@
+{
+  "id": 63,
+  "card": "Harpie Lady Sisters",
+  "link": "/wiki/Harpie_Lady_Sisters_(TSC)",
+  "dc": 116,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Winged Beast",
+  "alignment": "Wind",
+  "level": 6,
+  "atk": 1950,
+  "def": 2100,
+  "password": 12206212,
+  "description": "A trio of Harpie Ladies, sisters half bird and half human.\nIt can power up Harpie's Pet Dragons on the own field two levels."
+}

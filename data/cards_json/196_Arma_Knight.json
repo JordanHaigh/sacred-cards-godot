@@ -1,0 +1,15 @@
+{
+  "id": 196,
+  "card": "Arma Knight",
+  "link": "/wiki/Arma_Knight_(TSC)",
+  "dc": 121,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Aqua",
+  "alignment": "Water",
+  "level": 4,
+  "atk": 1000,
+  "def": 1200,
+  "password": 36151751,
+  "description": "A marine warrior that has assumed the guise of an ammonite.\nFrom ancient times, it has protected the sea from outsiders."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 330,
+  "card": "Forest",
+  "link": "/wiki/Forest_(TSC)",
+  "dc": 40,
+  "card_type": "Magic",
+  "monsterType": null,
+  "type": null,
+  "alignment": null,
+  "level": 0,
+  "atk": 0,
+  "def": 0,
+  "password": 87430998,
+  "description": "A spell card that changes the field into a verdant forest.\nIt benefits plants, beast warriors, insects and beasts."
+}

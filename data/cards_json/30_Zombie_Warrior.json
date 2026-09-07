@@ -1,0 +1,15 @@
+{
+  "id": 30,
+  "card": "Zombie Warrior",
+  "link": "/wiki/Zombie_Warrior_(TSC)",
+  "dc": 121,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Zombie",
+  "alignment": "Fiend",
+  "level": 3,
+  "atk": 1200,
+  "def": 900,
+  "password": 31339260,
+  "description": "A skeletal warrior that is equipped with a sword and shield.\nIt appears weak, but it strikes with quick, sharp stabs."
+}

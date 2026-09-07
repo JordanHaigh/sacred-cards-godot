@@ -1,0 +1,15 @@
+{
+  "id": 775,
+  "card": "Deepsea Warrior",
+  "link": "/wiki/Deepsea_Warrior_(TSC)",
+  "dc": 41,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Warrior",
+  "alignment": "Water",
+  "level": 5,
+  "atk": 1600,
+  "def": 1800,
+  "password": 24128274,
+  "description": "An undersea warrior in a wet suit made for deep water fighting.\nThe suit can withstand high pressure of 10,000 bar."
+}

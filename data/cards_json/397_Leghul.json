@@ -1,0 +1,15 @@
+{
+  "id": 397,
+  "card": "Leghul",
+  "link": "/wiki/Leghul_(TSC)",
+  "dc": 19,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Insect",
+  "alignment": "Forest",
+  "level": 1,
+  "atk": 300,
+  "def": 350,
+  "password": 12472242,
+  "description": "A monstrous worm that has a special power despite its stats.\nIts attack power can be used to damage the opponent directly."
+}

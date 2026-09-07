@@ -1,0 +1,15 @@
+{
+  "id": 194,
+  "card": "Terra the Terrible",
+  "link": "/wiki/Terra_the_Terrible_(TSC)",
+  "dc": 140,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Fiend",
+  "level": 4,
+  "atk": 1200,
+  "def": 1300,
+  "password": 63308047,
+  "description": "A swamp-dwelling fiend that calls another fiend its master.\nWhile it is not as strong as it looks, don't treat it lightly."
+}

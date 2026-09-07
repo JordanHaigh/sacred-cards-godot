@@ -1,0 +1,15 @@
+{
+  "id": 469,
+  "card": "Armed Ninja",
+  "link": "/wiki/Armed_Ninja_(TSC)",
+  "dc": 16,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Warrior",
+  "alignment": "Water",
+  "level": 1,
+  "atk": 300,
+  "def": 300,
+  "password": 9076207,
+  "description": "A stealthy ninja who is colored blue entirely from head to toe.\nHe attacks with a large sickle and his spiked feet."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 229,
+  "card": "Hourglass of Life",
+  "link": "/wiki/Hourglass_of_Life_(TSC)",
+  "dc": 47,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Fairy",
+  "alignment": "Light",
+  "level": 2,
+  "atk": 700,
+  "def": 600,
+  "password": 8783685,
+  "description": "An enchanted hourglass that can exchange strength for vitality.\nIt can power up all monsters on the own field for 1000LP."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 833,
+  "card": "Slifer the Sky Dragon",
+  "link": "/wiki/Slifer_the_Sky_Dragon_(TSC)",
+  "dc": 0,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Dragon",
+  "alignment": "Divine",
+  "level": 12,
+  "atk": 4000,
+  "def": 4000,
+  "password": null,
+  "description": "A dragon that can power up based on the cards in thehand.\nFor every card in the player's hand, power is upped 3 levels."
+}

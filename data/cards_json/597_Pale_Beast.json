@@ -1,0 +1,15 @@
+{
+  "id": 597,
+  "card": "Pale Beast",
+  "link": "/wiki/Pale_Beast_(TSC)",
+  "dc": 183,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Beast",
+  "alignment": "Forest",
+  "level": 4,
+  "atk": 1500,
+  "def": 1200,
+  "password": 21263083,
+  "description": "A creepy, blue-skinned beast with a pair of horns on its head.\nThe identity of this beast is completely unknown."
+}

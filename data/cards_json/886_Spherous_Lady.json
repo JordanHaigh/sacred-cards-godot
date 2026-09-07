@@ -1,0 +1,15 @@
+{
+  "id": 886,
+  "card": "Spherous Lady",
+  "link": "/wiki/Spherous_Lady_(TSC)",
+  "dc": 161,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Rock",
+  "alignment": "Earth",
+  "level": 3,
+  "atk": 400,
+  "def": 1400,
+  "password": 52121290,
+  "description": "A vampiric woman who uses her beauty to lure careless victims.\nShe bites the necks of prey and sucks it dry of all blood."
+}

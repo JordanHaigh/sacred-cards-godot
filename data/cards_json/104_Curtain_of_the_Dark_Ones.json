@@ -1,0 +1,15 @@
+{
+  "id": 104,
+  "card": "Curtain of the Dark Ones",
+  "link": "/wiki/Curtain_of_the_Dark_Ones_(TSC)",
+  "dc": 37,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Spellcaster",
+  "alignment": "Dark",
+  "level": 2,
+  "atk": 600,
+  "def": 500,
+  "password": 22026707,
+  "description": "A possessed curtain made by magicians using special powers.\nIt is said to enhance the power of magic users."
+}

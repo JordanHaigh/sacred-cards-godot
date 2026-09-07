@@ -1,0 +1,15 @@
+{
+  "id": 540,
+  "card": "Skelengel",
+  "link": "/wiki/Skelengel_(TSC)",
+  "dc": 72,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Fairy",
+  "alignment": "Light",
+  "level": 2,
+  "atk": 900,
+  "def": 400,
+  "password": 60694662,
+  "description": "An invisible fairy on which only the halo and wings can be seen.\nIt has the ability to draw a card from the deck."
+}

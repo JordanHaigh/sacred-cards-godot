@@ -1,0 +1,15 @@
+{
+  "id": 277,
+  "card": "Gorgon Egg",
+  "link": "/wiki/Gorgon_Egg_(TSC)",
+  "dc": 140,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Fiend",
+  "level": 3,
+  "atk": 300,
+  "def": 1300,
+  "password": 11793047,
+  "description": "An egg laid by a Gorgon with a single eye at its center.\nWhatever the eye reflects is what will hatch from the egg."
+}

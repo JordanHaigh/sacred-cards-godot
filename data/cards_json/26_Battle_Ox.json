@@ -1,0 +1,15 @@
+{
+  "id": 26,
+  "card": "Battle Ox",
+  "link": "/wiki/Battle_Ox_(TSC)",
+  "dc": 233,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Beast-Warrior",
+  "alignment": "Forest",
+  "level": 4,
+  "atk": 1700,
+  "def": 1000,
+  "password": 5053103,
+  "description": "A fearsome ox monster that wields the power of Axe Crusher.\nWhen used, it eliminates all pyro types from the enemy field."
+}

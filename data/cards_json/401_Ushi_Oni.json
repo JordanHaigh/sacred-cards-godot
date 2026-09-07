@@ -1,0 +1,15 @@
+{
+  "id": 401,
+  "card": "Ushi Oni",
+  "link": "/wiki/Ushi_Oni_(TSC)",
+  "dc": 132,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Forest",
+  "level": 6,
+  "atk": 2150,
+  "def": 1950,
+  "password": 48649353,
+  "description": "A brutal ox fiend that was resurrected using dark sorcery.\nIt emerges from a vase when it is summoned."
+}

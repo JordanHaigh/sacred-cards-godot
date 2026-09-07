@@ -1,0 +1,15 @@
+{
+  "id": 757,
+  "card": "Beta The Magnet Warrior",
+  "link": "/wiki/Beta_The_Magnet_Warrior_(TSC)",
+  "dc": 233,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Rock",
+  "alignment": "Earth",
+  "level": 4,
+  "atk": 1700,
+  "def": 1600,
+  "password": 39256679,
+  "description": "A magnetized monster that fuses with Alpha and Gamma into one.\nThe other two must be on the field to integrate with Beta."
+}

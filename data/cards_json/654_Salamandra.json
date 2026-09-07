@@ -1,0 +1,15 @@
+{
+  "id": 654,
+  "card": "Salamandra",
+  "link": "/wiki/Salamandra_(TSC)",
+  "dc": 100,
+  "card_type": "Magic",
+  "monsterType": null,
+  "type": null,
+  "alignment": null,
+  "level": 0,
+  "atk": 0,
+  "def": 0,
+  "password": 32268901,
+  "description": "An equipment card that has the power of a wicked fiery monster.\nIt can power up any pyro-type monster."
+}

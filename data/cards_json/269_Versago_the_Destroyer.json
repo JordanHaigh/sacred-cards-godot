@@ -1,0 +1,15 @@
+{
+  "id": 269,
+  "card": "Versago the Destroyer",
+  "link": "/wiki/Versago_the_Destroyer_(TSC)",
+  "dc": 103,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Dark",
+  "level": 3,
+  "atk": 1100,
+  "def": 900,
+  "password": 50259460,
+  "description": "A dark god of destruction that was born in the realm of darkness.\nIt attacks by summoning a destructive storm."
+}

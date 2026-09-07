@@ -1,0 +1,15 @@
+{
+  "id": 458,
+  "card": "Kaminari Attack",
+  "link": "/wiki/Kaminari_Attack_(TSC)",
+  "dc": 61,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Thunder",
+  "alignment": "Thunder",
+  "level": 5,
+  "atk": 1900,
+  "def": 1400,
+  "password": 9653271,
+  "description": "An electric deity that looks down on earth from the heavens.\nIt smites evil-doers with bolts of lightning."
+}

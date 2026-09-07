@@ -1,0 +1,15 @@
+{
+  "id": 135,
+  "card": "Fiend's Hand",
+  "link": "/wiki/Fiend%27s_Hand_(TSC)",
+  "dc": 37,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Zombie",
+  "alignment": "Fiend",
+  "level": 2,
+  "atk": 600,
+  "def": 600,
+  "password": 52800428,
+  "description": "A spectral hand of the undead that tugs and pulls at victims.\nIt can drag an enemy monster from the field to die together."
+}

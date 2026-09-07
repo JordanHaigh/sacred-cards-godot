@@ -1,0 +1,15 @@
+{
+  "id": 536,
+  "card": "Mechaleon",
+  "link": "/wiki/Mechaleon_(TSC)",
+  "dc": 59,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Reptile",
+  "alignment": "Water",
+  "level": 2,
+  "atk": 800,
+  "def": 600,
+  "password": 94412545,
+  "description": "A large chameleon with the ability to alter its body coloring.\nUsing this ability, it can conceal itself in any location."
+}

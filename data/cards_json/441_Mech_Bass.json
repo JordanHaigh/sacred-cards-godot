@@ -1,0 +1,15 @@
+{
+  "id": 441,
+  "card": "Mech Bass",
+  "link": "/wiki/Mech_Bass_(TSC)",
+  "dc": 41,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Machine",
+  "alignment": "Water",
+  "level": 5,
+  "atk": 1800,
+  "def": 1500,
+  "password": 50176820,
+  "description": "A mechanized bass with a large mouth and a cannon on its back.\nThe cannon fires blinding plasma rays."
+}

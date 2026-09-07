@@ -1,0 +1,15 @@
+{
+  "id": 823,
+  "card": "Spear Cretin",
+  "link": "/wiki/Spear_Cretin_(TSC)",
+  "dc": 29,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Fiend",
+  "level": 2,
+  "atk": 500,
+  "def": 500,
+  "password": 58551308,
+  "description": "A impish fiend that roams about in the darkness aimlessly.\nIf it spots prey, it goes on the attack with its spear in hand."
+}

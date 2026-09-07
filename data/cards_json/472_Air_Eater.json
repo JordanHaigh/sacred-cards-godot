@@ -1,0 +1,15 @@
+{
+  "id": 472,
+  "card": "Air Eater",
+  "link": "/wiki/Air_Eater_(TSC)",
+  "dc": 116,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Fiend",
+  "level": 6,
+  "atk": 2100,
+  "def": 1600,
+  "password": 8353769,
+  "description": "A many-armed fiend that can inhale air to create an airless state.\nBy doing so, it suffocates its foes."
+}

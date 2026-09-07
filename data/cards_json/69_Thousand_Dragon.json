@@ -1,0 +1,15 @@
+{
+  "id": 69,
+  "card": "Thousand Dragon",
+  "link": "/wiki/Thousand_Dragon_(TSC)",
+  "dc": 12,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Dragon",
+  "alignment": "Fire",
+  "level": 7,
+  "atk": 2400,
+  "def": 2000,
+  "password": 41462083,
+  "description": "A dragon that has lived for thousands and thousands of years.\nIt breathes laboriously through its nostrils."
+}

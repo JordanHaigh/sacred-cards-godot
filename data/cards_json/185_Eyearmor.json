@@ -1,0 +1,15 @@
+{
+  "id": 185,
+  "card": "Eyearmor",
+  "link": "/wiki/Eyearmor_(TSC)",
+  "dc": 37,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Warrior",
+  "alignment": "Earth",
+  "level": 2,
+  "atk": 600,
+  "def": 500,
+  "password": 64511793,
+  "description": "A one-eyed creature that has the power to transform into others.\nIt keeps its foes offguard by changing its guise in battle."
+}

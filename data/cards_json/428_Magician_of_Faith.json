@@ -1,0 +1,15 @@
+{
+  "id": 428,
+  "card": "Magician of Faith",
+  "link": "/wiki/Magician_of_Faith_(TSC)",
+  "dc": 22,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Spellcaster",
+  "alignment": "Light",
+  "level": 1,
+  "atk": 300,
+  "def": 400,
+  "password": 31560081,
+  "description": "A female magician whose immaturity makes her weak.\nShe banishes darkness with sacred spells."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 894,
+  "card": "Heavy Storm",
+  "link": "/wiki/Heavy_Storm_(TSC)",
+  "dc": 25,
+  "card_type": "Magic",
+  "monsterType": null,
+  "type": null,
+  "alignment": null,
+  "level": 0,
+  "atk": 0,
+  "def": 0,
+  "password": 19613556,
+  "description": "A spell that totally wipes out every card on the playing field.\nIt creates a storm that blows away all cards on the field."
+}

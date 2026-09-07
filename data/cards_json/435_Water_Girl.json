@@ -1,0 +1,15 @@
+{
+  "id": 435,
+  "card": "Water Girl",
+  "link": "/wiki/Water_Girl_(TSC)",
+  "dc": 130,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Aqua",
+  "alignment": "Water",
+  "level": 4,
+  "atk": 1250,
+  "def": 1000,
+  "password": 55014050,
+  "description": "A beautiful girl with fins on her arms in a revealing outfit.\nShe attacks by hurling ice as if they were spears."
+}

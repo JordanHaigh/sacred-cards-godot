@@ -1,0 +1,15 @@
+{
+  "id": 570,
+  "card": "Trakadon",
+  "link": "/wiki/Trakadon_(TSC)",
+  "dc": 140,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Dinosaur",
+  "alignment": "Earth",
+  "level": 3,
+  "atk": 1300,
+  "def": 800,
+  "password": 42348802,
+  "description": "A ferocious dinosaur that wears stripes like those of a tiger.\nIt sprints through wastelands at an impressive pace."
+}

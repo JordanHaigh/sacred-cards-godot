@@ -1,0 +1,15 @@
+{
+  "id": 6,
+  "card": "Feral Imp",
+  "link": "/wiki/Feral_Imp_(TSC)",
+  "dc": 161,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Fiend",
+  "level": 4,
+  "atk": 1300,
+  "def": 1400,
+  "password": 41392891,
+  "description": "A small but fierce fiend known for its mischievous ways.\nBeware - it uses the cover of darkness to attack the unwary."
+}

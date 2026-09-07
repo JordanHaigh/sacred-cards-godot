@@ -1,0 +1,15 @@
+{
+  "id": 29,
+  "card": "Mountain Warrior",
+  "link": "/wiki/Mountain_Warrior_(TSC)",
+  "dc": 87,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Beast-Warrior",
+  "alignment": "Earth",
+  "level": 3,
+  "atk": 600,
+  "def": 1000,
+  "password": 4931562,
+  "description": "A muscular warrior built to withstand harsh elements and terrain.\nIt has no trouble getting about on even terrible ground."
+}

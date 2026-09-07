@@ -1,0 +1,15 @@
+{
+  "id": 245,
+  "card": "Meda Bat",
+  "link": "/wiki/Meda_Bat_(TSC)",
+  "dc": 59,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Fiend",
+  "level": 2,
+  "atk": 800,
+  "def": 400,
+  "password": 76211194,
+  "description": "A fiendish flying eye created by an evil-hearted soul.\nIt attacks by raining Dark Bombs on its foes."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 835,
+  "card": "Flying Fish",
+  "link": "/wiki/Flying_Fish_(TSC)",
+  "dc": 59,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fish",
+  "alignment": "Wind",
+  "level": 4,
+  "atk": 800,
+  "def": 500,
+  "password": 31987274,
+  "description": "A fish that is said to bring luck to those who see it flying.\nThe lucky witnesses are said to have three wishes come true."
+}

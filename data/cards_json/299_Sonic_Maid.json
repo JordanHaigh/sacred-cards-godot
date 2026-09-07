@@ -1,0 +1,15 @@
+{
+  "id": 299,
+  "card": "Sonic Maid",
+  "link": "/wiki/Sonic_Maid_(TSC)",
+  "dc": 121,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Warrior",
+  "alignment": "Light",
+  "level": 3,
+  "atk": 1200,
+  "def": 900,
+  "password": 38942059,
+  "description": "A beautiful maiden who is adept at the manipulation of sounds.\nShe attacks with a scythe in the form of a musical note."
+}

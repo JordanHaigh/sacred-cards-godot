@@ -1,0 +1,15 @@
+{
+  "id": 511,
+  "card": "Bean Soldier",
+  "link": "/wiki/Bean_Soldier_(TSC)",
+  "dc": 161,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Plant",
+  "alignment": "Forest",
+  "level": 4,
+  "atk": 1400,
+  "def": 1300,
+  "password": 84990171,
+  "description": "A courageous plant warrior that attacks with a knife and beans.\nBe careful - it is stronger than it looks."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 379,
+  "card": "La Jinn the Mystical Genie of the Lamp",
+  "link": "/wiki/La_Jinn_the_Mystical_Genie_of_the_Lamp_(TSC)",
+  "dc": 260,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Dark",
+  "level": 4,
+  "atk": 1800,
+  "def": 1000,
+  "password": 97590747,
+  "description": "An obeisant genie that keeps hidden in a magical lamp.\nIt grants any wish of the master who has summoned it."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 172,
+  "card": "Armaill",
+  "link": "/wiki/Armaill_(TSC)",
+  "dc": 140,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Warrior",
+  "alignment": "Fire",
+  "level": 3,
+  "atk": 700,
+  "def": 1300,
+  "password": 53153481,
+  "description": "A remarkable warrior with a tail that is in the form of a sword.\nIt launches 3-hit attacks with its two arms and its tail."
+}

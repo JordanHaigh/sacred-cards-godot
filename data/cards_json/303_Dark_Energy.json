@@ -1,0 +1,15 @@
+{
+  "id": 303,
+  "card": "Dark Energy",
+  "link": "/wiki/Dark_Energy_(TSC)",
+  "dc": 100,
+  "card_type": "Magic",
+  "monsterType": null,
+  "type": null,
+  "alignment": null,
+  "level": 0,
+  "atk": 0,
+  "def": 0,
+  "password": 4614116,
+  "description": "A tainted energy for fiends that makes them powerful.\nIt powers up a dark being by 500 points."
+}

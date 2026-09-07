@@ -1,0 +1,15 @@
+{
+  "id": 797,
+  "card": "Total Defense Shogun",
+  "link": "/wiki/Total_Defense_Shogun_(TSC)",
+  "dc": 279,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Warrior",
+  "alignment": "Dark",
+  "level": 6,
+  "atk": 1550,
+  "def": 2500,
+  "password": 75372290,
+  "description": "A brave general who fought to protect his loved ones.\nHe endured an assault that raged for a thousand days."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 306,
+  "card": "Insect Armor with Laser Cannon",
+  "link": "/wiki/Insect_Armor_with_Laser_Cannon_(TSC)",
+  "dc": 100,
+  "card_type": "Magic",
+  "monsterType": null,
+  "type": null,
+  "alignment": null,
+  "level": 0,
+  "atk": 0,
+  "def": 0,
+  "password": 3492538,
+  "description": "A mechanical suit of armor that is fitted with a flame thrower.\nIf equipped by an insect, etc., it can shoot intense flames."
+}

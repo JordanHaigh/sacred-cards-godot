@@ -1,0 +1,15 @@
+{
+  "id": 55,
+  "card": "Giant Flea",
+  "link": "/wiki/Giant_Flea_(TSC)",
+  "dc": 183,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Insect",
+  "alignment": "Forest",
+  "level": 4,
+  "atk": 1500,
+  "def": 1200,
+  "password": 41762634,
+  "description": "An enormous, blood-sucking flea that is surprisingly strong.\nDon't let the fact of it being a flea fool you into complacency."
+}

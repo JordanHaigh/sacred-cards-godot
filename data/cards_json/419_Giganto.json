@@ -1,0 +1,15 @@
+{
+  "id": 419,
+  "card": "Giganto",
+  "link": "/wiki/Giganto_(TSC)",
+  "dc": 41,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Machine",
+  "alignment": "Fiend",
+  "level": 5,
+  "atk": 1700,
+  "def": 1800,
+  "password": 33621868,
+  "description": "A daunting machine that is equipped with a spiked iron ball.\nIt charges at foes while swinging the ball wildly."
+}

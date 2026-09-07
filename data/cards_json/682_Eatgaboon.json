@@ -1,0 +1,15 @@
+{
+  "id": 682,
+  "card": "Eatgaboon",
+  "link": "/wiki/Eatgaboon_(TSC)",
+  "dc": 1,
+  "card_type": "Trap",
+  "monsterType": null,
+  "type": null,
+  "alignment": null,
+  "level": 0,
+  "atk": 0,
+  "def": 0,
+  "password": 42578427,
+  "description": "A trap card that is deadly to mid-powered monsters that attack it.\nIf the monster's ATK is 1,000 or less, the trap wipes it out."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 187,
+  "card": "Gate Deeg",
+  "link": "/wiki/Gate_Deeg_(TSC)",
+  "dc": 59,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Beast",
+  "alignment": "Fiend",
+  "level": 3,
+  "atk": 700,
+  "def": 800,
+  "password": 49258578,
+  "description": "A sinister, orblike being with a door mounted on its belly.\nThe door is one that leads straight to hell."
+}

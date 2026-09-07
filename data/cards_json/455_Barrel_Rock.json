@@ -1,0 +1,15 @@
+{
+  "id": 455,
+  "card": "Barrel Rock",
+  "link": "/wiki/Barrel_Rock_(TSC)",
+  "dc": 140,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Rock",
+  "alignment": "Earth",
+  "level": 4,
+  "atk": 1000,
+  "def": 1300,
+  "password": 10476868,
+  "description": "A rock-hard monster with machine guns mounted on its shoulders.\nIt rams foes while shooting the machine guns steadily."
+}

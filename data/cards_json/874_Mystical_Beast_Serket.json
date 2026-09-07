@@ -1,0 +1,15 @@
+{
+  "id": 874,
+  "card": "Mystical Beast Serket",
+  "link": "/wiki/Mystical_Beast_Serket_(TSC)",
+  "dc": 279,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Fairy",
+  "alignment": "Earth",
+  "level": 6,
+  "atk": 2500,
+  "def": 2000,
+  "password": 89194033,
+  "description": "A powerful scorpionlike being that can envelop a monster on the\nfoe's field to power itself  up."
+}

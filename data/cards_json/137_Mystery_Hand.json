@@ -1,0 +1,15 @@
+{
+  "id": 137,
+  "card": "Mystery Hand",
+  "link": "/wiki/Mystery_Hand_(TSC)",
+  "dc": 29,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Fiend",
+  "level": 2,
+  "atk": 500,
+  "def": 500,
+  "password": 62793020,
+  "description": "The hand of a being that has the power to distort the dimensions.\nIt reaches from a rift in the dimensions to strike."
+}

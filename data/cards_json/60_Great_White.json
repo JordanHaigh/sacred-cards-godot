@@ -1,0 +1,15 @@
+{
+  "id": 60,
+  "card": "Great White",
+  "link": "/wiki/Great_White_(TSC)",
+  "dc": 207,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fish",
+  "alignment": "Water",
+  "level": 4,
+  "atk": 1600,
+  "def": 800,
+  "password": 13429800,
+  "description": "An enormous great white shark of fearsome ferocity and speed.\nThere is no escape if it were to clamp down with its huge jaws."
+}

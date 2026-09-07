@@ -1,0 +1,15 @@
+{
+  "id": 620,
+  "card": "Snakeyashi",
+  "link": "/wiki/Snakeyashi_(TSC)",
+  "dc": 121,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Plant",
+  "alignment": "Forest",
+  "level": 4,
+  "atk": 1000,
+  "def": 1200,
+  "password": 29802344,
+  "description": "What appears to be a single creature is actually many snakes.\nWhen foes draw near, the snakes break rank to swarm."
+}

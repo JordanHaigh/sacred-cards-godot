@@ -1,0 +1,15 @@
+{
+  "id": 460,
+  "card": "Bolt Escargot",
+  "link": "/wiki/Bolt_Escargot_(TSC)",
+  "dc": 7,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Thunder",
+  "alignment": "Thunder",
+  "level": 5,
+  "atk": 1400,
+  "def": 1500,
+  "password": 12146024,
+  "description": "An enormous snail that spits a gooey, immobilizing fluid.\nAfter making the foe unable to move, it attacks with electricity."
+}

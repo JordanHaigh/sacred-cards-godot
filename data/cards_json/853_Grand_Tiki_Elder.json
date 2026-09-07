@@ -1,0 +1,15 @@
+{
+  "id": 853,
+  "card": "Grand Tiki Elder",
+  "link": "/wiki/Grand_Tiki_Elder_(TSC)",
+  "dc": 183,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Dreams",
+  "level": 4,
+  "atk": 1500,
+  "def": 800,
+  "password": 13676474,
+  "description": "A masked fiend that uses freaky incantations to attack.\nIts chanted curses cause foes to drop as if stricken physically."
+}

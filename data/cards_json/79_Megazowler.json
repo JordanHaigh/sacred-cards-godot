@@ -1,0 +1,15 @@
+{
+  "id": 79,
+  "card": "Megazowler",
+  "link": "/wiki/Megazowler_(TSC)",
+  "dc": 86,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Dinosaur",
+  "alignment": "Earth",
+  "level": 6,
+  "atk": 1800,
+  "def": 2000,
+  "password": 75390004,
+  "description": "A dinosaur with horns protruding from all over its body.\nAs expected, its ramming attacks are very powerful."
+}

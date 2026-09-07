@@ -1,0 +1,15 @@
+{
+  "id": 119,
+  "card": "Trial of Nightmare",
+  "link": "/wiki/Trial_of_Nightmare_(TSC)",
+  "dc": 140,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Fiend",
+  "level": 4,
+  "atk": 1300,
+  "def": 900,
+  "password": 77827521,
+  "description": "An emissary of hell that traps its foe inside a large coffin.\nIt then renders its judgment that skewers the coffin."
+}

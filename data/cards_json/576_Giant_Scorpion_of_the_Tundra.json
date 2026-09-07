@@ -1,0 +1,15 @@
+{
+  "id": 576,
+  "card": "Giant Scorpion of the Tundra",
+  "link": "/wiki/Giant_Scorpion_of_the_Tundra_(TSC)",
+  "dc": 103,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Insect",
+  "alignment": "Forest",
+  "level": 3,
+  "atk": 1100,
+  "def": 1000,
+  "password": 41403766,
+  "description": "A rarely seen scorpion that lives in tundras, not deserts.\nPerhaps befitting its cold habitat, its shell is a bright blue."
+}

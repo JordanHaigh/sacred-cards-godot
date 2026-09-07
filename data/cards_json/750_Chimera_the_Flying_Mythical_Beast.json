@@ -1,0 +1,15 @@
+{
+  "id": 750,
+  "card": "Chimera the Flying Mythical Beast",
+  "link": "/wiki/Chimera_the_Flying_Mythical_Beast_(TSC)",
+  "dc": 116,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Beast",
+  "alignment": "Dreams",
+  "level": 6,
+  "atk": 2100,
+  "def": 1800,
+  "password": 4796100,
+  "description": "A beast that obtained enormous power by achieving fusion.\nHowever, its life lasts a mere five minutes."
+}

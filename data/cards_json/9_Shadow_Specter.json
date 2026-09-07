@@ -1,0 +1,15 @@
+{
+  "id": 9,
+  "card": "Shadow Specter",
+  "link": "/wiki/Shadow_Specter_(TSC)",
+  "dc": 29,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Zombie",
+  "alignment": "Fiend",
+  "level": 1,
+  "atk": 500,
+  "def": 200,
+  "password": 40575313,
+  "description": "A ghostly spirit of a wild animal that roams in wastelands.\nThis card could become troublesome if encountered in number."
+}

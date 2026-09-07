@@ -1,0 +1,15 @@
+{
+  "id": 88,
+  "card": "Metal Guardian",
+  "link": "/wiki/Metal_Guardian_(TSC)",
+  "dc": 449,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Fiend",
+  "level": 5,
+  "atk": 1500,
+  "def": 2800,
+  "password": 68339286,
+  "description": "A fiend that guards the treasures in the world of fiends.\nIts defense in darkness is outstandingly high."
+}

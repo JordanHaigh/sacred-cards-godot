@@ -1,0 +1,15 @@
+{
+  "id": 820,
+  "card": "Dark Zebra",
+  "link": "/wiki/Dark_Zebra_(TSC)",
+  "dc": 260,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Beast",
+  "alignment": "Forest",
+  "level": 4,
+  "atk": 1800,
+  "def": 400,
+  "password": 59784896,
+  "description": "A sinister zebra that has a unicornlike horn on its forehead.\nIt befuddles foes by making its stripes move around quickly."
+}

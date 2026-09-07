@@ -1,0 +1,15 @@
+{
+  "id": 861,
+  "card": "Ancient Lamp",
+  "link": "/wiki/Ancient_Lamp_(TSC)",
+  "dc": 161,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Spellcaster",
+  "alignment": "Wind",
+  "level": 3,
+  "atk": 900,
+  "def": 1400,
+  "password": 54912977,
+  "description": "An animated magic lamp. It can summon a La Jinn the Mystical\nGenie of the Lamp if there is open space on the own field."
+}

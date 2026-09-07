@@ -1,0 +1,15 @@
+{
+  "id": 836,
+  "card": "Amphibian Beast",
+  "link": "/wiki/Amphibian_Beast_(TSC)",
+  "dc": 231,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fish",
+  "alignment": "Water",
+  "level": 6,
+  "atk": 2400,
+  "def": 2000,
+  "password": 67371383,
+  "description": "A creature that attacks quickly like a beast while on land.\nIn water, it strikes fast like a fish."
+}

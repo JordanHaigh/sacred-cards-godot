@@ -1,0 +1,15 @@
+{
+  "id": 381,
+  "card": "Toon Alligator",
+  "link": "/wiki/Toon_Alligator_(TSC)",
+  "dc": 207,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Reptile",
+  "alignment": "Water",
+  "level": 4,
+  "atk": 800,
+  "def": 1600,
+  "password": 59383041,
+  "description": "A cartoony alligator that has big eyes, large teeth, and an axe.\nIt emerged from the world of American comic books."
+}

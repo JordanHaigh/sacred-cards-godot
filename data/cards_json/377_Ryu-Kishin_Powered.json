@@ -1,0 +1,15 @@
+{
+  "id": 377,
+  "card": "Ryu-Kishin Powered",
+  "link": "/wiki/Ryu-Kishin_Powered_(TSC)",
+  "dc": 207,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Fiend",
+  "level": 4,
+  "atk": 1600,
+  "def": 1200,
+  "password": 24611934,
+  "description": "A Ryu-Kishin that has been grown stronger by the power of darkness.\nBeware of its cruelly hooked talons."
+}

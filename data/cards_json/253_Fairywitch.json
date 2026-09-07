@@ -1,0 +1,15 @@
+{
+  "id": 253,
+  "card": "Fairywitch",
+  "link": "/wiki/Fairywitch_(TSC)",
+  "dc": 87,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Spellcaster",
+  "alignment": "Dark",
+  "level": 3,
+  "atk": 800,
+  "def": 1000,
+  "password": 37160778,
+  "description": "A disgraced being that had refuted her duty to become an angel.\nInstead, she followed her heart and became a witch."
+}

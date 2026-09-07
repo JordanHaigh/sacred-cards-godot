@@ -1,0 +1,15 @@
+{
+  "id": 727,
+  "card": "Manga Ryu-Ran",
+  "link": "/wiki/Manga_Ryu-Ran_(TSC)",
+  "dc": 30,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Dragon",
+  "alignment": "Fiend",
+  "level": 7,
+  "atk": 2200,
+  "def": 2600,
+  "password": 38369349,
+  "description": "A cartoony dragon that wears an egg shell for protection.\nDespite its whimsical appearance, it is very strong."
+}

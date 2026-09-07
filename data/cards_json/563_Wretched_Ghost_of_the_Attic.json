@@ -1,0 +1,15 @@
+{
+  "id": 563,
+  "card": "Wretched Ghost of the Attic",
+  "link": "/wiki/Wretched_Ghost_of_the_Attic_(TSC)",
+  "dc": 33,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Dark",
+  "level": 2,
+  "atk": 550,
+  "def": 400,
+  "password": 17238333,
+  "description": "A diminutive fiend that hides in the attic of any house.\nIt does not cause too much mischief."
+}

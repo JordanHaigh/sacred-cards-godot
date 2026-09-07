@@ -1,0 +1,15 @@
+{
+  "id": 710,
+  "card": "Crab Turtle",
+  "link": "/wiki/Crab_Turtle_(TSC)",
+  "dc": 255,
+  "card_type": "Monster",
+  "monsterType": "Ritual Monster",
+  "type": "Aqua",
+  "alignment": "Divine",
+  "level": 8,
+  "atk": 2550,
+  "def": 2500,
+  "password": 91782219,
+  "description": "A powerful turtle from whose shell protrudes crab pincers.\nIt is very strong in terms of both ATK and DEF."
+}

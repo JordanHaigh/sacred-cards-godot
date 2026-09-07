@@ -1,0 +1,15 @@
+{
+  "id": 81,
+  "card": "Crawling Dragon #2",
+  "link": "/wiki/Crawling_Dragon_2_(TSC)",
+  "dc": 207,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Dinosaur",
+  "alignment": "Fiend",
+  "level": 4,
+  "atk": 1600,
+  "def": 1200,
+  "password": 38289717,
+  "description": "A ghoulish dinosaur with a mouth that pulverizes all it eats.\nIts attack power is quite high."
+}

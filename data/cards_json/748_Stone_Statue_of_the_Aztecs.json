@@ -1,0 +1,15 @@
+{
+  "id": 748,
+  "card": "Stone Statue of the Aztecs",
+  "link": "/wiki/Stone_Statue_of_the_Aztecs_(TSC)",
+  "dc": 319,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Rock",
+  "alignment": "Earth",
+  "level": 4,
+  "atk": 300,
+  "def": 2000,
+  "password": 31812496,
+  "description": "A monumental statue made in ancient times by a long lost culture.\nTens of thousands of sacrifices were made on it."
+}

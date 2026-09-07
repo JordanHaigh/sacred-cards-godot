@@ -1,0 +1,15 @@
+{
+  "id": 426,
+  "card": "Stone D.",
+  "link": "/wiki/Stone_D._(TSC)",
+  "dc": 6,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Rock",
+  "alignment": "Earth",
+  "level": 7,
+  "atk": 2000,
+  "def": 2300,
+  "password": 68171737,
+  "description": "A rugged dragon whose entire body is composed of boulders.\nBecause of its rocky build, its blows are heavy."
+}

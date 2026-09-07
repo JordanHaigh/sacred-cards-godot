@@ -1,0 +1,15 @@
+{
+  "id": 222,
+  "card": "Midnight Fiend",
+  "link": "/wiki/Midnight_Fiend_(TSC)",
+  "dc": 59,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Fiend",
+  "level": 2,
+  "atk": 800,
+  "def": 600,
+  "password": 83678433,
+  "description": "A fiendish bird monster that appears only late at night.\nIt is said to require a sacrifice for it to be summoned."
+}

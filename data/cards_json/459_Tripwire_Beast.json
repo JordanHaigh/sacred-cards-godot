@@ -1,0 +1,15 @@
+{
+  "id": 459,
+  "card": "Tripwire Beast",
+  "link": "/wiki/Tripwire_Beast_(TSC)",
+  "dc": 140,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Thunder",
+  "alignment": "Thunder",
+  "level": 4,
+  "atk": 1200,
+  "def": 1300,
+  "password": 45042329,
+  "description": "A peculiar four-legged creature with its head on the ground.\nIt generates powerful waves of electromagnetism to attack."
+}

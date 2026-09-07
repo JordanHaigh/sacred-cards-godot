@@ -1,0 +1,15 @@
+{
+  "id": 415,
+  "card": "Mechanicalchaser",
+  "link": "/wiki/Mechanicalchaser_(TSC)",
+  "dc": 274,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Machine",
+  "alignment": "Fiend",
+  "level": 4,
+  "atk": 1850,
+  "def": 800,
+  "password": 7359741,
+  "description": "A robotic hunter that capably serves the Machine King.\nIt pursues its targets relentlessly until they are caught."
+}

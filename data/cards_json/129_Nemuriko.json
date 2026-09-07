@@ -1,0 +1,15 @@
+{
+  "id": 129,
+  "card": "Nemuriko",
+  "link": "/wiki/Nemuriko_(TSC)",
+  "dc": 59,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Spellcaster",
+  "alignment": "Dark",
+  "level": 3,
+  "atk": 800,
+  "def": 700,
+  "password": 90963488,
+  "description": "A sleeping child that is swaddled in an enchanted scarf.\nIt can make all enemy monsters on the field fall asleep."
+}

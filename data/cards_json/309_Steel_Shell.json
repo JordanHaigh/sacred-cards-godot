@@ -1,0 +1,15 @@
+{
+  "id": 309,
+  "card": "Steel Shell",
+  "link": "/wiki/Steel_Shell_(TSC)",
+  "dc": 100,
+  "card_type": "Magic",
+  "monsterType": null,
+  "type": null,
+  "alignment": null,
+  "level": 0,
+  "atk": 0,
+  "def": 0,
+  "password": 2370081,
+  "description": "A tortoiselike shell that is made out of rugged steel.\nIt powers up only a monster that has a shell to begin with."
+}

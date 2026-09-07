@@ -1,0 +1,15 @@
+{
+  "id": 513,
+  "card": "Guardian of the Throne Room",
+  "link": "/wiki/Guardian_of_the_Throne_Room_(TSC)",
+  "dc": 220,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Machine",
+  "alignment": "Light",
+  "level": 4,
+  "atk": 1650,
+  "def": 1600,
+  "password": 47879985,
+  "description": "A robot that fulfills its guardian role with missile launchers.\nIts homing missiles track targets until they strike."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 719,
+  "card": "Dokurorider",
+  "link": "/wiki/Dokurorider_(TSC)",
+  "dc": 255,
+  "card_type": "Monster",
+  "monsterType": "Ritual Monster",
+  "type": "Zombie",
+  "alignment": "Divine",
+  "level": 6,
+  "atk": 1900,
+  "def": 1850,
+  "password": 99721536,
+  "description": "A solitary ghoul that rides a motorcycle with a skull.\nIt rides through wastelands in a cloud of dust."
+}

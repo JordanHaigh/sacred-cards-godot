@@ -1,0 +1,15 @@
+{
+  "id": 883,
+  "card": "Valkyrion the Magna Warrior",
+  "link": "/wiki/Valkyrion_the_Magna_Warrior_(TSC)",
+  "dc": 357,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Rock",
+  "alignment": "Earth",
+  "level": 8,
+  "atk": 3500,
+  "def": 3850,
+  "password": 75347539,
+  "description": "A magnetized warrior that can separate intoAlpha,Beta, andGammaif there are two or more openspaceson the ownfield."
+}

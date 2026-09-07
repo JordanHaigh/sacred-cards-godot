@@ -1,0 +1,15 @@
+{
+  "id": 736,
+  "card": "Blast Sphere",
+  "link": "/wiki/Blast_Sphere_(TSC)",
+  "dc": 161,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Machine",
+  "alignment": "Fire",
+  "level": 4,
+  "atk": 1400,
+  "def": 1400,
+  "password": 26302522,
+  "description": "A mechanized bomb that has hooks used for latching onto its enemy.\nIt defeats its for with a devastating explosion."
+}

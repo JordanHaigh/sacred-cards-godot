@@ -1,0 +1,15 @@
+{
+  "id": 197,
+  "card": "Mech Mole Zombie",
+  "link": "/wiki/Mech_Mole_Zombie_(TSC)",
+  "dc": 29,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Zombie",
+  "alignment": "Fiend",
+  "level": 2,
+  "atk": 500,
+  "def": 400,
+  "password": 63545455,
+  "description": "An undead monster with the build of a mole and bony hands.\nIt launches its skeletal hands like rockets to attack."
+}

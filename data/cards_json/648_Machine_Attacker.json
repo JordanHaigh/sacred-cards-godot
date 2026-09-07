@@ -1,0 +1,15 @@
+{
+  "id": 648,
+  "card": "Machine Attacker",
+  "link": "/wiki/Machine_Attacker_(TSC)",
+  "dc": 14,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Machine",
+  "alignment": "Fiend",
+  "level": 5,
+  "atk": 1600,
+  "def": 1300,
+  "password": 38116136,
+  "description": "A machine that was made to undertake suicidal ram attacks.\nIt plows over foes by charging recklessly."
+}

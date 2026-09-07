@@ -1,0 +1,15 @@
+{
+  "id": 267,
+  "card": "Unknown Warrior of Fiend",
+  "link": "/wiki/Unknown_Warrior_of_Fiend_(TSC)",
+  "dc": 87,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Warrior",
+  "alignment": "Dark",
+  "level": 3,
+  "atk": 1000,
+  "def": 500,
+  "password": 97360116,
+  "description": "A nameless warrior whose arm is in the form of a sword.\nIt creates a vacuum at high speed to tear at the foe."
+}

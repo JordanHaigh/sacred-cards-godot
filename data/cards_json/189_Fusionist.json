@@ -1,0 +1,15 @@
+{
+  "id": 189,
+  "card": "Fusionist",
+  "link": "/wiki/Fusionist_(TSC)",
+  "dc": 72,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Beast",
+  "alignment": "Forest",
+  "level": 3,
+  "atk": 900,
+  "def": 700,
+  "password": 1641882,
+  "description": "A feline monster that has angelic wings and a long tail.\nThe pink, furry tail is much longer than its body."
+}

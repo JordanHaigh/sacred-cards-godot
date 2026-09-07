@@ -1,0 +1,15 @@
+{
+  "id": 705,
+  "card": "Tri-Horned Dragon",
+  "link": "/wiki/Tri-Horned_Dragon_(TSC)",
+  "dc": 255,
+  "card_type": "Monster",
+  "monsterType": "Ritual Monster",
+  "type": "Dragon",
+  "alignment": "Divine",
+  "level": 8,
+  "atk": 2850,
+  "def": 2350,
+  "password": 39111158,
+  "description": "A divine dragon of enormous power belied by its appearance.\nIt is distinguished by the three horns on its head."
+}

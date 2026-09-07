@@ -1,0 +1,15 @@
+{
+  "id": 834,
+  "card": "The Winged Dragon of Ra",
+  "link": "/wiki/The_Winged_Dragon_of_Ra_(TSC)",
+  "dc": 0,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Machine",
+  "alignment": "Divine",
+  "level": 12,
+  "atk": 4000,
+  "def": 4000,
+  "password": null,
+  "description": "A dragon that has the power to cut itsLPto 1 and hit the\nopponent with the LP amount that it has lost."
+}

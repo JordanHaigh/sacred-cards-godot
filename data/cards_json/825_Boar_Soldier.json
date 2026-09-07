@@ -1,0 +1,15 @@
+{
+  "id": 825,
+  "card": "Boar Soldier",
+  "link": "/wiki/Boar_Soldier_(TSC)",
+  "dc": 319,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Beast-Warrior",
+  "alignment": "Earth",
+  "level": 4,
+  "atk": 2000,
+  "def": 500,
+  "password": 21340051,
+  "description": "A porcine beast warrior that wields a massive stone axe.\nIt destroys everything that happens to be within sight."
+}

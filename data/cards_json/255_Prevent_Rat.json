@@ -1,0 +1,15 @@
+{
+  "id": 255,
+  "card": "Prevent Rat",
+  "link": "/wiki/Prevent_Rat_(TSC)",
+  "dc": 319,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Beast",
+  "alignment": "Forest",
+  "level": 4,
+  "atk": 500,
+  "def": 2000,
+  "password": 549481,
+  "description": "A beast with a tough, blue shell made of hair bunched together.\nThe shell gives it a high degree of protection."
+}

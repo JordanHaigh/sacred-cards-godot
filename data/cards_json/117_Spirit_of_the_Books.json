@@ -1,0 +1,15 @@
+{
+  "id": 117,
+  "card": "Spirit of the Books",
+  "link": "/wiki/Spirit_of_the_Books_(TSC)",
+  "dc": 161,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Winged Beast",
+  "alignment": "Wind",
+  "level": 4,
+  "atk": 1400,
+  "def": 1200,
+  "password": 14037717,
+  "description": "A small, robed bird that serves as the spirit of books.\nIt can summon a Boo Koo to an open spot on the own field."
+}

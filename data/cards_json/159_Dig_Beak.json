@@ -1,0 +1,15 @@
+{
+  "id": 159,
+  "card": "Dig Beak",
+  "link": "/wiki/Dig_Beak_(TSC)",
+  "dc": 59,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Beast",
+  "alignment": "Forest",
+  "level": 2,
+  "atk": 500,
+  "def": 800,
+  "password": 29948642,
+  "description": "A reptilian beast with a long, snakelike body and a beak.\nIt curls up into a ball to roll and hack with its large beak."
+}

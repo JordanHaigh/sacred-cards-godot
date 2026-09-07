@@ -1,0 +1,15 @@
+{
+  "id": 369,
+  "card": "Wall Shadow",
+  "link": "/wiki/Wall_Shadow_(TSC)",
+  "dc": 95,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Warrior",
+  "alignment": "Fiend",
+  "level": 7,
+  "atk": 1600,
+  "def": 3000,
+  "password": 63162310,
+  "description": "A green-skinned zombie that scuttles quickly along walls.\nIt attacks at incredible speeds."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 208,
+  "card": "Petit Angel",
+  "link": "/wiki/Petit_Angel_(TSC)",
+  "dc": 72,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fairy",
+  "alignment": "Light",
+  "level": 3,
+  "atk": 600,
+  "def": 900,
+  "password": 38142739,
+  "description": "An extremely small angel that darts and dashes about quickly.\nIts small size and quick agility make it a difficult target."
+}

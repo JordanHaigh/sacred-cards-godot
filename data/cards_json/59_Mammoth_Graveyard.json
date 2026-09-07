@@ -1,0 +1,15 @@
+{
+  "id": 59,
+  "card": "Mammoth Graveyard",
+  "link": "/wiki/Mammoth_Graveyard_(TSC)",
+  "dc": 121,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Dinosaur",
+  "alignment": "Dark",
+  "level": 3,
+  "atk": 1200,
+  "def": 800,
+  "password": 40374923,
+  "description": "An animated skeleton of a mammoth with a debilitating power.\nIt can power down every monster on the enemy's field."
+}

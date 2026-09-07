@@ -1,0 +1,15 @@
+{
+  "id": 403,
+  "card": "Leogun",
+  "link": "/wiki/Leogun_(TSC)",
+  "dc": 32,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Beast",
+  "alignment": "Earth",
+  "level": 5,
+  "atk": 1750,
+  "def": 1550,
+  "password": 10538007,
+  "description": "A lion with a magnificent mane suitable for the king of beasts.\nIts body is similarly formidable."
+}

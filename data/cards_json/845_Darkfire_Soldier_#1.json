@@ -1,0 +1,15 @@
+{
+  "id": 845,
+  "card": "Darkfire Soldier #1",
+  "link": "/wiki/Darkfire_Soldier_1_(TSC)",
+  "dc": 233,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Pyro",
+  "alignment": "Fire",
+  "level": 4,
+  "atk": 1700,
+  "def": 1150,
+  "password": 5388481,
+  "description": "A covert operations specialist who is cloaked in flames.\nHe is an expert in the handling of explosives."
+}

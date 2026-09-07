@@ -1,0 +1,15 @@
+{
+  "id": 761,
+  "card": "Alligator's Sword",
+  "link": "/wiki/Alligator%27s_Sword_(TSC)",
+  "dc": 183,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Beast",
+  "alignment": "Wind",
+  "level": 4,
+  "atk": 1500,
+  "def": 1200,
+  "password": 64428736,
+  "description": "A lizardman that is highly skilled in the handling of swords.\nIt swings its sword at the speed of sound."
+}

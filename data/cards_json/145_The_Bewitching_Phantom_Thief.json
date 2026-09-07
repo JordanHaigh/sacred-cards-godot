@@ -1,0 +1,15 @@
+{
+  "id": 145,
+  "card": "The Bewitching Phantom Thief",
+  "link": "/wiki/The_Bewitching_Phantom_Thief_(TSC)",
+  "dc": 47,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Spellcaster",
+  "alignment": "Dreams",
+  "level": 2,
+  "atk": 700,
+  "def": 700,
+  "password": 24348204,
+  "description": "A suave and debonair thief who swaddles himself in a black cape.\nHe enchants enemies by exquisitely twirling his cane."
+}

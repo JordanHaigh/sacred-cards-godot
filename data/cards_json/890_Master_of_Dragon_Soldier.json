@@ -1,0 +1,15 @@
+{
+  "id": 890,
+  "card": "Master of Dragon Soldier",
+  "link": "/wiki/Master_of_Dragon_Soldier_(TSC)",
+  "dc": 169,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Dragon",
+  "alignment": "Divine",
+  "level": 12,
+  "atk": 5000,
+  "def": 5000,
+  "password": 62873545,
+  "description": "A huge and awesomely strong dragon that can be powered up\nbased on the number of dragons on the player's field."
+}

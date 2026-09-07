@@ -1,0 +1,15 @@
+{
+  "id": 729,
+  "card": "Toon Summoned Skull",
+  "link": "/wiki/Toon_Summoned_Skull_(TSC)",
+  "dc": 279,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Fiend",
+  "level": 6,
+  "atk": 2500,
+  "def": 1200,
+  "password": 91842653,
+  "description": "A cartoony skeleton fiend that has been summoned from its castle.\nIt is a Summoned Skull in the Toon World."
+}

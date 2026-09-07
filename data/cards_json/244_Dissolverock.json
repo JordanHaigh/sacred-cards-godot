@@ -1,0 +1,15 @@
+{
+  "id": 244,
+  "card": "Dissolverock",
+  "link": "/wiki/Dissolverock_(TSC)",
+  "dc": 87,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Rock",
+  "alignment": "Fire",
+  "level": 3,
+  "atk": 900,
+  "def": 1000,
+  "password": 40826495,
+  "description": "A bloblike monster that emerged into life from magma.\nIt is so intensely hot, it melts anything coming too close."
+}

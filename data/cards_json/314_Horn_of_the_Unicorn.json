@@ -1,0 +1,15 @@
+{
+  "id": 314,
+  "card": "Horn of the Unicorn",
+  "link": "/wiki/Horn_of_the_Unicorn_(TSC)",
+  "dc": 100,
+  "card_type": "Magic",
+  "monsterType": null,
+  "type": null,
+  "alignment": null,
+  "level": 0,
+  "atk": 0,
+  "def": 0,
+  "password": 64047146,
+  "description": "A spiraling horn that can boost power when it is equipped.\nIt is usable only by a dark monster with a horn on its head."
+}

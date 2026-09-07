@@ -1,0 +1,15 @@
+{
+  "id": 628,
+  "card": "Witch's Apprentice",
+  "link": "/wiki/Witch%27s_Apprentice_(TSC)",
+  "dc": 33,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Spellcaster",
+  "alignment": "Dark",
+  "level": 2,
+  "atk": 550,
+  "def": 500,
+  "password": 80741828,
+  "description": "A starting witch with the ability to power up shadow-type\nmonsters and power down light types on the own field."
+}

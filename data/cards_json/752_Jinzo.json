@@ -1,0 +1,15 @@
+{
+  "id": 752,
+  "card": "Jinzo",
+  "link": "/wiki/Jinzo_(TSC)",
+  "dc": 231,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Machine",
+  "alignment": "Thunder",
+  "level": 6,
+  "atk": 2400,
+  "def": 1500,
+  "password": 77585513,
+  "description": "An android of great power distinguished by its thick, long neck.\nIt can destroy all the trap cards on the opponent's field."
+}

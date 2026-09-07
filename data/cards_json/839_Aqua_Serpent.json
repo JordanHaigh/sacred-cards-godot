@@ -1,0 +1,15 @@
+{
+  "id": 839,
+  "card": "Aqua Serpent",
+  "link": "/wiki/Aqua_Serpent_(TSC)",
+  "dc": 183,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Aqua",
+  "alignment": "Water",
+  "level": 4,
+  "atk": 1500,
+  "def": 1200,
+  "password": 66259795,
+  "description": "An aquatic serpent that crawls along the bottom of the sea.\nIt suddenly appears and attacks when it spots prey."
+}

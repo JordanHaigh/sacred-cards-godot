@@ -1,0 +1,15 @@
+{
+  "id": 385,
+  "card": "Bickuribox",
+  "link": "/wiki/Bickuribox_(TSC)",
+  "dc": 6,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Fiend",
+  "level": 7,
+  "atk": 2300,
+  "def": 2000,
+  "password": 25655502,
+  "description": "A birdlike fiend that hides inside a Jack-in-the-box case.\nIt springs out without warning to strike."
+}

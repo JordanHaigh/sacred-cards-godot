@@ -1,0 +1,15 @@
+{
+  "id": 796,
+  "card": "Garnecia Elefantis",
+  "link": "/wiki/Garnecia_Elefantis_(TSC)",
+  "dc": 12,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Beast-Warrior",
+  "alignment": "Earth",
+  "level": 7,
+  "atk": 2400,
+  "def": 2000,
+  "password": 49888191,
+  "description": "An immense elephant being that boasts terrifying strength.\nFissures appear with every step it takes."
+}

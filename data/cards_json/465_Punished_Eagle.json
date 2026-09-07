@@ -1,0 +1,15 @@
+{
+  "id": 465,
+  "card": "Punished Eagle",
+  "link": "/wiki/Punished_Eagle_(TSC)",
+  "dc": 116,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Winged Beast",
+  "alignment": "Wind",
+  "level": 6,
+  "atk": 2100,
+  "def": 1800,
+  "password": 74703140,
+  "description": "An eagle that renders judgments from a lofty position.\nIt punishes those it finds guilty with silver talons."
+}

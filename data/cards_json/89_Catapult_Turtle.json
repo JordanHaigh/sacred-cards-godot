@@ -1,0 +1,15 @@
+{
+  "id": 89,
+  "card": "Catapult Turtle",
+  "link": "/wiki/Catapult_Turtle_(TSC)",
+  "dc": 86,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Aqua",
+  "alignment": "Water",
+  "level": 5,
+  "atk": 1000,
+  "def": 2000,
+  "password": 95727991,
+  "description": "A monster that can make all the unused monsters on the player's\nfield disappear and hit the foe with their combined power."
+}

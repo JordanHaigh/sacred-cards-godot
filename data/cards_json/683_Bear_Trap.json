@@ -1,0 +1,15 @@
+{
+  "id": 683,
+  "card": "Bear Trap",
+  "link": "/wiki/Bear_Trap_(TSC)",
+  "dc": 2,
+  "card_type": "Trap",
+  "monsterType": null,
+  "type": null,
+  "alignment": null,
+  "level": 0,
+  "atk": 0,
+  "def": 0,
+  "password": 78977532,
+  "description": "A trap card that is deadly to stronger monsters that attack it.\nIf the monster's ATK is 1,500 or less, the trap wipes it out."
+}

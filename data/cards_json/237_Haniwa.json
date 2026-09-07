@@ -1,0 +1,15 @@
+{
+  "id": 237,
+  "card": "Haniwa",
+  "link": "/wiki/Haniwa_(TSC)",
+  "dc": 29,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Rock",
+  "alignment": "Earth",
+  "level": 2,
+  "atk": 500,
+  "def": 500,
+  "password": 84285623,
+  "description": "An animated earthenware figurine from an ancient time.\nIt guards treasures in a tomb of a king from long ago."
+}

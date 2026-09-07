@@ -1,0 +1,15 @@
+{
+  "id": 623,
+  "card": "The Thing That Hides in the Mud",
+  "link": "/wiki/The_Thing_That_Hides_in_the_Mud_(TSC)",
+  "dc": 140,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Rock",
+  "alignment": "Earth",
+  "level": 4,
+  "atk": 1200,
+  "def": 1300,
+  "password": 18180762,
+  "description": "A goopy mess of a creature that lurks in dirt and mud unnoticed.\nIf the ground appears to melt, this monster will emerge."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 31,
+  "card": "Koumori Dragon",
+  "link": "/wiki/Koumori_Dragon_(TSC)",
+  "dc": 183,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Dragon",
+  "alignment": "Fiend",
+  "level": 4,
+  "atk": 1500,
+  "def": 1200,
+  "password": 67724379,
+  "description": "A vicious, batlike dragon with wings, long tail, and sharp teeth.\nIt spews a black and fiery breath that turns souls dark."
+}

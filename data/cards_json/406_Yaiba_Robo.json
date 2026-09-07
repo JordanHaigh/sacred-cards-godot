@@ -1,0 +1,15 @@
+{
+  "id": 406,
+  "card": "Yaiba Robo",
+  "link": "/wiki/Yaiba_Robo_(TSC)",
+  "dc": 140,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Machine",
+  "alignment": "Fiend",
+  "level": 4,
+  "atk": 1000,
+  "def": 1300,
+  "password": 10315429,
+  "description": "A thresherlike machine that conceals blades in its cube body.\nIn battle, it extends the blades to chop everything to bits."
+}

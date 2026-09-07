@@ -1,0 +1,15 @@
+{
+  "id": 768,
+  "card": "The Unhappy Maiden",
+  "link": "/wiki/The_Unhappy_Maiden_(TSC)",
+  "dc": 10,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Spellcaster",
+  "alignment": "Light",
+  "level": 1,
+  "atk": 0,
+  "def": 100,
+  "password": 51275027,
+  "description": "A pitiable young girl who is dressed in tattered old rags.\nShe ekes out her living by peddling wares in a town on a daily basis."
+}

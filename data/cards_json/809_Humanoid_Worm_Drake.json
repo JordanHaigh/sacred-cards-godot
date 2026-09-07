@@ -1,0 +1,15 @@
+{
+  "id": 809,
+  "card": "Humanoid Worm Drake",
+  "link": "/wiki/Humanoid_Worm_Drake_(TSC)",
+  "dc": 3,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Aqua",
+  "alignment": "Water",
+  "level": 7,
+  "atk": 2200,
+  "def": 2000,
+  "password": 5600127,
+  "description": "A gelatinous creature that was created from a fusion between a\nHumanoid Slime and a Worm Drake."
+}

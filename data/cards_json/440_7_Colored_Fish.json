@@ -1,0 +1,15 @@
+{
+  "id": 440,
+  "card": "7 Colored Fish",
+  "link": "/wiki/7_Colored_Fish_(TSC)",
+  "dc": 260,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fish",
+  "alignment": "Water",
+  "level": 4,
+  "atk": 1800,
+  "def": 800,
+  "password": 23771716,
+  "description": "An extremely rare fish in the seven colors of a rainbow.\nCapturing it is not a feat to be taken lightly."
+}

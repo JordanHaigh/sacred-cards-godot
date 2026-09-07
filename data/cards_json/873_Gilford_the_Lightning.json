@@ -1,0 +1,15 @@
+{
+  "id": 873,
+  "card": "Gilford the Lightning",
+  "link": "/wiki/Gilford_the_Lightning_(TSC)",
+  "dc": 58,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Warrior",
+  "alignment": "Light",
+  "level": 8,
+  "atk": 2800,
+  "def": 1400,
+  "password": 36354007,
+  "description": "A warrior of great strength with a devastating power.\nHe can wipe out all monsters on the foe's field."
+}

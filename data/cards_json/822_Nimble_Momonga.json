@@ -1,0 +1,15 @@
+{
+  "id": 822,
+  "card": "Nimble Momonga",
+  "link": "/wiki/Nimble_Momonga_(TSC)",
+  "dc": 87,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Beast",
+  "alignment": "Forest",
+  "level": 2,
+  "atk": 1000,
+  "def": 100,
+  "password": 22567609,
+  "description": "A flying squirrel that flies around its foe, out of reach.\nWhen it sees a chance, it goes for the foe's throat with fangs."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 524,
+  "card": "Star Boy",
+  "link": "/wiki/Star_Boy_(TSC)",
+  "dc": 33,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Aqua",
+  "alignment": "Water",
+  "level": 2,
+  "atk": 550,
+  "def": 500,
+  "password": 8201910,
+  "description": "An extraterrestrial life form from the far reaches of space.\nIt appears to enjoy life in water."
+}

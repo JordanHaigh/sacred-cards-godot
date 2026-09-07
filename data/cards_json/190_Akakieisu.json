@@ -1,0 +1,15 @@
+{
+  "id": 190,
+  "card": "Akakieisu",
+  "link": "/wiki/Akakieisu_(TSC)",
+  "dc": 87,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Spellcaster",
+  "alignment": "Dark",
+  "level": 3,
+  "atk": 1000,
+  "def": 800,
+  "password": 38035986,
+  "description": "A clownlike magician that lays death curses on its opponents.\nAnyone that listens to its spell chants grows faint."
+}

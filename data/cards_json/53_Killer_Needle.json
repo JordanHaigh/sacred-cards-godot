@@ -1,0 +1,15 @@
+{
+  "id": 53,
+  "card": "Killer Needle",
+  "link": "/wiki/Killer_Needle_(TSC)",
+  "dc": 121,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Insect",
+  "alignment": "Forest",
+  "level": 4,
+  "atk": 1200,
+  "def": 1000,
+  "password": 88979991,
+  "description": "An enormous bee that has more strength than it first appears.\nIt can be a serious threat if it were to swarm with others."
+}

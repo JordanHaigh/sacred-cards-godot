@@ -1,0 +1,15 @@
+{
+  "id": 296,
+  "card": "One-Eyed Shield Dragon",
+  "link": "/wiki/One-Eyed_Shield_Dragon_(TSC)",
+  "dc": 140,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Dragon",
+  "alignment": "Wind",
+  "level": 3,
+  "atk": 700,
+  "def": 1300,
+  "password": 33064647,
+  "description": "A birdlike dragon with one eye and a shield on its belly.\nThe shield is used for both defense and attack."
+}

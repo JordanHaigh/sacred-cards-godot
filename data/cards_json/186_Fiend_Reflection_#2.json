@@ -1,0 +1,15 @@
+{
+  "id": 186,
+  "card": "Fiend Reflection #2",
+  "link": "/wiki/Fiend_Reflection_2_(TSC)",
+  "dc": 161,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Winged Beast",
+  "alignment": "Dreams",
+  "level": 4,
+  "atk": 1100,
+  "def": 1400,
+  "password": 2863439,
+  "description": "A bird that clutches an enchanted mirror in its talons.\nIt summons other monsters through its mirror."
+}

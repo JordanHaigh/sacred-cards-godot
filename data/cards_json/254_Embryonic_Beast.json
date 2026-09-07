@@ -1,0 +1,15 @@
+{
+  "id": 254,
+  "card": "Embryonic Beast",
+  "link": "/wiki/Embryonic_Beast_(TSC)",
+  "dc": 53,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Fiend",
+  "level": 2,
+  "atk": 500,
+  "def": 750,
+  "password": 64154377,
+  "description": "A pitifully ugly fiend that failed to become fully mature.\nIt inhales all things with the hole on its belly."
+}

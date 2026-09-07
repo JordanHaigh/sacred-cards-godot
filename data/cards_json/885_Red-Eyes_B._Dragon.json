@@ -1,0 +1,15 @@
+{
+  "id": 885,
+  "card": "Red-Eyes B. Dragon",
+  "link": "/wiki/Red-Eyes_B._Dragon_(TSC)",
+  "dc": 12,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Dragon",
+  "alignment": "Fiend",
+  "level": 7,
+  "atk": 2400,
+  "def": 2000,
+  "password": null,
+  "description": "A sinister black dragon with eyes that shine a deep scarlet.\nIt furiously spouts black flames that incinerate all things."
+}

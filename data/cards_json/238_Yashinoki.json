@@ -1,0 +1,15 @@
+{
+  "id": 238,
+  "card": "Yashinoki",
+  "link": "/wiki/Yashinoki_(TSC)",
+  "dc": 59,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Plant",
+  "alignment": "Forest",
+  "level": 2,
+  "atk": 800,
+  "def": 600,
+  "password": 41061625,
+  "description": "An animated palm tree that developed its own sense of being.\nIt attacks by dropping coconuts that contain tasty juice."
+}

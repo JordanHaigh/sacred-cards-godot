@@ -1,0 +1,15 @@
+{
+  "id": 102,
+  "card": "Mask of Darkness",
+  "link": "/wiki/Mask_of_Darkness_(TSC)",
+  "dc": 72,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Dark",
+  "level": 2,
+  "atk": 900,
+  "def": 400,
+  "password": 28933734,
+  "description": "An animated mask created by a magician using dark powers.\nIt attacks using a dark power that cannot be seen."
+}

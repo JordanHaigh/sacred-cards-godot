@@ -1,0 +1,15 @@
+{
+  "id": 140,
+  "card": "Toad Master",
+  "link": "/wiki/Toad_Master_(TSC)",
+  "dc": 87,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Aqua",
+  "alignment": "Water",
+  "level": 3,
+  "atk": 1000,
+  "def": 1000,
+  "password": 62671448,
+  "description": "A green-skinned figure that has the power to control frogs.\nIt can summon a Frog the Jam to an open spot on the own field."
+}

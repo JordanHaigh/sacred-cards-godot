@@ -1,0 +1,15 @@
+{
+  "id": 562,
+  "card": "Needle Worm",
+  "link": "/wiki/Needle_Worm_(TSC)",
+  "dc": 53,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Insect",
+  "alignment": "Forest",
+  "level": 2,
+  "atk": 750,
+  "def": 600,
+  "password": 81843628,
+  "description": "An insect larva that has three sharp steel spikes on its head.\nDon't underestimate what this monster could do."
+}

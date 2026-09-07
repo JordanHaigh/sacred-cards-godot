@@ -1,0 +1,15 @@
+{
+  "id": 417,
+  "card": "Blast Juggler",
+  "link": "/wiki/Blast_Juggler_(TSC)",
+  "dc": 72,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Machine",
+  "alignment": "Fire",
+  "level": 3,
+  "atk": 800,
+  "def": 900,
+  "password": 70138455,
+  "description": "A mechanical monster that has the body of a time bomb.\nAbove all else it loves to explode."
+}

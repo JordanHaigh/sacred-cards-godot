@@ -1,0 +1,15 @@
+{
+  "id": 433,
+  "card": "Ancient Elf",
+  "link": "/wiki/Ancient_Elf_(TSC)",
+  "dc": 172,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Spellcaster",
+  "alignment": "Light",
+  "level": 4,
+  "atk": 1450,
+  "def": 1200,
+  "password": 93221206,
+  "description": "An elf that has lived for thousands upon thousands of years.\nIt controls elementals to attack foes."
+}

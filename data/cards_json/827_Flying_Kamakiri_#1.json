@@ -1,0 +1,15 @@
+{
+  "id": 827,
+  "card": "Flying Kamakiri #1",
+  "link": "/wiki/Flying_Kamakiri_1_(TSC)",
+  "dc": 161,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Insect",
+  "alignment": "Fire",
+  "level": 4,
+  "atk": 1400,
+  "def": 900,
+  "password": 84834865,
+  "description": "A dragonflylike insect that breathes intense flames to strike.\nIf it spots prey, it flies above it and spits fire immediately."
+}

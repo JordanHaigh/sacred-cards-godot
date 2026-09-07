@@ -1,0 +1,15 @@
+{
+  "id": 153,
+  "card": "Dokuroizo the Grim Reaper",
+  "link": "/wiki/Dokuroizo_the_Grim_Reaper_(TSC)",
+  "dc": 121,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Zombie",
+  "alignment": "Fiend",
+  "level": 3,
+  "atk": 900,
+  "def": 1200,
+  "password": 25882881,
+  "description": "A menacing grim reaper that wears a red hooded cloak.\nIt tries to take the souls of foes with hellish scythe slashes."
+}

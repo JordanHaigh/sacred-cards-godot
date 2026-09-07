@@ -1,0 +1,15 @@
+{
+  "id": 210,
+  "card": "Hinotama Soul",
+  "link": "/wiki/Hinotama_Soul_(TSC)",
+  "dc": 37,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Pyro",
+  "alignment": "Fire",
+  "level": 2,
+  "atk": 600,
+  "def": 500,
+  "password": 96851799,
+  "description": "A terrifying monster that is made up of intensely hot flames.\nIt charges into foes with its furiously flaming body."
+}

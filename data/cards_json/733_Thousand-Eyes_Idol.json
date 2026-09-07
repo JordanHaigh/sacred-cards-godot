@@ -1,0 +1,15 @@
+{
+  "id": 733,
+  "card": "Thousand-Eyes Idol",
+  "link": "/wiki/Thousand-Eyes_Idol_(TSC)",
+  "dc": 10,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Spellcaster",
+  "alignment": "Dreams",
+  "level": 1,
+  "atk": 0,
+  "def": 0,
+  "password": 27125110,
+  "description": "A strange, enchanted idol that has eyes all over its body.\nIt glares at foes to stop them in their tracks."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 867,
+  "card": "Executor - Makyura",
+  "link": "/wiki/Executor_-_Makyura_(TSC)",
+  "dc": 207,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Warrior",
+  "alignment": "Dark",
+  "level": 4,
+  "atk": 1600,
+  "def": 1200,
+  "password": 21593977,
+  "description": "A menacing monster that has been given the role of an executioner.\nIt slices up the condemned with the sharp claws on its forelegs."
+}

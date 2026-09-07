@@ -1,0 +1,15 @@
+{
+  "id": 429,
+  "card": "Goddess of Whim",
+  "link": "/wiki/Goddess_of_Whim_(TSC)",
+  "dc": 79,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Fairy",
+  "alignment": "Light",
+  "level": 3,
+  "atk": 950,
+  "def": 700,
+  "password": 67959180,
+  "description": "A female deity who is known for her unpredictably fickle ways.\nShe can sacrifice herself in exchange for drawing a new card."
+}

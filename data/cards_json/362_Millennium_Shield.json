@@ -1,0 +1,15 @@
+{
+  "id": 362,
+  "card": "Millennium Shield",
+  "link": "/wiki/Millennium_Shield_(TSC)",
+  "dc": 255,
+  "card_type": "Monster",
+  "monsterType": "Ritual Monster",
+  "type": "Warrior",
+  "alignment": "Divine",
+  "level": 5,
+  "atk": 0,
+  "def": 3000,
+  "password": 32012841,
+  "description": "One of the infamous and eagerly sought Millennium items.\nIt is said to withstand any attack, however hard."
+}

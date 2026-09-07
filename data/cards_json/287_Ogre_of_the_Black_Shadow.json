@@ -1,0 +1,15 @@
+{
+  "id": 287,
+  "card": "Ogre of the Black Shadow",
+  "link": "/wiki/Ogre_of_the_Black_Shadow_(TSC)",
+  "dc": 161,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Beast-Warrior",
+  "alignment": "Fiend",
+  "level": 4,
+  "atk": 1200,
+  "def": 1400,
+  "password": 45121025,
+  "description": "A foul ogre that has been possessed by a malevolent shadow.\nIt charges foes at an astounding speed."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 175,
+  "card": "Ancient Brain",
+  "link": "/wiki/Ancient_Brain_(TSC)",
+  "dc": 87,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Dark",
+  "level": 3,
+  "atk": 1000,
+  "def": 700,
+  "password": 42431843,
+  "description": "A fallen angel that has been banished from the heavens.\nIt is highly skilled at the use of dark powers for fighting."
+}

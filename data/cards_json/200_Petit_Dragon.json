@@ -1,0 +1,15 @@
+{
+  "id": 200,
+  "card": "Petit Dragon",
+  "link": "/wiki/Petit_Dragon_(TSC)",
+  "dc": 47,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Dragon",
+  "alignment": "Wind",
+  "level": 2,
+  "atk": 600,
+  "def": 700,
+  "password": 75356564,
+  "description": "A very tiny dragon with wings that are as large as its body.\nIt bravely attacks foes using its puny body to the fullest."
+}

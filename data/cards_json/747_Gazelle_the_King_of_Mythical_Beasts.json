@@ -1,0 +1,15 @@
+{
+  "id": 747,
+  "card": "Gazelle the King of Mythical Beasts",
+  "link": "/wiki/Gazelle_the_King_of_Mythical_Beasts_(TSC)",
+  "dc": 183,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Beast",
+  "alignment": "Dreams",
+  "level": 4,
+  "atk": 1500,
+  "def": 1200,
+  "password": 5818798,
+  "description": "A horned lion beast that reigns over mythical beasts.\nIt is said to have over 10,000 beasts under its command."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 228,
+  "card": "Wood Remains",
+  "link": "/wiki/Wood_Remains_(TSC)",
+  "dc": 87,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Zombie",
+  "alignment": "Forest",
+  "level": 3,
+  "atk": 1000,
+  "def": 900,
+  "password": 17733394,
+  "description": "A spectral being that had once been the master of a forest.\nIt has been resurrected at the hands of evil."
+}

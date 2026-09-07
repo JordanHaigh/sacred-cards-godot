@@ -1,0 +1,15 @@
+{
+  "id": 408,
+  "card": "Giant Mech-Soldier",
+  "link": "/wiki/Giant_Mech-Soldier_(TSC)",
+  "dc": 61,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Machine",
+  "alignment": "Fiend",
+  "level": 6,
+  "atk": 1750,
+  "def": 1900,
+  "password": 72299832,
+  "description": "A towering mechanical soldier armed with a massive axe.\nIt is so powerful, one blow of its axe can split the ground."
+}

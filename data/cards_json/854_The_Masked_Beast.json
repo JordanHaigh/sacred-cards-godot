@@ -1,0 +1,15 @@
+{
+  "id": 854,
+  "card": "The Masked Beast",
+  "link": "/wiki/The_Masked_Beast_(TSC)",
+  "dc": 142,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Fiend",
+  "level": 8,
+  "atk": 3200,
+  "def": 1800,
+  "password": 49064413,
+  "description": "A masked fiend with the torso of a human and a staff.\nIt has learned the world's most horrifying spell."
+}

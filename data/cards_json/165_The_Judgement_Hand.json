@@ -1,0 +1,15 @@
+{
+  "id": 165,
+  "card": "The Judgement Hand",
+  "link": "/wiki/The_Judgement_Hand_(TSC)",
+  "dc": 161,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Warrior",
+  "alignment": "Light",
+  "level": 3,
+  "atk": 1400,
+  "def": 700,
+  "password": 28003512,
+  "description": "A seemingly disembodied hand that is endowed with god's power.\nIt renders final judgments and metes harsh punishment."
+}

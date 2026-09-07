@@ -1,0 +1,15 @@
+{
+  "id": 690,
+  "card": "Fake Trap",
+  "link": "/wiki/Fake_Trap_(TSC)",
+  "dc": 0,
+  "card_type": "Trap",
+  "monsterType": null,
+  "type": null,
+  "alignment": null,
+  "level": 0,
+  "atk": 0,
+  "def": 0,
+  "password": 3027001,
+  "description": "A faketrap cardthat is intended only to fool the opponent.\nNothing happens if it is attacked."
+}

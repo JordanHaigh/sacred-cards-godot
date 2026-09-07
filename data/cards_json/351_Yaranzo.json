@@ -1,0 +1,15 @@
+{
+  "id": 351,
+  "card": "Yaranzo",
+  "link": "/wiki/Yaranzo_(TSC)",
+  "dc": 183,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Zombie",
+  "alignment": "Fiend",
+  "level": 4,
+  "atk": 1300,
+  "def": 1500,
+  "password": 71280811,
+  "description": "A wickedly devious being that guards a treasure chest from within.\nIt leaps out and attacks anyone trying to open the chest."
+}

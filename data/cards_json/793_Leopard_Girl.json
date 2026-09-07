@@ -1,0 +1,15 @@
+{
+  "id": 793,
+  "card": "Leopard Girl",
+  "link": "/wiki/Leopard_Girl_(TSC)",
+  "dc": 73,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Beast-Warrior",
+  "alignment": "Forest",
+  "level": 6,
+  "atk": 1950,
+  "def": 1700,
+  "password": 49000779,
+  "description": "A beast warrior that breathes on the neck of its foe.\nThe startled foe is then shredded by this quick being."
+}

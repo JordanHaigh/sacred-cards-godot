@@ -1,0 +1,15 @@
+{
+  "id": 532,
+  "card": "Gemini Elf",
+  "link": "/wiki/Gemini_Elf_(TSC)",
+  "dc": 289,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Spellcaster",
+  "alignment": "Light",
+  "level": 4,
+  "atk": 1900,
+  "def": 900,
+  "password": 69140098,
+  "description": "Twin elven sisters who practice in the ways of magic.\nThey take turns while they attack."
+}

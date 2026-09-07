@@ -1,0 +1,15 @@
+{
+  "id": 688,
+  "card": "Bad Reaction to Simochi",
+  "link": "/wiki/Bad_Reaction_to_Simochi_(TSC)",
+  "dc": 2,
+  "card_type": "Trap",
+  "monsterType": null,
+  "type": null,
+  "alignment": null,
+  "level": 0,
+  "atk": 0,
+  "def": 0,
+  "password": 40633297,
+  "description": "Atrap cardthat reverses theeffectof any healingspell card.\nIf a healing card is used, it injures the user."
+}

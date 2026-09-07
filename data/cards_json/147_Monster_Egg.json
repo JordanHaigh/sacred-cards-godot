@@ -1,0 +1,15 @@
+{
+  "id": 147,
+  "card": "Monster Egg",
+  "link": "/wiki/Monster_Egg_(TSC)",
+  "dc": 72,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Warrior",
+  "alignment": "Earth",
+  "level": 3,
+  "atk": 600,
+  "def": 900,
+  "password": 36121917,
+  "description": "An enigmatic warrior that hides itself inside a large egg shell.\nIt attacks by flinging the shell at its foe."
+}

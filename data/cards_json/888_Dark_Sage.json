@@ -1,0 +1,15 @@
+{
+  "id": 888,
+  "card": "Dark Sage",
+  "link": "/wiki/Dark_Sage_(TSC)",
+  "dc": 5,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Spellcaster",
+  "alignment": "Dark",
+  "level": 9,
+  "atk": 2800,
+  "def": 3200,
+  "password": 92377303,
+  "description": "An imposing and powerful sage that dons striking black clothes.\nHe is a Dark Magician who gained power over many years."
+}

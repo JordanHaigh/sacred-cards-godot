@@ -1,0 +1,15 @@
+{
+  "id": 772,
+  "card": "Sorcerer of the Doomed",
+  "link": "/wiki/Sorcerer_of_the_Doomed_(TSC)",
+  "dc": 172,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Spellcaster",
+  "alignment": "Dark",
+  "level": 4,
+  "atk": 1450,
+  "def": 1200,
+  "password": 49218300,
+  "description": "A ghoulish sorcerer that is skilled in the art of necromancy.\nIt has struck a contract with darkness."
+}

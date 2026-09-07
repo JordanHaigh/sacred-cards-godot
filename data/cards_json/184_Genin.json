@@ -1,0 +1,15 @@
+{
+  "id": 184,
+  "card": "Genin",
+  "link": "/wiki/Genin_(TSC)",
+  "dc": 72,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Spellcaster",
+  "alignment": "Dreams",
+  "level": 3,
+  "atk": 600,
+  "def": 900,
+  "password": 49370026,
+  "description": "A being that that uses its illusionary spells to beat foes.\nIt also conjures doves to carry out its attacks."
+}

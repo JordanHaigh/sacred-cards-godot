@@ -1,0 +1,15 @@
+{
+  "id": 263,
+  "card": "Rock Ogre Grotto #2",
+  "link": "/wiki/Rock_Ogre_Grotto_2_(TSC)",
+  "dc": 161,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Rock",
+  "alignment": "Earth",
+  "level": 3,
+  "atk": 700,
+  "def": 1400,
+  "password": 62193699,
+  "description": "A golem that emerged when boulders and rocks gathered together.\nIn battle, it petrifies, then destroys the foe."
+}

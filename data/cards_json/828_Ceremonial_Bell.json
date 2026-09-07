@@ -1,0 +1,15 @@
+{
+  "id": 828,
+  "card": "Ceremonial Bell",
+  "link": "/wiki/Ceremonial_Bell_(TSC)",
+  "dc": 274,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Spellcaster",
+  "alignment": "Light",
+  "level": 3,
+  "atk": 0,
+  "def": 1850,
+  "password": 20228463,
+  "description": "A gleaming bell that is used to mark celebratory occasions.\nIts pealing brings solace to those that hear it."
+}

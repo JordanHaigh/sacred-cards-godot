@@ -1,0 +1,15 @@
+{
+  "id": 567,
+  "card": "Darkworld Thorns",
+  "link": "/wiki/Darkworld_Thorns_(TSC)",
+  "dc": 121,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Plant",
+  "alignment": "Fiend",
+  "level": 3,
+  "atk": 1200,
+  "def": 900,
+  "password": 43500484,
+  "description": "A fiendish plant with vines that exists in the darkworld.\nIt ensnares anyone that tries to force their way through."
+}

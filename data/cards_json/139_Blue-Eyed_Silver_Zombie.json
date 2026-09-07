@@ -1,0 +1,15 @@
+{
+  "id": 139,
+  "card": "Blue-Eyed Silver Zombie",
+  "link": "/wiki/Blue-Eyed_Silver_Zombie_(TSC)",
+  "dc": 72,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Zombie",
+  "alignment": "Fiend",
+  "level": 3,
+  "atk": 900,
+  "def": 700,
+  "password": 35282433,
+  "description": "A horrifying being that fires a deadly ray from its one eye.\nThe ray is said to turn victims into zombies."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 219,
+  "card": "Solitude",
+  "link": "/wiki/Solitude_(TSC)",
+  "dc": 95,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Beast-Warrior",
+  "alignment": "Fiend",
+  "level": 3,
+  "atk": 1050,
+  "def": 1000,
+  "password": 84794011,
+  "description": "A centaurlike beast warrior with the body of a deer.\nIt is armed with a scythe that is said to drain away souls."
+}

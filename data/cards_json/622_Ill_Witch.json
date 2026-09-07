@@ -1,0 +1,15 @@
+{
+  "id": 622,
+  "card": "Ill Witch",
+  "link": "/wiki/Ill_Witch_(TSC)",
+  "dc": 14,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Spellcaster",
+  "alignment": "Light",
+  "level": 5,
+  "atk": 1600,
+  "def": 1500,
+  "password": 81686058,
+  "description": "A bedraggled girl who has the power to control the winds.\nShe whips up sudden gusts that can blow everything away."
+}

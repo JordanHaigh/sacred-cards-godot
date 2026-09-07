@@ -1,0 +1,15 @@
+{
+  "id": 100,
+  "card": "Battle Warrior",
+  "link": "/wiki/Battle_Warrior_(TSC)",
+  "dc": 87,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Warrior",
+  "alignment": "Earth",
+  "level": 3,
+  "atk": 700,
+  "def": 1000,
+  "password": 55550921,
+  "description": "A proud and muscle-bound warrior that has no use for weapons.\nInstead, it chooses to battle using only its bare knuckles."
+}

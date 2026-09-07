@@ -1,0 +1,15 @@
+{
+  "id": 832,
+  "card": "Obelisk the Tormentor",
+  "link": "/wiki/Obelisk_the_Tormentor_(TSC)",
+  "dc": 0,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Warrior",
+  "alignment": "Divine",
+  "level": 12,
+  "atk": 4000,
+  "def": 4000,
+  "password": null,
+  "description": "A monster that can wipe out allmonsterson the foe'sfield.\nAt the same time, it hits the foe with 4,000LPworth ofdamage."
+}

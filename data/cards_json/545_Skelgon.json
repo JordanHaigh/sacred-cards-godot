@@ -1,0 +1,15 @@
+{
+  "id": 545,
+  "card": "Skelgon",
+  "link": "/wiki/Skelgon_(TSC)",
+  "dc": 61,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Zombie",
+  "alignment": "Fiend",
+  "level": 6,
+  "atk": 1700,
+  "def": 1900,
+  "password": 32355828,
+  "description": "A zombie dragon of which little remains but its bones.\nDespite its skeletal state, it can fly."
+}

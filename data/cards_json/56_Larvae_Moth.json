@@ -1,0 +1,15 @@
+{
+  "id": 56,
+  "card": "Larvae Moth",
+  "link": "/wiki/Larvae_Moth_(TSC)",
+  "dc": 255,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Insect",
+  "alignment": "Forest",
+  "level": 2,
+  "atk": 500,
+  "def": 400,
+  "password": 87756343,
+  "description": "Because it is only an undeveloped larva, it is very weak.\nHowever, it grows into an enormous moth."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 120,
+  "card": "Dream Clown",
+  "link": "/wiki/Dream_Clown_(TSC)",
+  "dc": 121,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Warrior",
+  "alignment": "Dreams",
+  "level": 3,
+  "atk": 1200,
+  "def": 900,
+  "password": 13215230,
+  "description": "A peculiar, small being that has taken the guise of a clown.\nIts sweet dancing lulls the viewer to an eternal sleep."
+}

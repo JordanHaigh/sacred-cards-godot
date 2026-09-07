@@ -1,0 +1,15 @@
+{
+  "id": 516,
+  "card": "Muka Muka",
+  "link": "/wiki/Muka_Muka_(TSC)",
+  "dc": 37,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Rock",
+  "alignment": "Earth",
+  "level": 2,
+  "atk": 600,
+  "def": 300,
+  "password": 46657337,
+  "description": "An extremely irritating bug that annoys foes into huge rages.\nIt is adept at goading the furious foes into going out of control."
+}

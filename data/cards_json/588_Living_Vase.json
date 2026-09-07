@@ -1,0 +1,15 @@
+{
+  "id": 588,
+  "card": "Living Vase",
+  "link": "/wiki/Living_Vase_(TSC)",
+  "dc": 103,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Plant",
+  "alignment": "Forest",
+  "level": 3,
+  "atk": 900,
+  "def": 1100,
+  "password": 34320307,
+  "description": "An animated floral vase that scatters pollen from its flowers.\nWhile it is scattering pollen, it lunges and bites."
+}

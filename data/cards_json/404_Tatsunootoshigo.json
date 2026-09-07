@@ -1,0 +1,15 @@
+{
+  "id": 404,
+  "card": "Tatsunootoshigo",
+  "link": "/wiki/Tatsunootoshigo_(TSC)",
+  "dc": 14,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Beast",
+  "alignment": "Water",
+  "level": 5,
+  "atk": 1350,
+  "def": 1600,
+  "password": 47922711,
+  "description": "A bizarre monster with the torso of a horse and a fish's tail.\nIt gallops through the sea as if it were the wind."
+}

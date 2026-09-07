@@ -1,0 +1,15 @@
+{
+  "id": 218,
+  "card": "Two-Mouth Darkruler",
+  "link": "/wiki/Two-Mouth_Darkruler_(TSC)",
+  "dc": 72,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Dinosaur",
+  "alignment": "Fiend",
+  "level": 3,
+  "atk": 900,
+  "def": 700,
+  "password": 57305373,
+  "description": "A horrible dinosaur that has two gaping mouths and a horn.\nElectricity is charged in the horn and released from the mouth."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 763,
+  "card": "Parasite Paracide",
+  "link": "/wiki/Parasite_Paracide_(TSC)",
+  "dc": 29,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Insect",
+  "alignment": "Forest",
+  "level": 2,
+  "atk": 500,
+  "def": 300,
+  "password": 27911549,
+  "description": "A parasitic insect that obtains food from the hapless host.\nIt has the power to latch onto a monster on the foe's field."
+}

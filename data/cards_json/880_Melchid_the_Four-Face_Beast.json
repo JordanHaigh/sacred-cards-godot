@@ -1,0 +1,15 @@
+{
+  "id": 880,
+  "card": "Melchid the Four-Face Beast",
+  "link": "/wiki/Melchid_the_Four-Face_Beast_(TSC)",
+  "dc": 183,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Fiend",
+  "level": 4,
+  "atk": 1500,
+  "def": 1200,
+  "password": 86569121,
+  "description": "A strange monster that switches its four masks in battle.\nBy switching masks, it changes its attack modes four ways."
+}

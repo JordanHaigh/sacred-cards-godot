@@ -1,0 +1,15 @@
+{
+  "id": 431,
+  "card": "Ice Water",
+  "link": "/wiki/Ice_Water_(TSC)",
+  "dc": 112,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Aqua",
+  "alignment": "Water",
+  "level": 3,
+  "atk": 1150,
+  "def": 900,
+  "password": 20848593,
+  "description": "A blazingly red-haired mermaid with an aggressive nature.\nIt attacks using the spikes that grow from its body."
+}

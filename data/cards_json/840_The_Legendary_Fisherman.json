@@ -1,0 +1,15 @@
+{
+  "id": 840,
+  "card": "The Legendary Fisherman",
+  "link": "/wiki/The_Legendary_Fisherman_(TSC)",
+  "dc": 50,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Warrior",
+  "alignment": "Water",
+  "level": 5,
+  "atk": 1850,
+  "def": 1600,
+  "password": 3643300,
+  "description": "A whale-riding man of the sea with a compassionate spirit.\nHe cannot be bested by anyone when battling at sea."
+}

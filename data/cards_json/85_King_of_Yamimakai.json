@@ -1,0 +1,15 @@
+{
+  "id": 85,
+  "card": "King of Yamimakai",
+  "link": "/wiki/King_of_Yamimakai_(TSC)",
+  "dc": 331,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Fiend",
+  "level": 5,
+  "atk": 2600,
+  "def": 2300,
+  "password": 69455834,
+  "description": "A wickedly cruel being that bears an awful power of darkness.\nIt destroys all around it with its overwhelming power."
+}

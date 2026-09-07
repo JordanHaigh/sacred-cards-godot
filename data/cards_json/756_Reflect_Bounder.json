@@ -1,0 +1,15 @@
+{
+  "id": 756,
+  "card": "Reflect Bounder",
+  "link": "/wiki/Reflect_Bounder_(TSC)",
+  "dc": 233,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Spellcaster",
+  "alignment": "Fiend",
+  "level": 4,
+  "atk": 1700,
+  "def": 1000,
+  "password": 2851070,
+  "description": "A magical mirror being that can take the ATK power of a monster\non the foe's field to cause LP loss in return for its own life."
+}

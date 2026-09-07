@@ -1,0 +1,15 @@
+{
+  "id": 52,
+  "card": "Hercules Beetle",
+  "link": "/wiki/Hercules_Beetle_(TSC)",
+  "dc": 86,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Insect",
+  "alignment": "Forest",
+  "level": 5,
+  "atk": 1500,
+  "def": 2000,
+  "password": 52584282,
+  "description": "A gigantic stag beetle with imposing horns and a hard shell.\nIts horn attack and rugged defense make it very tough."
+}

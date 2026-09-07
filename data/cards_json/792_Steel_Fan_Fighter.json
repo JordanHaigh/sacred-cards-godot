@@ -1,0 +1,15 @@
+{
+  "id": 792,
+  "card": "Steel Fan Fighter",
+  "link": "/wiki/Steel_Fan_Fighter_(TSC)",
+  "dc": 150,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Warrior",
+  "alignment": "Wind",
+  "level": 6,
+  "atk": 2200,
+  "def": 1850,
+  "password": 13616074,
+  "description": "A warrior who uses a steel fan that is etched with a dragon.\nHe battles as if he were dancing."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 48,
+  "card": "Sangan",
+  "link": "/wiki/Sangan_(TSC)",
+  "dc": 87,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Fiend",
+  "level": 3,
+  "atk": 1000,
+  "def": 600,
+  "password": 26202165,
+  "description": "A smaller fiend with a set of three malevolent eyes.\nIt becomes more powerful in darkness."
+}

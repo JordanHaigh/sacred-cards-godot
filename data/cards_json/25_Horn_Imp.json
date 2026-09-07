@@ -1,0 +1,15 @@
+{
+  "id": 25,
+  "card": "Horn Imp",
+  "link": "/wiki/Horn_Imp_(TSC)",
+  "dc": 140,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Fiend",
+  "level": 4,
+  "atk": 1300,
+  "def": 1000,
+  "password": 69669405,
+  "description": "A small fiend that dwells among shadows and darkness.\nDespite its stature, it is surprisingly strong. Beware of its horn."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 593,
+  "card": "Giant Turtle Who Feeds on Flames",
+  "link": "/wiki/Giant_Turtle_Who_Feeds_on_Flames_(TSC)",
+  "dc": 41,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Aqua",
+  "alignment": "Water",
+  "level": 5,
+  "atk": 1400,
+  "def": 1800,
+  "password": 96981563,
+  "description": "An enormous turtle whose bright red shell bristles with spikes.\nIt is said to feed on fire."
+}

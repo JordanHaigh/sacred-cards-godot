@@ -1,0 +1,15 @@
+{
+  "id": 535,
+  "card": "Kamakiriman",
+  "link": "/wiki/Kamakiriman_(TSC)",
+  "dc": 161,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Insect",
+  "alignment": "Forest",
+  "level": 4,
+  "atk": 1150,
+  "def": 1400,
+  "password": 68928540,
+  "description": "A praying mantis monster that stands erect like a human.\nIt attacks using the two scythelike forelegs."
+}

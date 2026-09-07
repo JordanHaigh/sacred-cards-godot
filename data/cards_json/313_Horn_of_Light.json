@@ -1,0 +1,15 @@
+{
+  "id": 313,
+  "card": "Horn of Light",
+  "link": "/wiki/Horn_of_Light_(TSC)",
+  "dc": 100,
+  "card_type": "Magic",
+  "monsterType": null,
+  "type": null,
+  "alignment": null,
+  "level": 0,
+  "atk": 0,
+  "def": 0,
+  "password": 38552107,
+  "description": "A glowing horn that is used to power up a horned being.\nIt has no effect on dark monsters."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 348,
+  "card": "Swords of Revealing Light",
+  "link": "/wiki/Swords_of_Revealing_Light_(TSC)",
+  "dc": 200,
+  "card_type": "Magic",
+  "monsterType": null,
+  "type": null,
+  "alignment": null,
+  "level": 0,
+  "atk": 0,
+  "def": 0,
+  "password": 72302403,
+  "description": "A spell that reveals all the foe's monsters over three turns.\nThe opposing monsters are prevented from attacking over that time."
+}

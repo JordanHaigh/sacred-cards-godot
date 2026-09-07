@@ -1,0 +1,15 @@
+{
+  "id": 621,
+  "card": "Succubus Knight",
+  "link": "/wiki/Succubus_Knight_(TSC)",
+  "dc": 19,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Warrior",
+  "alignment": "Dark",
+  "level": 5,
+  "atk": 1650,
+  "def": 1300,
+  "password": 55291359,
+  "description": "A multi-armed magician who is skilled at casting dark spells.\nWith her dark powers, she slaughters all opponents."
+}

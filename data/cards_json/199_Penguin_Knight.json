@@ -1,0 +1,15 @@
+{
+  "id": 199,
+  "card": "Penguin Knight",
+  "link": "/wiki/Penguin_Knight_(TSC)",
+  "dc": 72,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Aqua",
+  "alignment": "Earth",
+  "level": 3,
+  "atk": 900,
+  "def": 800,
+  "password": 36039163,
+  "description": "An imperious penguin that is armed with an imposing sword.\nIt leaps and slides on its belly to make a charge at foes."
+}

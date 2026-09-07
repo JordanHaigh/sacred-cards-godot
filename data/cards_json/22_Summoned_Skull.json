@@ -1,0 +1,15 @@
+{
+  "id": 22,
+  "card": "Summoned Skull",
+  "link": "/wiki/Summoned_Skull_(TSC)",
+  "dc": 279,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Fiend",
+  "level": 6,
+  "atk": 2500,
+  "def": 1200,
+  "password": 70781052,
+  "description": "A skeletal fiend that fools people with the power of darkness.\nIt is among the stronger of the fiend types."
+}

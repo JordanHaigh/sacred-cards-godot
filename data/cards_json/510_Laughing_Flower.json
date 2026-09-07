@@ -1,0 +1,15 @@
+{
+  "id": 510,
+  "card": "Laughing Flower",
+  "link": "/wiki/Laughing_Flower_(TSC)",
+  "dc": 72,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Plant",
+  "alignment": "Forest",
+  "level": 2,
+  "atk": 900,
+  "def": 500,
+  "password": 42591472,
+  "description": "A bizarre flowering plant that laughs without stop.\nHearing its laughter for too long leads to confusion."
+}

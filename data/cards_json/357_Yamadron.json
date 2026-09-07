@@ -1,0 +1,15 @@
+{
+  "id": 357,
+  "card": "Yamadron",
+  "link": "/wiki/Yamadron_(TSC)",
+  "dc": 255,
+  "card_type": "Monster",
+  "monsterType": "Ritual Monster",
+  "type": "Dragon",
+  "alignment": "Divine",
+  "level": 5,
+  "atk": 1600,
+  "def": 1800,
+  "password": 70345785,
+  "description": "A spiked dragon with three heads that breathe fire.\nIt sets its surroundings ablaze in a sea of flames."
+}

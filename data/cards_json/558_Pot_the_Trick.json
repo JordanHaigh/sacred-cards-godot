@@ -1,0 +1,15 @@
+{
+  "id": 558,
+  "card": "Pot the Trick",
+  "link": "/wiki/Pot_the_Trick_(TSC)",
+  "dc": 22,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Rock",
+  "alignment": "Fiend",
+  "level": 2,
+  "atk": 400,
+  "def": 400,
+  "password": 55567161,
+  "description": "A familiar that loyally obeys every command of a magician.\nIt is not particularly strong in any way."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 71,
+  "card": "Jellyfish",
+  "link": "/wiki/Jellyfish_(TSC)",
+  "dc": 183,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Aqua",
+  "alignment": "Water",
+  "level": 4,
+  "atk": 1200,
+  "def": 1500,
+  "password": 14851496,
+  "description": "A jellyfish that drifts aimlessly on the sea among waves.\nIts body is translucent, making it hard to distinguish its shape."
+}

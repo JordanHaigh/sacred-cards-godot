@@ -1,0 +1,15 @@
+{
+  "id": 708,
+  "card": "Cosmo Queen",
+  "link": "/wiki/Cosmo_Queen_(TSC)",
+  "dc": 255,
+  "card_type": "Monster",
+  "monsterType": "Ritual Monster",
+  "type": "Spellcaster",
+  "alignment": "Divine",
+  "level": 8,
+  "atk": 2900,
+  "def": 2450,
+  "password": 38999506,
+  "description": "A woman of distinguished demeanor and enormous power.\nShe is said to rule over all the stars and planets in the cosmos."
+}

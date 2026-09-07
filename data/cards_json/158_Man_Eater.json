@@ -1,0 +1,15 @@
+{
+  "id": 158,
+  "card": "Man Eater",
+  "link": "/wiki/Man_Eater_(TSC)",
+  "dc": 59,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Plant",
+  "alignment": "Forest",
+  "level": 2,
+  "atk": 800,
+  "def": 600,
+  "password": 93553943,
+  "description": "A carnivorous plant that feasts on the flesh of humans.\nIt attacks with its toxic tentacles."
+}

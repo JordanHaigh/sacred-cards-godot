@@ -1,0 +1,15 @@
+{
+  "id": 503,
+  "card": "Turtle Raccoon",
+  "link": "/wiki/Turtle_Raccoon_(TSC)",
+  "dc": 72,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Aqua",
+  "alignment": "Forest",
+  "level": 3,
+  "atk": 700,
+  "def": 900,
+  "password": 17441953,
+  "description": "A rotund little raccoon that shoulders a large turtle shell.\nIt tricks foes using transformation and illusion techniques."
+}

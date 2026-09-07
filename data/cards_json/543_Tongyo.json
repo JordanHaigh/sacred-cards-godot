@@ -1,0 +1,15 @@
+{
+  "id": 543,
+  "card": "Tongyo",
+  "link": "/wiki/Tongyo_(TSC)",
+  "dc": 150,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fish",
+  "alignment": "Water",
+  "level": 4,
+  "atk": 1350,
+  "def": 800,
+  "password": 69572024,
+  "description": "A vampiric fish that uses its tongue to capture other fish.\nIt then uses the elongated tongue to drain the prey of energy."
+}

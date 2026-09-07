@@ -1,0 +1,15 @@
+{
+  "id": 774,
+  "card": "Drill Bug",
+  "link": "/wiki/Drill_Bug_(TSC)",
+  "dc": 103,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Insect",
+  "alignment": "Earth",
+  "level": 2,
+  "atk": 1100,
+  "def": 200,
+  "password": 88733579,
+  "description": "A wormlike insect that burrows inside its foe's body to eat.\nIt is a dangerous monster that drains the prey from within."
+}

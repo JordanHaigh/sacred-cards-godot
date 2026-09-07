@@ -1,0 +1,15 @@
+{
+  "id": 171,
+  "card": "Big Eye",
+  "link": "/wiki/Big_Eye_(TSC)",
+  "dc": 121,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Dreams",
+  "level": 4,
+  "atk": 1200,
+  "def": 1000,
+  "password": 16768387,
+  "description": "A bizarre being that has eyes peering from all over its body.\nIt uses the numerous eyes to hypnotize its foes."
+}

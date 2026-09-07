@@ -1,0 +1,15 @@
+{
+  "id": 150,
+  "card": "Akihiron",
+  "link": "/wiki/Akihiron_(TSC)",
+  "dc": 25,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Aqua",
+  "alignment": "Water",
+  "level": 5,
+  "atk": 1700,
+  "def": 1400,
+  "password": 36904469,
+  "description": "A bizarre creature that hides itself in the safety of water.\nIts strange appearance is mind-boggling."
+}

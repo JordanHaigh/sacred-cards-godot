@@ -1,0 +1,15 @@
+{
+  "id": 192,
+  "card": "Key Mace",
+  "link": "/wiki/Key_Mace_(TSC)",
+  "dc": 22,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fairy",
+  "alignment": "Light",
+  "level": 1,
+  "atk": 400,
+  "def": 300,
+  "password": 1929294,
+  "description": "A very small angel that is the picture of cuteness with its key.\nIts adorable qualities let it unlock the hearts of its foes."
+}

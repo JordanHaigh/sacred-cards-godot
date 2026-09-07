@@ -1,0 +1,15 @@
+{
+  "id": 824,
+  "card": "Shining Angel",
+  "link": "/wiki/Shining_Angel_(TSC)",
+  "dc": 161,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fairy",
+  "alignment": "Light",
+  "level": 4,
+  "atk": 1400,
+  "def": 800,
+  "password": 95956346,
+  "description": "An ethereal fairy that shoots a beam from the halo on it head.\nThe beam stops foes in their tracks."
+}

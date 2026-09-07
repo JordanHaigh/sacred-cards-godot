@@ -1,0 +1,15 @@
+{
+  "id": 575,
+  "card": "Ancient One of the Deep Forest",
+  "link": "/wiki/Ancient_One_of_the_Deep_Forest_(TSC)",
+  "dc": 61,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Beast",
+  "alignment": "Forest",
+  "level": 6,
+  "atk": 1800,
+  "def": 1900,
+  "password": 14015067,
+  "description": "A white goat that has lived in a forest for many, many years.\nIt is also known as the ancient sage of the forest."
+}

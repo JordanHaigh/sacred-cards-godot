@@ -1,0 +1,15 @@
+{
+  "id": 709,
+  "card": "Chakra",
+  "link": "/wiki/Chakra_(TSC)",
+  "dc": 255,
+  "card_type": "Monster",
+  "monsterType": "Ritual Monster",
+  "type": "Fiend",
+  "alignment": "Divine",
+  "level": 7,
+  "atk": 2450,
+  "def": 2000,
+  "password": 65393205,
+  "description": "A bizarre fiend that has the ability to alter its body shape.\nWhile it shifts shape, it strikes with tentaclelike arms."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 295,
+  "card": "Bio Plant",
+  "link": "/wiki/Bio_Plant_(TSC)",
+  "dc": 140,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Forest",
+  "level": 3,
+  "atk": 600,
+  "def": 1300,
+  "password": 7670542,
+  "description": "A hideous monstrosity of a plant with many eyes and legs.\nIt was made as a result of an experiment gone horribly wrong."
+}

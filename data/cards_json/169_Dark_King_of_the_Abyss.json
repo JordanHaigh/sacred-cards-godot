@@ -1,0 +1,15 @@
+{
+  "id": 169,
+  "card": "Dark King of the Abyss",
+  "link": "/wiki/Dark_King_of_the_Abyss_(TSC)",
+  "dc": 121,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Dark",
+  "level": 3,
+  "atk": 1200,
+  "def": 800,
+  "password": 53375573,
+  "description": "A powerful fiend that rules the dark world of the Abyss.\nIt is said to have had the power to rule all that is darkness."
+}

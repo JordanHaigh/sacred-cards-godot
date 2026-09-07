@@ -1,0 +1,15 @@
+{
+  "id": 87,
+  "card": "Dark Chimera",
+  "link": "/wiki/Dark_Chimera_(TSC)",
+  "dc": 116,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Dark",
+  "level": 5,
+  "atk": 2100,
+  "def": 1900,
+  "password": 32344688,
+  "description": "A powerful monster that dwells in the dark world of fiends.\nIt attacks by breathing the fires of darkness."
+}

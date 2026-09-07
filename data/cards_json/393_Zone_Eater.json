@@ -1,0 +1,15 @@
+{
+  "id": 393,
+  "card": "Zone Eater",
+  "link": "/wiki/Zone_Eater_(TSC)",
+  "dc": 14,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Aqua",
+  "alignment": "Water",
+  "level": 1,
+  "atk": 250,
+  "def": 200,
+  "password": 86100785,
+  "description": "A buoyant sea cucumber that drifts aimlessly in water.\nIt sucks in enemies and slowly digests them."
+}

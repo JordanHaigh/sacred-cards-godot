@@ -1,0 +1,15 @@
+{
+  "id": 223,
+  "card": "Roaring Ocean Snake",
+  "link": "/wiki/Roaring_Ocean_Snake_(TSC)",
+  "dc": 116,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Aqua",
+  "alignment": "Water",
+  "level": 6,
+  "atk": 2100,
+  "def": 1800,
+  "password": 19066538,
+  "description": "A gigantic sea serpent that emerges from the waves in a storm.\nIt creates towering tidal waves that swallow all in their path."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 863,
+  "card": "Thunder Nyan Nyan",
+  "link": "/wiki/Thunder_Nyan_Nyan_(TSC)",
+  "dc": 289,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Thunder",
+  "alignment": "Light",
+  "level": 4,
+  "atk": 1900,
+  "def": 800,
+  "password": 70797118,
+  "description": "A clumsy elemental infant who lives on the tops of clouds.\nShe often falls, causing lightning to crash down each time."
+}

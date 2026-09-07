@@ -1,0 +1,15 @@
+{
+  "id": 613,
+  "card": "Twin-Headed Thunder Dragon",
+  "link": "/wiki/Twin-Headed_Thunder_Dragon_(TSC)",
+  "dc": 58,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Thunder",
+  "alignment": "Thunder",
+  "level": 7,
+  "atk": 2800,
+  "def": 2100,
+  "password": 54752875,
+  "description": "A Thunder Dragon that has grown an additional head.\nIt looses devastating thunderbolts to attack."
+}

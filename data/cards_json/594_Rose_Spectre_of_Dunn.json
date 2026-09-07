@@ -1,0 +1,15 @@
+{
+  "id": 594,
+  "card": "Rose Spectre of Dunn",
+  "link": "/wiki/Rose_Spectre_of_Dunn_(TSC)",
+  "dc": 86,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Plant",
+  "alignment": "Fiend",
+  "level": 6,
+  "atk": 2000,
+  "def": 1800,
+  "password": 32485271,
+  "description": "A dark being that makes its home among beautiful rose flowers.\nIt drains the souls of its victims to feed the plant."
+}

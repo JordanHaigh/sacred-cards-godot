@@ -1,0 +1,15 @@
+{
+  "id": 637,
+  "card": "Trent",
+  "link": "/wiki/Trent_(TSC)",
+  "dc": 41,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Plant",
+  "alignment": "Forest",
+  "level": 5,
+  "atk": 1500,
+  "def": 1800,
+  "password": 78780140,
+  "description": "A massive, ancient tree that guards a forest of fairies.\nIt can turn the field into a forest."
+}

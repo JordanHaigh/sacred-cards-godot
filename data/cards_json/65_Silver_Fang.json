@@ -1,0 +1,15 @@
+{
+  "id": 65,
+  "card": "Silver Fang",
+  "link": "/wiki/Silver_Fang_(TSC)",
+  "dc": 121,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Beast",
+  "alignment": "Forest",
+  "level": 3,
+  "atk": 1200,
+  "def": 800,
+  "password": 90357090,
+  "description": "A strikingly gorgeous wolf that glows in a whitish silver.\nDespite its beautiful look, it is extremely vicious."
+}

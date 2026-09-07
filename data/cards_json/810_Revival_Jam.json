@@ -1,0 +1,15 @@
+{
+  "id": 810,
+  "card": "Revival Jam",
+  "link": "/wiki/Revival_Jam_(TSC)",
+  "dc": 183,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Aqua",
+  "alignment": "Water",
+  "level": 4,
+  "atk": 1500,
+  "def": 500,
+  "password": 31709826,
+  "description": "A being that multiplies by splitting into two identical halves.\nIf there is room on the player's field it can split into two."
+}

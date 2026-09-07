@@ -1,0 +1,15 @@
+{
+  "id": 146,
+  "card": "Temple of Skulls",
+  "link": "/wiki/Temple_of_Skulls_(TSC)",
+  "dc": 140,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Zombie",
+  "alignment": "Dark",
+  "level": 4,
+  "atk": 900,
+  "def": 1300,
+  "password": 732302,
+  "description": "An eerie temple made entirely of a skull and some bones.\nIt draws in anyone unwary enough to get too close."
+}

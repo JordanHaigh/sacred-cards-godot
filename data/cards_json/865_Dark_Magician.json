@@ -1,0 +1,15 @@
+{
+  "id": 865,
+  "card": "Dark Magician",
+  "link": "/wiki/Dark_Magician_(TSC_alternate_password)",
+  "dc": 20,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Spellcaster",
+  "alignment": "Dark",
+  "level": 7,
+  "atk": 2500,
+  "def": 2100,
+  "password": 36996508,
+  "description": "A slender magician who is among the best of all his kind.\nHis attack and defense stats are top class."
+}

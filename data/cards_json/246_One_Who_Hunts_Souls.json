@@ -1,0 +1,15 @@
+{
+  "id": 246,
+  "card": "One Who Hunts Souls",
+  "link": "/wiki/One_Who_Hunts_Souls_(TSC)",
+  "dc": 103,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Beast-Warrior",
+  "alignment": "Fiend",
+  "level": 4,
+  "atk": 1100,
+  "def": 1000,
+  "password": 3606209,
+  "description": "A headless, centaurlike creature armed with a wicked sword.\nThe sword steals souls from those it cuts."
+}

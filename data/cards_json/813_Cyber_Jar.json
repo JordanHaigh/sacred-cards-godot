@@ -1,0 +1,15 @@
+{
+  "id": 813,
+  "card": "Cyber Jar",
+  "link": "/wiki/Cyber_Jar_(TSC)",
+  "dc": 72,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Rock",
+  "alignment": "Dark",
+  "level": 3,
+  "atk": 900,
+  "def": 900,
+  "password": 34124316,
+  "description": "A pod-type robot of a jarlike design from a future world.\nIt carries a powerful bomb inside its body."
+}

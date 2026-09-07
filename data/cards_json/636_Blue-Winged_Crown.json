@@ -1,0 +1,15 @@
+{
+  "id": 636,
+  "card": "Blue-Winged Crown",
+  "link": "/wiki/Blue-Winged_Crown_(TSC)",
+  "dc": 207,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Winged Beast",
+  "alignment": "Wind",
+  "level": 4,
+  "atk": 1600,
+  "def": 1200,
+  "password": 41396436,
+  "description": "A bird that is engulfed in flames, giving it a bluish white color.\nIt has a tuft of hair that looks like a crown."
+}

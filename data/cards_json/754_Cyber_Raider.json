@@ -1,0 +1,15 @@
+{
+  "id": 754,
+  "card": "Cyber Raider",
+  "link": "/wiki/Cyber_Raider_(TSC)",
+  "dc": 161,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Warrior",
+  "alignment": "Thunder",
+  "level": 4,
+  "atk": 1400,
+  "def": 1000,
+  "password": 39978267,
+  "description": "A helmeted and muscular brute whose identity is a secret.\nHe was a villain who perpetrated evil deeds in cyber space."
+}

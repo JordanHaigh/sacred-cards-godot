@@ -1,0 +1,15 @@
+{
+  "id": 462,
+  "card": "The Immortal of Thunder",
+  "link": "/wiki/The_Immortal_of_Thunder_(TSC)",
+  "dc": 183,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Thunder",
+  "alignment": "Thunder",
+  "level": 4,
+  "atk": 1500,
+  "def": 1300,
+  "password": 84926738,
+  "description": "A kindly-looking being that actually is very quick to anger.\nIt has no qualms about hitting anyone with a bolt of lightning."
+}

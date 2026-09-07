@@ -1,0 +1,15 @@
+{
+  "id": 762,
+  "card": "Insect Queen",
+  "link": "/wiki/Insect_Queen_(TSC)",
+  "dc": 12,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Insect",
+  "alignment": "Forest",
+  "level": 7,
+  "atk": 2200,
+  "def": 2400,
+  "password": 91512835,
+  "description": "A powerful creature that rules over the insects. It can be\npowered up based on the number of insects on the own field."
+}

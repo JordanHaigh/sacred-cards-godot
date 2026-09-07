@@ -1,0 +1,15 @@
+{
+  "id": 374,
+  "card": "Gate Guardian",
+  "link": "/wiki/Gate_Guardian_(TSC)",
+  "dc": 255,
+  "card_type": "Monster",
+  "monsterType": "Ritual Monster",
+  "type": "Warrior",
+  "alignment": "Divine",
+  "level": 11,
+  "atk": 3750,
+  "def": 3400,
+  "password": 25833572,
+  "description": "A combined being that consists of Sanga, Kazejin and Suijin.\nIts powers place it among the strongest of all beings."
+}

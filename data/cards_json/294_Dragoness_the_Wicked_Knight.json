@@ -1,0 +1,15 @@
+{
+  "id": 294,
+  "card": "Dragoness the Wicked Knight",
+  "link": "/wiki/Dragoness_the_Wicked_Knight_(TSC)",
+  "dc": 121,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Warrior",
+  "alignment": "Wind",
+  "level": 3,
+  "atk": 1200,
+  "def": 900,
+  "password": 70681994,
+  "description": "A winged knight that gained power through dragon equipment.\nIt hacks at foes from the sky, diving repeatedly."
+}

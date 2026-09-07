@@ -1,0 +1,15 @@
+{
+  "id": 412,
+  "card": "Giga-Tech Wolf",
+  "link": "/wiki/Giga-Tech_Wolf_(TSC)",
+  "dc": 161,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Machine",
+  "alignment": "Forest",
+  "level": 4,
+  "atk": 1200,
+  "def": 1400,
+  "password": 8471389,
+  "description": "A barbarous wolf whose entire body is constructed of steel.\nIt bites and tears at foes with sharply pointed fangs."
+}

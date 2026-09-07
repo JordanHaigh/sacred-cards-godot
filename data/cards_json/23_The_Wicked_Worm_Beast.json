@@ -1,0 +1,15 @@
+{
+  "id": 23,
+  "card": "The Wicked Worm Beast",
+  "link": "/wiki/The_Wicked_Worm_Beast_(TSC)",
+  "dc": 161,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Beast",
+  "alignment": "Earth",
+  "level": 3,
+  "atk": 1400,
+  "def": 700,
+  "password": 6285791,
+  "description": "An earthworm that became a monster from the power of darkness.\nIt burrows underground and attacks suddenly without warning."
+}

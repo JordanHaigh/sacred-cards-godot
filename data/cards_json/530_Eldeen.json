@@ -1,0 +1,15 @@
+{
+  "id": 530,
+  "card": "Eldeen",
+  "link": "/wiki/Eldeen_(TSC)",
+  "dc": 87,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Spellcaster",
+  "alignment": "Dark",
+  "level": 3,
+  "atk": 950,
+  "def": 1000,
+  "password": 6367785,
+  "description": "A young, magician who wields a staff bearing a blue gemstone.\nShe attacks with a variety of spells with her staff."
+}

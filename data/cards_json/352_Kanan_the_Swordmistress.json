@@ -1,0 +1,15 @@
+{
+  "id": 352,
+  "card": "Kanan the Swordmistress",
+  "link": "/wiki/Kanan_the_Swordmistress_(TSC)",
+  "dc": 161,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Warrior",
+  "alignment": "Earth",
+  "level": 4,
+  "atk": 1400,
+  "def": 1400,
+  "password": 12829151,
+  "description": "A female swordsman in armor wielding a sword and shield.\nShe floats like a butterfly and stings like a bee."
+}

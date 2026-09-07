@@ -1,0 +1,15 @@
+{
+  "id": 749,
+  "card": "Berfomet",
+  "link": "/wiki/Berfomet_(TSC)",
+  "dc": 41,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Fiend",
+  "level": 5,
+  "atk": 1400,
+  "def": 1800,
+  "password": 77207191,
+  "description": "An immense being with huge wings that keep it aloft.\nThe wings are said to be able to repel any wind."
+}

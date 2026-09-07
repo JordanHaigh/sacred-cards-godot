@@ -1,0 +1,15 @@
+{
+  "id": 45,
+  "card": "Oscillo Hero #2",
+  "link": "/wiki/Oscillo_Hero_2_(TSC)",
+  "dc": 87,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Thunder",
+  "alignment": "Thunder",
+  "level": 3,
+  "atk": 1000,
+  "def": 500,
+  "password": 27324313,
+  "description": "A small but tough robot with a strong thunderbolt attack.\nTreating it lightly could come as a nasty shock."
+}

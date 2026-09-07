@@ -1,0 +1,15 @@
+{
+  "id": 80,
+  "card": "Uraby",
+  "link": "/wiki/Uraby_(TSC)",
+  "dc": 183,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Dinosaur",
+  "alignment": "Earth",
+  "level": 4,
+  "atk": 1500,
+  "def": 800,
+  "password": 1784619,
+  "description": "A dinosaur that is adept at running at a very rapid pace.\nIt attacks with hooked, razor-sharp claws."
+}

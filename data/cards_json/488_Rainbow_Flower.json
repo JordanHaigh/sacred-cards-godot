@@ -1,0 +1,15 @@
+{
+  "id": 488,
+  "card": "Rainbow Flower",
+  "link": "/wiki/Rainbow_Flower_(TSC)",
+  "dc": 29,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Plant",
+  "alignment": "Forest",
+  "level": 2,
+  "atk": 400,
+  "def": 500,
+  "password": 21347810,
+  "description": "A one-eyed flower monster whose petals are in rainbow colors.\nIt lunges and bites at anyone getting too close."
+}

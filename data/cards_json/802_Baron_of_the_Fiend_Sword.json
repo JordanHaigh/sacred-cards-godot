@@ -1,0 +1,15 @@
+{
+  "id": 802,
+  "card": "Baron of the Fiend Sword",
+  "link": "/wiki/Baron_of_the_Fiend_Sword_(TSC)",
+  "dc": 195,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Dark",
+  "level": 4,
+  "atk": 1550,
+  "def": 800,
+  "password": 86325596,
+  "description": "A noble who brandishes a sword imbued with dark emotions.\nHe chases down quarry with grim and relentless purpose."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 497,
+  "card": "Yado Karu",
+  "link": "/wiki/Yado_Karu_(TSC)",
+  "dc": 233,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Aqua",
+  "alignment": "Water",
+  "level": 4,
+  "atk": 900,
+  "def": 1700,
+  "password": 29380133,
+  "description": "A hermit crab monster that has the head of a dragon.\nIt withdraws itself into the shell to take refuge."
+}

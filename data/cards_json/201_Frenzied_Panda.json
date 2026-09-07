@@ -1,0 +1,15 @@
+{
+  "id": 201,
+  "card": "Frenzied Panda",
+  "link": "/wiki/Frenzied_Panda_(TSC)",
+  "dc": 121,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Beast",
+  "alignment": "Forest",
+  "level": 4,
+  "atk": 1200,
+  "def": 1000,
+  "password": 98818516,
+  "description": "A seemingly adorable beast that actually is extremely aggressive.\nIt is always armed with a stout bamboo pole."
+}

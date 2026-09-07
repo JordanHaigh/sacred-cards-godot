@@ -1,0 +1,15 @@
+{
+  "id": 790,
+  "card": "The Inexperienced Spy",
+  "link": "/wiki/The_Inexperienced_Spy_(TSC)",
+  "dc": 2,
+  "card_type": "Magic",
+  "monsterType": null,
+  "type": null,
+  "alignment": null,
+  "level": 0,
+  "atk": 0,
+  "def": 0,
+  "password": 81820689,
+  "description": "Aspellthat enables the player to look at the foe'shand.\nAll the cards in the opponent's hand become visible."
+}

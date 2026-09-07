@@ -1,0 +1,15 @@
+{
+  "id": 413,
+  "card": "Cyber Soldier",
+  "link": "/wiki/Cyber_Soldier_(TSC)",
+  "dc": 25,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Machine",
+  "alignment": "Fiend",
+  "level": 5,
+  "atk": 1500,
+  "def": 1700,
+  "password": 44865098,
+  "description": "A mechanical soldier that serves the Machine King as a guard.\nIt rolls its round body to quickly reach enemies."
+}

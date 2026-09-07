@@ -1,0 +1,15 @@
+{
+  "id": 778,
+  "card": "Beast of Gilfer",
+  "link": "/wiki/Beast_of_Gilfer_(TSC)",
+  "dc": 279,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Fiend",
+  "alignment": "Dark",
+  "level": 6,
+  "atk": 2200,
+  "def": 2500,
+  "password": 50287060,
+  "description": "A peculiar, dragonlike fiend. In return for its own\ndemise, it can power down all monsters on the foe's field."
+}

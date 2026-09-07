@@ -1,0 +1,15 @@
+{
+  "id": 74,
+  "card": "Giant Soldier of Stone",
+  "link": "/wiki/Giant_Soldier_of_Stone_(TSC)",
+  "dc": 319,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Rock",
+  "alignment": "Earth",
+  "level": 3,
+  "atk": 1300,
+  "def": 2000,
+  "password": 13039848,
+  "description": "A massive warrior hewn from boulders that rattles the earth.\nIt has the power to turn the field into an arena."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 395,
+  "card": "Dancing Elf",
+  "link": "/wiki/Dancing_Elf_(TSC)",
+  "dc": 16,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fairy",
+  "alignment": "Forest",
+  "level": 1,
+  "atk": 300,
+  "def": 200,
+  "password": 59983499,
+  "description": "An angelic elf that reels and dances in the sky to music.\nThe wings also serve as sharp blades."
+}

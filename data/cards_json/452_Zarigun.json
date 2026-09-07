@@ -1,0 +1,15 @@
+{
+  "id": 452,
+  "card": "Zarigun",
+  "link": "/wiki/Zarigun_(TSC)",
+  "dc": 47,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Aqua",
+  "alignment": "Water",
+  "level": 2,
+  "atk": 600,
+  "def": 700,
+  "password": 10598400,
+  "description": "A hulking monster with pincers that evolved from a crayfish.\nIt aims for its opponent's neck with its large pincers."
+}

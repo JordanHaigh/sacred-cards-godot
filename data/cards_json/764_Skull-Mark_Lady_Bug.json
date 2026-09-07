@@ -1,0 +1,15 @@
+{
+  "id": 764,
+  "card": "Skull-Mark Lady Bug",
+  "link": "/wiki/Skull-Mark_Lady_Bug_(TSC)",
+  "dc": 183,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Insect",
+  "alignment": "Fiend",
+  "level": 3,
+  "atk": 500,
+  "def": 1500,
+  "password": 64306248,
+  "description": "A ladybug that has a skull-and-crossbones on its back.\nIn return for its own demise, it can restore LP by 500."
+}

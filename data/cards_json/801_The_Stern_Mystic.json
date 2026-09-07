@@ -1,0 +1,15 @@
+{
+  "id": 801,
+  "card": "The Stern Mystic",
+  "link": "/wiki/The_Stern_Mystic_(TSC)",
+  "dc": 183,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Spellcaster",
+  "alignment": "Light",
+  "level": 4,
+  "atk": 1500,
+  "def": 1200,
+  "password": 87557188,
+  "description": "A wise old magician whose stern demeanor reflect his high morals.\nBefore him, no lie can go unnoticed."
+}

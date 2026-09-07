@@ -1,0 +1,15 @@
+{
+  "id": 466,
+  "card": "Skull Red Bird",
+  "link": "/wiki/Skull_Red_Bird_(TSC)",
+  "dc": 195,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Winged Beast",
+  "alignment": "Wind",
+  "level": 4,
+  "atk": 1550,
+  "def": 1200,
+  "password": 10202894,
+  "description": "A deceptive bird that conceals knives among its feathers.\nIt drops the knives on foes to attack."
+}

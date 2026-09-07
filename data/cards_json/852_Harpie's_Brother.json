@@ -1,0 +1,15 @@
+{
+  "id": 852,
+  "card": "Harpie's Brother",
+  "link": "/wiki/Harpie%27s_Brother_(TSC)",
+  "dc": 260,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Winged Beast",
+  "alignment": "Wind",
+  "level": 4,
+  "atk": 1800,
+  "def": 600,
+  "password": 30532390,
+  "description": "A winged humanoid being who is able to fly at Mach 5 speed.\nHis eyes glint with a light sharper than a hawk's."
+}

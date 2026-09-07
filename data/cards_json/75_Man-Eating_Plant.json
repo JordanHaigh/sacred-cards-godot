@@ -1,0 +1,15 @@
+{
+  "id": 75,
+  "card": "Man-Eating Plant",
+  "link": "/wiki/Man-Eating_Plant_(TSC)",
+  "dc": 59,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Plant",
+  "alignment": "Dark",
+  "level": 2,
+  "atk": 800,
+  "def": 600,
+  "password": 49127943,
+  "description": "A thorny plant with what appears to be a lovely flower.\nHowever, the flower is used to swallow unsuspecting prey."
+}

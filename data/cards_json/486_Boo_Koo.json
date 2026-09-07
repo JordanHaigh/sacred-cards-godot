@@ -1,0 +1,15 @@
+{
+  "id": 486,
+  "card": "Boo Koo",
+  "link": "/wiki/Boo_Koo_(TSC)",
+  "dc": 42,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Spellcaster",
+  "alignment": "Light",
+  "level": 2,
+  "atk": 650,
+  "def": 500,
+  "password": 68963107,
+  "description": "A strange magician that has taken the form of a book.\nPrinted in its pages are spells of all kinds."
+}

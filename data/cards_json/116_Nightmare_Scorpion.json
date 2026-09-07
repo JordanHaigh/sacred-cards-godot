@@ -1,0 +1,15 @@
+{
+  "id": 116,
+  "card": "Nightmare Scorpion",
+  "link": "/wiki/Nightmare_Scorpion_(TSC)",
+  "dc": 72,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Insect",
+  "alignment": "Earth",
+  "level": 3,
+  "atk": 900,
+  "def": 800,
+  "password": 88643173,
+  "description": "A scorpion that lulls its foes to sleep and terrible nightmares.\nThe sleeping foe is then stabbed by its four toxic stingers."
+}

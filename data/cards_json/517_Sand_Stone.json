@@ -1,0 +1,15 @@
+{
+  "id": 517,
+  "card": "Sand Stone",
+  "link": "/wiki/Sand_Stone_(TSC)",
+  "dc": 14,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Rock",
+  "alignment": "Earth",
+  "level": 5,
+  "atk": 1300,
+  "def": 1600,
+  "password": 73051941,
+  "description": "A subterranean monster that ambushes unsuspecting foes.\nIt attacks the startled enemies with its tentacles."
+}

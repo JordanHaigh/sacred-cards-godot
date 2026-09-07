@@ -1,0 +1,15 @@
+{
+  "id": 399,
+  "card": "Swordsman from a Foreign Land",
+  "link": "/wiki/Swordsman_from_a_Foreign_Land_(TSC)",
+  "dc": 14,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Warrior",
+  "alignment": "Earth",
+  "level": 1,
+  "atk": 250,
+  "def": 250,
+  "password": 85255550,
+  "description": "A swordsman who has come from a land far off in the Orient.\nHe bears a sinister sword that is said to tear apart darkness."
+}

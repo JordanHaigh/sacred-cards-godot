@@ -1,0 +1,15 @@
+{
+  "id": 881,
+  "card": "Nuvia the Wicked",
+  "link": "/wiki/Nuvia_the_Wicked_(TSC)",
+  "dc": 319,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Dark",
+  "level": 4,
+  "atk": 2000,
+  "def": 800,
+  "password": 12953226,
+  "description": "A dark fiend that had once been a woman fixated on revenge.\nShe changed to this form by selling her soul to a dark entity."
+}

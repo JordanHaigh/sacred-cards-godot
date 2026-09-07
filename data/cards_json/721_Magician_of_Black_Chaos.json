@@ -1,0 +1,15 @@
+{
+  "id": 721,
+  "card": "Magician of Black Chaos",
+  "link": "/wiki/Magician_of_Black_Chaos_(TSC)",
+  "dc": 255,
+  "card_type": "Monster",
+  "monsterType": "Ritual Monster",
+  "type": "Spellcaster",
+  "alignment": "Divine",
+  "level": 8,
+  "atk": 2800,
+  "def": 2600,
+  "password": 30208479,
+  "description": "A master of magicians who embodies the sinister power of chaos.\nHe is the fusion of shadow and light."
+}

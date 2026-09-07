@@ -1,0 +1,15 @@
+{
+  "id": 164,
+  "card": "Lord of Zemia",
+  "link": "/wiki/Lord_of_Zemia_(TSC)",
+  "dc": 140,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Dark",
+  "level": 4,
+  "atk": 1300,
+  "def": 1000,
+  "password": 81618817,
+  "description": "A pagan deity in the form of a large winged creature.\nIt tricks foes into following a path of self-destruction."
+}

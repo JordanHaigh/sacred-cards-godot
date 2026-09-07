@@ -1,0 +1,15 @@
+{
+  "id": 427,
+  "card": "Kaiser Dragon",
+  "link": "/wiki/Kaiser_Dragon_(TSC)",
+  "dc": 6,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Dragon",
+  "alignment": "Light",
+  "level": 7,
+  "atk": 2300,
+  "def": 2000,
+  "password": 94566432,
+  "description": "The emperor of all dragons has batlike wings and huge pride.\nBefitting its status, its attacks are powerful."
+}

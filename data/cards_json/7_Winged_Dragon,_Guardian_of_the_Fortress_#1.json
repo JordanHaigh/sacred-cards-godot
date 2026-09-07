@@ -1,0 +1,15 @@
+{
+  "id": 7,
+  "card": "Winged Dragon, Guardian of the Fortress #1",
+  "link": "/wiki/Winged_Dragon,_Guardian_of_the_Fortress_1_(TSC)",
+  "dc": 161,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Dragon",
+  "alignment": "Wind",
+  "level": 4,
+  "atk": 1400,
+  "def": 1200,
+  "password": 87796900,
+  "description": "A winged dragon that stands guard at a mountain fortress.\nIt attacks by plummeting down from the sky in a steep dive."
+}

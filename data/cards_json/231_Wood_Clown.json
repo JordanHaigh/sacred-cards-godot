@@ -1,0 +1,15 @@
+{
+  "id": 231,
+  "card": "Wood Clown",
+  "link": "/wiki/Wood_Clown_(TSC)",
+  "dc": 121,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Warrior",
+  "alignment": "Dark",
+  "level": 3,
+  "atk": 800,
+  "def": 1200,
+  "password": 17511156,
+  "description": "A small, unpleasantly leering fiend in the form of a joker.\nIt cleverly parries away attacks with its sickle."
+}

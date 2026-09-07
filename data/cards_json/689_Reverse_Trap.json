@@ -1,0 +1,15 @@
+{
+  "id": 689,
+  "card": "Reverse Trap",
+  "link": "/wiki/Reverse_Trap_(TSC)",
+  "dc": 2,
+  "card_type": "Trap",
+  "monsterType": null,
+  "type": null,
+  "alignment": null,
+  "level": 0,
+  "atk": 0,
+  "def": 0,
+  "password": 77622396,
+  "description": "Atrap cardthat reverses the effect of any power-up card.\nIf a power-up card is used, it cuts power instead."
+}

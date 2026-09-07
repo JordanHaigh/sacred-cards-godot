@@ -1,0 +1,15 @@
+{
+  "id": 202,
+  "card": "Air Marmot of Nefariousness",
+  "link": "/wiki/Air_Marmot_of_Nefariousness_(TSC)",
+  "dc": 37,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Beast",
+  "alignment": "Fiend",
+  "level": 2,
+  "atk": 400,
+  "def": 600,
+  "password": 75889523,
+  "description": "A ferocious marmot that has the horn and wings of a fiend.\nIt attacks by hurling acorns."
+}

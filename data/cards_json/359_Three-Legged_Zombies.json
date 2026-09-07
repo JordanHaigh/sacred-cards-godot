@@ -1,0 +1,15 @@
+{
+  "id": 359,
+  "card": "Three-Legged Zombies",
+  "link": "/wiki/Three-Legged_Zombies_(TSC)",
+  "dc": 103,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Zombie",
+  "alignment": "Fiend",
+  "level": 3,
+  "atk": 1100,
+  "def": 800,
+  "password": 33734439,
+  "description": "A skeletal pair of comrades, one thin and one fat.\nThey appear to have some trouble walking in unison."
+}

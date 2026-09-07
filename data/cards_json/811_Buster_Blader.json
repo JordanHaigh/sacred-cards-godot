@@ -1,0 +1,15 @@
+{
+  "id": 811,
+  "card": "Buster Blader",
+  "link": "/wiki/Buster_Blader_(TSC)",
+  "dc": 30,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Warrior",
+  "alignment": "Earth",
+  "level": 7,
+  "atk": 2600,
+  "def": 2300,
+  "password": 78193831,
+  "description": "A warrior that can be powered up based on the number of\ndragons on the opponent's field."
+}

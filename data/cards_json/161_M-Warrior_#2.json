@@ -1,0 +1,15 @@
+{
+  "id": 161,
+  "card": "M-Warrior #2",
+  "link": "/wiki/M-Warrior_2_(TSC)",
+  "dc": 87,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Warrior",
+  "alignment": "Earth",
+  "level": 3,
+  "atk": 500,
+  "def": 1000,
+  "password": 92731455,
+  "description": "A striking, red-skinned warrior armed with a flat blade.\nIt can power up M-Warrior #1s on the own field."
+}

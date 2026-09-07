@@ -1,0 +1,15 @@
+{
+  "id": 799,
+  "card": "Cyber-Tech Alligator",
+  "link": "/wiki/Cyber-Tech_Alligator_(TSC)",
+  "dc": 279,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Machine",
+  "alignment": "Wind",
+  "level": 5,
+  "atk": 2500,
+  "def": 1600,
+  "password": 48766543,
+  "description": "A winged dragon that has been made powerful using technology.\nIt was made a cyborg by its owner on its deathbed."
+}

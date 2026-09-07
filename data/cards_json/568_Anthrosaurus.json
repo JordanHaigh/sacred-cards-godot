@@ -1,0 +1,15 @@
+{
+  "id": 568,
+  "card": "Anthrosaurus",
+  "link": "/wiki/Anthrosaurus_(TSC)",
+  "dc": 87,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Dinosaur",
+  "alignment": "Earth",
+  "level": 3,
+  "atk": 1000,
+  "def": 850,
+  "password": 89904598,
+  "description": "A standing dinosaur that has the build like that of humans.\nWhile it is highly intelligent, it is not very strong."
+}

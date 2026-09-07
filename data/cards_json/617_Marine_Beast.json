@@ -1,0 +1,15 @@
+{
+  "id": 617,
+  "card": "Marine Beast",
+  "link": "/wiki/Marine_Beast_(TSC)",
+  "dc": 25,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fish",
+  "alignment": "Water",
+  "level": 5,
+  "atk": 1700,
+  "def": 1600,
+  "password": 29929832,
+  "description": "A beastly being of the high seas with needle-sharp fangs.\nIf it buries its fangs in its foe, it will not let go."
+}

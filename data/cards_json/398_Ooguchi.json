@@ -1,0 +1,15 @@
+{
+  "id": 398,
+  "card": "Ooguchi",
+  "link": "/wiki/Ooguchi_(TSC)",
+  "dc": 16,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Aqua",
+  "alignment": "Water",
+  "level": 1,
+  "atk": 300,
+  "def": 250,
+  "password": 58861941,
+  "description": "A monster bullfrog with a grotesquely stretched mouth.\nTouching the spikes on its back causes numbness."
+}

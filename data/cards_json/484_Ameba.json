@@ -1,0 +1,15 @@
+{
+  "id": 484,
+  "card": "Ameba",
+  "link": "/wiki/Ameba_(TSC)",
+  "dc": 19,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Aqua",
+  "alignment": "Water",
+  "level": 1,
+  "atk": 300,
+  "def": 350,
+  "password": 95174353,
+  "description": "A gelatinous monster that engulfs prey completely from above.\nIt digests the trapped prey slowly to cause damage."
+}

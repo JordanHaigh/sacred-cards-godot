@@ -1,0 +1,15 @@
+{
+  "id": 450,
+  "card": "Kappa Avenger",
+  "link": "/wiki/Kappa_Avenger_(TSC)",
+  "dc": 121,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Aqua",
+  "alignment": "Water",
+  "level": 3,
+  "atk": 1200,
+  "def": 900,
+  "password": 48109103,
+  "description": "A traditional Japanese monster that lives only for revenge.\nIt sold its soul to evil for avenging the deaths of friends."
+}

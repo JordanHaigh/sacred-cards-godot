@@ -1,0 +1,15 @@
+{
+  "id": 878,
+  "card": "Legendary Fiend",
+  "link": "/wiki/Legendary_Fiend_(TSC)",
+  "dc": 41,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Fiend",
+  "alignment": "Dark",
+  "level": 6,
+  "atk": 1500,
+  "def": 1800,
+  "password": 99747800,
+  "description": "A fiend with large black wings that is described in legends.\nIt has the ability to power itself up."
+}

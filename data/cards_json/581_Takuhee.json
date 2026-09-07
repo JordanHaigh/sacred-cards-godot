@@ -1,0 +1,15 @@
+{
+  "id": 581,
+  "card": "Takuhee",
+  "link": "/wiki/Takuhee_(TSC)",
+  "dc": 172,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Winged Beast",
+  "alignment": "Wind",
+  "level": 4,
+  "atk": 1450,
+  "def": 1000,
+  "password": 3170832,
+  "description": "A glittering gold bird that is considered to be a bad omen.\nIts appearance always presages a tragedy."
+}

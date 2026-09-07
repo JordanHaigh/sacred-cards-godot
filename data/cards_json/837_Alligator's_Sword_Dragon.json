@@ -1,0 +1,15 @@
+{
+  "id": 837,
+  "card": "Alligator's Sword Dragon",
+  "link": "/wiki/Alligator%27s_Sword_Dragon_(TSC)",
+  "dc": 25,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Dragon",
+  "alignment": "Wind",
+  "level": 5,
+  "atk": 1700,
+  "def": 1500,
+  "password": 3366982,
+  "description": "A lizardman with a dragon steed created from the fusion of\na Baby Dragon and an Alligator's Sword."
+}

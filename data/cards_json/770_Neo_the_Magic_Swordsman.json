@@ -1,0 +1,15 @@
+{
+  "id": 770,
+  "card": "Neo the Magic Swordsman",
+  "link": "/wiki/Neo_the_Magic_Swordsman_(TSC)",
+  "dc": 233,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Spellcaster",
+  "alignment": "Earth",
+  "level": 4,
+  "atk": 1700,
+  "def": 1000,
+  "password": 50930991,
+  "description": "A swordsman who is equally adept at both swordplay and sorcery.\nHe is useful to have around as a comrade."
+}

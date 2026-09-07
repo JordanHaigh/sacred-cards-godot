@@ -1,0 +1,15 @@
+{
+  "id": 133,
+  "card": "Charubin the Fire Knight",
+  "link": "/wiki/Charubin_the_Fire_Knight_(TSC)",
+  "dc": 103,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Pyro",
+  "alignment": "Fire",
+  "level": 3,
+  "atk": 1100,
+  "def": 800,
+  "password": 37421579,
+  "description": "A knight in an enchanted armor that guards against fire.\nBecause of it, he is unharmed even in an inferno."
+}

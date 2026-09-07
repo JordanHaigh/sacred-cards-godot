@@ -1,0 +1,15 @@
+{
+  "id": 875,
+  "card": "Cyber Harpie",
+  "link": "/wiki/Cyber_Harpie_(TSC)",
+  "dc": 260,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Winged Beast",
+  "alignment": "Wind",
+  "level": 4,
+  "atk": 1800,
+  "def": 1300,
+  "password": 80316585,
+  "description": "AHarpie Ladywho has been modified. She has the ability to\npower upHarpie's Pet Dragonson the player'sfield."
+}

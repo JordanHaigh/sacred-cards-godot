@@ -1,0 +1,15 @@
+{
+  "id": 791,
+  "card": "Gate Sword",
+  "link": "/wiki/Gate_Sword_(TSC)",
+  "dc": 73,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Warrior",
+  "alignment": "Fiend",
+  "level": 6,
+  "atk": 1800,
+  "def": 1950,
+  "password": 46211326,
+  "description": "A dark warrior that has assumed the guise of a caped sword.\nIt cleaves everything it touches in half."
+}

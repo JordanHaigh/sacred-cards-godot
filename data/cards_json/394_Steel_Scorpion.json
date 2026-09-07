@@ -1,0 +1,15 @@
+{
+  "id": 394,
+  "card": "Steel Scorpion",
+  "link": "/wiki/Steel_Scorpion_(TSC)",
+  "dc": 16,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Machine",
+  "alignment": "Forest",
+  "level": 1,
+  "atk": 250,
+  "def": 300,
+  "password": 13599884,
+  "description": "A mechanical scorpion that hacks away with razorlike pincers.\nBeware of the damage its steel axes can inflict."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 113,
+  "card": "Dark Gray",
+  "link": "/wiki/Dark_Gray_(TSC)",
+  "dc": 72,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Beast",
+  "alignment": "Forest",
+  "level": 3,
+  "atk": 800,
+  "def": 900,
+  "password": 9159938,
+  "description": "A goatlike creature with small wings and a dark gray hide.\nIt is very precious and rarely seen."
+}

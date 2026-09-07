@@ -1,0 +1,15 @@
+{
+  "id": 411,
+  "card": "Bat",
+  "link": "/wiki/Bat_(TSC)",
+  "dc": 19,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Machine",
+  "alignment": "Fiend",
+  "level": 1,
+  "atk": 300,
+  "def": 350,
+  "password": 72076281,
+  "description": "A mechanical bat that is used to undertake bombing missions.\nIt carries bombs under its wings."
+}

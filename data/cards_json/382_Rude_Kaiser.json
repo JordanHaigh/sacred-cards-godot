@@ -1,0 +1,15 @@
+{
+  "id": 382,
+  "card": "Rude Kaiser",
+  "link": "/wiki/Rude_Kaiser_(TSC)",
+  "dc": 41,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Beast-Warrior",
+  "alignment": "Earth",
+  "level": 5,
+  "atk": 1800,
+  "def": 1600,
+  "password": 26378150,
+  "description": "A savage beast warrior that bears a pair of prized axes.\nBlows from the two axes are quite powerful."
+}

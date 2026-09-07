@@ -1,0 +1,15 @@
+{
+  "id": 92,
+  "card": "Rabid Horseman",
+  "link": "/wiki/Rabid_Horseman_(TSC)",
+  "dc": 86,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Beast-Warrior",
+  "alignment": "Forest",
+  "level": 6,
+  "atk": 2000,
+  "def": 1700,
+  "password": 94905343,
+  "description": "A fearsome monster that is made of a centaur and an ox.\nIt savagely doles out very punishing attacks."
+}

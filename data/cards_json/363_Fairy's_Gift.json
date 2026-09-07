@@ -1,0 +1,15 @@
+{
+  "id": 363,
+  "card": "Fairy's Gift",
+  "link": "/wiki/Fairy%27s_Gift_(TSC)",
+  "dc": 161,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Spellcaster",
+  "alignment": "Forest",
+  "level": 4,
+  "atk": 1400,
+  "def": 1000,
+  "password": 68401546,
+  "description": "A diminutive green fairy that flies on the wings of a butterfly.\nIt can cast a spell to restore LP by 1,000."
+}

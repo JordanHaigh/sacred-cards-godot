@@ -1,0 +1,15 @@
+{
+  "id": 68,
+  "card": "Garoozis",
+  "link": "/wiki/Garoozis_(TSC)",
+  "dc": 41,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Beast-Warrior",
+  "alignment": "Fire",
+  "level": 5,
+  "atk": 1800,
+  "def": 1500,
+  "password": 14977074,
+  "description": "A ferocious beast warrior that has the head of a dragon.\nIts axe attacks have the power to inflict severe damage."
+}

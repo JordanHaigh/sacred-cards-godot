@@ -1,0 +1,15 @@
+{
+  "id": 803,
+  "card": "Shining Abyss",
+  "link": "/wiki/Shining_Abyss_(TSC)",
+  "dc": 260,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Light",
+  "level": 4,
+  "atk": 1600,
+  "def": 1800,
+  "password": 87303357,
+  "description": "A peculiar winged being that embodies two opposing attributes.\nIt has both the power of light and darkness."
+}

@@ -1,0 +1,15 @@
+{
+  "id": 149,
+  "card": "Lord of the Lamp",
+  "link": "/wiki/Lord_of_the_Lamp_(TSC)",
+  "dc": 161,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Fiend",
+  "alignment": "Dark",
+  "level": 4,
+  "atk": 1400,
+  "def": 1200,
+  "password": 99510761,
+  "description": "A rotund genie that emerges from an enchanted lamp.\nIt obeys every command of whoever has summoned it."
+}

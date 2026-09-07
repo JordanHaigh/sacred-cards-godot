@@ -1,0 +1,15 @@
+{
+  "id": 731,
+  "card": "Relinquished",
+  "link": "/wiki/Relinquished_(TSC)",
+  "dc": 255,
+  "card_type": "Monster",
+  "monsterType": "Ritual Monster",
+  "type": "Spellcaster",
+  "alignment": "Divine",
+  "level": 1,
+  "atk": 0,
+  "def": 0,
+  "password": 64631466,
+  "description": "A horrifying monster that has single malevolent eye.\nIt can steal the abilities of a monster on the foe's field."
+}

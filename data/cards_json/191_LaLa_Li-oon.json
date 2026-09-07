@@ -1,0 +1,15 @@
+{
+  "id": 191,
+  "card": "LaLa Li-oon",
+  "link": "/wiki/LaLa_Li-oon_(TSC)",
+  "dc": 37,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Thunder",
+  "alignment": "Thunder",
+  "level": 2,
+  "atk": 600,
+  "def": 600,
+  "password": 9430387,
+  "description": "A cloudlike monster that is charged with powerful electricity.\nIt unleashes downpours of a fluid that dissolves all substances."
+}

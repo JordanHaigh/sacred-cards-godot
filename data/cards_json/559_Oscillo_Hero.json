@@ -1,0 +1,15 @@
+{
+  "id": 559,
+  "card": "Oscillo Hero",
+  "link": "/wiki/Oscillo_Hero_(TSC)",
+  "dc": 130,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Warrior",
+  "alignment": "Dreams",
+  "level": 3,
+  "atk": 1250,
+  "def": 700,
+  "password": 82065276,
+  "description": "A baffling sort of a warrior with a single eye and antennas.\nIt arrived from another dimension."
+}

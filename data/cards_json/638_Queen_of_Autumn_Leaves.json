@@ -1,0 +1,15 @@
+{
+  "id": 638,
+  "card": "Queen of Autumn Leaves",
+  "link": "/wiki/Queen_of_Autumn_Leaves_(TSC)",
+  "dc": 41,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Plant",
+  "alignment": "Forest",
+  "level": 5,
+  "atk": 1800,
+  "def": 1500,
+  "password": 4179849,
+  "description": "The Queen of the Emerald Forest and wife of the Spirit King.\nShe lives among leaves in the vivid colors of autumn."
+}

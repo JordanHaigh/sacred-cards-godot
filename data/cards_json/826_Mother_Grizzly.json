@@ -1,0 +1,15 @@
+{
+  "id": 826,
+  "card": "Mother Grizzly",
+  "link": "/wiki/Mother_Grizzly_(TSC)",
+  "dc": 161,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Beast-Warrior",
+  "alignment": "Water",
+  "level": 4,
+  "atk": 1400,
+  "def": 1000,
+  "password": 57839750,
+  "description": "A bruin that tears at the foe's throat with hooked claws.\nThe foe's life is over in just five seconds."
+}

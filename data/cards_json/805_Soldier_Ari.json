@@ -1,0 +1,15 @@
+{
+  "id": 805,
+  "card": "Soldier Ari",
+  "link": "/wiki/Soldier_Ari_(TSC)",
+  "dc": 121,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Insect",
+  "alignment": "Forest",
+  "level": 3,
+  "atk": 500,
+  "def": 1200,
+  "password": 73038060,
+  "description": "An ant that turned vicious as a result of spontaneous mutation.\nIts body is relatively stiff and durable."
+}

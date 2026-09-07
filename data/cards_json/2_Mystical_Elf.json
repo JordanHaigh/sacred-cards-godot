@@ -1,0 +1,15 @@
+{
+  "id": 2,
+  "card": "Mystical Elf",
+  "link": "/wiki/Mystical_Elf_(TSC)",
+  "dc": 319,
+  "card_type": "Monster",
+  "monsterType": "Effect Monster",
+  "type": "Spellcaster",
+  "alignment": "Light",
+  "level": 4,
+  "atk": 800,
+  "def": 2000,
+  "password": 15025844,
+  "description": "An elf with blue skin, yellow hair, and light of element.\nIt can power upBlue-Eyes White Dragonson the own field."
+}

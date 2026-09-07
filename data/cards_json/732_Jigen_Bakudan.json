@@ -1,0 +1,15 @@
+{
+  "id": 732,
+  "card": "Jigen Bakudan",
+  "link": "/wiki/Jigen_Bakudan_(TSC)",
+  "dc": 87,
+  "card_type": "Monster",
+  "monsterType": "Normal Monster",
+  "type": "Pyro",
+  "alignment": "Dreams",
+  "level": 2,
+  "atk": 200,
+  "def": 1000,
+  "password": 90020065,
+  "description": "An animated time bomb that can get around on its own accord.\nIts blast force is said to affect the monsters on its side."
+}
