@@ -9,7 +9,7 @@ Codex must execute exactly one story per iteration.
 | [SC-102](SC-102.md) | P0 | TODO | SC-101 | Implement CardDefinition |
 | [SC-103](SC-103.md) | P0 | TODO | SC-102 | Implement CardDatabase |
 | [SC-104](SC-104.md) | P0 | TODO | SC-102 | Implement CardInstance |
-| [SC-201](SC-201.md) | P0 | READY | SC-001 | Create DuelRuleSet |
+| [SC-201](SC-201.md) | P0 | DONE | SC-001 | Create DuelRuleSet |
 | [SC-202](SC-202.md) | P0 | TODO | SC-201, SC-103 | Implement Sacred Cards Matchup System |
 | [SC-301](SC-301.md) | P0 | TODO | SC-103, SC-104 | Implement DuelPlayerState |
 | [SC-302](SC-302.md) | P0 | TODO | SC-301, SC-201 | Implement DuelState |

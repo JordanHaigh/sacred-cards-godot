@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="DuelRuleSet" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/rules/duel_rule_set.gd" id="1_duel_rule_set"]
+
+[resource]
+script = ExtResource("1_duel_rule_set")
+starting_life_points = 8000
+opening_hand_size = 5
+starting_deck_size = 40
+monster_zone_count = 5
+spell_trap_zone_count = 5
+field_zone_count = 1
+draws_per_turn = 1
+first_player_draws_on_first_turn = false
+normal_summons_per_turn = 1
+tribute_summons_enabled = true
+one_tribute_minimum_level = 5
+two_tribute_minimum_level = 7
+direct_attack_requires_empty_field = true
+direct_attack_uses_attacker_attack = true
+zero_life_points_is_defeat = true
+deck_out_causes_defeat = false
