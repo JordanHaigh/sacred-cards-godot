@@ -100,6 +100,8 @@ func validate() -> PackedStringArray:
 		if not superior_to is Array:
 			continue
 		for other_star in superior_to:
+			if str(other_star) == str(guardian_star):
+				errors.append("guardian_star_superiority cannot give %s superiority over itself." % guardian_star)
 			if _contains(guardian_star_superiority, str(other_star), str(guardian_star)):
 				errors.append("guardian_star_superiority contains a contradictory two-way rule for %s and %s." % [guardian_star, other_star])
 
