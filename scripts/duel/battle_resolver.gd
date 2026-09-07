@@ -9,6 +9,7 @@ extends RefCounted
 ## an explicit project assumption.
 
 const BATTLE_RESULT_SCRIPT = preload("res://scripts/duel/battle_result.gd")
+const VICTORY_RESOLVER_SCRIPT = preload("res://scripts/duel/victory_resolver.gd")
 
 var _card_database: Object
 var _matchup_rules: Resource
@@ -66,10 +67,7 @@ func resolve(
 		_apply_matchups(result, attacker, defender, attacker_definition)
 		_resolve_comparison(result, attacker_player, defender_player, attacker, defender)
 
-	if defender_player.is_defeated():
-		duel_state.finish(attacker_id)
-	elif attacker_player.is_defeated():
-		duel_state.finish(defender_id)
+	VICTORY_RESOLVER_SCRIPT.new().resolve(duel_state)
 	duel_state.record_battle(result.to_dictionary())
 	return result
 
