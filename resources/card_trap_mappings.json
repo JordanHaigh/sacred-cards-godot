@@ -1,0 +1,8 @@
+[
+  {"card_id": 681, "event": "attack_queued", "effect_id": "destroy_monster", "parameters": {"max_attack": 500}},
+  {"card_id": 682, "event": "attack_queued", "effect_id": "destroy_monster", "parameters": {"max_attack": 1000}},
+  {"card_id": 683, "event": "attack_queued", "effect_id": "destroy_monster", "parameters": {"max_attack": 1500}},
+  {"card_id": 684, "event": "attack_queued", "effect_id": "destroy_monster", "parameters": {"max_attack": 2000}},
+  {"card_id": 685, "event": "attack_queued", "effect_id": "destroy_monster", "parameters": {"max_attack": 3000}},
+  {"card_id": 686, "event": "attack_queued", "effect_id": "destroy_monster", "parameters": {"max_attack": -1}}
+]

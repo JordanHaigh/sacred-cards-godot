@@ -132,6 +132,14 @@ func get_graveyard() -> Array[RefCounted]:
 	return _graveyard.duplicate()
 
 
+func remove_from_graveyard(card: RefCounted) -> bool:
+	var card_index := _graveyard.find(card)
+	if card_index < 0:
+		return false
+	_graveyard.remove_at(card_index)
+	return true
+
+
 func deck_size() -> int:
 	return _deck.size()
 

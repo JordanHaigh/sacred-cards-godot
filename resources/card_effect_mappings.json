@@ -1,0 +1,46 @@
+[
+  {
+    "card_id": 338,
+    "effects": [{"id": "lp_heal", "parameters": {"amount": 200, "target": "self"}}]
+  },
+  {
+    "card_id": 339,
+    "effects": [{"id": "lp_heal", "parameters": {"amount": 500, "target": "self"}}]
+  },
+  {
+    "card_id": 340,
+    "effects": [{"id": "lp_heal", "parameters": {"amount": 1000, "target": "self"}}]
+  },
+  {
+    "card_id": 341,
+    "effects": [{"id": "lp_heal", "parameters": {"amount": 2000, "target": "self"}}]
+  },
+  {
+    "card_id": 342,
+    "effects": [{"id": "lp_heal", "parameters": {"amount": 5000, "target": "self"}}]
+  },
+  {
+    "card_id": 343,
+    "effects": [{"id": "lp_damage", "parameters": {"amount": 50, "target": "opponent"}}]
+  },
+  {
+    "card_id": 344,
+    "effects": [{"id": "lp_damage", "parameters": {"amount": 100, "target": "opponent"}}]
+  },
+  {
+    "card_id": 345,
+    "effects": [{"id": "lp_damage", "parameters": {"amount": 200, "target": "opponent"}}]
+  },
+  {
+    "card_id": 346,
+    "effects": [{"id": "lp_damage", "parameters": {"amount": 500, "target": "opponent"}}]
+  },
+  {
+    "card_id": 347,
+    "effects": [{"id": "lp_damage", "parameters": {"amount": 1000, "target": "opponent"}}]
+  },
+  {
+    "card_id": 789,
+    "effects": [{"id": "draw_cards", "parameters": {"count": 2, "target": "self"}}]
+  }
+]

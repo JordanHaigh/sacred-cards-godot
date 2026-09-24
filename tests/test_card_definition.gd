@@ -27,6 +27,17 @@ func _init() -> void:
 	if trap.card_type != "Trap" or trap.description.is_empty():
 		_fail("Trap fields were not mapped.")
 		return
+	var effect_record: Dictionary = monster.to_source_record()
+	effect_record["effect_ids"] = ["modify_monster_stats", "lp_heal"]
+	var effect_definition = CARD_DEFINITION_SCRIPT.from_source_record(effect_record)
+	if effect_definition == null or effect_definition.effect_ids != PackedStringArray(["modify_monster_stats", "lp_heal"]):
+		_fail("Optional effect IDs should be accepted and exposed without changing required source fields.")
+		return
+	var invalid_effect_record: Dictionary = monster.to_source_record()
+	invalid_effect_record["effect_ids"] = [""]
+	if not _contains_error(CARD_DEFINITION_SCRIPT.validate_source_record(invalid_effect_record), "effect_ids"):
+		_fail("Malformed optional effect IDs should be rejected explicitly.")
+		return
 
 	var source_copy: Dictionary = monster.to_source_record()
 	source_copy["atk"] = 1

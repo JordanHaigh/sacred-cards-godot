@@ -14,11 +14,13 @@ const ACTION_SET_SPELL_TRAP := "set_spell_trap"
 const ACTION_CHANGE_POSITION := "change_position"
 const ACTION_ATTACK := "attack"
 const ACTION_END_TURN := "end_turn"
+const ACTION_ACTIVATE_EFFECT := "activate_effect"
 
 const PHASE_DRAW := "draw"
 const PHASE_MAIN := "main"
 const PHASE_BATTLE := "battle"
 const PHASE_END := "end"
+const DUEL_EVENT_BUS_SCRIPT = preload("res://scripts/duel/duel_event_bus.gd")
 
 var _action_type: String
 var _actor_id: String
@@ -48,7 +50,7 @@ func payload() -> Dictionary:
 	return _payload.duplicate(true)
 
 
-func validate(duel_state: Object) -> bool:
+func validate(duel_state: Object, effect_registry: Object = null) -> bool:
 	_last_error = ""
 	if duel_state == null or not duel_state.has_method("get_player"):
 		return _fail("A valid DuelState is required.")
@@ -77,22 +79,32 @@ func validate(duel_state: Object) -> bool:
 			return _validate_position_change(player)
 		ACTION_ATTACK:
 			return _validate_attack(duel_state, player)
+		ACTION_ACTIVATE_EFFECT:
+			return _validate_effect_activation(duel_state, player, effect_registry)
 		_:
 			return _fail("Unknown action type '%s'." % _action_type)
 
 
-func execute(duel_state: Object) -> bool:
-	if not validate(duel_state):
+func execute(duel_state: Object, effect_registry: Object = null) -> bool:
+	if not validate(duel_state, effect_registry):
 		return false
 	var player = duel_state.call("get_player", _actor_id)
 
 	match _action_type:
 		ACTION_DRAW:
-			player.call("draw_card")
+			var drawn_card = player.call("draw_card")
+			duel_state.call("emit_event", DUEL_EVENT_BUS_SCRIPT.EVENT_CARD_DRAWN, {
+				"player_id": _actor_id,
+				"card_id": int(drawn_card.get("definition_id")),
+			})
 			duel_state.set_phase(PHASE_MAIN)
+			_publish_action(duel_state)
 			return true
 		ACTION_END_TURN:
-			return duel_state.end_turn()
+			if not bool(duel_state.call("end_turn")):
+				return _fail(String(duel_state.get("last_transition_error")))
+			_publish_action(duel_state)
+			return true
 		ACTION_SUMMON:
 			var summon_card = _card_in_hand(player)
 			var summon_zone := int(_payload.get("zone_index", -1))
@@ -100,6 +112,8 @@ func execute(duel_state: Object) -> bool:
 				return _fail("Summon could not place the card in the requested zone.")
 			summon_card.set("battle_position", "attack")
 			summon_card.set("face_state", "face_up")
+			duel_state.call("emit_event", DUEL_EVENT_BUS_SCRIPT.EVENT_CARD_PLAYED, _card_event_payload(summon_card, summon_zone, "summon"))
+			_publish_action(duel_state)
 			return true
 		ACTION_SET_MONSTER:
 			var set_monster_card = _card_in_hand(player)
@@ -108,6 +122,8 @@ func execute(duel_state: Object) -> bool:
 				return _fail("Set monster could not place the card in the requested zone.")
 			set_monster_card.set("battle_position", "defense")
 			set_monster_card.set("face_state", "face_down")
+			duel_state.call("emit_event", DUEL_EVENT_BUS_SCRIPT.EVENT_CARD_PLAYED, _card_event_payload(set_monster_card, set_monster_zone, "set_monster"))
+			_publish_action(duel_state)
 			return true
 		ACTION_SET_SPELL_TRAP:
 			var set_card = _card_in_hand(player)
@@ -115,16 +131,48 @@ func execute(duel_state: Object) -> bool:
 			if player.place_spell_trap(set_card, set_zone) < 0:
 				return _fail("Set spell/trap could not place the card in the requested zone.")
 			set_card.set("face_state", "face_down")
+			duel_state.call("emit_event", DUEL_EVENT_BUS_SCRIPT.EVENT_CARD_PLAYED, _card_event_payload(set_card, set_zone, "set_spell_trap"))
+			_publish_action(duel_state)
 			return true
 		ACTION_CHANGE_POSITION:
 			var position_card = player.get_monster_zone(int(_payload["zone_index"]))
 			position_card.set("battle_position", String(_payload["position"]))
+			duel_state.call("emit_event", DUEL_EVENT_BUS_SCRIPT.EVENT_POSITION_CHANGED, {
+				"player_id": _actor_id,
+				"card_id": int(position_card.get("definition_id")),
+				"zone_index": int(_payload["zone_index"]),
+				"position": String(_payload["position"]),
+			})
+			_publish_action(duel_state)
 			return true
 		ACTION_ATTACK:
 			var attack_record := _payload.duplicate(true)
 			attack_record["type"] = ACTION_ATTACK
 			attack_record["actor_id"] = _actor_id
 			duel_state.queue_action(attack_record)
+			duel_state.call("emit_event", DUEL_EVENT_BUS_SCRIPT.EVENT_ATTACK_QUEUED, attack_record)
+			_publish_action(duel_state)
+			return true
+		ACTION_ACTIVATE_EFFECT:
+			var effect_card = _find_effect_card(player)
+			var effect_parameters: Dictionary = _payload.get("parameters", {}).duplicate(true)
+			effect_parameters["duel_state"] = duel_state
+			effect_parameters["actor_id"] = _actor_id
+			effect_parameters["source_card_id"] = int(effect_card.get("definition_id"))
+			if not effect_parameters.has("target_player_id"):
+				effect_parameters["target_player_id"] = _actor_id
+			var effect_result: Dictionary = effect_registry.call("execute", String(_payload["effect_id"]), effect_parameters)
+			if not bool(effect_result.get("success", false)):
+				return _fail(String(effect_result.get("error", "Card effect did not complete.")))
+			player.call("send_to_graveyard", effect_card)
+			var resolved_payload := {
+				"effect_id": String(_payload["effect_id"]),
+				"actor_id": _actor_id,
+				"source_card_id": int(effect_card.get("definition_id")),
+				"details": effect_result.get("details", {}),
+			}
+			duel_state.call("emit_event", DUEL_EVENT_BUS_SCRIPT.EVENT_EFFECT_RESOLVED, resolved_payload)
+			_publish_action(duel_state)
 			return true
 	return _fail("Action execution was not implemented for '%s'." % _action_type)
 
@@ -174,6 +222,15 @@ static func attack(actor_id: String, attacker_zone: int, defender_id: String, de
 
 static func end_turn(actor_id: String) -> RefCounted:
 	return load("res://scripts/duel/duel_action.gd").new(ACTION_END_TURN, actor_id)
+
+
+static func activate_effect(actor_id: String, card_id: int, card_type: String, effect_id: String, parameters: Dictionary = {}) -> RefCounted:
+	return load("res://scripts/duel/duel_action.gd").new(ACTION_ACTIVATE_EFFECT, actor_id, {
+		"card_id": card_id,
+		"card_type": card_type,
+		"effect_id": effect_id,
+		"parameters": parameters,
+	})
 
 
 func _validate_card_play(duel_state: Object, player: Object) -> bool:
@@ -229,6 +286,26 @@ func _validate_attack(duel_state: Object, player: Object) -> bool:
 	return true
 
 
+func _validate_effect_activation(duel_state: Object, player: Object, effect_registry: Object) -> bool:
+	if duel_state.get("phase") != PHASE_MAIN:
+		return _fail("Card effects can only be activated during the main phase.")
+	if effect_registry == null or not effect_registry.has_method("has_effect"):
+		return _fail("A CardEffectRegistry is required to activate an effect.")
+	var card_type := String(_payload.get("card_type", ""))
+	if not ["Magic", "Trap"].has(card_type):
+		return _fail("Only Magic or Trap cards can activate a card effect.")
+	if _find_effect_card(player) == null:
+		return _fail("The effect card must be in hand or set in a spell/trap zone.")
+	var effect_id := String(_payload.get("effect_id", ""))
+	if effect_id.is_empty() or not bool(effect_registry.call("has_effect", effect_id)):
+		return _fail("Effect '%s' is not registered." % effect_id)
+	if effect_registry.has_method("effects_for_card"):
+		var mapped_effects: PackedStringArray = effect_registry.call("effects_for_card", int(_payload.get("card_id", -1)))
+		if not mapped_effects.has(effect_id):
+			return _fail("Effect '%s' is not mapped to card ID %s." % [effect_id, _payload.get("card_id", "")])
+	return true
+
+
 func _card_in_hand(player: Object) -> RefCounted:
 	var requested_id := int(_payload.get("card_id", -1))
 	for card in player.get_hand():
@@ -237,6 +314,35 @@ func _card_in_hand(player: Object) -> RefCounted:
 	return null
 
 
+func _find_effect_card(player: Object) -> RefCounted:
+	var card_in_hand := _card_in_hand(player)
+	if card_in_hand != null:
+		return card_in_hand
+	var requested_id := int(_payload.get("card_id", -1))
+	for zone_index in range(player.call("spell_trap_zone_count")):
+		var card = player.call("get_spell_trap_zone", zone_index)
+		if card != null and int(card.get("definition_id")) == requested_id:
+			return card
+	return null
+
+
 func _fail(message: String) -> bool:
 	_last_error = message
 	return false
+
+
+func _card_event_payload(card: Object, zone_index: int, play_type: String) -> Dictionary:
+	return {
+		"player_id": _actor_id,
+		"card_id": int(card.get("definition_id")),
+		"zone_index": zone_index,
+		"play_type": play_type,
+	}
+
+
+func _publish_action(duel_state: Object) -> void:
+	duel_state.call("emit_event", DUEL_EVENT_BUS_SCRIPT.EVENT_ACTION_EXECUTED, {
+		"actor_id": _actor_id,
+		"action_type": _action_type,
+		"payload": _payload.duplicate(true),
+	})

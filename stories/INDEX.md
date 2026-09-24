@@ -22,21 +22,21 @@ Codex must execute exactly one story per iteration.
 | [SC-305](SC-305.md) | P1 | DONE | SC-303 | Implement Duel State Machine |
 | [SC-306](SC-306.md) | P1 | DONE | SC-304 | Implement Victory and Defeat Resolution |
 | [SC-403](SC-403.md) | P1 | DONE | SC-305 | Add Duel State and Action Tests |
-| [SC-501](SC-501.md) | P1 | TODO | SC-103 | Implement Deck Model |
+| [SC-501](SC-501.md) | P1 | BLOCKED | SC-103 | Implement Deck Model |
 | [SC-502](SC-502.md) | P1 | TODO | SC-501 | Implement Sacred Cards Deck Capacity |
 | [SC-503](SC-503.md) | P1 | TODO | SC-501 | Implement Duelist Level Restrictions |
-| [SC-504](SC-504.md) | P1 | TODO | SC-103 | Implement Player Card Collection |
+| [SC-504](SC-504.md) | P1 | BLOCKED | SC-103 | Implement Player Card Collection |
 | [SC-601](SC-601.md) | P1 | TODO | SC-501, SC-502, SC-503, SC-504 | Implement Deck Builder Core Logic |
 | [SC-603](SC-603.md) | P1 | TODO | SC-601 | Build Deck Builder UI |
-| [SC-701](SC-701.md) | P1 | TODO | SC-103 | Implement Card Effect Registry |
-| [SC-702](SC-702.md) | P1 | TODO | SC-302 | Implement Duel Event Bus |
-| [SC-703](SC-703.md) | P1 | TODO | SC-701, SC-702 | Implement Basic Spell Effect Primitives |
-| [SC-704](SC-704.md) | P1 | TODO | SC-702 | Implement Trap Trigger System |
-| [SC-801](SC-801.md) | P1 | TODO | SC-303 | Implement Basic Legal-Move AI |
+| [SC-701](SC-701.md) | P1 | BLOCKED | SC-103 | Implement Card Effect Registry |
+| [SC-702](SC-702.md) | P1 | BLOCKED | SC-302 | Implement Duel Event Bus |
+| [SC-703](SC-703.md) | P1 | BLOCKED | SC-701, SC-702 | Implement Basic Spell Effect Primitives |
+| [SC-704](SC-704.md) | P1 | BLOCKED | SC-702 | Implement Trap Trigger System |
+| [SC-801](SC-801.md) | P1 | BLOCKED | SC-303 | Implement Basic Legal-Move AI |
 | [SC-802](SC-802.md) | P1 | TODO | SC-304, SC-801 | Implement AI Combat Evaluation |
-| [SC-901](SC-901.md) | P1 | TODO | SC-302 | Build Basic Duel Screen |
+| [SC-901](SC-901.md) | P1 | BLOCKED | SC-302 | Build Basic Duel Screen |
 | [SC-902](SC-902.md) | P1 | TODO | SC-901 | Build Card Inspection UI |
-| [SC-903](SC-903.md) | P1 | TODO | SC-303, SC-901 | Implement Player Duel Controls |
+| [SC-903](SC-903.md) | P1 | BLOCKED | SC-303, SC-901 | Implement Player Duel Controls |
 | [SC-1001](SC-1001.md) | P1 | TODO | SC-001 | Implement Overworld Player Movement |
 | [SC-1002](SC-1002.md) | P1 | TODO | SC-1001 | Implement Overworld Map Framework |
 | [SC-1003](SC-1003.md) | P1 | TODO | SC-1002 | Implement NPC Framework |
@@ -57,7 +57,7 @@ Codex must execute exactly one story per iteration.
 | [SC-1603](SC-1603.md) | P1 | TODO | SC-1004, SC-1105, SC-1601 | Connect Overworld to Duel |
 | [SC-1604](SC-1604.md) | P1 | TODO | SC-1602, SC-1603, SC-1202, SC-1302 | Complete Core Gameplay Loop |
 | [SC-602](SC-602.md) | P2 | TODO | SC-601 | Implement Card Sorting and Filtering |
-| [SC-705](SC-705.md) | P2 | TODO | SC-701, SC-101 | Map Extracted Card Effects |
+| [SC-705](SC-705.md) | P2 | BLOCKED | SC-701, SC-101 | Map Extracted Card Effects |
 | [SC-803](SC-803.md) | P2 | TODO | SC-802 | Implement AI Profiles |
 | [SC-904](SC-904.md) | P2 | TODO | SC-903 | Add Duel Feedback and Animations |
 | [SC-1104](SC-1104.md) | P2 | TODO | SC-1102, SC-1103 | Implement Conditional NPC Dialogue |

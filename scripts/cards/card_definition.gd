@@ -36,6 +36,7 @@ var _attack: int
 var _defense: int
 var _password: Variant
 var _description: String
+var _effect_ids: PackedStringArray = []
 var _source_record: Dictionary = {}
 
 var card_id: int:
@@ -90,6 +91,10 @@ var description: String:
 	get:
 		return _description
 
+var effect_ids: PackedStringArray:
+	get:
+		return _effect_ids.duplicate()
+
 var source_metadata: Dictionary:
 	get:
 		return _source_record.duplicate(true)
@@ -127,6 +132,18 @@ static func validate_source_record(record: Dictionary) -> PackedStringArray:
 		errors.append("'password' must be an integer or null.")
 	if not record.has("description") or typeof(record.get("description")) != TYPE_STRING or String(record.get("description")).is_empty():
 		errors.append("'description' must be a non-empty string.")
+	if record.has("effect_ids"):
+		if not record.get("effect_ids") is Array:
+			errors.append("'effect_ids' must be an array of non-empty strings when supplied.")
+		else:
+			var seen_effect_ids: Dictionary = {}
+			for effect_id in record.get("effect_ids"):
+				if typeof(effect_id) != TYPE_STRING or String(effect_id).strip_edges().is_empty():
+					errors.append("Every 'effect_ids' entry must be a non-empty string.")
+				elif seen_effect_ids.has(String(effect_id)):
+					errors.append("'effect_ids' entries must be unique.")
+				else:
+					seen_effect_ids[String(effect_id)] = true
 
 	return errors
 
@@ -152,6 +169,8 @@ static func from_source_record(record: Dictionary) -> Resource:
 	definition._defense = int(record["def"])
 	definition._password = record["password"]
 	definition._description = String(record["description"])
+	for effect_id in record.get("effect_ids", []):
+		definition._effect_ids.append(String(effect_id))
 	definition._source_record = record.duplicate(true)
 	return definition
 

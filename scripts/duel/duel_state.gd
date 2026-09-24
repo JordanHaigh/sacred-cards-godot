@@ -18,9 +18,11 @@ const PHASE_BATTLE := "battle"
 const PHASE_END := "end"
 
 const PLAYER_STATE_SCRIPT = preload("res://scripts/duel/duel_player_state.gd")
+const DUEL_EVENT_BUS_SCRIPT = preload("res://scripts/duel/duel_event_bus.gd")
 const DEFAULT_RULESET_PATH := "res://resources/sacred_cards_rules.tres"
 
 var _ruleset: Resource
+var _event_bus: RefCounted
 var _players: Dictionary = {}
 var _player_order: Array[String] = []
 var _active_player_id: String = ""
@@ -36,6 +38,10 @@ var _battle_history: Array[Dictionary] = []
 var ruleset: Resource:
 	get:
 		return _ruleset
+
+var event_bus: RefCounted:
+	get:
+		return _event_bus
 
 var active_player_id: String:
 	get:
@@ -70,6 +76,7 @@ func _init(
 	_ruleset = initial_ruleset
 	if _ruleset == null:
 		_ruleset = load(DEFAULT_RULESET_PATH)
+	_event_bus = DUEL_EVENT_BUS_SCRIPT.new()
 	_add_player(first_player_id)
 	_add_player(second_player_id)
 	if not _player_order.is_empty():
@@ -83,6 +90,8 @@ func start() -> bool:
 	_turn_number = 1
 	_phase = PHASE_DRAW
 	_winner_id = ""
+	emit_event(DUEL_EVENT_BUS_SCRIPT.EVENT_DUEL_STARTED, {"turn": _turn_number, "active_player_id": _active_player_id})
+	emit_event(DUEL_EVENT_BUS_SCRIPT.EVENT_TURN_STARTED, {"turn": _turn_number, "active_player_id": _active_player_id})
 	return true
 
 
@@ -98,7 +107,14 @@ func transition_to_phase(next_phase: String) -> bool:
 		return _reject_transition("Unknown duel phase '%s'." % next_phase)
 	if not _is_legal_phase_transition(_phase, next_phase):
 		return _reject_transition("Cannot transition from '%s' to '%s'." % [_phase, next_phase])
+	var previous_phase := _phase
 	_phase = next_phase
+	emit_event(DUEL_EVENT_BUS_SCRIPT.EVENT_PHASE_CHANGED, {
+		"turn": _turn_number,
+		"player_id": _active_player_id,
+		"from": previous_phase,
+		"to": _phase,
+	})
 	return true
 
 
@@ -133,9 +149,19 @@ func advance_turn() -> bool:
 	var active_index := _player_order.find(_active_player_id)
 	if active_index < 0:
 		return _reject_transition("The active player is not registered in the duel.")
+	var previous_player_id := _active_player_id
+	emit_event(DUEL_EVENT_BUS_SCRIPT.EVENT_TURN_ENDED, {"turn": _turn_number, "player_id": previous_player_id})
+	var previous_phase := _phase
 	_active_player_id = _player_order[(active_index + 1) % _player_order.size()]
 	_turn_number += 1
 	_phase = PHASE_DRAW
+	emit_event(DUEL_EVENT_BUS_SCRIPT.EVENT_PHASE_CHANGED, {
+		"turn": _turn_number,
+		"player_id": _active_player_id,
+		"from": previous_phase,
+		"to": _phase,
+	})
+	emit_event(DUEL_EVENT_BUS_SCRIPT.EVENT_TURN_STARTED, {"turn": _turn_number, "active_player_id": _active_player_id})
 	return true
 
 
@@ -144,9 +170,18 @@ func finish(next_winner_id: String = "") -> bool:
 		return false
 	if not next_winner_id.is_empty() and not _players.has(next_winner_id):
 		return false
+	var previous_phase := _phase
 	_status = STATUS_FINISHED
 	_phase = PHASE_END
 	_winner_id = next_winner_id
+	if previous_phase != _phase:
+		emit_event(DUEL_EVENT_BUS_SCRIPT.EVENT_PHASE_CHANGED, {
+			"turn": _turn_number,
+			"player_id": _active_player_id,
+			"from": previous_phase,
+			"to": _phase,
+		})
+	emit_event(DUEL_EVENT_BUS_SCRIPT.EVENT_DUEL_FINISHED, {"winner_id": _winner_id, "turn": _turn_number})
 	return true
 
 
@@ -161,6 +196,10 @@ func forfeit(player_id: String) -> bool:
 
 func get_player(player_id: String) -> RefCounted:
 	return _players.get(player_id, null)
+
+
+func emit_event(event_name: String, payload: Dictionary = {}) -> Dictionary:
+	return _event_bus.call("publish", event_name, payload)
 
 
 func has_player(player_id: String) -> bool:

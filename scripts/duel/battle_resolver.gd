@@ -10,6 +10,7 @@ extends RefCounted
 
 const BATTLE_RESULT_SCRIPT = preload("res://scripts/duel/battle_result.gd")
 const VICTORY_RESOLVER_SCRIPT = preload("res://scripts/duel/victory_resolver.gd")
+const DUEL_EVENT_BUS_SCRIPT = preload("res://scripts/duel/duel_event_bus.gd")
 
 var _card_database: Object
 var _matchup_rules: Resource
@@ -67,8 +68,9 @@ func resolve(
 		_apply_matchups(result, attacker, defender, attacker_definition)
 		_resolve_comparison(result, attacker_player, defender_player, attacker, defender)
 
-	VICTORY_RESOLVER_SCRIPT.new().resolve(duel_state)
 	duel_state.record_battle(result.to_dictionary())
+	duel_state.call("emit_event", DUEL_EVENT_BUS_SCRIPT.EVENT_BATTLE_RESOLVED, result.to_dictionary())
+	VICTORY_RESOLVER_SCRIPT.new().resolve(duel_state)
 	return result
 
 
