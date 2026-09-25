@@ -108,21 +108,33 @@ func execute(duel_state: Object, effect_registry: Object = null) -> bool:
 		ACTION_SUMMON:
 			var summon_card = _card_in_hand(player)
 			var summon_zone := int(_payload.get("zone_index", -1))
-			if player.place_monster(summon_card, summon_zone) < 0:
+			var tribute_zones: Array = _payload.get("tribute_zones", [])
+			for tribute_zone in tribute_zones:
+				player.send_to_graveyard(player.get_monster_zone(int(tribute_zone)))
+			var placed_zone: int = player.place_monster(summon_card, summon_zone)
+			if placed_zone < 0:
 				return _fail("Summon could not place the card in the requested zone.")
 			summon_card.set("battle_position", "attack")
 			summon_card.set("face_state", "face_up")
-			duel_state.call("emit_event", DUEL_EVENT_BUS_SCRIPT.EVENT_CARD_PLAYED, _card_event_payload(summon_card, summon_zone, "summon"))
+			var summon_event := _card_event_payload(summon_card, placed_zone, "summon")
+			summon_event["tribute_zones"] = tribute_zones.duplicate()
+			duel_state.call("emit_event", DUEL_EVENT_BUS_SCRIPT.EVENT_CARD_PLAYED, summon_event)
 			_publish_action(duel_state)
 			return true
 		ACTION_SET_MONSTER:
 			var set_monster_card = _card_in_hand(player)
 			var set_monster_zone := int(_payload.get("zone_index", -1))
-			if player.place_monster(set_monster_card, set_monster_zone) < 0:
+			var set_tribute_zones: Array = _payload.get("tribute_zones", [])
+			for tribute_zone in set_tribute_zones:
+				player.send_to_graveyard(player.get_monster_zone(int(tribute_zone)))
+			var placed_set_zone: int = player.place_monster(set_monster_card, set_monster_zone)
+			if placed_set_zone < 0:
 				return _fail("Set monster could not place the card in the requested zone.")
 			set_monster_card.set("battle_position", "defense")
 			set_monster_card.set("face_state", "face_down")
-			duel_state.call("emit_event", DUEL_EVENT_BUS_SCRIPT.EVENT_CARD_PLAYED, _card_event_payload(set_monster_card, set_monster_zone, "set_monster"))
+			var set_event := _card_event_payload(set_monster_card, placed_set_zone, "set_monster")
+			set_event["tribute_zones"] = set_tribute_zones.duplicate()
+			duel_state.call("emit_event", DUEL_EVENT_BUS_SCRIPT.EVENT_CARD_PLAYED, set_event)
 			_publish_action(duel_state)
 			return true
 		ACTION_SET_SPELL_TRAP:
@@ -146,6 +158,8 @@ func execute(duel_state: Object, effect_registry: Object = null) -> bool:
 			_publish_action(duel_state)
 			return true
 		ACTION_ATTACK:
+			var attacking_card = player.get_monster_zone(int(_payload.get("attacker_zone", -1)))
+			attacking_card.set_turn_flag("attacked_turn_%d" % int(duel_state.get("turn_number")))
 			var attack_record := _payload.duplicate(true)
 			attack_record["type"] = ACTION_ATTACK
 			attack_record["actor_id"] = _actor_id
@@ -181,21 +195,25 @@ static func draw(actor_id: String) -> RefCounted:
 	return load("res://scripts/duel/duel_action.gd").new(ACTION_DRAW, actor_id)
 
 
-static func summon(actor_id: String, card_id: int, card_type: String, zone_index: int = -1, instance_id: int = 0) -> RefCounted:
+static func summon(actor_id: String, card_id: int, card_type: String, zone_index: int = -1, instance_id: int = 0, card_level: int = 0, tribute_zones: Array[int] = []) -> RefCounted:
 	return load("res://scripts/duel/duel_action.gd").new(ACTION_SUMMON, actor_id, {
 		"card_id": card_id,
 		"card_type": card_type,
 		"zone_index": zone_index,
 		"instance_id": instance_id,
+		"card_level": card_level,
+		"tribute_zones": tribute_zones.duplicate(),
 	})
 
 
-static func set_monster(actor_id: String, card_id: int, card_type: String, zone_index: int = -1, instance_id: int = 0) -> RefCounted:
+static func set_monster(actor_id: String, card_id: int, card_type: String, zone_index: int = -1, instance_id: int = 0, card_level: int = 0, tribute_zones: Array[int] = []) -> RefCounted:
 	return load("res://scripts/duel/duel_action.gd").new(ACTION_SET_MONSTER, actor_id, {
 		"card_id": card_id,
 		"card_type": card_type,
 		"zone_index": zone_index,
 		"instance_id": instance_id,
+		"card_level": card_level,
+		"tribute_zones": tribute_zones.duplicate(),
 	})
 
 
@@ -227,12 +245,13 @@ static func end_turn(actor_id: String) -> RefCounted:
 	return load("res://scripts/duel/duel_action.gd").new(ACTION_END_TURN, actor_id)
 
 
-static func activate_effect(actor_id: String, card_id: int, card_type: String, effect_id: String, parameters: Dictionary = {}) -> RefCounted:
+static func activate_effect(actor_id: String, card_id: int, card_type: String, effect_id: String, parameters: Dictionary = {}, instance_id: int = 0) -> RefCounted:
 	return load("res://scripts/duel/duel_action.gd").new(ACTION_ACTIVATE_EFFECT, actor_id, {
 		"card_id": card_id,
 		"card_type": card_type,
 		"effect_id": effect_id,
 		"parameters": parameters,
+		"instance_id": instance_id,
 	})
 
 
@@ -248,10 +267,22 @@ func _validate_card_play(duel_state: Object, player: Object) -> bool:
 	if card == null:
 		return _fail("Card ID %s is not in the actor's hand." % _payload.get("card_id", ""))
 	var zone_index := int(_payload.get("zone_index", -1))
+	var tribute_zones: Array = []
 	if _action_type in [ACTION_SUMMON, ACTION_SET_MONSTER]:
-		if zone_index == -1 and player.get_open_monster_zone_index() < 0:
+		tribute_zones = _payload.get("tribute_zones", [])
+		var required_tributes := int(duel_state.get("ruleset").call("required_tributes_for_level", int(_payload.get("card_level", 0))))
+		if tribute_zones.size() != required_tributes:
+			return _fail("This monster requires %d tribute(s)." % required_tributes)
+		var seen_zones: Array[int] = []
+		for tribute_zone_value in tribute_zones:
+			var tribute_zone := int(tribute_zone_value)
+			if seen_zones.has(tribute_zone) or tribute_zone < 0 or tribute_zone >= player.monster_zone_count() or player.get_monster_zone(tribute_zone) == null:
+				return _fail("Each tribute must be a different monster you control.")
+			seen_zones.append(tribute_zone)
+	if _action_type in [ACTION_SUMMON, ACTION_SET_MONSTER]:
+		if zone_index == -1 and player.get_open_monster_zone_index() < 0 and tribute_zones.is_empty():
 			return _fail("No open monster zone is available.")
-		if zone_index != -1 and (zone_index < 0 or zone_index >= player.monster_zone_count() or player.get_monster_zone(zone_index) != null):
+		if zone_index != -1 and (zone_index < 0 or zone_index >= player.monster_zone_count() or (player.get_monster_zone(zone_index) != null and not tribute_zones.has(zone_index))):
 			return _fail("The requested monster zone is unavailable.")
 	else:
 		if zone_index == -1 and player.get_open_spell_trap_zone_index() < 0:
@@ -284,6 +315,8 @@ func _validate_attack(duel_state: Object, player: Object) -> bool:
 		return _fail("Attack requires a monster in the requested attacker zone.")
 	if attacker.get("face_state") != "face_up" or attacker.get("battle_position") != "attack":
 		return _fail("Only face-up attack-position monsters can attack.")
+	if attacker.has_turn_flag("attacked_turn_%d" % int(duel_state.get("turn_number"))):
+		return _fail("This monster has already attacked this turn.")
 	var defender_id := String(_payload.get("defender_id", ""))
 	var defender = duel_state.get_player(defender_id)
 	if defender == null or defender_id == _actor_id:
@@ -328,9 +361,10 @@ func _find_effect_card(player: Object) -> RefCounted:
 	if card_in_hand != null:
 		return card_in_hand
 	var requested_id := int(_payload.get("card_id", -1))
+	var requested_instance_id := int(_payload.get("instance_id", 0))
 	for zone_index in range(player.call("spell_trap_zone_count")):
 		var card = player.call("get_spell_trap_zone", zone_index)
-		if card != null and int(card.get("definition_id")) == requested_id:
+		if card != null and int(card.get("definition_id")) == requested_id and (requested_instance_id == 0 or int(card.get_instance_id()) == requested_instance_id):
 			return card
 	return null
 

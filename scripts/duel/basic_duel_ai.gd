@@ -24,15 +24,23 @@ func take_turn(duel_state: Object, card_database: Object, battle_resolver: Objec
 	_initialize_field_cards(duel_state, card_database)
 
 	if duel_state.get("phase") == "draw":
-		if not _execute(DUEL_ACTION_SCRIPT.draw(actor_id), duel_state):
-			return false
+		if actor.deck_size() > 0:
+			if not _execute(DUEL_ACTION_SCRIPT.draw(actor_id), duel_state):
+				return false
+		elif not duel_state.call("set_phase", "main"):
+			return _fail("The AI could not enter its main phase with an empty deck.")
 	if duel_state.get("phase") != "main":
 		return _fail("The AI turn must begin in the draw phase.")
 
-	var monster := _strongest_monster(actor.call("get_hand"), card_database)
-	if monster != null and actor.call("get_open_monster_zone_index") >= 0:
+	var monster := _strongest_monster(actor.call("get_hand"), card_database, actor, duel_state.get("ruleset"))
+	if monster != null:
 		var definition = monster.call("resolve_definition", card_database)
-		var summon := DUEL_ACTION_SCRIPT.summon(actor_id, int(monster.get("definition_id")), String(definition.get("card_type")))
+		var required_tributes := int(duel_state.get("ruleset").call("required_tributes_for_level", int(definition.get("level"))))
+		var tribute_zones: Array[int] = _first_monster_zones(actor, required_tributes)
+		var summon_zone: int = actor.get_open_monster_zone_index()
+		if summon_zone < 0 and not tribute_zones.is_empty():
+			summon_zone = tribute_zones[0]
+		var summon := DUEL_ACTION_SCRIPT.summon(actor_id, int(monster.get("definition_id")), String(definition.get("card_type")), summon_zone, int(monster.get_instance_id()), int(definition.get("level")), tribute_zones)
 		if not _execute(summon, duel_state):
 			return false
 
@@ -59,12 +67,17 @@ func take_turn(duel_state: Object, card_database: Object, battle_resolver: Objec
 	return true
 
 
-func _strongest_monster(hand: Array, card_database: Object) -> Object:
+func _strongest_monster(hand: Array, card_database: Object, player: Object, ruleset: Resource) -> Object:
 	var best: Object = null
 	var best_attack := -1
 	for card in hand:
 		var definition = card.resolve_definition(card_database)
 		if definition == null or definition.get("card_type") != "Monster":
+			continue
+		var required_tributes := int(ruleset.call("required_tributes_for_level", int(definition.get("level"))))
+		if _first_monster_zones(player, required_tributes).size() < required_tributes:
+			continue
+		if required_tributes == 0 and player.get_open_monster_zone_index() < 0:
 			continue
 		if not card.is_initialized() and not card.initialize_from_database(card_database):
 			continue
@@ -73,6 +86,18 @@ func _strongest_monster(hand: Array, card_database: Object) -> Object:
 			best = card
 			best_attack = attack
 	return best
+
+
+func _first_monster_zones(player: Object, count: int) -> Array[int]:
+	var zones: Array[int] = []
+	if count <= 0:
+		return zones
+	for zone_index in range(player.monster_zone_count()):
+		if player.get_monster_zone(zone_index) != null:
+			zones.append(zone_index)
+			if zones.size() == count:
+				break
+	return zones
 
 
 func _initialize_field_cards(duel_state: Object, card_database: Object) -> void:

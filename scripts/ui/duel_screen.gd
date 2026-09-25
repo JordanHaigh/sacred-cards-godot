@@ -13,7 +13,7 @@ const EFFECT_REGISTRY_SCRIPT = preload("res://scripts/duel/card_effect_registry.
 const BASIC_EFFECTS_SCRIPT = preload("res://scripts/duel/basic_card_effects.gd")
 const TRAP_TRIGGER_SCRIPT = preload("res://scripts/duel/trap_trigger_system.gd")
 const EVENT_BUS_SCRIPT = preload("res://scripts/duel/duel_event_bus.gd")
-const ARENA_3D_SCENE = preload("res://scenes/duel_arena_3d.tscn")
+const ARENA_2D_SCENE: PackedScene = preload("res://scenes/duel_arena_2d.tscn")
 const CARD_HAND_SCENE: PackedScene = preload("res://ui/card_hand.tscn")
 
 var duel_state: Object
@@ -26,11 +26,13 @@ var _last_trap_message: String = ""
 var _turn_label: Label
 var _player_summary: Label
 var _opponent_summary: Label
-var _arena_3d: Node3D
+var _arena_2d: DuelArena2D
 var _card_hand: Control
 var _selection_label: Label
 var _message_label: Label
 var _card_preview: PanelContainer
+var _field_actions: PanelContainer
+var _field_action_list: VBoxContainer
 var _preview_title: Label
 var _preview_origin: Label
 var _preview_type: Label
@@ -43,6 +45,10 @@ var _selected_card_id: int = -1
 var _selected_hand_instance_id: int = 0
 var _inspected_zone_kind: String = ""
 var _inspected_zone_index: int = -1
+var _hovered_zone_kind: String = ""
+var _hovered_zone_index: int = -1
+var _tribute_zones: Array[int] = []
+var _pending_attacker_zone: int = -1
 var _selected_zone_kind: String = "player_monster"
 var _selected_monster_zone: int = 0
 var _selected_back_row_zone: int = 0
@@ -83,14 +89,17 @@ func refresh_screen() -> void:
 	_turn_label.text = "Turn %d  |  %s phase  |  Active: %s" % [duel_state.get("turn_number"), String(duel_state.get("phase")).capitalize(), String(duel_state.get("active_player_id")).capitalize()]
 	_player_summary.text = _summary_text("You", player)
 	_opponent_summary.text = _summary_text("Opponent", opponent)
-	_arena_3d.call("refresh_from_duel", duel_state, card_database)
+	_arena_2d.refresh_from_duel(duel_state, card_database)
 	var active_zone_index := _selected_monster_zone if _selected_zone_kind == "player_monster" else _selected_back_row_zone
-	_arena_3d.call("select_zone", _selected_zone_kind, active_zone_index)
+	_arena_2d.select_zone(_selected_zone_kind, active_zone_index)
+	_arena_2d.set_tribute_zones(_tribute_zones)
 	_refresh_placement_highlights(player)
+	_refresh_attack_targets()
 	_render_hand(player)
-	_selection_label.text = "Selected card: %s   ·   Monster slot %d   ·   Spell / Trap slot %d" % [
-		_selected_card_name(player), _selected_monster_zone + 1, _selected_back_row_zone + 1,
-	]
+	_selection_label.text = "Selected card: %s" % _selected_card_name(player)
+	var required_tributes := _required_tributes_for_selected()
+	if required_tributes > 0:
+		_selection_label.text += "   ·   Tributes: %d / %d" % [_tribute_zones.size(), required_tributes]
 	if duel_state.get("status") == "finished":
 		_message_label.text = "Duel finished. Winner: %s" % String(duel_state.get("winner_id")).capitalize()
 
@@ -105,36 +114,16 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	var key_event := event as InputEventKey
 	if not key_event.pressed or key_event.echo:
 		return
-	match key_event.keycode:
-		KEY_D:
-			_on_draw()
-		KEY_S:
-			_on_summon()
-		KEY_F:
-			_on_set()
-		KEY_P:
-			_on_change_position()
-		KEY_B:
-			_on_enter_battle()
-		KEY_A:
-			_on_attack()
-		KEY_E:
-			_on_end_turn()
+	if key_event.keycode == KEY_E:
+		_on_end_turn()
 
 
 func _build_screen() -> void:
-	var arena_container := SubViewportContainer.new()
-	arena_container.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	arena_container.stretch = true
-	arena_container.mouse_filter = Control.MOUSE_FILTER_STOP
-	add_child(arena_container)
-	var arena_viewport := SubViewport.new()
-	arena_viewport.physics_object_picking = true
-	arena_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
-	arena_container.add_child(arena_viewport)
-	_arena_3d = ARENA_3D_SCENE.instantiate()
-	arena_viewport.add_child(_arena_3d)
-	_arena_3d.connect("slot_selected", _on_zone_selected)
+	var background := ColorRect.new()
+	background.color = Color("#18362d")
+	background.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	add_child(background)
 
 	var margin := MarginContainer.new()
 	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -170,6 +159,12 @@ func _build_screen() -> void:
 	battlefield_spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	battlefield_spacer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	content.add_child(battlefield_spacer)
+	_arena_2d = ARENA_2D_SCENE.instantiate() as DuelArena2D
+	battlefield_spacer.add_child(_arena_2d)
+	_arena_2d.slot_selected.connect(_on_zone_selected)
+	_arena_2d.slot_set_requested.connect(_on_zone_set_requested)
+	_arena_2d.slot_hovered.connect(_on_field_hovered)
+	_arena_2d.slot_unhovered.connect(_on_field_unhovered)
 
 	_add_heading(content, "YOUR HAND")
 	_card_hand = CARD_HAND_SCENE.instantiate() as Control
@@ -177,14 +172,24 @@ func _build_screen() -> void:
 	_card_hand.connect("card_selected", _select_hand_card)
 	_card_hand.connect("card_hovered", _show_card_preview)
 	_card_hand.connect("card_unhovered", _hide_card_preview)
-	_selection_label = _new_label(content, "", 16, Color("#c2cfdf"))
-	_add_controls(content)
+	var footer := HBoxContainer.new()
+	footer.add_theme_constant_override("separation", 16)
+	content.add_child(footer)
+	_selection_label = _new_label(footer, "", 16, Color("#c2cfdf"))
+	_selection_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var end_turn_button := Button.new()
+	end_turn_button.text = "End Turn"
+	end_turn_button.custom_minimum_size = Vector2(150, 44)
+	end_turn_button.add_theme_font_size_override("font_size", 17)
+	end_turn_button.pressed.connect(_on_end_turn)
+	footer.add_child(end_turn_button)
 
 	var spacer := Control.new()
 	spacer.custom_minimum_size.y = 2
 	content.add_child(spacer)
 	_message_label = _new_label(content, "", 18, Color("#f0cf68"))
 	_build_card_preview()
+	_build_field_actions()
 
 
 func _start_demo_duel() -> void:
@@ -261,12 +266,10 @@ func _start_demo_duel() -> void:
 	var opening_hand_size := int(ruleset.get("opening_hand_size"))
 	duel_state.call("get_player", "player_one").draw_cards(opening_hand_size)
 	duel_state.call("get_player", "player_two").draw_cards(opening_hand_size)
-	if not bool(duel_state.call("set_phase", "main")):
-		show_message("The demo duel could not enter its first main phase.")
-		return
 	_setup_trap_system()
-	if _trap_system != null:
-		show_message("Select a hand card to play it. Click a field card to inspect its details.")
+	var draw_message := _draw_current_player_turn()
+	if duel_state.get("phase") == "main":
+		show_message("%s Select a hand card, then click a highlighted zone. Hover over field cards to inspect them." % draw_message)
 
 
 func _setup_trap_system() -> void:
@@ -299,6 +302,12 @@ func _on_trap_activated(event: Dictionary) -> void:
 
 
 func _on_zone_selected(zone_kind: String, zone_index: int) -> void:
+	if _pending_attacker_zone >= 0:
+		if zone_kind == "opponent_monster" and _card_in_zone(zone_kind, zone_index) != null:
+			_attack_with_target(_pending_attacker_zone, zone_index)
+			return
+		_pending_attacker_zone = -1
+		_refresh_attack_targets()
 	if zone_kind.begins_with("player_"):
 		_selected_zone_kind = zone_kind
 		if zone_kind == "player_monster":
@@ -310,7 +319,12 @@ func _on_zone_selected(zone_kind: String, zone_index: int) -> void:
 		_inspected_zone_kind = zone_kind
 		_inspected_zone_index = zone_index
 		refresh_screen()
+		if zone_kind.begins_with("player_"):
+			_show_field_actions(zone_kind, zone_index)
+		else:
+			_hide_field_actions()
 		return
+	_hide_field_actions()
 	if zone_kind.begins_with("opponent_"):
 		_inspected_zone_kind = ""
 		_inspected_zone_index = -1
@@ -321,9 +335,12 @@ func _on_zone_selected(zone_kind: String, zone_index: int) -> void:
 		_inspected_zone_index = -1
 		refresh_screen()
 		return
+	_play_selected_card_at_zone(zone_kind, zone_index)
+
+
+func _play_selected_card_at_zone(zone_kind: String, zone_index: int) -> void:
 	var action := _placement_action(zone_kind, zone_index)
 	if action == null:
-		refresh_screen()
 		show_message("Choose one of the highlighted squares for this card.")
 		return
 	var definition := _selected_definition()
@@ -338,7 +355,46 @@ func _on_zone_selected(zone_kind: String, zone_index: int) -> void:
 	_inspected_zone_index = zone_index
 	_selected_card_id = -1
 	_selected_hand_instance_id = 0
+	_tribute_zones.clear()
+	_hide_field_actions()
 	refresh_screen()
+
+
+func _on_zone_set_requested(zone_kind: String, zone_index: int) -> void:
+	var definition := _selected_definition()
+	if zone_kind != "player_monster" or definition == null or String(definition.get("card_type")) != "Monster":
+		return
+	var action = DUEL_ACTION_SCRIPT.set_monster(
+		"player_one", _selected_card_id, "Monster", zone_index, _selected_hand_instance_id,
+		int(definition.get("level")), _tribute_zones,
+	)
+	if not _run_action(action):
+		return
+	_selected_card_id = -1
+	_selected_hand_instance_id = 0
+	_tribute_zones.clear()
+	_inspected_zone_kind = zone_kind
+	_inspected_zone_index = zone_index
+	_hide_field_actions()
+	refresh_screen()
+	show_message("Set %s face down." % definition.get("display_name"))
+
+
+func _on_field_hovered(zone_kind: String, zone_index: int) -> void:
+	var card := _card_in_zone(zone_kind, zone_index)
+	if card == null:
+		return
+	_hovered_zone_kind = zone_kind
+	_hovered_zone_index = zone_index
+	_show_field_card_preview(card)
+
+
+func _on_field_unhovered(zone_kind: String, zone_index: int) -> void:
+	if _hovered_zone_kind != zone_kind or _hovered_zone_index != zone_index:
+		return
+	_hovered_zone_kind = ""
+	_hovered_zone_index = -1
+	_hide_card_preview()
 
 
 func _card_in_zone(zone_kind: String, zone_index: int) -> RefCounted:
@@ -357,7 +413,7 @@ func _refresh_placement_highlights(player: Object) -> void:
 	var definition := _selected_definition()
 	if definition == null:
 		var no_zones: Array[int] = []
-		_arena_3d.call("set_placement_zones", "", no_zones)
+		_arena_2d.set_placement_zones("", no_zones)
 		return
 	var zone_kind := "player_monster" if String(definition.get("card_type")) == "Monster" else "player_back"
 	var zone_count: int = player.monster_zone_count() if zone_kind == "player_monster" else player.spell_trap_zone_count()
@@ -366,7 +422,7 @@ func _refresh_placement_highlights(player: Object) -> void:
 		var action := _placement_action(zone_kind, zone_index)
 		if action != null and bool(action.call("validate", duel_state)):
 			valid_zones.append(zone_index)
-	_arena_3d.call("set_placement_zones", zone_kind, valid_zones)
+	_arena_2d.set_placement_zones(zone_kind, valid_zones)
 
 
 func _placement_action(zone_kind: String, zone_index: int) -> RefCounted:
@@ -375,7 +431,7 @@ func _placement_action(zone_kind: String, zone_index: int) -> RefCounted:
 		return null
 	var card_type := String(definition.get("card_type"))
 	if zone_kind == "player_monster" and card_type == "Monster":
-		return DUEL_ACTION_SCRIPT.summon("player_one", _selected_card_id, card_type, zone_index, _selected_hand_instance_id)
+		return DUEL_ACTION_SCRIPT.summon("player_one", _selected_card_id, card_type, zone_index, _selected_hand_instance_id, int(definition.get("level")), _tribute_zones)
 	if zone_kind == "player_back" and ["Magic", "Trap"].has(card_type):
 		return DUEL_ACTION_SCRIPT.set_spell_trap("player_one", _selected_card_id, card_type, zone_index, _selected_hand_instance_id)
 	return null
@@ -457,6 +513,87 @@ func _build_card_preview() -> void:
 	_preview_stats = _new_label(layout, "", 20, Color("#edcf79"))
 
 
+func _build_field_actions() -> void:
+	_field_actions = PanelContainer.new()
+	_field_actions.name = "FieldActions"
+	_field_actions.visible = false
+	_field_actions.z_index = 41
+	_field_actions.custom_minimum_size.x = 236.0
+	_field_actions.anchor_left = 1.0
+	_field_actions.anchor_right = 1.0
+	_field_actions.anchor_top = 0.5
+	_field_actions.anchor_bottom = 0.5
+	_field_actions.offset_left = -260.0
+	_field_actions.offset_right = -24.0
+	_field_actions.offset_top = -130.0
+	_field_actions.offset_bottom = 130.0
+	_field_actions.add_theme_stylebox_override("panel", _preview_panel_style(Color("#e0c979")))
+	add_child(_field_actions)
+	var margin := MarginContainer.new()
+	margin.add_theme_constant_override("margin_left", 14)
+	margin.add_theme_constant_override("margin_right", 14)
+	margin.add_theme_constant_override("margin_top", 12)
+	margin.add_theme_constant_override("margin_bottom", 12)
+	_field_actions.add_child(margin)
+	_field_action_list = VBoxContainer.new()
+	_field_action_list.add_theme_constant_override("separation", 8)
+	margin.add_child(_field_action_list)
+
+
+func _show_field_actions(zone_kind: String, zone_index: int) -> void:
+	_hide_field_actions()
+	if duel_state == null or duel_state.get("status") != "in_progress" or duel_state.get("active_player_id") != "player_one":
+		return
+	var card := _card_in_zone(zone_kind, zone_index)
+	if card == null:
+		return
+	_new_label(_field_action_list, _card_name(card), 17, Color("#f2d789"))
+	var action_count := 0
+	if zone_kind == "player_monster":
+		if duel_state.get("phase") in ["main", "battle"] and card.get("face_state") == "face_up" and card.get("battle_position") == "attack" and not card.has_turn_flag("attacked_turn_%d" % int(duel_state.get("turn_number"))):
+			_add_field_action("Attack", _begin_attack.bind(zone_index))
+			action_count += 1
+		if duel_state.get("phase") == "main":
+			_add_field_action("Change Position", _change_position_at.bind(zone_index))
+			action_count += 1
+			var required_tributes := _required_tributes_for_selected()
+			if required_tributes > 0:
+				if _tribute_zones.has(zone_index):
+					_add_field_action("Unmark Tribute", _toggle_tribute.bind(zone_index))
+					action_count += 1
+				elif _tribute_zones.size() < required_tributes:
+					_add_field_action("Mark as Tribute", _toggle_tribute.bind(zone_index))
+					action_count += 1
+				var summon_action := _placement_action(zone_kind, zone_index)
+				if summon_action != null and bool(summon_action.call("validate", duel_state)):
+					_add_field_action("Summon Here", _play_selected_card_at_zone.bind(zone_kind, zone_index))
+					action_count += 1
+	elif zone_kind == "player_back" and duel_state.get("phase") == "main":
+		var effect_ids: PackedStringArray = effect_registry.call("effects_for_card", int(card.get("definition_id")))
+		if not effect_ids.is_empty():
+			_add_field_action("Use Effect", _activate_field_effect.bind(zone_index))
+			action_count += 1
+	_field_actions.visible = action_count > 0
+
+
+func _hide_field_actions() -> void:
+	if _field_actions == null:
+		return
+	_field_actions.visible = false
+	for child in _field_action_list.get_children():
+		_field_action_list.remove_child(child)
+		child.queue_free()
+
+
+func _add_field_action(caption: String, callback: Callable) -> void:
+	var button := Button.new()
+	button.text = caption
+	button.custom_minimum_size.y = 38.0
+	button.add_theme_font_size_override("font_size", 16)
+	button.pressed.connect(callback)
+	_field_action_list.add_child(button)
+
+
 func _show_card_preview(card_id: int, _source_button: Control) -> void:
 	var definition = card_database.call("get_card", card_id) if card_database != null else null
 	if definition == null:
@@ -518,8 +655,11 @@ func _hide_card_preview() -> void:
 	if _card_preview == null:
 		return
 	var field_card: RefCounted = null
+	if not _hovered_zone_kind.is_empty():
+		field_card = _card_in_zone(_hovered_zone_kind, _hovered_zone_index)
 	if not _inspected_zone_kind.is_empty():
-		field_card = _card_in_zone(_inspected_zone_kind, _inspected_zone_index)
+		if field_card == null:
+			field_card = _card_in_zone(_inspected_zone_kind, _inspected_zone_index)
 	if field_card != null and card_database != null:
 		_show_field_card_preview(field_card)
 	elif _selected_card_id >= 0 and card_database != null:
@@ -614,21 +754,36 @@ func _card_accent(card_type: String) -> Color:
 			return Color("#c3a963")
 
 
-func _add_controls(parent: VBoxContainer) -> void:
-	var controls := HFlowContainer.new()
-	controls.add_theme_constant_override("h_separation", 8)
-	controls.add_theme_constant_override("v_separation", 8)
-	parent.add_child(controls)
-	_add_button(controls, "Draw", _on_draw)
-	_add_button(controls, "Summon", _on_summon)
-	_add_button(controls, "Set", _on_set)
-	_add_button(controls, "Activate Effect", _on_activate_effect)
-	_add_button(controls, "Previous Zone", _on_previous_zone)
-	_add_button(controls, "Next Zone", _on_next_zone)
-	_add_button(controls, "Change Position", _on_change_position)
-	_add_button(controls, "Enter Battle", _on_enter_battle)
-	_add_button(controls, "Attack", _on_attack)
-	_add_button(controls, "End Turn", _on_end_turn)
+func _required_tributes_for_selected() -> int:
+	var definition := _selected_definition()
+	if definition == null or String(definition.get("card_type")) != "Monster" or duel_state == null:
+		return 0
+	return int(duel_state.get("ruleset").call("required_tributes_for_level", int(definition.get("level"))))
+
+
+func _refresh_attack_targets() -> void:
+	var target_zones: Array[int] = []
+	if _pending_attacker_zone >= 0 and duel_state != null:
+		var opponent = duel_state.call("get_player", "player_two")
+		for zone_index in range(opponent.monster_zone_count()):
+			if opponent.get_monster_zone(zone_index) != null:
+				target_zones.append(zone_index)
+	_arena_2d.set_attack_targets(target_zones)
+
+
+func _draw_current_player_turn() -> String:
+	if duel_state == null or duel_state.get("phase") != "draw" or duel_state.get("active_player_id") != "player_one":
+		return ""
+	var player = duel_state.call("get_player", "player_one")
+	if player.deck_size() == 0:
+		if not bool(duel_state.call("set_phase", "main")):
+			return "Could not enter the main phase."
+		return "Your deck is empty."
+	var action = DUEL_ACTION_SCRIPT.draw("player_one")
+	if not bool(action.call("execute", duel_state)):
+		return String(action.get("last_error"))
+	_play_duel_sfx("draw")
+	return "Drew a card."
 
 
 func _setup_duel_audio() -> void:
@@ -670,18 +825,11 @@ func _play_duel_sfx(cue_name: String) -> void:
 	player.play()
 
 
-func _add_button(parent: Container, caption: String, callback: Callable) -> void:
-	var button := Button.new()
-	button.text = caption
-	button.custom_minimum_size = Vector2(145, 44)
-	button.add_theme_font_size_override("font_size", 16)
-	button.pressed.connect(callback)
-	parent.add_child(button)
-
-
 func _select_hand_card(card_id: int, instance_id: int) -> void:
 	_inspected_zone_kind = ""
 	_inspected_zone_index = -1
+	_tribute_zones.clear()
+	_hide_field_actions()
 	if _selected_hand_instance_id == instance_id:
 		_selected_card_id = -1
 		_selected_hand_instance_id = 0
@@ -694,138 +842,50 @@ func _select_hand_card(card_id: int, instance_id: int) -> void:
 	var definition := _selected_definition()
 	if definition != null and String(definition.get("card_type")) == "Ritual":
 		show_message("Ritual placement is not available in this duel yet.")
+	elif _required_tributes_for_selected() > 0:
+		show_message("Select %d monster(s) on your field to sacrifice, then choose a highlighted zone." % _required_tributes_for_selected())
 	else:
-		show_message("Selected %s. Click a highlighted square to play it." % _selected_card_name(duel_state.call("get_player", "player_one")))
+		var instruction := "Click a highlighted zone to summon it, or right-click to set it face down." if String(definition.get("card_type")) == "Monster" else "Click a highlighted zone to set it."
+		show_message("Selected %s. %s" % [_selected_card_name(duel_state.call("get_player", "player_one")), instruction])
 
 
-func _on_draw() -> void:
-	var action = DUEL_ACTION_SCRIPT.draw("player_one")
-	if _run_action(action):
-		_play_duel_sfx("draw")
-		show_message("Drew a card.")
-
-
-func _on_summon() -> void:
-	var definition = _selected_definition()
-	if definition == null:
-		show_message("Select a card in your hand first.")
+func _toggle_tribute(zone_index: int) -> void:
+	var required_tributes := _required_tributes_for_selected()
+	if required_tributes == 0:
+		show_message("Select a high-level monster in your hand first.")
 		return
-	var action = DUEL_ACTION_SCRIPT.summon("player_one", _selected_card_id, String(definition.get("card_type")), _selected_monster_zone, _selected_hand_instance_id)
-	if _run_action(action):
-		_play_duel_sfx("summon")
-		_inspected_zone_kind = "player_monster"
-		_inspected_zone_index = _selected_monster_zone
-		_selected_card_id = -1
-		_selected_hand_instance_id = 0
-		refresh_screen()
-		show_message("Summoned %s in attack position." % definition.get("display_name"))
-
-
-func _on_set() -> void:
-	var definition = _selected_definition()
-	if definition == null:
-		show_message("Select a card in your hand first.")
-		return
-	var card_type := String(definition.get("card_type"))
-	var action: Object
-	if card_type == "Monster":
-		action = DUEL_ACTION_SCRIPT.set_monster("player_one", _selected_card_id, card_type, _selected_monster_zone, _selected_hand_instance_id)
-	else:
-		action = DUEL_ACTION_SCRIPT.set_spell_trap("player_one", _selected_card_id, card_type, _selected_back_row_zone, _selected_hand_instance_id)
-	if _run_action(action):
-		_inspected_zone_kind = "player_monster" if card_type == "Monster" else "player_back"
-		_inspected_zone_index = _selected_monster_zone if card_type == "Monster" else _selected_back_row_zone
-		_selected_card_id = -1
-		_selected_hand_instance_id = 0
-		refresh_screen()
-		show_message("Set %s face down." % definition.get("display_name"))
-
-
-func _on_activate_effect() -> void:
-	var definition = _selected_definition()
-	if definition == null:
-		show_message("Select a Magic or Trap card in your hand first.")
-		return
-	var effect_ids: PackedStringArray = definition.get("effect_ids")
-	if effect_ids.is_empty():
-		effect_ids = effect_registry.call("effects_for_card", _selected_card_id)
-	if effect_ids.is_empty():
-		effect_ids = effect_registry.call("effects_for_card", _selected_card_id)
-	if effect_ids.is_empty():
-		show_message("This card does not have a mapped effect yet.")
-		return
-	var effect_id := String(effect_ids[0])
-	var parameters: Dictionary = effect_registry.call("parameters_for_card_effect", _selected_card_id, effect_id)
-	var default_target := "opponent" if effect_id == "lp_damage" or effect_id == "destroy_monster" else "self"
-	var target_side := String(parameters.get("target", default_target))
-	parameters.erase("target")
-	parameters["target_player_id"] = "player_two" if target_side == "opponent" else "player_one"
-	parameters["card_database"] = card_database
-	if effect_id in ["modify_monster_stats", "change_monster_position", "destroy_monster"]:
-		parameters["zone_index"] = int(parameters.get("zone_index", _selected_monster_zone))
-	if effect_id == "change_monster_position" and not parameters.has("position"):
-		var target = duel_state.call("get_player", parameters["target_player_id"])
-		var target_card = target.call("get_monster_zone", parameters["zone_index"])
-		if target_card != null:
-			parameters["position"] = "defense" if target_card.get("battle_position") == "attack" else "attack"
-	var action = DUEL_ACTION_SCRIPT.activate_effect(
-		"player_one",
-		_selected_card_id,
-		String(definition.get("card_type")),
-		effect_id,
-		parameters,
-	)
-	if not bool(action.call("execute", duel_state, effect_registry)):
-		show_message(String(action.get("last_error")))
-		return
-	_selected_card_id = -1
-	_selected_hand_instance_id = 0
+	if _tribute_zones.has(zone_index):
+		_tribute_zones.erase(zone_index)
+	elif _tribute_zones.size() < required_tributes:
+		_tribute_zones.append(zone_index)
 	refresh_screen()
-	show_message("Activated %s." % effect_id.replace("_", " "))
+	_show_field_actions("player_monster", zone_index)
+	show_message("Marked %d of %d tributes. They are sacrificed only when the summon succeeds." % [_tribute_zones.size(), required_tributes])
 
 
-func _on_previous_zone() -> void:
-	var zone_count: int = duel_state.call("get_player", "player_one").monster_zone_count()
-	if zone_count <= 0:
-		return
-	_selected_zone_kind = "player_monster"
-	_selected_monster_zone = posmod(_selected_monster_zone - 1, zone_count)
-	refresh_screen()
-
-
-func _on_next_zone() -> void:
-	var zone_count: int = duel_state.call("get_player", "player_one").monster_zone_count()
-	if zone_count <= 0:
-		return
-	_selected_zone_kind = "player_monster"
-	_selected_monster_zone = (_selected_monster_zone + 1) % zone_count
-	refresh_screen()
-
-
-func _on_change_position() -> void:
-	var player = duel_state.call("get_player", "player_one")
-	var card = player.get_monster_zone(_selected_monster_zone)
-	if card == null:
-		show_message("There is no monster in that zone.")
-		return
-	var position := "defense" if card.get("battle_position") == "attack" else "attack"
-	var action = DUEL_ACTION_SCRIPT.change_position("player_one", _selected_monster_zone, position)
-	if _run_action(action):
-		show_message("Changed the monster to %s position." % position)
-
-
-func _on_enter_battle() -> void:
-	if bool(duel_state.call("set_phase", "battle")):
-		refresh_screen()
-		show_message("Choose Attack to attack the opposing field.")
-	else:
+func _begin_attack(zone_index: int) -> void:
+	_hide_field_actions()
+	if duel_state.get("phase") == "main" and not bool(duel_state.call("set_phase", "battle")):
 		show_message(String(duel_state.get("last_transition_error")))
-
-
-func _on_attack() -> void:
+		return
+	if duel_state.get("phase") != "battle":
+		show_message("Attacks are only available during the battle phase.")
+		return
+	_pending_attacker_zone = zone_index
 	var opponent = duel_state.call("get_player", "player_two")
-	var defender_zone := _first_occupied_zone(opponent)
-	var action = DUEL_ACTION_SCRIPT.attack("player_one", _selected_monster_zone, "player_two", defender_zone)
+	var first_target := _first_occupied_zone(opponent)
+	if first_target < 0:
+		_attack_with_target(zone_index, -1)
+		return
+	refresh_screen()
+	show_message("Click a highlighted opponent monster to attack it. Click elsewhere to cancel targeting.")
+
+
+func _attack_with_target(attacker_zone: int, defender_zone: int) -> void:
+	_pending_attacker_zone = -1
+	_refresh_attack_targets()
+	_hide_field_actions()
+	var action = DUEL_ACTION_SCRIPT.attack("player_one", attacker_zone, "player_two", defender_zone)
 	_last_trap_message = ""
 	if not _run_action(action):
 		return
@@ -835,7 +895,7 @@ func _on_attack() -> void:
 		show_message(_last_trap_message)
 		return
 	var resolver = BATTLE_RESOLVER_SCRIPT.new(card_database, load("res://resources/sacred_cards_matchups.tres"))
-	var result = resolver.resolve(duel_state, "player_one", _selected_monster_zone, "player_two", defender_zone)
+	var result = resolver.resolve(duel_state, "player_one", attacker_zone, "player_two", defender_zone)
 	if not result.success:
 		show_message(result.error)
 	else:
@@ -846,10 +906,67 @@ func _on_attack() -> void:
 	refresh_screen()
 
 
+func _change_position_at(zone_index: int) -> void:
+	var card := _card_in_zone("player_monster", zone_index)
+	if card == null:
+		show_message("There is no monster in that zone.")
+		return
+	var position := "defense" if card.get("battle_position") == "attack" else "attack"
+	var action = DUEL_ACTION_SCRIPT.change_position("player_one", zone_index, position)
+	if _run_action(action):
+		_hide_field_actions()
+		show_message("Changed the monster to %s position." % position)
+
+
+func _activate_field_effect(zone_index: int) -> void:
+	var card := _card_in_zone("player_back", zone_index)
+	if card == null:
+		show_message("There is no card in that zone.")
+		return
+	var card_id := int(card.get("definition_id"))
+	var definition = card.call("resolve_definition", card_database)
+	var effect_ids: PackedStringArray = effect_registry.call("effects_for_card", card_id)
+	if definition == null or effect_ids.is_empty():
+		show_message("This card does not have a mapped effect yet.")
+		return
+	var effect_id := String(effect_ids[0])
+	var parameters: Dictionary = effect_registry.call("parameters_for_card_effect", card_id, effect_id)
+	var default_target := "opponent" if effect_id in ["lp_damage", "destroy_monster"] else "self"
+	var target_side := String(parameters.get("target", default_target))
+	parameters.erase("target")
+	parameters["target_player_id"] = "player_two" if target_side == "opponent" else "player_one"
+	parameters["card_database"] = card_database
+	if effect_id in ["modify_monster_stats", "change_monster_position", "destroy_monster"]:
+		var target_player = duel_state.call("get_player", parameters["target_player_id"])
+		var fallback_zone := _first_occupied_zone(target_player) if target_side == "opponent" else _selected_monster_zone
+		parameters["zone_index"] = int(parameters.get("zone_index", fallback_zone))
+	if effect_id == "change_monster_position" and not parameters.has("position"):
+		var position_target_player = duel_state.call("get_player", parameters["target_player_id"])
+		var target_card = position_target_player.call("get_monster_zone", parameters["zone_index"])
+		if target_card != null:
+			parameters["position"] = "defense" if target_card.get("battle_position") == "attack" else "attack"
+	var action = DUEL_ACTION_SCRIPT.activate_effect(
+		"player_one", card_id, String(definition.get("card_type")), effect_id, parameters, int(card.get_instance_id()),
+	)
+	if not bool(action.call("execute", duel_state, effect_registry)):
+		show_message(String(action.get("last_error")))
+		return
+	_hide_field_actions()
+	refresh_screen()
+	show_message("Activated %s." % effect_id.replace("_", " "))
+
+
 func _on_end_turn() -> void:
+	_hide_field_actions()
+	_tribute_zones.clear()
+	_pending_attacker_zone = -1
 	var action = DUEL_ACTION_SCRIPT.end_turn("player_one")
 	if not _run_action(action):
 		return
+	_selected_card_id = -1
+	_selected_hand_instance_id = 0
+	_inspected_zone_kind = ""
+	_inspected_zone_index = -1
 	if duel_state.get("status") == "in_progress" and duel_state.get("active_player_id") == "player_two":
 		var resolver = BATTLE_RESOLVER_SCRIPT.new(card_database, load("res://resources/sacred_cards_matchups.tres"))
 		_last_trap_message = ""
@@ -860,7 +977,9 @@ func _on_end_turn() -> void:
 			show_message("Opponent turn failed: %s" % failure_message)
 			refresh_screen()
 			return
-		show_message(_last_trap_message if not _last_trap_message.is_empty() else "Opponent completed its turn.")
+		var turn_message := _last_trap_message if not _last_trap_message.is_empty() else "Opponent completed its turn."
+		var draw_message := _draw_current_player_turn()
+		show_message("%s %s" % [turn_message, draw_message])
 	refresh_screen()
 
 
