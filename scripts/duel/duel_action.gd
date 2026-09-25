@@ -181,27 +181,30 @@ static func draw(actor_id: String) -> RefCounted:
 	return load("res://scripts/duel/duel_action.gd").new(ACTION_DRAW, actor_id)
 
 
-static func summon(actor_id: String, card_id: int, card_type: String, zone_index: int = -1) -> RefCounted:
+static func summon(actor_id: String, card_id: int, card_type: String, zone_index: int = -1, instance_id: int = 0) -> RefCounted:
 	return load("res://scripts/duel/duel_action.gd").new(ACTION_SUMMON, actor_id, {
 		"card_id": card_id,
 		"card_type": card_type,
 		"zone_index": zone_index,
+		"instance_id": instance_id,
 	})
 
 
-static func set_monster(actor_id: String, card_id: int, card_type: String, zone_index: int = -1) -> RefCounted:
+static func set_monster(actor_id: String, card_id: int, card_type: String, zone_index: int = -1, instance_id: int = 0) -> RefCounted:
 	return load("res://scripts/duel/duel_action.gd").new(ACTION_SET_MONSTER, actor_id, {
 		"card_id": card_id,
 		"card_type": card_type,
 		"zone_index": zone_index,
+		"instance_id": instance_id,
 	})
 
 
-static func set_spell_trap(actor_id: String, card_id: int, card_type: String, zone_index: int = -1) -> RefCounted:
+static func set_spell_trap(actor_id: String, card_id: int, card_type: String, zone_index: int = -1, instance_id: int = 0) -> RefCounted:
 	return load("res://scripts/duel/duel_action.gd").new(ACTION_SET_SPELL_TRAP, actor_id, {
 		"card_id": card_id,
 		"card_type": card_type,
 		"zone_index": zone_index,
+		"instance_id": instance_id,
 	})
 
 
@@ -244,12 +247,17 @@ func _validate_card_play(duel_state: Object, player: Object) -> bool:
 	var card = _card_in_hand(player)
 	if card == null:
 		return _fail("Card ID %s is not in the actor's hand." % _payload.get("card_id", ""))
+	var zone_index := int(_payload.get("zone_index", -1))
 	if _action_type in [ACTION_SUMMON, ACTION_SET_MONSTER]:
-		if player.get_open_monster_zone_index() < 0 and int(_payload.get("zone_index", -1)) < 0:
+		if zone_index == -1 and player.get_open_monster_zone_index() < 0:
 			return _fail("No open monster zone is available.")
+		if zone_index != -1 and (zone_index < 0 or zone_index >= player.monster_zone_count() or player.get_monster_zone(zone_index) != null):
+			return _fail("The requested monster zone is unavailable.")
 	else:
-		if player.get_open_spell_trap_zone_index() < 0 and int(_payload.get("zone_index", -1)) < 0:
+		if zone_index == -1 and player.get_open_spell_trap_zone_index() < 0:
 			return _fail("No open spell/trap zone is available.")
+		if zone_index != -1 and (zone_index < 0 or zone_index >= player.spell_trap_zone_count() or player.get_spell_trap_zone(zone_index) != null):
+			return _fail("The requested spell/trap zone is unavailable.")
 	return true
 
 
@@ -308,8 +316,9 @@ func _validate_effect_activation(duel_state: Object, player: Object, effect_regi
 
 func _card_in_hand(player: Object) -> RefCounted:
 	var requested_id := int(_payload.get("card_id", -1))
+	var requested_instance_id := int(_payload.get("instance_id", 0))
 	for card in player.get_hand():
-		if int(card.get("definition_id")) == requested_id:
+		if int(card.get("definition_id")) == requested_id and (requested_instance_id == 0 or int(card.get_instance_id()) == requested_instance_id):
 			return card
 	return null
 

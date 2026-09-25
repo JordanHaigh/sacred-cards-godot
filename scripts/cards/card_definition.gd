@@ -38,6 +38,7 @@ var _password: Variant
 var _description: String
 var _effect_ids: PackedStringArray = []
 var _source_record: Dictionary = {}
+var _illustration_path: String
 
 var card_id: int:
 	get:
@@ -94,6 +95,10 @@ var description: String:
 var effect_ids: PackedStringArray:
 	get:
 		return _effect_ids.duplicate()
+
+var illustration_path: String:
+	get:
+		return _illustration_path
 
 var source_metadata: Dictionary:
 	get:
@@ -169,10 +174,17 @@ static func from_source_record(record: Dictionary) -> Resource:
 	definition._defense = int(record["def"])
 	definition._password = record["password"]
 	definition._description = String(record["description"])
+	definition._illustration_path = "res://local_assets/card_art/cards/%03d/illustration.png" % definition._card_id
 	for effect_id in record.get("effect_ids", []):
 		definition._effect_ids.append(String(effect_id))
 	definition._source_record = record.duplicate(true)
 	return definition
+
+
+func load_illustration() -> Texture2D:
+	if _illustration_path.is_empty() or not FileAccess.file_exists(_illustration_path):
+		return null
+	return load(_illustration_path) as Texture2D
 
 
 func is_monster() -> bool:

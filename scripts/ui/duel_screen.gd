@@ -14,6 +14,7 @@ const BASIC_EFFECTS_SCRIPT = preload("res://scripts/duel/basic_card_effects.gd")
 const TRAP_TRIGGER_SCRIPT = preload("res://scripts/duel/trap_trigger_system.gd")
 const EVENT_BUS_SCRIPT = preload("res://scripts/duel/duel_event_bus.gd")
 const ARENA_3D_SCENE = preload("res://scenes/duel_arena_3d.tscn")
+const CARD_HAND_SCENE: PackedScene = preload("res://ui/card_hand.tscn")
 
 var duel_state: Object
 var card_database: Object
@@ -26,26 +27,45 @@ var _turn_label: Label
 var _player_summary: Label
 var _opponent_summary: Label
 var _arena_3d: Node3D
-var _hand_container: HBoxContainer
+var _card_hand: Control
 var _selection_label: Label
 var _message_label: Label
 var _card_preview: PanelContainer
 var _preview_title: Label
+var _preview_origin: Label
 var _preview_type: Label
 var _preview_details: Label
 var _preview_description: Label
 var _preview_stats: Label
+var _preview_art: TextureRect
+var _preview_art_fallback: Label
 var _selected_card_id: int = -1
+var _selected_hand_instance_id: int = 0
+var _inspected_zone_kind: String = ""
+var _inspected_zone_index: int = -1
 var _selected_zone_kind: String = "player_monster"
 var _selected_monster_zone: int = 0
 var _selected_back_row_zone: int = 0
 var _ai: Object
+var _music_player: AudioStreamPlayer
+var _sfx_player: AudioStreamPlayer
+var _life_point_player: AudioStreamPlayer
+var _duel_sfx: Dictionary = {}
+
+const DUEL_MUSIC_PATH := "res://local_assets/audio/music/BGM_DUEL_NORMAL_09.wav"
+const DUEL_SFX_PATHS := {
+	"draw": "res://local_assets/audio/sfx/SE_CARD_DRAW_01.wav",
+	"summon": "res://local_assets/audio/sfx/SE_SMN_CMN_CARD_01.wav",
+	"attack": "res://local_assets/audio/sfx/SE_SOLO_ATTACK_01.wav",
+	"life_points": "res://local_assets/audio/sfx/SE_LP_COUNT_PLAYER.wav",
+}
 
 const FIELD_ACCENT := Color("#a4dcb9")
 
 
 func _ready() -> void:
 	_build_screen()
+	_setup_duel_audio()
 	_start_demo_duel()
 	refresh_screen()
 
@@ -66,6 +86,7 @@ func refresh_screen() -> void:
 	_arena_3d.call("refresh_from_duel", duel_state, card_database)
 	var active_zone_index := _selected_monster_zone if _selected_zone_kind == "player_monster" else _selected_back_row_zone
 	_arena_3d.call("select_zone", _selected_zone_kind, active_zone_index)
+	_refresh_placement_highlights(player)
 	_render_hand(player)
 	_selection_label.text = "Selected card: %s   ·   Monster slot %d   ·   Spell / Trap slot %d" % [
 		_selected_card_name(player), _selected_monster_zone + 1, _selected_back_row_zone + 1,
@@ -108,7 +129,6 @@ func _build_screen() -> void:
 	arena_container.mouse_filter = Control.MOUSE_FILTER_STOP
 	add_child(arena_container)
 	var arena_viewport := SubViewport.new()
-	arena_viewport.size = Vector2i(1920, 1080)
 	arena_viewport.physics_object_picking = true
 	arena_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	arena_container.add_child(arena_viewport)
@@ -148,17 +168,15 @@ func _build_screen() -> void:
 
 	var battlefield_spacer := Control.new()
 	battlefield_spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	battlefield_spacer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	content.add_child(battlefield_spacer)
 
 	_add_heading(content, "YOUR HAND")
-	var hand_scroll := ScrollContainer.new()
-	hand_scroll.custom_minimum_size.y = 118
-	hand_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
-	hand_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	content.add_child(hand_scroll)
-	_hand_container = HBoxContainer.new()
-	_hand_container.add_theme_constant_override("separation", 14)
-	hand_scroll.add_child(_hand_container)
+	_card_hand = CARD_HAND_SCENE.instantiate() as Control
+	content.add_child(_card_hand)
+	_card_hand.connect("card_selected", _select_hand_card)
+	_card_hand.connect("card_hovered", _show_card_preview)
+	_card_hand.connect("card_unhovered", _hide_card_preview)
 	_selection_label = _new_label(content, "", 16, Color("#c2cfdf"))
 	_add_controls(content)
 
@@ -247,6 +265,8 @@ func _start_demo_duel() -> void:
 		show_message("The demo duel could not enter its first main phase.")
 		return
 	_setup_trap_system()
+	if _trap_system != null:
+		show_message("Select a hand card to play it. Click a field card to inspect its details.")
 
 
 func _setup_trap_system() -> void:
@@ -276,14 +296,89 @@ func _on_trap_activated(event: Dictionary) -> void:
 	var definition = card_database.call("get_card", card_id)
 	var card_name := "Trap %d" % card_id if definition == null else String(definition.get("display_name"))
 	_last_trap_message = "%s activated and destroyed the attacking monster." % card_name
+
+
 func _on_zone_selected(zone_kind: String, zone_index: int) -> void:
-	_selected_zone_kind = zone_kind
-	if zone_kind == "player_monster":
-		_selected_monster_zone = zone_index
-	elif zone_kind == "player_back":
-		_selected_back_row_zone = zone_index
-	_arena_3d.call("select_zone", zone_kind, zone_index)
+	if zone_kind.begins_with("player_"):
+		_selected_zone_kind = zone_kind
+		if zone_kind == "player_monster":
+			_selected_monster_zone = zone_index
+		else:
+			_selected_back_row_zone = zone_index
+	var field_card := _card_in_zone(zone_kind, zone_index)
+	if field_card != null:
+		_inspected_zone_kind = zone_kind
+		_inspected_zone_index = zone_index
+		refresh_screen()
+		return
+	if zone_kind.begins_with("opponent_"):
+		_inspected_zone_kind = ""
+		_inspected_zone_index = -1
+		refresh_screen()
+		return
+	if _selected_card_id < 0:
+		_inspected_zone_kind = ""
+		_inspected_zone_index = -1
+		refresh_screen()
+		return
+	var action := _placement_action(zone_kind, zone_index)
+	if action == null:
+		refresh_screen()
+		show_message("Choose one of the highlighted squares for this card.")
+		return
+	var definition := _selected_definition()
+	if not _run_action(action):
+		return
+	if String(definition.get("card_type")) == "Monster":
+		_play_duel_sfx("summon")
+		show_message("Summoned %s in attack position." % definition.get("display_name"))
+	else:
+		show_message("Set %s face down." % definition.get("display_name"))
+	_inspected_zone_kind = zone_kind
+	_inspected_zone_index = zone_index
+	_selected_card_id = -1
+	_selected_hand_instance_id = 0
 	refresh_screen()
+
+
+func _card_in_zone(zone_kind: String, zone_index: int) -> RefCounted:
+	if duel_state == null:
+		return null
+	var player_id := "player_one" if zone_kind.begins_with("player_") else "player_two"
+	var player = duel_state.call("get_player", player_id)
+	if player == null:
+		return null
+	if zone_kind.ends_with("monster"):
+		return player.call("get_monster_zone", zone_index) as RefCounted
+	return player.call("get_spell_trap_zone", zone_index) as RefCounted
+
+
+func _refresh_placement_highlights(player: Object) -> void:
+	var definition := _selected_definition()
+	if definition == null:
+		var no_zones: Array[int] = []
+		_arena_3d.call("set_placement_zones", "", no_zones)
+		return
+	var zone_kind := "player_monster" if String(definition.get("card_type")) == "Monster" else "player_back"
+	var zone_count: int = player.monster_zone_count() if zone_kind == "player_monster" else player.spell_trap_zone_count()
+	var valid_zones: Array[int] = []
+	for zone_index in range(zone_count):
+		var action := _placement_action(zone_kind, zone_index)
+		if action != null and bool(action.call("validate", duel_state)):
+			valid_zones.append(zone_index)
+	_arena_3d.call("set_placement_zones", zone_kind, valid_zones)
+
+
+func _placement_action(zone_kind: String, zone_index: int) -> RefCounted:
+	var definition := _selected_definition()
+	if definition == null:
+		return null
+	var card_type := String(definition.get("card_type"))
+	if zone_kind == "player_monster" and card_type == "Monster":
+		return DUEL_ACTION_SCRIPT.summon("player_one", _selected_card_id, card_type, zone_index, _selected_hand_instance_id)
+	if zone_kind == "player_back" and ["Magic", "Trap"].has(card_type):
+		return DUEL_ACTION_SCRIPT.set_spell_trap("player_one", _selected_card_id, card_type, zone_index, _selected_hand_instance_id)
+	return null
 
 
 func _new_demo_card(definition: Resource, owner_id: String) -> RefCounted:
@@ -304,104 +399,132 @@ func _summary_text(caption: String, player: Object) -> String:
 
 func _render_hand(player: Object) -> void:
 	_hide_card_preview()
-	for child in _hand_container.get_children():
-		child.queue_free()
-	for card in player.get_hand():
-		var definition = card.call("resolve_definition", card_database)
-		var button := Button.new()
-		button.text = _card_name(card)
-		if definition != null and definition.get("card_type") == "Monster":
-			button.text += "\nATK %d / DEF %d" % [definition.get("attack"), definition.get("defense")]
-		button.custom_minimum_size = Vector2(190, 104)
-		button.add_theme_font_size_override("font_size", 17)
-		button.add_theme_color_override("font_color", Color("#eee7d3"))
-		button.add_theme_color_override("font_hover_color", Color("#fff4c8"))
-		button.add_theme_stylebox_override("normal", _hand_card_style(definition, false))
-		button.add_theme_stylebox_override("hover", _hand_card_style(definition, true))
-		var card_id := int(card.get("definition_id"))
-		button.toggle_mode = true
-		button.button_pressed = card_id == _selected_card_id
-		button.pressed.connect(_select_hand_card.bind(card_id))
-		button.mouse_entered.connect(_show_card_preview.bind(card_id, button))
-		button.mouse_exited.connect(_hide_card_preview)
-		_hand_container.add_child(button)
-	if _hand_container.get_child_count() == 0:
-		var empty_label := Label.new()
-		empty_label.text = "(empty)"
-		empty_label.add_theme_font_size_override("font_size", 20)
-		_hand_container.add_child(empty_label)
+	_card_hand.call("show_hand", player.get_hand(), card_database, _selected_hand_instance_id)
 
 
 func _build_card_preview() -> void:
 	_card_preview = PanelContainer.new()
-	_card_preview.name = "HoveredCardPreview"
-	_card_preview.custom_minimum_size = Vector2(330, 430)
-	_card_preview.size = _card_preview.custom_minimum_size
+	_card_preview.name = "CardDetails"
+	_card_preview.custom_minimum_size = Vector2(370, 510)
 	_card_preview.visible = false
 	_card_preview.z_index = 40
-	_card_preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_card_preview.mouse_filter = Control.MOUSE_FILTER_STOP
 	_card_preview.add_theme_stylebox_override("panel", _preview_panel_style(Color("#829466")))
 	add_child(_card_preview)
+	_card_preview.anchor_top = 0.5
+	_card_preview.anchor_bottom = 0.5
+	_card_preview.offset_left = 24.0
+	_card_preview.offset_top = -255.0
+	_card_preview.offset_right = 394.0
+	_card_preview.offset_bottom = 255.0
 	var margin := MarginContainer.new()
-	margin.add_theme_constant_override("margin_left", 22)
-	margin.add_theme_constant_override("margin_right", 22)
-	margin.add_theme_constant_override("margin_top", 22)
-	margin.add_theme_constant_override("margin_bottom", 22)
+	margin.add_theme_constant_override("margin_left", 18)
+	margin.add_theme_constant_override("margin_right", 18)
+	margin.add_theme_constant_override("margin_top", 18)
+	margin.add_theme_constant_override("margin_bottom", 18)
 	_card_preview.add_child(margin)
 	var layout := VBoxContainer.new()
-	layout.add_theme_constant_override("separation", 12)
+	layout.add_theme_constant_override("separation", 9)
 	margin.add_child(layout)
-	_preview_title = _new_label(layout, "Card name", 29, Color("#f2d789"))
+	_preview_origin = _new_label(layout, "CARD DETAILS", 15, Color("#a4dcb9"))
+	_preview_title = _new_label(layout, "Card name", 27, Color("#f2d789"))
 	_preview_title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_preview_type = _new_label(layout, "CARD TYPE", 16, Color("#b9c9af"))
-	var art_window := PanelContainer.new()
-	art_window.custom_minimum_size.y = 116
-	art_window.add_theme_stylebox_override("panel", _preview_art_style())
-	layout.add_child(art_window)
-	var art_label := Label.new()
-	art_label.text = "✦"
-	art_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	art_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	art_label.add_theme_color_override("font_color", Color("#dec98f"))
-	art_label.add_theme_font_size_override("font_size", 62)
-	art_window.add_child(art_label)
-	_preview_details = _new_label(layout, "", 15, Color("#e0d8c2"))
-	_preview_description = _new_label(layout, "", 17, Color("#f0ecdf"))
+	var art_frame := PanelContainer.new()
+	art_frame.custom_minimum_size.y = 150.0
+	art_frame.add_theme_stylebox_override("panel", _preview_art_style())
+	layout.add_child(art_frame)
+	var art_center := CenterContainer.new()
+	art_center.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	art_frame.add_child(art_center)
+	_preview_art = TextureRect.new()
+	_preview_art.custom_minimum_size = Vector2(145.0, 145.0)
+	_preview_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_preview_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_preview_art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	art_center.add_child(_preview_art)
+	_preview_art_fallback = _new_label(art_center, "Illustration unavailable", 16, Color("#aab6a8"))
+	_preview_details = _new_label(layout, "", 16, Color("#e0d8c2"))
+	_preview_details.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	var description_scroll := ScrollContainer.new()
+	description_scroll.custom_minimum_size.y = 120.0
+	description_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	description_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	layout.add_child(description_scroll)
+	_preview_description = _new_label(description_scroll, "", 17, Color("#f0ecdf"))
+	_preview_description.custom_minimum_size.x = 314.0
 	_preview_description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_preview_description.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_preview_stats = _new_label(layout, "", 18, Color("#edcf79"))
+	_preview_stats = _new_label(layout, "", 20, Color("#edcf79"))
 
 
-func _show_card_preview(card_id: int, source_button: Control) -> void:
+func _show_card_preview(card_id: int, _source_button: Control) -> void:
 	var definition = card_database.call("get_card", card_id) if card_database != null else null
 	if definition == null:
 		return
+	_show_definition_preview(definition, null, "IN HAND")
+
+
+func _show_definition_preview(definition: Object, card: Object, origin: String) -> void:
 	var card_type := String(definition.get("card_type"))
 	var accent := _card_accent(card_type)
+	_preview_origin.text = origin
 	_preview_title.text = String(definition.get("display_name"))
 	_preview_type.text = card_type.to_upper()
 	_preview_details.text = _card_preview_details(definition)
 	_preview_description.text = _card_preview_text(definition)
-	_preview_stats.text = "ATK  %d      DEF  %d" % [int(definition.get("attack")), int(definition.get("defense"))] if card_type == "Monster" else ""
+	if card_type == "Monster":
+		var attack := int(card.get("current_attack")) if card != null else int(definition.get("attack"))
+		var defense := int(card.get("current_defense")) if card != null else int(definition.get("defense"))
+		_preview_stats.text = "ATK  %d      DEF  %d" % [attack, defense]
+	else:
+		_preview_stats.text = ""
+	_preview_art.texture = definition.call("load_illustration") as Texture2D
+	_preview_art.visible = _preview_art.texture != null
+	_preview_art_fallback.text = "Illustration unavailable"
+	_preview_art_fallback.visible = _preview_art.texture == null
 	_card_preview.add_theme_stylebox_override("panel", _preview_panel_style(accent))
 	_card_preview.visible = true
-	_card_preview.reset_size()
-	var source_rect := source_button.get_global_rect()
-	var preview_x := source_rect.position.x + source_rect.size.x * 0.5 - _card_preview.size.x * 0.5
-	var preview_y := source_rect.position.y - _card_preview.size.y - 18.0
-	if preview_y < 18.0:
-		preview_y = source_rect.end.y + 18.0
-	_card_preview.position = Vector2(
-		clampf(preview_x, 18.0, size.x - _card_preview.size.x - 18.0),
-		clampf(preview_y, 18.0, size.y - _card_preview.size.y - 18.0),
-	)
-	_card_preview.scale = Vector2(0.96, 0.96)
-	var tween := create_tween()
-	tween.tween_property(_card_preview, "scale", Vector2.ONE, 0.1).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+
+
+func _show_field_card_preview(card: Object) -> void:
+	var owner_id := String(card.get("owner_id"))
+	if owner_id == "player_two" and String(card.get("face_state")) == "face_down":
+		_preview_origin.text = "OPPONENT FIELD"
+		_preview_title.text = "Face-down card"
+		_preview_type.text = "HIDDEN"
+		_preview_details.text = "This card has not been revealed."
+		_preview_description.text = ""
+		_preview_stats.text = ""
+		_preview_art.texture = null
+		_preview_art.visible = false
+		_preview_art_fallback.text = "Card identity hidden"
+		_preview_art_fallback.visible = true
+		_card_preview.add_theme_stylebox_override("panel", _preview_panel_style(Color("#829466")))
+		_card_preview.visible = true
+		return
+	var definition = card.call("resolve_definition", card_database)
+	if definition == null:
+		_card_preview.visible = false
+		return
+	var origin := "YOUR FIELD" if owner_id == "player_one" else "OPPONENT FIELD"
+	origin += "  ·  %s" % String(card.get("face_state")).replace("_", " ").to_upper()
+	if String(definition.get("card_type")) == "Monster":
+		origin += "  ·  %s" % String(card.get("battle_position")).to_upper()
+	_preview_art_fallback.text = "Illustration unavailable"
+	_show_definition_preview(definition, card, origin)
 
 
 func _hide_card_preview() -> void:
-	if _card_preview != null:
+	if _card_preview == null:
+		return
+	var field_card: RefCounted = null
+	if not _inspected_zone_kind.is_empty():
+		field_card = _card_in_zone(_inspected_zone_kind, _inspected_zone_index)
+	if field_card != null and card_database != null:
+		_show_field_card_preview(field_card)
+	elif _selected_card_id >= 0 and card_database != null:
+		_show_card_preview(_selected_card_id, null)
+	else:
 		_card_preview.visible = false
 
 
@@ -455,21 +578,6 @@ func _card_preview_text(definition: Object) -> String:
 	return "%s\n\nEffect\n%s" % [text, effect_text]
 
 
-func _hand_card_style(definition: Object, highlighted: bool) -> StyleBoxFlat:
-	var card_type := String(definition.get("card_type")) if definition != null else "Monster"
-	var accent := _card_accent(card_type)
-	var style := StyleBoxFlat.new()
-	style.bg_color = Color("#192421") if not highlighted else Color("#28392f")
-	style.border_color = accent.lightened(0.18) if highlighted else accent.darkened(0.25)
-	style.set_border_width_all(2 if highlighted else 1)
-	style.set_corner_radius_all(10)
-	style.content_margin_left = 14.0
-	style.content_margin_right = 14.0
-	style.content_margin_top = 10.0
-	style.content_margin_bottom = 10.0
-	return style
-
-
 func _preview_panel_style(accent: Color) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
 	style.bg_color = Color("#15211e")
@@ -487,10 +595,10 @@ func _preview_panel_style(accent: Color) -> StyleBoxFlat:
 
 func _preview_art_style() -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
-	style.bg_color = Color("#28372e")
-	style.border_color = Color("#6e805d")
-	style.set_border_width_all(1)
-	style.set_corner_radius_all(12)
+	style.bg_color = Color("#0d1715")
+	style.border_color = Color("#6b846c")
+	style.set_border_width_all(2)
+	style.set_corner_radius_all(8)
 	return style
 
 
@@ -507,8 +615,9 @@ func _card_accent(card_type: String) -> Color:
 
 
 func _add_controls(parent: VBoxContainer) -> void:
-	var controls := HBoxContainer.new()
-	controls.add_theme_constant_override("separation", 8)
+	var controls := HFlowContainer.new()
+	controls.add_theme_constant_override("h_separation", 8)
+	controls.add_theme_constant_override("v_separation", 8)
 	parent.add_child(controls)
 	_add_button(controls, "Draw", _on_draw)
 	_add_button(controls, "Summon", _on_summon)
@@ -522,7 +631,46 @@ func _add_controls(parent: VBoxContainer) -> void:
 	_add_button(controls, "End Turn", _on_end_turn)
 
 
-func _add_button(parent: HBoxContainer, caption: String, callback: Callable) -> void:
+func _setup_duel_audio() -> void:
+	_music_player = AudioStreamPlayer.new()
+	_music_player.name = "DuelMusicPlayer"
+	_music_player.volume_db = -12.0
+	add_child(_music_player)
+	var music := _load_local_audio(DUEL_MUSIC_PATH) as AudioStreamWAV
+	if music != null:
+		music.loop_mode = AudioStreamWAV.LOOP_FORWARD
+		_music_player.stream = music
+		_music_player.play()
+
+	_sfx_player = AudioStreamPlayer.new()
+	_sfx_player.name = "DuelSfxPlayer"
+	_sfx_player.volume_db = -4.0
+	add_child(_sfx_player)
+	_life_point_player = AudioStreamPlayer.new()
+	_life_point_player.name = "LifePointSfxPlayer"
+	_life_point_player.volume_db = -4.0
+	add_child(_life_point_player)
+	for cue_name in DUEL_SFX_PATHS:
+		var stream := _load_local_audio(String(DUEL_SFX_PATHS[cue_name]))
+		if stream != null:
+			_duel_sfx[cue_name] = stream
+
+
+func _load_local_audio(path: String) -> AudioStream:
+	if not ResourceLoader.exists(path):
+		return null
+	return ResourceLoader.load(path) as AudioStream
+
+
+func _play_duel_sfx(cue_name: String) -> void:
+	if not _duel_sfx.has(cue_name):
+		return
+	var player := _life_point_player if cue_name == "life_points" else _sfx_player
+	player.stream = _duel_sfx[cue_name] as AudioStream
+	player.play()
+
+
+func _add_button(parent: Container, caption: String, callback: Callable) -> void:
 	var button := Button.new()
 	button.text = caption
 	button.custom_minimum_size = Vector2(145, 44)
@@ -531,15 +679,29 @@ func _add_button(parent: HBoxContainer, caption: String, callback: Callable) -> 
 	parent.add_child(button)
 
 
-func _select_hand_card(card_id: int) -> void:
+func _select_hand_card(card_id: int, instance_id: int) -> void:
+	_inspected_zone_kind = ""
+	_inspected_zone_index = -1
+	if _selected_hand_instance_id == instance_id:
+		_selected_card_id = -1
+		_selected_hand_instance_id = 0
+		refresh_screen()
+		show_message("Card selection cleared.")
+		return
 	_selected_card_id = card_id
+	_selected_hand_instance_id = instance_id
 	refresh_screen()
-	show_message("Selected %s." % _selected_card_name(duel_state.call("get_player", "player_one")))
+	var definition := _selected_definition()
+	if definition != null and String(definition.get("card_type")) == "Ritual":
+		show_message("Ritual placement is not available in this duel yet.")
+	else:
+		show_message("Selected %s. Click a highlighted square to play it." % _selected_card_name(duel_state.call("get_player", "player_one")))
 
 
 func _on_draw() -> void:
 	var action = DUEL_ACTION_SCRIPT.draw("player_one")
 	if _run_action(action):
+		_play_duel_sfx("draw")
 		show_message("Drew a card.")
 
 
@@ -548,9 +710,13 @@ func _on_summon() -> void:
 	if definition == null:
 		show_message("Select a card in your hand first.")
 		return
-	var action = DUEL_ACTION_SCRIPT.summon("player_one", _selected_card_id, String(definition.get("card_type")), _selected_monster_zone)
+	var action = DUEL_ACTION_SCRIPT.summon("player_one", _selected_card_id, String(definition.get("card_type")), _selected_monster_zone, _selected_hand_instance_id)
 	if _run_action(action):
+		_play_duel_sfx("summon")
+		_inspected_zone_kind = "player_monster"
+		_inspected_zone_index = _selected_monster_zone
 		_selected_card_id = -1
+		_selected_hand_instance_id = 0
 		refresh_screen()
 		show_message("Summoned %s in attack position." % definition.get("display_name"))
 
@@ -563,11 +729,14 @@ func _on_set() -> void:
 	var card_type := String(definition.get("card_type"))
 	var action: Object
 	if card_type == "Monster":
-		action = DUEL_ACTION_SCRIPT.set_monster("player_one", _selected_card_id, card_type, _selected_monster_zone)
+		action = DUEL_ACTION_SCRIPT.set_monster("player_one", _selected_card_id, card_type, _selected_monster_zone, _selected_hand_instance_id)
 	else:
-		action = DUEL_ACTION_SCRIPT.set_spell_trap("player_one", _selected_card_id, card_type, _selected_back_row_zone)
+		action = DUEL_ACTION_SCRIPT.set_spell_trap("player_one", _selected_card_id, card_type, _selected_back_row_zone, _selected_hand_instance_id)
 	if _run_action(action):
+		_inspected_zone_kind = "player_monster" if card_type == "Monster" else "player_back"
+		_inspected_zone_index = _selected_monster_zone if card_type == "Monster" else _selected_back_row_zone
 		_selected_card_id = -1
+		_selected_hand_instance_id = 0
 		refresh_screen()
 		show_message("Set %s face down." % definition.get("display_name"))
 
@@ -610,6 +779,7 @@ func _on_activate_effect() -> void:
 		show_message(String(action.get("last_error")))
 		return
 	_selected_card_id = -1
+	_selected_hand_instance_id = 0
 	refresh_screen()
 	show_message("Activated %s." % effect_id.replace("_", " "))
 
@@ -669,6 +839,9 @@ func _on_attack() -> void:
 	if not result.success:
 		show_message(result.error)
 	else:
+		_play_duel_sfx("attack")
+		if result.life_point_damage > 0:
+			_play_duel_sfx("life_points")
 		show_message("Battle result: %s. LP damage: %d." % [result.outcome.replace("_", " ").capitalize(), result.life_point_damage])
 	refresh_screen()
 
@@ -750,6 +923,7 @@ func _add_heading(parent: VBoxContainer, text: String) -> void:
 func _new_label(parent: Node, text: String, font_size: int, color: Color) -> Label:
 	var label := Label.new()
 	label.text = text
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	label.add_theme_font_size_override("font_size", font_size)
 	label.add_theme_color_override("font_color", color)
 	parent.add_child(label)

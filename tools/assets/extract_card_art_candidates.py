@@ -65,7 +65,7 @@ def main() -> None:
     parser.add_argument(
         "--output-dir",
         type=Path,
-        default=Path("extracted/card_art/candidates"),
+        default=Path("local_assets/card_art/candidates"),
         help="Directory for candidate PNGs, relative to the current working directory",
     )
     parser.add_argument(
@@ -95,6 +95,7 @@ def main() -> None:
     output_dir = args.output_dir.expanduser()
     manifest_path = args.manifest.expanduser()
     output_dir.mkdir(parents=True, exist_ok=True)
+    (output_dir / ".gdignore").touch(exist_ok=True)
     manifest_path.parent.mkdir(parents=True, exist_ok=True)
     manifest_partial = manifest_path.with_suffix(manifest_path.suffix + ".partial")
     count = 0

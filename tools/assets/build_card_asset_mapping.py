@@ -190,7 +190,7 @@ def main() -> None:
                         "master_duel_card_id": master_id,
                         "master_duel_name": catalog_name_by_id[master_id],
                         "market": Path(asset["export_path"]).parts[0] if asset else "",
-                        "illustration_path": f"extracted/card_art/candidates/{asset['export_path']}" if asset else "",
+                        "illustration_path": f"local_assets/card_art/candidates/{asset['export_path']}" if asset else "",
                         "source_asset_path": asset["source_asset_path"] if asset else "",
                         "source_bundle": asset["bundle"] if asset else "",
                         "match_status": "name_match_art_available" if asset else "name_match_art_not_in_candidate_dump",

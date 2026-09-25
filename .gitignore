@@ -4,3 +4,10 @@
 export/
 /assets/cards/
 /extracted/
+/local_assets/
+/manifests/*.translation
+/manifests/*.csv.import
+__pycache__/
+*.pyc
+/inspiration/duelArenas/*.png
+/inspiration/duelArenas/*.png.import

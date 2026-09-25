@@ -10,6 +10,7 @@ const CARD_LENGTH := 1.82
 var _card_body: MeshInstance3D
 var _face_panel: MeshInstance3D
 var _art_panel: MeshInstance3D
+var _art_texture_panel: MeshInstance3D
 var _title_label: Label3D
 var _type_label: Label3D
 var _description_label: Label3D
@@ -40,6 +41,14 @@ func _build_card_face() -> void:
 	_face_panel = _add_box("Card Parchment", Vector3(CARD_WIDTH, 0.014, CARD_LENGTH), Vector3(0.0, 0.048, 0.0), _material(Color("#d6c79e"), 0.88))
 	_add_box("Top Nameplate", Vector3(CARD_WIDTH - 0.12, 0.014, 0.22), Vector3(0.0, 0.06, -0.75), _material(Color("#343b32"), 0.68, 0.12))
 	_art_panel = _add_box("Illustration Window", Vector3(0.98, 0.014, 0.78), Vector3(0.0, 0.065, -0.16), _material(Color("#52634c"), 0.7))
+	var art_plane := PlaneMesh.new()
+	art_plane.size = Vector2(0.94, 0.74)
+	_art_texture_panel = MeshInstance3D.new()
+	_art_texture_panel.name = "Card Illustration"
+	_art_texture_panel.mesh = art_plane
+	_art_texture_panel.position = Vector3(0.0, 0.073, -0.16)
+	_art_texture_panel.rotation_degrees.x = -90.0
+	add_child(_art_texture_panel)
 	_add_box("Description Inlay", Vector3(CARD_WIDTH - 0.16, 0.012, 0.48), Vector3(0.0, 0.064, 0.47), _material(Color("#c4b78f"), 0.95))
 	_add_box("Card Footplate", Vector3(CARD_WIDTH - 0.12, 0.018, 0.2), Vector3(0.0, 0.066, 0.78), _material(Color("#343b32"), 0.68, 0.12))
 	_add_frame_rails()
@@ -67,6 +76,7 @@ func _show_card_front(definition: Object, card: Object) -> void:
 		return
 	var card_type := String(definition.get("card_type"))
 	var accent := _type_color(card_type)
+	var illustration: Texture2D = definition.call("load_illustration")
 	_title_label.text = _shorten(String(definition.get("display_name")), 16)
 	_type_label.text = _metadata_line(definition, card_type)
 	_description_label.text = _wrap_description(String(definition.get("description")), 33, 3)
@@ -76,6 +86,14 @@ func _show_card_front(definition: Object, card: Object) -> void:
 	art_material.emission_enabled = true
 	art_material.emission = accent.darkened(0.72)
 	_art_panel.material_override = art_material
+	_art_texture_panel.visible = illustration != null
+	if illustration != null:
+		var image_material := StandardMaterial3D.new()
+		image_material.albedo_texture = illustration
+		image_material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+		image_material.roughness = 0.86
+		_art_texture_panel.material_override = image_material
+	_sigil_label.visible = illustration == null
 	_title_label.modulate = Color("#f1e8ca")
 	_type_label.modulate = accent.lightened(0.2)
 	_sigil_label.modulate = accent.lightened(0.34)
@@ -91,6 +109,8 @@ func _show_card_back() -> void:
 	_description_label.text = ""
 	_stats_label.text = ""
 	_sigil_label.text = "✧"
+	_sigil_label.visible = true
+	_art_texture_panel.visible = false
 	_sigil_label.modulate = Color("#e0cb82")
 	_art_panel.material_override = _material(Color("#243a35"), 0.35, 0.35)
 	_face_panel.material_override = _material(Color("#263a35"), 0.44, 0.25)

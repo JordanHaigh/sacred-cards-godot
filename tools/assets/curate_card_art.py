@@ -79,7 +79,7 @@ def main() -> None:
             source_path = (root / source_rel).resolve(strict=True)
             if not source_path.is_relative_to(root):
                 raise ValueError(f"Candidate path escapes repository root: {source_rel}")
-            destination_rel = Path("assets/cards") / f"{int(sacred_id):03d}" / "illustration.png"
+            destination_rel = Path("local_assets/card_art/cards") / f"{int(sacred_id):03d}" / "illustration.png"
             destination = root / destination_rel
             pending_copies.append((source_path, destination, art_rows[0]))
             candidate_path = source_rel.as_posix()
