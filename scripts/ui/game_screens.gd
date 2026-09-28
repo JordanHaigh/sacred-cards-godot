@@ -91,6 +91,9 @@ var pre_duel_display: PreDuelDisplay
 var pre_duel_opponent_id := 0
 var duel_summon_rules: SummonRules
 var scene_graphics: SceneGraphics
+var current_scene_id := 0
+var current_scene_variant := 0
+var current_scene_graphics: Dictionary = {}
 var _spell_target_classes: Array[int] = []
 var deck_rules: DeckBuilderState
 var deck_management: DeckManagement
@@ -231,8 +234,7 @@ func _ready() -> void:
 	scene_script_events.scene_change_requested.connect(func(id: int, variant: int, spawn: int, _rules: bool) -> void:
 		scene_script_runtime.stop()
 		audio_dispatch.play_scene_music(id, variant)
-		var graphics: Dictionary = scene_graphics.scene_background(id, variant)
-		scene_graphics_changed.emit(id, variant, graphics)
+		show_scene(id, variant)
 		scene_script_scene_change.emit(id, variant, spawn)
 	)
 	scene_script_events.service_requested.connect(_on_scene_script_service_requested)
@@ -614,6 +616,7 @@ func start_scene_script(scene_id: int, variant: int, role: StringName = &"scene_
 	scene_script_events.scene_id = scene_id
 	scene_script_events.scene_variant = variant
 	audio_dispatch.play_scene_music(scene_id, variant)
+	show_scene(scene_id, variant)
 	var context := initial_context.duplicate()
 	context["event"] = func(event_id: int, _runtime: SceneScriptRuntime) -> void: scene_script_events.dispatch(event_id, scene_script_runtime.state)
 	context["condition"] = func(condition_id: int, _runtime: SceneScriptRuntime) -> int:
@@ -684,7 +687,30 @@ func _build_screen() -> void:
 		"card_detail": _draw_card_detail()
 		"name_entry": _draw_name_entry()
 		"pre_duel": _draw_pre_duel()
+		"scene": _draw_scene()
 	menu_graphics.upload_menu_graphics(screen_root)
+
+## Presents a recovered scene background in the Godot screen shell.
+func show_scene(scene_id: int, variant: int = 0) -> bool:
+	if scene_graphics == null:
+		return false
+	var graphics: Dictionary = scene_graphics.scene_background(scene_id, variant)
+	if not bool(graphics.get("ok", false)):
+		return false
+	current_scene_id = scene_id
+	current_scene_variant = variant
+	current_scene_graphics = graphics
+	_show("scene")
+	scene_graphics_changed.emit(scene_id, variant, graphics)
+	return true
+
+func _draw_scene() -> void:
+	var graphics := current_scene_graphics
+	if not bool(graphics.get("ok", false)):
+		return
+	var background := screen_root.get_child(0) as TextureRect if screen_root.get_child_count() > 0 else null
+	if background != null:
+		background.texture = graphics.texture as Texture2D
 
 func _background_for_screen() -> String:
 	match screen:
