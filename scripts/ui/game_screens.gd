@@ -42,6 +42,7 @@ const SHOP_DISPLAY_SCRIPT = preload("res://scripts/ported/shop_display.gd")
 const SHOP_MENU_SCRIPT = preload("res://scripts/ported/shop_menu.gd")
 const PLAYER_DUEL_SCRIPT = preload("res://scripts/ported/duel_player.gd")
 const DUEL_TEXT_SCRIPT = preload("res://scripts/ported/duel_text.gd")
+const DUEL_UI_SCRIPT = preload("res://scripts/ported/duel_ui.gd")
 const SUMMON_RULES_SCRIPT = preload("res://scripts/systems/summon_rules.gd")
 ## Temporary screen shell for exercising the recovered state and data models.
 
@@ -74,6 +75,8 @@ var shop_display: ShopDisplay
 var shop_menu: ShopMenuState
 var player_duel_controller: PlayerDuelController
 var duel_text_presenter: DuelTextPresenter
+var duel_ui: DuelUiDisplay
+var active_duel_state: SacredDuelState
 var duel_summon_rules: SummonRules
 var _spell_target_classes: Array[int] = []
 var deck_rules: DeckBuilderState
@@ -220,6 +223,14 @@ func _ready() -> void:
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
+		if screen == "duel" and active_duel_state != null:
+			var duel_code := _duel_code_for_key(event.keycode)
+			if duel_code != PlayerDuelController.InputCode.NONE:
+				var result := process_player_duel_code(duel_code, active_duel_state)
+				if result.has("reason"): _toast(str(result.reason))
+				_build_screen()
+				get_viewport().set_input_as_handled()
+				return
 		if scene_script_runtime != null and scene_script_runtime.running:
 			var pressed_mask := 0
 			if event.keycode == KEY_ENTER: pressed_mask = 1
@@ -463,6 +474,29 @@ func run_opponent_turn(duel_state: SacredDuelState, acting_side: int, random_ser
 		return {"completed": false, "reason": "ai_turn_unavailable", "actions": []}
 	return ai_turn.run_opponent_turn(duel_state, acting_side, random_service, max_actions)
 
+## Connects a game-owned duel state to the playable Godot battlefield view.
+func show_duel_state(duel_state: SacredDuelState) -> void:
+	active_duel_state = duel_state
+	if player_duel_controller != null: player_duel_controller.reset_turn()
+	_show("duel")
+
+func _duel_code_for_key(keycode: int) -> int:
+	match keycode:
+		KEY_UP: return PlayerDuelController.InputCode.UP
+		KEY_DOWN: return PlayerDuelController.InputCode.DOWN
+		KEY_LEFT: return PlayerDuelController.InputCode.LEFT
+		KEY_RIGHT: return PlayerDuelController.InputCode.RIGHT
+		KEY_ENTER, KEY_SPACE: return PlayerDuelController.InputCode.CONFIRM
+		KEY_ESCAPE: return PlayerDuelController.InputCode.CANCEL
+		KEY_Q: return PlayerDuelController.InputCode.STATS
+		KEY_W: return PlayerDuelController.InputCode.OPPONENT_HAND
+	return PlayerDuelController.InputCode.NONE
+
+func _duel_cell_selected(row: int, column: int) -> void:
+	if player_duel_controller == null: return
+	player_duel_controller.cursor = Vector2i(column, row)
+	_build_screen()
+
 ## Starts one of the recovered scene entry scripts by scene/variant role.
 ## The script graph contains typed node IDs and can be driven by project services.
 func start_scene_script(scene_id: int, variant: int, role: StringName = &"scene_script_a", initial_context: Dictionary = {}) -> bool:
@@ -566,6 +600,14 @@ func _draw_title() -> void:
 	_click_area(Rect2(76, 122, 88, 34), _confirm_title)
 
 func _draw_duel() -> void:
+	if active_duel_state != null:
+		duel_ui = DUEL_UI_SCRIPT.new()
+		duel_ui.position = Vector2.ZERO
+		duel_ui.size = SCREEN_SIZE
+		duel_ui.cell_selected.connect(_duel_cell_selected)
+		screen_root.add_child(duel_ui)
+		duel_ui.present(active_duel_state, card_database, player_duel_controller.cursor)
+		return
 	_overlay_rect(Rect2(3, 2, 103, 15), Color(0.04, 0.08, 0.10, 0.9), Color("d7bf82"))
 	_text("RIVAL  %04d" % rival_lp, Vector2(7, 5), 9, PAPER)
 	_overlay_rect(Rect2(134, 2, 103, 15), Color(0.04, 0.08, 0.10, 0.9), Color("d7bf82"))

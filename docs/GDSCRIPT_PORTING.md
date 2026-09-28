@@ -1,6 +1,6 @@
 # GDScript port status
 
-The recovered C tree contains 71 maintained modules. 27 are translated into usable GDScript, 37 are partial, and 7 remain. This project is porting those modules to GDScript and Godot-owned state. The source describes recovered behavior; its own documentation says the C has not been execution-compared against the ROM. Remaining native or untraced dependencies must stay explicit instead of being guessed.
+The recovered C tree contains 71 maintained modules. 27 are translated into usable GDScript, 39 are partial, and 5 remain. This project is porting those modules to GDScript and Godot-owned state. The source describes recovered behavior; its own documentation says the C has not been execution-compared against the ROM. Remaining native or untraced dependencies must stay explicit instead of being guessed.
 
 Port rules: use card IDs and typed records, dictionaries, arrays and `Resource`/`RefCounted` models. Do not reproduce memory maps, pointer aliases, BIOS calls or hardware registers. Keep game rules separate from rendering, and keep unresolved source behavior marked as unresolved.
 
@@ -43,7 +43,7 @@ Port rules: use card IDs and typed records, dictionaries, arrays and `Resource`/
 | `decompiled/src/duel_rewards.c` | `scripts/systems/duel_rewards.gd` | Complete |
 | `decompiled/src/duel_special_wins.c` | `scripts/systems/duel_special_wins.gd` | Complete: Exodia/Destiny masks, win state and presentation signal |
 | `decompiled/src/duel_text.c` | `scripts/ported/duel_text.gd, scripts/ui/game_screens.gd` | Partial: resumable text VM handles language segments, pause/line-break directives, card/player-name and number substitutions, and emits render-ready text signals; localized card name data, message-index string tables, exact glyph advances/blink tiles, and end-to-end visual timing remain |
-| `decompiled/src/duel_ui.c` | `scripts/ported/duel_ui.gd` | Not started |
+| `decompiled/src/duel_ui.c` | `scripts/ported/duel_ui.gd, scripts/ui/game_screens.gd` | Partial: a Control renders the 5×5 value-state board, visibility/face-down states, typed card details, stats, attribute/requirement badges and selection; original tile positions, palette assets, mini-stage/used sprites, battle OAM animation and ROM comparison remain |
 | `decompiled/src/effect_dispatch.c` | `scripts/systems/effect_dispatcher.gd` | Complete: validated metadata-index dispatch through Godot Callable registries |
 | `decompiled/src/effect_families.c` | `scripts/systems/effect_family_rules.gd, resources/effect_family_rules.json, scripts/systems/effect_rule_bindings.gd, scripts/ui/game_screens.gd` | Partial: exact 33 equipment eligibility lists and 22 ritual recipes drive typed state updates through metadata dispatch; presentation playback and tribute reset wiring remain |
 | `decompiled/src/effect_noops.c` | `scripts/systems/effect_noops.gd` | Complete: explicit empty metadata-1A handler indices |
