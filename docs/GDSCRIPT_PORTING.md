@@ -1,0 +1,89 @@
+# GDScript port status
+
+The recovered C tree contains 71 maintained modules. 27 are translated into usable GDScript, 33 are partial, and 11 remain. This project is porting those modules to GDScript and Godot-owned state. The source describes recovered behavior; its own documentation says the C has not been execution-compared against the ROM. Remaining native or untraced dependencies must stay explicit instead of being guessed.
+
+Port rules: use card IDs and typed records, dictionaries, arrays and `Resource`/`RefCounted` models. Do not reproduce memory maps, pointer aliases, BIOS calls or hardware registers. Keep game rules separate from rendering, and keep unresolved source behavior marked as unresolved.
+
+## Module inventory
+
+| Recovered C module | Godot destination | Status |
+| `decompiled/src/actor_graphics.c` | `scripts/data/actor_animation_database.gd, resources/actor_frames.json, art/actors/` | Complete: texture-backed frame lookup and recovered walking phase/frame data |
+| `decompiled/src/ai_actions.c` | `scripts/systems/ai_actions.gd, scripts/state/duel_side_state.gd, scripts/systems/duel_deck.gd, scripts/systems/duel_flow.gd, scripts/systems/spell_effect_rules.gd, scripts/systems/monster_effect_rules.gd, scripts/ui/game_screens.gd` | Partial: all 25 actions mutate typed duel/hand state, invoke current battle/effect/trap systems, distinguish simulation from execution paths, and return audio/presentation results; attack-tag lookup, UI choreography and native execution comparison remain |
+| `decompiled/src/ai_card_scoring.c` | `scripts/systems/ai_card_scoring.gd, resources/ai_card_score_tables.json, scripts/ui/game_screens.gd` | Partial: all 140 recovered scorer bodies are dispatched through metadata-indexed spell/monster before/after tables, with a source-name map for review; board/hand scoring and ritual recipes use typed Godot state; native execution comparison remains because the C recovery is not ROM-matched, and candidate-cell mapping needs in-engine verification |
+| `decompiled/src/ai_scoring.c` | `scripts/systems/ai_scoring.gd, scripts/ui/game_screens.gd` | Partial: typed before/after score callbacks cover all 25 action kinds, unsigned priority arithmetic and stable best-candidate selection; card-specific scorer tables are wired through Godot callables, and native execution comparison remains; native raw-window duplicate counting uses a hand-local count until that memory alias is resolved |
+| `decompiled/src/ai_turn.c` | `scripts/systems/ai_turn.gd, scripts/state/sacred_duel_state.gd, scripts/ui/game_screens.gd` | Partial: all 616 candidates are filtered, simulated on independent value-state copies, scored, selected with stable ties, then executed until no candidate, duel end or caller limit; attack-tag table/audio timing, presentation sequencing and execution comparison remain |
+| `decompiled/src/ai_validation.c` | `scripts/systems/ai_validation.gd, scripts/data/ai_candidate_database.gd, resources/ai_candidates.json, resources/ai_spell_target_classes.json, scripts/ui/game_screens.gd` | Partial: all 25 candidate action validators accept explicit duel state and packed row/column operands; a typed loader exposes all 616 recovered candidates, hand row maps through the Godot hand array, trap searches use the trap rules, and recovered spell-target/ritual data is loaded; native execution comparison remains |
+| `decompiled/src/audio_dispatch.c` | `scripts/systems/audio_dispatch.gd, resources/audio_catalog.json` | Complete: 225 recovered IDs, category dispatch, scene music defaults and exact overrides; GBA player calls route to Godot audio services |
+| `decompiled/src/audio_mixer.c` | `scripts/systems/audio_mixer.gd` | Complete: Godot AudioServer buses and reusable AudioStreamPlayer pools replace the DMA/PCM hardware mixer |
+| `decompiled/src/audio_player.c` | `scripts/systems/audio_player.gd, scripts/systems/audio_mixer.gd` | Partial: music/effect routing and interval fades use Godot players/tweens; native tick-based fade cadence and secondary M4A player priority behavior are approximated |
+| `decompiled/src/audio_psg.c` | `scripts/systems/audio_psg.gd, resources/audio_pitch_tables.json` | Partial: recovered PSG pitch/noise conversion tables and helpers are ported; native oscillator envelopes now require a Godot tone voice |
+| `decompiled/src/audio_sequence.c` | `scripts/systems/audio_sequence.gd, audio/music/, audio/effects/, resources/audio_catalog.json` | Complete: recovered sequence/instrument output is shipped as compact Godot-playable streams indexed by stable song IDs |
+| `decompiled/src/battle.c` | `scripts/systems/battle_calculator.gd` | Complete |
+| `decompiled/src/battle_animation.c` | `scripts/systems/battle_animation_player.gd, scripts/state/battle_state.gd` | Partial: recovered result flags, side ordering, hit/destruction/life-point tween phases; original card staging and sprite animation assets remain |
+| `decompiled/src/battle_setup.c` | `scripts/systems/battle_setup.gd` | Complete: direct and monster attack calculator inputs with terrain/stage stats and source locations |
+| `decompiled/src/battle_state.c` | `scripts/state/battle_state.gd` | Complete |
+| `decompiled/src/card_art.c` | `scripts/ported/card_art.gd, scripts/ui/game_screens.gd` | Partial: row-delta decoding and both padded/contiguous mini-card composition layouts use bounded `PackedByteArray` data; indexed palette rendering and in-engine/native comparison remain |
+| `decompiled/src/card_effects.c` | `scripts/systems/card_effect_rules.gd, scripts/systems/effect_rule_bindings.gd, scripts/ui/game_screens.gd` | Partial: all 17 recovered handlers run on typed duel state through the metadata dispatcher; animation/audio event playback and remaining duel flow are not wired |
+| `decompiled/src/card_metadata.c` | `scripts/data/card_definition.gd, scripts/data/card_database.gd` | Complete |
+| `decompiled/src/card_presentation.c` | `scripts/ported/card_presentation.gd, scripts/ui/game_screens.gd` | Partial: full-card assets and card metadata render in a Godot detail view; recovered `^`-delimited description pages are navigable from the existing CARD INFO action; exact multilingual glyph flow, original tile compositor overlays, and runtime comparison remain |
+| `decompiled/src/card_sort.c` | `scripts/systems/card_sort.gd` | Partial: all 54 key builders and recovered language name ranks; four fixed output lists and native quicksort tie order remain |
+| `decompiled/src/card_stats.c` | `scripts/systems/card_stat_rules.gd` | Complete |
+| `decompiled/src/collection_display.c` | `scripts/ported/collection_display.gd, scripts/ui/game_screens.gd` | Partial: collection and deck rows are now a Godot Control with miniature art, selection events and frame-based initialize/show/restore stages replacing VBlank callbacks and VRAM transfers; palette/audio/OAM timing and original screen comparison remain |
+| `decompiled/src/currency.c` | `scripts/state/player_wallet.gd` | Complete |
+| `decompiled/src/deck_builder_graphics.c` | `scripts/ported/deck_builder_graphics.gd, scripts/ported/collection_display.gd, scripts/ui/game_screens.gd` | Partial: all four recovered row-detail modes and the 124-pixel proportional scrollbar are modeled on card records and used by the Godot deck view; native sprite/layout palettes and in-engine comparison remain |
+| `decompiled/src/deck_builder_menu.c` | `scripts/systems/deck_builder_menu.gd, scripts/ui/game_screens.gd, scripts/systems/card_sort.gd` | Partial: collection/deck action popups, inspect/add/remove actions, sort modes, page/filter state and key routing now use typed models and the existing deck/sort services; ROM cursor navigation tables, exact filter display pages, sort popup drawing and frame-by-frame upload order remain |
+| `decompiled/src/deck_builder_state.c` | `scripts/systems/deck_builder_state.gd` | Complete |
+| `decompiled/src/deck_management.c` | `scripts/systems/deck_management.gd, scripts/ui/game_screens.gd` | Partial: the three-choice hub, deck-size/capacity exit checks, status values, sound ordering and routes into collection/deck editing are modeled with save and deck state; original GBA tile maps, numeric glyph layout, invalid-deck overlay timing and in-engine comparison remain |
+| `decompiled/src/duel_cells.c` | `scripts/state/duel_card_slot.gd, scripts/state/sacred_duel_state.gd` | Complete |
+| `decompiled/src/duel_deck.c` | `scripts/systems/duel_deck.gd` | Complete |
+| `decompiled/src/duel_flow.c` | `scripts/systems/duel_flow.gd` | Partial: setup, shuffle, opening draw, turn transition, transformations (pair table injected), and persistent win/loss effects; full encounter loop and original transformation table/presentation remain |
+| `decompiled/src/duel_graphics.c` | `scripts/systems/duel_graphics.gd, art/arenas/terrain-*-view-*.png, scripts/ui/game_screens.gd` | Partial: all seven terrains and both recovered viewport variants use Godot textures, with typed terrain/view selection and the two used viewport offsets; hardware decompression/register writes are removed, and runtime/ROM visual comparison plus validation of other viewport-table entries remain |
+| `decompiled/src/duel_menus.c` | `scripts/ported/duel_menus.gd` | Not started |
+| `decompiled/src/duel_player.c` | `scripts/ported/duel_player.gd` | Not started |
+| `decompiled/src/duel_rewards.c` | `scripts/systems/duel_rewards.gd` | Complete |
+| `decompiled/src/duel_special_wins.c` | `scripts/systems/duel_special_wins.gd` | Complete: Exodia/Destiny masks, win state and presentation signal |
+| `decompiled/src/duel_text.c` | `scripts/ported/duel_text.gd` | Not started |
+| `decompiled/src/duel_ui.c` | `scripts/ported/duel_ui.gd` | Not started |
+| `decompiled/src/effect_dispatch.c` | `scripts/systems/effect_dispatcher.gd` | Complete: validated metadata-index dispatch through Godot Callable registries |
+| `decompiled/src/effect_families.c` | `scripts/systems/effect_family_rules.gd, resources/effect_family_rules.json, scripts/systems/effect_rule_bindings.gd, scripts/ui/game_screens.gd` | Partial: exact 33 equipment eligibility lists and 22 ritual recipes drive typed state updates through metadata dispatch; presentation playback and tribute reset wiring remain |
+| `decompiled/src/effect_noops.c` | `scripts/systems/effect_noops.gd` | Complete: explicit empty metadata-1A handler indices |
+| `decompiled/src/event_flags.c` | `scripts/systems/event_flag_bank.gd` | Complete |
+| `decompiled/src/frame_input.c` | `scripts/systems/frame_input.gd` | Complete: Godot action edges and repeat timing replace key matrix polling |
+| `decompiled/src/menu_graphics.c` | `scripts/ported/menu_graphics.gd` | Not started |
+| `decompiled/src/monster_effects.c` | `scripts/systems/monster_effect_rules.gd, resources/monster_effect_tables.json, scripts/systems/effect_rule_bindings.gd, scripts/ui/game_screens.gd` | Partial: all 78 monster handlers used by card metadata have typed state implementations and metadata dispatch, plus default and four unreferenced source routines; Fairy’s Gift remains in the card-effects port; sprite/audio sequencing and engine runtime verification remain |
+| `decompiled/src/name_entry.c` | `scripts/ported/name_entry.gd` | Not started |
+| `decompiled/src/new_game.c` | `scripts/systems/new_game_state.gd` | Complete |
+| `decompiled/src/password.c` | `scripts/systems/password_system.gd, scripts/state/password_entry_state.gd, scripts/ui/password_entry_view.gd, resources/password_records.json, resources/password_sprites.json, art/ui/password/` | Partial: recovered keypad sprites, navigation/repeat, lookup, and rewards; card-description result presentation remains |
+| `decompiled/src/pre_duel_display.c` | `scripts/ported/pre_duel_display.gd` | Not started |
+| `decompiled/src/pre_duel_graphics.c` | `scripts/ported/pre_duel_graphics.gd` | Not started |
+| `decompiled/src/pre_duel_menu.c` | `scripts/ported/pre_duel_menu.gd` | Not started |
+| `decompiled/src/progression.c` | `scripts/state/player_progression.gd` | Complete |
+| `decompiled/src/random.c` | `scripts/systems/sacred_random.gd` | Complete |
+| `decompiled/src/save_data.c` | `scripts/state/player_save_data.gd` | Complete |
+| `decompiled/src/save_storage.c` | `scripts/systems/save_storage.gd` | Complete |
+| `decompiled/src/scene_data.c` | `scripts/state/scene_actor.gd, scripts/state/scene_configuration.gd, scripts/systems/scene_grid.gd` | Complete: typed scene data and cell predicates replace pointer-backed grid access |
+| `decompiled/src/scene_graphics.c` | `scripts/ported/scene_graphics.gd` | Not started |
+| `decompiled/src/script_actors.c` | `scripts/systems/scene_actor_runtime.gd, scripts/state/scene_actor.gd, scripts/data/actor_animation_database.gd` | Partial: movement, placement, pose, sprite/palette selection, and fade; original height collision and frame cadence helpers remain |
+| `decompiled/src/script_commands.c` | `scripts/systems/script_commands.gd` | Partial: all 27 command tokens route through typed Godot services; duel/native service behavior remains |
+| `decompiled/src/script_dialogue.c` | `scripts/systems/script_dialogue.gd, scripts/systems/script_runtime.gd` | Partial: wait/choice input, recovered glyph cursor/line tables, name insertion, exact portrait cadence, and draw signals; recovered glyph maps and output rendering still need wiring |
+| `decompiled/src/script_events.c` | `scripts/systems/script_events.gd, resources/scene_variant_rules.json, resources/scene_script_motion.json` | Partial: all 58 event IDs are routed with recovered variant rules, motion words, and choreographies; project service execution and several native scene-service bodies remain |
+| `decompiled/src/script_runtime.c` | `scripts/data/scene_script_database.gd, scripts/state/scene_script_node.gd, scripts/systems/script_runtime.gd, resources/scene_scripts.json` | Partial: bounded 1,288-node graph interpreter runs in the project shell with exact recovered portrait cadence; exact language segment selection and output rendering remain |
+| `decompiled/src/shop.c` | `scripts/systems/shop_system.gd` | Complete |
+| `decompiled/src/shop_display.c` | `scripts/ported/shop_display.gd, scripts/ui/game_screens.gd` | Partial: the 5x7 shop view, selected card info, buy/sell/sort popup labels, refresh scopes and selection events use Godot controls/signals; visual comparison and hardware-era blend/palette timing remain |
+| `decompiled/src/shop_graphics.c` | `scripts/ported/shop_graphics.gd, scripts/ported/shop_display.gd, art/ui/shop/` | Partial: miniature tribute/attribute/stat overlays and row scrollbar geometry use recovered assets and typed card data; selection sprites, tile layout and runtime comparison remain |
+| `decompiled/src/shop_menu.c` | `scripts/ported/shop_menu.gd` | Not started |
+| `decompiled/src/shop_panel.c` | `scripts/ported/shop_panel.gd, scripts/ui/game_screens.gd` | Partial: selected-card metadata, stock/collection/deck counts, buy/sell prices, projected balance, and buy shortfall are computed from typed Godot data and shown in the shop screen; native icon palette layouts and in-engine comparison remain |
+| `decompiled/src/spell_effects.c` | `scripts/systems/spell_effect_rules.gd, resources/spell_ritual_recipes.json, scripts/systems/effect_rule_bindings.gd, scripts/ui/game_screens.gd` | Partial: all 37 nonempty handlers have typed state logic and metadata dispatch bindings, including sweeps, hand/deck/grave effects, control, and ritual materials; animation/audio event playback and full duel-flow integration remain |
+| `decompiled/src/summon_rules.c` | `scripts/systems/summon_rules.gd` | Complete |
+| `decompiled/src/text.c` | `scripts/systems/text_rules.gd, scripts/ui/pixel_text.gd` | Partial: original ASCII font rendering and number rules; tile formats beyond text atlas and multilingual glyph composition remain |
+| `decompiled/src/title_screen.c` | `scripts/systems/title_menu_state.gd, scripts/ui/game_screens.gd` | Partial: choice, Continue/New Game, and overwrite flow; native palette pulse/fade and title composition remain |
+| `decompiled/src/trap_effects.c` | `scripts/systems/trap_effect_rules.gd, scripts/ui/game_screens.gd` | Partial: typed trap validation, first-match search, and value-state activation effects are connected to card effect resolution; presentation/audio sequencing remains |
+## Translation order
+
+1. Data, save model, deterministic utilities and rules.
+2. Card effects, duel state, battle flow, rewards and AI.
+3. Script runtime, scenes, actors, progression and menus.
+4. Screen composition, card presentation and audio playback.
+5. Compare each translated behavior against its recovered C contract and original assets; preserve unresolved contracts as explicit open items.
+
+The interactive screen script is still a temporary presentation shell. Its input and screen composition have not yet been ported from the recovered menu, duel, and graphics modules. Scene script roots can be started through the shell API; dialogue rendering and game-service callbacks remain in progress.

@@ -1,0 +1,38 @@
+class_name ShopGraphics
+extends RefCounted
+## Typed shop-thumbnail and selector data recovered from shop_graphics.c.
+
+const ATTRIBUTE_ICON_PATH := "res://art/ui/shop/attribute-%02d.png"
+const REQUIREMENT_ICON_PATH := "res://art/ui/shop/requirement-%d.png"
+const SCROLLBAR_TRAVEL := 127
+
+var card_database: CardDatabase
+var summon_rules: SummonRules
+
+func _init(database: CardDatabase, rules: SummonRules) -> void:
+	card_database = database
+	summon_rules = rules
+
+func miniature_layers(card_id: int) -> Dictionary:
+	var card := card_database.get_card(card_id) if card_database != null else null
+	if card == null:
+		return {"card_id": card_id, "attribute_path": "", "requirement_path": "", "attack_value": -1, "defense_value": -1}
+	var tribute_requirement := summon_rules.card_tribute_requirement(card_id, card_database) if summon_rules != null else 0
+	return {
+		"card_id": card_id,
+		"attribute_path": ATTRIBUTE_ICON_PATH % card.attribute if card.attribute > 0 and card.attribute <= 11 else "",
+		"requirement_path": REQUIREMENT_ICON_PATH % tribute_requirement if tribute_requirement > 0 and tribute_requirement <= 3 else "",
+		"attack_value": mini(floori(float(card.attack) / 100.0), 99) if card.metadata_1c == 2 else -1,
+		"defense_value": mini(floori(float(card.defense) / 100.0), 99) if card.metadata_1c == 2 else -1,
+	}
+
+func scrollbar_y(selected_index: int, card_count: int) -> int:
+	var row_count := maxi(ceili(float(card_count) / 7.0), 1)
+	var selected_row := clampi(selected_index / 7, 0, row_count - 1)
+	return floori(float(selected_row * SCROLLBAR_TRAVEL) / float(row_count)) + 1
+
+func selection_rect(selected_index: int, visible_start: int, view_width: int = 7) -> Rect2:
+	var slot := selected_index - visible_start
+	var column := posmod(slot, view_width)
+	var row := floori(float(slot) / float(view_width))
+	return Rect2(Vector2(6 + column * 32, 2 + row * 32), Vector2(28, 28))
