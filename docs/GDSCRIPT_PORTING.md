@@ -1,6 +1,6 @@
 # GDScript port status
 
-The recovered C tree contains 71 maintained modules. 28 are translated into usable GDScript, 40 are partial, and 3 remain. This project is porting those modules to GDScript and Godot-owned state. The source describes recovered behavior; its own documentation says the C has not been execution-compared against the ROM. Remaining native or untraced dependencies must stay explicit instead of being guessed.
+The recovered C tree contains 71 maintained modules. 28 are translated into usable GDScript, 41 are partial, and 2 remain. This project is porting those modules to GDScript and Godot-owned state. The source describes recovered behavior; its own documentation says the C has not been execution-compared against the ROM. Remaining native or untraced dependencies must stay explicit instead of being guessed.
 
 Port rules: use card IDs and typed records, dictionaries, arrays and `Resource`/`RefCounted` models. Do not reproduce memory maps, pointer aliases, BIOS calls or hardware registers. Keep game rules separate from rendering, and keep unresolved source behavior marked as unresolved.
 
@@ -55,7 +55,7 @@ Port rules: use card IDs and typed records, dictionaries, arrays and `Resource`/
 | `decompiled/src/new_game.c` | `scripts/systems/new_game_state.gd` | Complete |
 | `decompiled/src/password.c` | `scripts/systems/password_system.gd, scripts/state/password_entry_state.gd, scripts/ui/password_entry_view.gd, resources/password_records.json, resources/password_sprites.json, art/ui/password/` | Partial: recovered keypad sprites, navigation/repeat, lookup, and rewards; card-description result presentation remains |
 | `decompiled/src/pre_duel_display.c` | `scripts/ported/pre_duel_display.gd` | Not started |
-| `decompiled/src/pre_duel_graphics.c` | `scripts/ported/pre_duel_graphics.gd` | Not started |
+| `decompiled/src/pre_duel_graphics.c` | `scripts/ported/pre_duel_graphics.gd` | Partial: typed five-row card/name/detail/ownership data, center-row spacing, source tile-row calculation and proportional scroll position replace raw map/OAM writes; exact source font glyph placement and sprite/palette choreography remain |
 | `decompiled/src/pre_duel_menu.c` | `scripts/ported/pre_duel_menu.gd, scripts/ui/game_screens.gd` | Partial: typed 900-card sorted list, collection-plus-deck totals, 50-card paging, four view modes, sort/action/special-wager/no-wager states and start-duel signal are integrated; original wager-eligibility ROM list, exact popup transition tables, polling priority and refresh/audio cadence remain |
 | `decompiled/src/progression.c` | `scripts/state/player_progression.gd` | Complete |
 | `decompiled/src/random.c` | `scripts/systems/sacred_random.gd` | Complete |
