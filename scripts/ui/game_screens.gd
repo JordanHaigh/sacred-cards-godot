@@ -45,6 +45,7 @@ const DUEL_TEXT_SCRIPT = preload("res://scripts/ported/duel_text.gd")
 const DUEL_UI_SCRIPT = preload("res://scripts/ported/duel_ui.gd")
 const MENU_GRAPHICS_SCRIPT = preload("res://scripts/ported/menu_graphics.gd")
 const NAME_ENTRY_SCRIPT = preload("res://scripts/ported/name_entry.gd")
+const PRE_DUEL_MENU_SCRIPT = preload("res://scripts/ported/pre_duel_menu.gd")
 const SUMMON_RULES_SCRIPT = preload("res://scripts/systems/summon_rules.gd")
 ## Temporary screen shell for exercising the recovered state and data models.
 
@@ -83,6 +84,7 @@ var menu_graphics: MenuGraphics
 var name_entry_view: NameEntryView
 var name_entry_return_screen := "title"
 var name_entry_save_after := false
+var pre_duel_menu: PreDuelMenuState
 var duel_summon_rules: SummonRules
 var _spell_target_classes: Array[int] = []
 var deck_rules: DeckBuilderState
@@ -133,10 +135,12 @@ signal scene_script_motion_path(event_id: int, descriptor: Dictionary, x_steps: 
 signal scene_script_actor_state(actor_id: int, changes: Dictionary)
 signal duel_text_changed(value: String, glyph_position: int, wait_state: bool)
 signal duel_text_finished
+signal pre_duel_requested(opponent_id: int, wagered_card_id: int)
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_PASS
 	menu_graphics = MENU_GRAPHICS_SCRIPT.new()
+	pre_duel_menu = PRE_DUEL_MENU_SCRIPT.new()
 	duel_graphics = DUEL_GRAPHICS_SCRIPT.new()
 	duel_graphics.select(0, 0)
 	card_art = CARD_ART_SCRIPT.new()
@@ -489,6 +493,54 @@ func show_duel_state(duel_state: SacredDuelState) -> void:
 	active_duel_state = duel_state
 	if player_duel_controller != null: player_duel_controller.reset_turn()
 	_show("duel")
+
+func initialize_pre_duel_menu(wagerable_ids: Array[int], special_wager_ids: Array[int]) -> void:
+	if pre_duel_menu == null: pre_duel_menu = PRE_DUEL_MENU_SCRIPT.new()
+	pre_duel_menu.initialize(shop_rules.collection, deck, wagerable_ids, special_wager_ids)
+	pre_duel_menu.apply_sort(card_sorter)
+
+func process_pre_duel_code(code: int, opponent_id: int) -> Dictionary:
+	if pre_duel_menu == null:
+		return {"accepted": false, "reason": "pre_duel_menu_not_initialized"}
+	if pre_duel_menu.popup != PreDuelMenuState.Popup.NONE:
+		if code == 2 or code == 8:
+			pre_duel_menu.close_popup()
+			if audio_dispatch != null: audio_dispatch.play_game_audio(56)
+			return {"accepted": true, "action": "popup_closed"}
+		if code in [64, 128, 32, 16]:
+			var direction := -1 if code in [64, 32] else 1
+			pre_duel_menu.navigate_popup(direction)
+			return {"accepted": true, "action": "popup_moved", "choice": pre_duel_menu.choice}
+		if code == 1:
+			var popup_result := pre_duel_menu.confirm()
+			if bool(popup_result.get("apply_sort", false)): pre_duel_menu.apply_sort(card_sorter)
+			return _handle_pre_duel_result(popup_result, opponent_id)
+		return {"accepted": false, "reason": "unsupported_popup_input"}
+	match code:
+		64: pre_duel_menu.move(-1)
+		128: pre_duel_menu.move(1)
+		0x140: pre_duel_menu.page(-1)
+		0x180: pre_duel_menu.page(1)
+		512: pre_duel_menu.cycle_view()
+		4: pre_duel_menu.cycle_sort(card_sorter)
+		8: pre_duel_menu.open_sort()
+		2: pre_duel_menu.open_no_wager()
+		1: return _handle_pre_duel_result(pre_duel_menu.confirm(), opponent_id)
+		_: return {"accepted": false, "reason": "unsupported_input"}
+	return {"accepted": true, "action": "list_updated", "selected_card_id": pre_duel_menu.selected_card_id(), "view_mode": pre_duel_menu.view_mode}
+
+func _handle_pre_duel_result(result: Dictionary, opponent_id: int) -> Dictionary:
+	var sound := int(result.get("sound", 0))
+	if sound != 0 and audio_dispatch != null: audio_dispatch.play_game_audio(sound)
+	match int(result.get("action", PreDuelMenuState.Action.NONE)):
+		PreDuelMenuState.Action.INSPECT:
+			selected_card_detail_id = int(result.get("card_id", 0))
+			card_detail_return_screen = "pre_duel"
+			_show("card_detail")
+			return result
+		PreDuelMenuState.Action.START_WITH_WAGER, PreDuelMenuState.Action.START_WITHOUT_WAGER:
+			pre_duel_requested.emit(opponent_id, int(result.get("card_id", 0)))
+	return result
 
 func _duel_code_for_key(keycode: int) -> int:
 	match keycode:
