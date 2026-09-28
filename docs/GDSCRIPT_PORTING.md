@@ -1,6 +1,6 @@
 # GDScript port status
 
-The recovered C tree contains 71 maintained modules. 27 are translated into usable GDScript, 38 are partial, and 6 remain. This project is porting those modules to GDScript and Godot-owned state. The source describes recovered behavior; its own documentation says the C has not been execution-compared against the ROM. Remaining native or untraced dependencies must stay explicit instead of being guessed.
+The recovered C tree contains 71 maintained modules. 28 are translated into usable GDScript, 38 are partial, and 5 remain. This project is porting those modules to GDScript and Godot-owned state. The source describes recovered behavior; its own documentation says the C has not been execution-compared against the ROM. Remaining native or untraced dependencies must stay explicit instead of being guessed.
 
 Port rules: use card IDs and typed records, dictionaries, arrays and `Resource`/`RefCounted` models. Do not reproduce memory maps, pointer aliases, BIOS calls or hardware registers. Keep game rules separate from rendering, and keep unresolved source behavior marked as unresolved.
 
@@ -49,7 +49,7 @@ Port rules: use card IDs and typed records, dictionaries, arrays and `Resource`/
 | `decompiled/src/effect_noops.c` | `scripts/systems/effect_noops.gd` | Complete: explicit empty metadata-1A handler indices |
 | `decompiled/src/event_flags.c` | `scripts/systems/event_flag_bank.gd` | Complete |
 | `decompiled/src/frame_input.c` | `scripts/systems/frame_input.gd` | Complete: Godot action edges and repeat timing replace key matrix polling |
-| `decompiled/src/menu_graphics.c` | `scripts/ported/menu_graphics.gd` | Not started |
+| `decompiled/src/menu_graphics.c` | `scripts/ported/menu_graphics.gd, scripts/ui/game_screens.gd` | Complete: screen layer recreation and Godot redraw scheduling replace background/object buffer clearing and explicit video-memory uploads |
 | `decompiled/src/monster_effects.c` | `scripts/systems/monster_effect_rules.gd, resources/monster_effect_tables.json, scripts/systems/effect_rule_bindings.gd, scripts/ui/game_screens.gd` | Partial: all 78 monster handlers used by card metadata have typed state implementations and metadata dispatch, plus default and four unreferenced source routines; Fairy’s Gift remains in the card-effects port; sprite/audio sequencing and engine runtime verification remain |
 | `decompiled/src/name_entry.c` | `scripts/ported/name_entry.gd` | Not started |
 | `decompiled/src/new_game.c` | `scripts/systems/new_game_state.gd` | Complete |

@@ -43,6 +43,7 @@ const SHOP_MENU_SCRIPT = preload("res://scripts/ported/shop_menu.gd")
 const PLAYER_DUEL_SCRIPT = preload("res://scripts/ported/duel_player.gd")
 const DUEL_TEXT_SCRIPT = preload("res://scripts/ported/duel_text.gd")
 const DUEL_UI_SCRIPT = preload("res://scripts/ported/duel_ui.gd")
+const MENU_GRAPHICS_SCRIPT = preload("res://scripts/ported/menu_graphics.gd")
 const SUMMON_RULES_SCRIPT = preload("res://scripts/systems/summon_rules.gd")
 ## Temporary screen shell for exercising the recovered state and data models.
 
@@ -77,6 +78,7 @@ var player_duel_controller: PlayerDuelController
 var duel_text_presenter: DuelTextPresenter
 var duel_ui: DuelUiDisplay
 var active_duel_state: SacredDuelState
+var menu_graphics: MenuGraphics
 var duel_summon_rules: SummonRules
 var _spell_target_classes: Array[int] = []
 var deck_rules: DeckBuilderState
@@ -130,6 +132,7 @@ signal duel_text_finished
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_PASS
+	menu_graphics = MENU_GRAPHICS_SCRIPT.new()
 	duel_graphics = DUEL_GRAPHICS_SCRIPT.new()
 	duel_graphics.select(0, 0)
 	card_art = CARD_ART_SCRIPT.new()
@@ -550,19 +553,8 @@ func _show(next: String) -> void:
 	_build_screen()
 
 func _build_screen() -> void:
-	for child in get_children():
-		if child == scene_script_runtime or child == audio_dispatch:
-			continue
-		child.queue_free()
-	screen_root = Control.new()
-	screen_root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	add_child(screen_root)
-	var texture := TextureRect.new()
-	texture.texture = load(_background_for_screen())
-	texture.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	texture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	texture.stretch_mode = TextureRect.STRETCH_SCALE
-	screen_root.add_child(texture)
+	var persistent_children: Array = [scene_script_runtime, audio_dispatch]
+	screen_root = menu_graphics.begin_screen(self, screen_root, persistent_children, _background_for_screen())
 	match screen:
 		"title": _draw_title()
 		"duel": _draw_duel()
@@ -571,6 +563,7 @@ func _build_screen() -> void:
 		"deck_hub": _draw_deck_hub()
 		"player_status": _draw_player_status()
 		"card_detail": _draw_card_detail()
+	menu_graphics.upload_menu_graphics(screen_root)
 
 func _background_for_screen() -> String:
 	match screen:
