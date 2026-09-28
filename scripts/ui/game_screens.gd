@@ -94,6 +94,7 @@ var scene_graphics: SceneGraphics
 var current_scene_id := 0
 var current_scene_variant := 0
 var current_scene_graphics: Dictionary = {}
+var current_scene_portrait_layer: Control
 var _spell_target_classes: Array[int] = []
 var deck_rules: DeckBuilderState
 var deck_management: DeckManagement
@@ -624,7 +625,9 @@ func start_scene_script(scene_id: int, variant: int, role: StringName = &"scene_
 		if condition_id == 1: return 1 if _bit_count(scene_script_events.progress_rank & 0x3F) == 6 else 0
 		return 0
 	context["dialogue_visibility"] = func(visible: bool) -> void: scene_script_service_requested.emit(&"dialogue_visibility", {"visible": visible})
-	context["dialogue"] = func(operation: StringName, data: Dictionary, _runtime: SceneScriptRuntime) -> void: scene_script_service_requested.emit(&"dialogue", {"operation": operation, "data": data})
+	context["dialogue"] = func(operation: StringName, data: Dictionary, _runtime: SceneScriptRuntime) -> void:
+		_handle_scene_dialogue(operation, data)
+		scene_script_service_requested.emit(&"dialogue", {"operation": operation, "data": data})
 	context["actor"] = func(command: StringName, operands: Array, _runtime: SceneScriptRuntime) -> void: scene_script_service_requested.emit(&"actor_command", {"command": command, "operands": operands})
 	context["audio"] = func(audio_id: int) -> void:
 		audio_dispatch.play_game_audio(audio_id)
@@ -711,6 +714,17 @@ func _draw_scene() -> void:
 	var background := screen_root.get_child(0) as TextureRect if screen_root.get_child_count() > 0 else null
 	if background != null:
 		background.texture = graphics.texture as Texture2D
+	current_scene_portrait_layer = null
+
+func _handle_scene_dialogue(operation: StringName, data: Dictionary) -> void:
+	if operation != &"portrait" or screen != "scene" or screen_root == null:
+		return
+	if is_instance_valid(current_scene_portrait_layer):
+		current_scene_portrait_layer.queue_free()
+	current_scene_portrait_layer = null
+	var portrait_id := int(data.get("portrait", 0))
+	if portrait_id > 0 and scene_graphics != null:
+		current_scene_portrait_layer = scene_graphics.create_portrait_layer(screen_root, portrait_id, int(data.get("flags", 0)))
 
 func _background_for_screen() -> String:
 	match screen:
