@@ -45,6 +45,7 @@ const DUEL_TEXT_SCRIPT = preload("res://scripts/ported/duel_text.gd")
 const DUEL_UI_SCRIPT = preload("res://scripts/ported/duel_ui.gd")
 const MENU_GRAPHICS_SCRIPT = preload("res://scripts/ported/menu_graphics.gd")
 const NAME_ENTRY_SCRIPT = preload("res://scripts/ported/name_entry.gd")
+const SCENE_GRAPHICS_SCRIPT = preload("res://scripts/ported/scene_graphics.gd")
 const PRE_DUEL_MENU_SCRIPT = preload("res://scripts/ported/pre_duel_menu.gd")
 const PRE_DUEL_DISPLAY_SCRIPT = preload("res://scripts/ported/pre_duel_display.gd")
 const SUMMON_RULES_SCRIPT = preload("res://scripts/systems/summon_rules.gd")
@@ -89,6 +90,7 @@ var pre_duel_menu: PreDuelMenuState
 var pre_duel_display: PreDuelDisplay
 var pre_duel_opponent_id := 0
 var duel_summon_rules: SummonRules
+var scene_graphics: SceneGraphics
 var _spell_target_classes: Array[int] = []
 var deck_rules: DeckBuilderState
 var deck_management: DeckManagement
@@ -139,11 +141,16 @@ signal scene_script_actor_state(actor_id: int, changes: Dictionary)
 signal duel_text_changed(value: String, glyph_position: int, wait_state: bool)
 signal duel_text_finished
 signal pre_duel_requested(opponent_id: int, wagered_card_id: int)
+signal scene_graphics_changed(scene_id: int, variant: int, graphics: Dictionary)
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_PASS
 	menu_graphics = MENU_GRAPHICS_SCRIPT.new()
 	pre_duel_menu = PRE_DUEL_MENU_SCRIPT.new()
+	scene_graphics = SCENE_GRAPHICS_SCRIPT.new()
+	var scene_graphics_error: Error = scene_graphics.load_recovered_data()
+	if scene_graphics_error != OK:
+		push_error("Could not load recovered scene graphics (error %d)." % scene_graphics_error)
 	duel_graphics = DUEL_GRAPHICS_SCRIPT.new()
 	duel_graphics.select(0, 0)
 	card_art = CARD_ART_SCRIPT.new()
@@ -224,6 +231,8 @@ func _ready() -> void:
 	scene_script_events.scene_change_requested.connect(func(id: int, variant: int, spawn: int, _rules: bool) -> void:
 		scene_script_runtime.stop()
 		audio_dispatch.play_scene_music(id, variant)
+		var graphics: Dictionary = scene_graphics.scene_background(id, variant)
+		scene_graphics_changed.emit(id, variant, graphics)
 		scene_script_scene_change.emit(id, variant, spawn)
 	)
 	scene_script_events.service_requested.connect(_on_scene_script_service_requested)
@@ -725,6 +734,20 @@ func set_duel_terrain(terrain: int, view: int) -> bool:
 	if screen == "duel":
 		_build_screen()
 	return true
+
+func scene_actor_draw_records(configuration: SceneConfiguration, grid: SceneGrid) -> Array[Dictionary]:
+	var records: Array[Dictionary] = []
+	if configuration == null or scene_graphics == null: return records
+	for actor: SceneActor in scene_graphics.sort_actors(configuration.actors):
+		var cell := grid.cell_at(actor.position.x, actor.position.y) if grid != null else 0
+		records.append(scene_graphics.actor_draw_record(actor, scene_graphics.actor_height(actor, grid), cell))
+	return records
+
+func add_scene_portrait(parent: Control, portrait_id: int, portrait_flags: int = 0, frame_indices: Array[int] = []) -> Control:
+	return scene_graphics.create_portrait_layer(parent, portrait_id, portrait_flags, frame_indices) if scene_graphics != null else null
+
+func set_scene_dialogue_window_visible(visible: bool) -> Dictionary:
+	return scene_graphics.set_dialogue_window_visible(visible) if scene_graphics != null else {"visible": false}
 
 func _draw_title() -> void:
 	# The backdrop is the recovered title layer; native choices sit directly over it.
