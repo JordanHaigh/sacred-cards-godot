@@ -44,6 +44,7 @@ const PLAYER_DUEL_SCRIPT = preload("res://scripts/ported/duel_player.gd")
 const DUEL_TEXT_SCRIPT = preload("res://scripts/ported/duel_text.gd")
 const DUEL_UI_SCRIPT = preload("res://scripts/ported/duel_ui.gd")
 const MENU_GRAPHICS_SCRIPT = preload("res://scripts/ported/menu_graphics.gd")
+const NAME_ENTRY_SCRIPT = preload("res://scripts/ported/name_entry.gd")
 const SUMMON_RULES_SCRIPT = preload("res://scripts/systems/summon_rules.gd")
 ## Temporary screen shell for exercising the recovered state and data models.
 
@@ -79,6 +80,9 @@ var duel_text_presenter: DuelTextPresenter
 var duel_ui: DuelUiDisplay
 var active_duel_state: SacredDuelState
 var menu_graphics: MenuGraphics
+var name_entry_view: NameEntryView
+var name_entry_return_screen := "title"
+var name_entry_save_after := false
 var duel_summon_rules: SummonRules
 var _spell_target_classes: Array[int] = []
 var deck_rules: DeckBuilderState
@@ -234,6 +238,9 @@ func _unhandled_key_input(event: InputEvent) -> void:
 				_build_screen()
 				get_viewport().set_input_as_handled()
 				return
+		if screen == "name_entry" and name_entry_view != null and name_entry_view.handle_key(event.keycode):
+			get_viewport().set_input_as_handled()
+			return
 		if scene_script_runtime != null and scene_script_runtime.running:
 			var pressed_mask := 0
 			if event.keycode == KEY_ENTER: pressed_mask = 1
@@ -537,7 +544,24 @@ func _on_scene_script_service_requested(service: StringName, data: Dictionary) -
 	if service == &"door_transition":
 		audio_dispatch.fade_game_music(int(data.get("music_fade_frames", 0)))
 		audio_dispatch.play_game_audio(int(data.get("audio_id", 0)))
+	elif service == &"name_entry":
+		_start_name_entry(bool(data.get("save_after", false)))
+		return
 	scene_script_service_requested.emit(service, data)
+
+func _start_name_entry(save_after: bool) -> void:
+	name_entry_return_screen = screen
+	name_entry_save_after = save_after
+	_show("name_entry")
+
+func _finish_name_entry(value: String) -> void:
+	if current_save != null:
+		current_save.player_name = value
+		if name_entry_save_after: _save_current_state()
+	_show(name_entry_return_screen)
+
+func _cancel_name_entry() -> void:
+	_show(name_entry_return_screen)
 
 func _bit_count(value: int) -> int:
 	var bits := value
@@ -563,6 +587,7 @@ func _build_screen() -> void:
 		"deck_hub": _draw_deck_hub()
 		"player_status": _draw_player_status()
 		"card_detail": _draw_card_detail()
+		"name_entry": _draw_name_entry()
 	menu_graphics.upload_menu_graphics(screen_root)
 
 func _background_for_screen() -> String:
@@ -572,7 +597,17 @@ func _background_for_screen() -> String:
 		"shop": return ART + "shop-backdrop.png"
 		"deck": return ART + ("deck-backdrop.png" if editing_deck else "collection-backdrop.png")
 		"deck_hub", "player_status": return ART + "deck-backdrop.png"
+		"name_entry": return ART + "name-entry-background.png"
 	return ART + "title-background.png"
+
+func _draw_name_entry() -> void:
+	name_entry_view = NAME_ENTRY_SCRIPT.new()
+	name_entry_view.position = Vector2.ZERO
+	name_entry_view.size = SCREEN_SIZE
+	name_entry_view.name_confirmed.connect(_finish_name_entry)
+	name_entry_view.cancelled.connect(_cancel_name_entry)
+	screen_root.add_child(name_entry_view)
+	name_entry_view.begin(current_save.player_name if current_save != null else "")
 
 func set_duel_terrain(terrain: int, view: int) -> bool:
 	var selection: Dictionary = duel_graphics.select(terrain, view)
