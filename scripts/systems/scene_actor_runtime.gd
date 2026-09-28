@@ -9,12 +9,14 @@ signal scene_faded_to_dark
 const DIRECTION_X := [0, -1, 0, 1]
 const DIRECTION_Y := [1, 0, -1, 0]
 const STEP_TIME := 2.0 / 60.0
+const ACTOR_SHADOW_TEXTURE := preload("res://art/scenes/actor-shadow.png")
 
 var animation_database: ActorAnimationDatabase
 var scene_grid: SceneGrid
 var actors: Dictionary[int, SceneActor] = {}
 var actor_nodes: Dictionary[int, Node2D] = {}
 var actor_sprites: Dictionary[int, Sprite2D] = {}
+var shadow_sprites: Dictionary[int, Sprite2D] = {}
 var _fade_layer: CanvasLayer
 var _fade_overlay: ColorRect
 
@@ -24,6 +26,7 @@ func load_scene(configuration: SceneConfiguration, graphics: ActorAnimationDatab
 	actors.clear()
 	actor_nodes.clear()
 	actor_sprites.clear()
+	shadow_sprites.clear()
 	animation_database = graphics
 	scene_grid = grid
 	if configuration == null or animation_database == null:
@@ -37,12 +40,20 @@ func add_actor(actor: SceneActor) -> bool:
 		return false
 	var node := Node2D.new()
 	node.position = Vector2(actor.position)
+	var shadow := Sprite2D.new()
+	shadow.texture = ACTOR_SHADOW_TEXTURE
+	shadow.position = Vector2(8, 24)
+	shadow.centered = false
+	shadow.z_index = -1
+	shadow.visible = false
+	node.add_child(shadow)
 	var sprite := Sprite2D.new()
 	node.add_child(sprite)
 	add_child(node)
 	actors[actor.actor_id] = actor
 	actor_nodes[actor.actor_id] = node
 	actor_sprites[actor.actor_id] = sprite
+	shadow_sprites[actor.actor_id] = shadow
 	_refresh_actor(actor.actor_id)
 	return true
 
@@ -151,11 +162,13 @@ func _refresh_actor(actor_id: int) -> void:
 		return
 	var node: Node2D = actor_nodes[actor_id]
 	var sprite: Sprite2D = actor_sprites[actor_id]
+	var shadow: Sprite2D = shadow_sprites[actor_id]
 	node.position = Vector2(actor.position.x * 2 - 16, actor.position.y * 2 - actor.height_offset - 24)
 	node.z_index = _actor_priority(actor)
 	sprite.centered = false
 	sprite.texture = animation_database.get_frame_texture(actor.sprite_id, _frame_index(actor), actor.palette_index)
 	sprite.visible = actor.sprite_id >= 0 and actor.position.y > -32 and actor.position.y < 104 and actor.position.x > -16 and actor.position.x < 136
+	shadow.visible = sprite.visible and (actor.flags & 1) != 0
 
 func set_scene_grid(grid: SceneGrid) -> void:
 	scene_grid = grid
