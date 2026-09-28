@@ -1,6 +1,6 @@
 # GDScript port status
 
-The recovered C tree contains 71 maintained modules. 27 are translated into usable GDScript, 35 are partial, and 9 remain. This project is porting those modules to GDScript and Godot-owned state. The source describes recovered behavior; its own documentation says the C has not been execution-compared against the ROM. Remaining native or untraced dependencies must stay explicit instead of being guessed.
+The recovered C tree contains 71 maintained modules. 27 are translated into usable GDScript, 36 are partial, and 8 remain. This project is porting those modules to GDScript and Godot-owned state. The source describes recovered behavior; its own documentation says the C has not been execution-compared against the ROM. Remaining native or untraced dependencies must stay explicit instead of being guessed.
 
 Port rules: use card IDs and typed records, dictionaries, arrays and `Resource`/`RefCounted` models. Do not reproduce memory maps, pointer aliases, BIOS calls or hardware registers. Keep game rules separate from rendering, and keep unresolved source behavior marked as unresolved.
 
@@ -39,7 +39,7 @@ Port rules: use card IDs and typed records, dictionaries, arrays and `Resource`/
 | `decompiled/src/duel_flow.c` | `scripts/systems/duel_flow.gd` | Partial: setup, shuffle, opening draw, turn transition, transformations (pair table injected), and persistent win/loss effects; full encounter loop and original transformation table/presentation remain |
 | `decompiled/src/duel_graphics.c` | `scripts/systems/duel_graphics.gd, art/arenas/terrain-*-view-*.png, scripts/ui/game_screens.gd` | Partial: all seven terrains and both recovered viewport variants use Godot textures, with typed terrain/view selection and the two used viewport offsets; hardware decompression/register writes are removed, and runtime/ROM visual comparison plus validation of other viewport-table entries remain |
 | `decompiled/src/duel_menus.c` | `scripts/ported/duel_menus.gd` | Partial: typed duel context and monster action menu state, selection, preview-position actions, held-stat overlay state, and five-card opponent hand model; recovered navigation tables, card/grave presentation, exact scene composition, and native timing remain |
-| `decompiled/src/duel_player.c` | `scripts/ported/duel_player.gd` | Not started |
+| `decompiled/src/duel_player.c` | `scripts/ported/duel_player.gd, scripts/ui/game_screens.gd` | Partial: normalized directional/confirm/cancel/inspection/end-turn input, typed cursor state, hand-to-field placement and spell/attack target selection are exposed through the screen controller; monster action/context menu flow, trap resolution, battle setup/animation, exact viewport table and frame/input cadence remain |
 | `decompiled/src/duel_rewards.c` | `scripts/systems/duel_rewards.gd` | Complete |
 | `decompiled/src/duel_special_wins.c` | `scripts/systems/duel_special_wins.gd` | Complete: Exodia/Destiny masks, win state and presentation signal |
 | `decompiled/src/duel_text.c` | `scripts/ported/duel_text.gd` | Not started |

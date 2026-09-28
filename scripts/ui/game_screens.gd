@@ -40,6 +40,8 @@ const COLLECTION_DISPLAY_SCRIPT = preload("res://scripts/ported/collection_displ
 const SHOP_PANEL_SCRIPT = preload("res://scripts/ported/shop_panel.gd")
 const SHOP_DISPLAY_SCRIPT = preload("res://scripts/ported/shop_display.gd")
 const SHOP_MENU_SCRIPT = preload("res://scripts/ported/shop_menu.gd")
+const PLAYER_DUEL_SCRIPT = preload("res://scripts/ported/duel_player.gd")
+const SUMMON_RULES_SCRIPT = preload("res://scripts/systems/summon_rules.gd")
 ## Temporary screen shell for exercising the recovered state and data models.
 
 const SCREEN_SIZE := Vector2(240, 160)
@@ -69,6 +71,9 @@ var shop_rules: ShopSystem
 var shop_panel: ShopPanel
 var shop_display: ShopDisplay
 var shop_menu: ShopMenuState
+var player_duel_controller: PlayerDuelController
+var duel_summon_rules: SummonRules
+var _spell_target_classes: Array[int] = []
 var deck_rules: DeckBuilderState
 var deck_management: DeckManagement
 var deck_builder_menu: DeckBuilderMenu
@@ -160,6 +165,9 @@ func _ready() -> void:
 	shop_panel = SHOP_PANEL_SCRIPT.new(card_database, shop_rules)
 	shop_menu = SHOP_MENU_SCRIPT.new()
 	shop_menu.begin(false, 7)
+	player_duel_controller = PLAYER_DUEL_SCRIPT.new()
+	duel_summon_rules = SUMMON_RULES_SCRIPT.new()
+	_load_spell_target_classes()
 	deck_rules = DECK_BUILDER_SCRIPT.new()
 	deck_management = DECK_MANAGEMENT_SCRIPT.new()
 	deck_builder_menu = DECK_BUILDER_MENU_SCRIPT.new()
@@ -311,6 +319,82 @@ func dispatch_duel_effect(card_id: int, duel_state: SacredDuelState, row: int, c
 	if monster_effect:
 		return duel_effect_dispatcher.dispatch_metadata_1b(card_id, context)
 	return duel_effect_dispatcher.dispatch_metadata_1a(card_id, context)
+
+## Entry point for player-turn controls. The caller supplies owned duel state
+## and normalized input codes; action results are handled by duel systems/UI.
+func process_player_duel_code(code: int, duel_state: SacredDuelState) -> Dictionary:
+	if player_duel_controller == null or duel_state == null:
+		return {"accepted": false, "reason": "duel_not_initialized"}
+	var side_id := duel_state.active_side
+	match code:
+		PlayerDuelController.InputCode.UP: player_duel_controller.move_cursor(Vector2i.UP)
+		PlayerDuelController.InputCode.DOWN: player_duel_controller.move_cursor(Vector2i.DOWN)
+		PlayerDuelController.InputCode.LEFT: player_duel_controller.move_cursor(Vector2i.LEFT)
+		PlayerDuelController.InputCode.RIGHT: player_duel_controller.move_cursor(Vector2i.RIGHT)
+		PlayerDuelController.InputCode.CANCEL: return player_duel_controller.cancel_selection()
+		PlayerDuelController.InputCode.END_PLAYER_TURN:
+			duel_state.auxiliary_flags[side_id] = 2
+			player_duel_controller.player_turn_done = true
+			return {"accepted": true, "action": "end_turn", "side": side_id}
+		PlayerDuelController.InputCode.END_OPPONENT_TURN:
+			duel_state.auxiliary_flags[1 - side_id] = 2
+			player_duel_controller.player_turn_done = true
+			return {"accepted": true, "action": "end_opponent_turn", "side": 1 - side_id}
+		PlayerDuelController.InputCode.STATS:
+			return {"accepted": true, "action": "show_stats", "cursor": player_duel_controller.cursor}
+		PlayerDuelController.InputCode.OPPONENT_HAND:
+			duel_state.side(1 - side_id).hand_revealed = true
+			return {"accepted": true, "action": "show_opponent_hand", "cards": duel_state.side(1 - side_id).hand.duplicate()}
+		PlayerDuelController.InputCode.CONFIRM:
+			if player_duel_controller.mode == PlayerDuelController.Mode.PLACE_CARD:
+				return player_duel_controller.confirm_placement(duel_state, side_id, duel_summon_rules, card_database)
+			if player_duel_controller.mode == PlayerDuelController.Mode.SPELL_TARGET:
+				var target_result := player_duel_controller.validate_spell_target(duel_state, side_id, 1)
+				if not bool(target_result.get("accepted", false)): return target_result
+				var effect_result: Variant = dispatch_duel_effect(int(target_result.card_id), duel_state, int(target_result.target_row), int(target_result.target_column), int(target_result.source_row), int(target_result.source_column))
+				if bool(effect_result.get("resolved", false)): player_duel_controller.finish_target_action()
+				return effect_result if effect_result is Dictionary else {"resolved": true, "result": effect_result}
+			if player_duel_controller.mode == PlayerDuelController.Mode.ATTACK_TARGET:
+				var opponent_slot := duel_state.side(1 - side_id).monster_zones[player_duel_controller.cursor.x]
+				if opponent_slot.is_empty(): return {"accepted": false, "reason": "empty_attack_target"}
+				return {"accepted": true, "action": "attack_target", "attacker": player_duel_controller.saved_cursor, "target": player_duel_controller.cursor, "target_card_id": opponent_slot.card_id}
+			return _confirm_player_field_selection(duel_state, side_id)
+	return {"accepted": true, "action": "cursor_moved", "cursor": player_duel_controller.cursor, "view_row": player_duel_controller.view_row}
+
+func _confirm_player_field_selection(duel_state: SacredDuelState, side_id: int) -> Dictionary:
+	var cell := player_duel_controller.cursor
+	var card_id := player_duel_controller.selected_card_id(duel_state, side_id)
+	if card_id == 0: return {"accepted": false, "reason": "empty_selection"}
+	if cell.y == 2:
+		var slot := duel_state.side(side_id).monster_zones[cell.x]
+		if (slot.persistent_flags & 1) != 0: return {"accepted": false, "reason": "monster_already_used"}
+		return {"accepted": true, "action": "open_monster_action_menu", "card_id": card_id, "cursor": cell}
+	if cell.y == 3:
+		var definition := card_database.get_card(card_id)
+		if definition == null: return {"accepted": false, "reason": "card_metadata_missing"}
+		var target_class := int(_spell_target_classes[definition.metadata_1a]) if definition.metadata_1a >= 0 and definition.metadata_1a < _spell_target_classes.size() else 0
+		var started := player_duel_controller.begin_spell_target(card_id, target_class)
+		if not bool(started.get("accepted", false)): return started
+		if target_class == 0:
+			var effect_result: Variant = dispatch_duel_effect(card_id, duel_state, cell.y, cell.x)
+			return effect_result if effect_result is Dictionary else {"resolved": true, "result": effect_result}
+		return started
+	if cell.y == 4:
+		var needed := duel_summon_rules.remaining_monster_tributes(card_id, duel_state.tributes_committed, card_database)
+		if needed > 0: return {"accepted": false, "reason": "tributes_required", "remaining": needed}
+		return player_duel_controller.begin_card_placement(duel_state, side_id, card_id, duel_summon_rules, card_database)
+	return {"accepted": false, "reason": "invalid_row"}
+
+func _load_spell_target_classes() -> void:
+	_spell_target_classes.clear()
+	var path := "res://resources/ai_spell_target_classes.json"
+	if not FileAccess.file_exists(path):
+		push_error("Missing recovered spell target classes at %s" % path)
+		return
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	if parsed is Dictionary:
+		for value: Variant in parsed.get("metadata_1a_target_classes", []):
+			_spell_target_classes.append(int(value))
 
 ## Validates a recovered AI candidate using packed row/column operands.
 func validate_ai_action(duel_state: SacredDuelState, acting_side: int, action_kind: int, operands: Array[int]) -> Dictionary:
