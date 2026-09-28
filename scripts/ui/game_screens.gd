@@ -41,6 +41,7 @@ const SHOP_PANEL_SCRIPT = preload("res://scripts/ported/shop_panel.gd")
 const SHOP_DISPLAY_SCRIPT = preload("res://scripts/ported/shop_display.gd")
 const SHOP_MENU_SCRIPT = preload("res://scripts/ported/shop_menu.gd")
 const PLAYER_DUEL_SCRIPT = preload("res://scripts/ported/duel_player.gd")
+const DUEL_TEXT_SCRIPT = preload("res://scripts/ported/duel_text.gd")
 const SUMMON_RULES_SCRIPT = preload("res://scripts/systems/summon_rules.gd")
 ## Temporary screen shell for exercising the recovered state and data models.
 
@@ -72,6 +73,7 @@ var shop_panel: ShopPanel
 var shop_display: ShopDisplay
 var shop_menu: ShopMenuState
 var player_duel_controller: PlayerDuelController
+var duel_text_presenter: DuelTextPresenter
 var duel_summon_rules: SummonRules
 var _spell_target_classes: Array[int] = []
 var deck_rules: DeckBuilderState
@@ -120,6 +122,8 @@ signal scene_script_service_requested(service: StringName, data: Dictionary)
 signal scene_script_motion_requested(event_id: int, actor_ids: Array, choreography_id: StringName)
 signal scene_script_motion_path(event_id: int, descriptor: Dictionary, x_steps: Array[int], y_steps: Array[int])
 signal scene_script_actor_state(actor_id: int, changes: Dictionary)
+signal duel_text_changed(value: String, glyph_position: int, wait_state: bool)
+signal duel_text_finished
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_PASS
@@ -166,6 +170,9 @@ func _ready() -> void:
 	shop_menu = SHOP_MENU_SCRIPT.new()
 	shop_menu.begin(false, 7)
 	player_duel_controller = PLAYER_DUEL_SCRIPT.new()
+	duel_text_presenter = DUEL_TEXT_SCRIPT.new(card_database)
+	duel_text_presenter.text_changed.connect(func(value: String, glyph_position: int, wait_state: bool): duel_text_changed.emit(value, glyph_position, wait_state))
+	duel_text_presenter.text_finished.connect(func(): duel_text_finished.emit())
 	duel_summon_rules = SUMMON_RULES_SCRIPT.new()
 	_load_spell_target_classes()
 	deck_rules = DECK_BUILDER_SCRIPT.new()
@@ -319,6 +326,18 @@ func dispatch_duel_effect(card_id: int, duel_state: SacredDuelState, row: int, c
 	if monster_effect:
 		return duel_effect_dispatcher.dispatch_metadata_1b(card_id, context)
 	return duel_effect_dispatcher.dispatch_metadata_1a(card_id, context)
+
+func present_duel_text(text: String, card_id: int = 0, other_card_id: int = 0, number: int = 0, other_number: int = 0, language: int = 0, player_name: String = "") -> void:
+	if duel_text_presenter == null:
+		push_error("Duel text presenter is not initialized.")
+		return
+	duel_text_presenter.begin(text, card_id, other_card_id, number, other_number, language, player_name)
+
+func advance_duel_text(max_steps: int = 1) -> Dictionary:
+	return duel_text_presenter.run_to_next_pause(max_steps) if duel_text_presenter != null else {"finished": true}
+
+func continue_duel_text() -> void:
+	if duel_text_presenter != null: duel_text_presenter.advance_input()
 
 ## Entry point for player-turn controls. The caller supplies owned duel state
 ## and normalized input codes; action results are handled by duel systems/UI.
