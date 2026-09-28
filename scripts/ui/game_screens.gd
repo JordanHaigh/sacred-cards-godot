@@ -46,6 +46,7 @@ const DUEL_UI_SCRIPT = preload("res://scripts/ported/duel_ui.gd")
 const MENU_GRAPHICS_SCRIPT = preload("res://scripts/ported/menu_graphics.gd")
 const NAME_ENTRY_SCRIPT = preload("res://scripts/ported/name_entry.gd")
 const PRE_DUEL_MENU_SCRIPT = preload("res://scripts/ported/pre_duel_menu.gd")
+const PRE_DUEL_DISPLAY_SCRIPT = preload("res://scripts/ported/pre_duel_display.gd")
 const SUMMON_RULES_SCRIPT = preload("res://scripts/systems/summon_rules.gd")
 ## Temporary screen shell for exercising the recovered state and data models.
 
@@ -85,6 +86,8 @@ var name_entry_view: NameEntryView
 var name_entry_return_screen := "title"
 var name_entry_save_after := false
 var pre_duel_menu: PreDuelMenuState
+var pre_duel_display: PreDuelDisplay
+var pre_duel_opponent_id := 0
 var duel_summon_rules: SummonRules
 var _spell_target_classes: Array[int] = []
 var deck_rules: DeckBuilderState
@@ -234,6 +237,14 @@ func _ready() -> void:
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
+		if screen == "pre_duel" and pre_duel_menu != null:
+			var pre_duel_code := _pre_duel_code_for_key(event.keycode)
+			if pre_duel_code != 0:
+				var result := process_pre_duel_code(pre_duel_code, pre_duel_opponent_id)
+				if result.has("reason"): _toast(str(result.reason))
+				_build_screen()
+				get_viewport().set_input_as_handled()
+				return
 		if screen == "duel" and active_duel_state != null:
 			var duel_code := _duel_code_for_key(event.keycode)
 			if duel_code != PlayerDuelController.InputCode.NONE:
@@ -499,6 +510,26 @@ func initialize_pre_duel_menu(wagerable_ids: Array[int], special_wager_ids: Arra
 	pre_duel_menu.initialize(shop_rules.collection, deck, wagerable_ids, special_wager_ids)
 	pre_duel_menu.apply_sort(card_sorter)
 
+func show_pre_duel_menu(opponent_id: int, wagerable_ids: Array[int], special_wager_ids: Array[int]) -> void:
+	pre_duel_opponent_id = opponent_id
+	initialize_pre_duel_menu(wagerable_ids, special_wager_ids)
+	_show("pre_duel")
+
+func _pre_duel_code_for_key(keycode: int) -> int:
+	match keycode:
+		KEY_UP: return 64
+		KEY_DOWN: return 128
+		KEY_LEFT: return 32
+		KEY_RIGHT: return 16
+		KEY_ENTER, KEY_KP_ENTER: return 1
+		KEY_SPACE, KEY_ESCAPE: return 2
+		KEY_PAGEUP: return 0x140
+		KEY_PAGEDOWN: return 0x180
+		KEY_Q: return 512
+		KEY_S: return 4
+		KEY_D: return 8
+	return 0
+
 func process_pre_duel_code(code: int, opponent_id: int) -> Dictionary:
 	if pre_duel_menu == null:
 		return {"accepted": false, "reason": "pre_duel_menu_not_initialized"}
@@ -510,6 +541,7 @@ func process_pre_duel_code(code: int, opponent_id: int) -> Dictionary:
 		if code in [64, 128, 32, 16]:
 			var direction := -1 if code in [64, 32] else 1
 			pre_duel_menu.navigate_popup(direction)
+			if audio_dispatch != null: audio_dispatch.play_game_audio(54)
 			return {"accepted": true, "action": "popup_moved", "choice": pre_duel_menu.choice}
 		if code == 1:
 			var popup_result := pre_duel_menu.confirm()
@@ -527,6 +559,7 @@ func process_pre_duel_code(code: int, opponent_id: int) -> Dictionary:
 		2: pre_duel_menu.open_no_wager()
 		1: return _handle_pre_duel_result(pre_duel_menu.confirm(), opponent_id)
 		_: return {"accepted": false, "reason": "unsupported_input"}
+	if audio_dispatch != null: audio_dispatch.play_game_audio(55 if code in [4, 8, 2, 512] else 54)
 	return {"accepted": true, "action": "list_updated", "selected_card_id": pre_duel_menu.selected_card_id(), "view_mode": pre_duel_menu.view_mode}
 
 func _handle_pre_duel_result(result: Dictionary, opponent_id: int) -> Dictionary:
@@ -539,6 +572,7 @@ func _handle_pre_duel_result(result: Dictionary, opponent_id: int) -> Dictionary
 			_show("card_detail")
 			return result
 		PreDuelMenuState.Action.START_WITH_WAGER, PreDuelMenuState.Action.START_WITHOUT_WAGER:
+			if audio_dispatch != null: audio_dispatch.fade_game_music(2)
 			pre_duel_requested.emit(opponent_id, int(result.get("card_id", 0)))
 	return result
 
@@ -640,6 +674,7 @@ func _build_screen() -> void:
 		"player_status": _draw_player_status()
 		"card_detail": _draw_card_detail()
 		"name_entry": _draw_name_entry()
+		"pre_duel": _draw_pre_duel()
 	menu_graphics.upload_menu_graphics(screen_root)
 
 func _background_for_screen() -> String:
@@ -650,7 +685,28 @@ func _background_for_screen() -> String:
 		"deck": return ART + ("deck-backdrop.png" if editing_deck else "collection-backdrop.png")
 		"deck_hub", "player_status": return ART + "deck-backdrop.png"
 		"name_entry": return ART + "name-entry-background.png"
+		"pre_duel": return ART + "wager-backdrop.png"
 	return ART + "title-background.png"
+
+func _draw_pre_duel() -> void:
+	pre_duel_display = PRE_DUEL_DISPLAY_SCRIPT.new()
+	pre_duel_display.position = Vector2.ZERO
+	pre_duel_display.size = SCREEN_SIZE
+	pre_duel_display.row_selected.connect(_on_pre_duel_row_selected)
+	pre_duel_display.popup_selected.connect(_on_pre_duel_popup_selected)
+	screen_root.add_child(pre_duel_display)
+	pre_duel_display.present(pre_duel_menu, card_database, deck, progression.capacity, deck_rules.deck_cost(card_database))
+
+func _on_pre_duel_row_selected(row: int) -> void:
+	if pre_duel_menu == null or pre_duel_menu.popup != PreDuelMenuState.Popup.NONE: return
+	pre_duel_menu.move(row - 2)
+	_build_screen()
+
+func _on_pre_duel_popup_selected(choice: int) -> void:
+	if pre_duel_menu == null or pre_duel_menu.popup == PreDuelMenuState.Popup.NONE: return
+	var max_choice := 9 if pre_duel_menu.popup == PreDuelMenuState.Popup.SORT else 2 if pre_duel_menu.popup == PreDuelMenuState.Popup.ACTION else 1
+	pre_duel_menu.choice = clampi(choice, 0, max_choice)
+	_build_screen()
 
 func _draw_name_entry() -> void:
 	name_entry_view = NAME_ENTRY_SCRIPT.new()

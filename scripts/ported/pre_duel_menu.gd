@@ -91,8 +91,6 @@ func confirm() -> Dictionary:
 			var card_id := selected_card_id()
 			if card_id == 0 or not wagerable_cards.get(card_id, false):
 				return {"action": Action.NONE, "reason": "card_cannot_be_wagered", "sound": 57}
-			if int(collection_counts.get(card_id, 0)) <= 0:
-				return {"action": Action.NONE, "reason": "card_not_owned", "sound": 57}
 			open_action()
 			return {"action": Action.NONE, "sound": 55}
 		Popup.ACTION:
