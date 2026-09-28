@@ -28,7 +28,7 @@ var popup_choice_index := 0
 var revision := 0
 var graphics_model: ShopGraphics
 
-func present(cards: Array[int], selection: int, is_selling: bool, database: CardDatabase, panel: ShopPanel, shop: ShopSystem, player_wallet: PlayerWallet, deck: Array[int]) -> void:
+func present(cards: Array[int], selection: int, is_selling: bool, database: CardDatabase, panel: ShopPanel, shop: ShopSystem, player_wallet: PlayerWallet, deck: Array[int], popup: int = PopupMode.NONE, popup_choice: int = 0) -> void:
 	visible_cards = cards.duplicate()
 	selected_index = clampi(selection, 0, maxi(visible_cards.size() - 1, 0))
 	selling = is_selling
@@ -37,6 +37,8 @@ func present(cards: Array[int], selection: int, is_selling: bool, database: Card
 	shop_rules = shop
 	wallet = player_wallet
 	deck_cards = deck.duplicate()
+	popup_mode = popup
+	popup_choice_index = popup_choice
 	graphics_model = SHOP_GRAPHICS_SCRIPT.new(card_database, SUMMON_RULES_SCRIPT.new())
 	_render()
 	_refresh(&"all_rows")

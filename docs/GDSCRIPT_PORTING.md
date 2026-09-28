@@ -1,6 +1,6 @@
 # GDScript port status
 
-The recovered C tree contains 71 maintained modules. 27 are translated into usable GDScript, 33 are partial, and 11 remain. This project is porting those modules to GDScript and Godot-owned state. The source describes recovered behavior; its own documentation says the C has not been execution-compared against the ROM. Remaining native or untraced dependencies must stay explicit instead of being guessed.
+The recovered C tree contains 71 maintained modules. 27 are translated into usable GDScript, 34 are partial, and 10 remain. This project is porting those modules to GDScript and Godot-owned state. The source describes recovered behavior; its own documentation says the C has not been execution-compared against the ROM. Remaining native or untraced dependencies must stay explicit instead of being guessed.
 
 Port rules: use card IDs and typed records, dictionaries, arrays and `Resource`/`RefCounted` models. Do not reproduce memory maps, pointer aliases, BIOS calls or hardware registers. Keep game rules separate from rendering, and keep unresolved source behavior marked as unresolved.
 
@@ -71,7 +71,7 @@ Port rules: use card IDs and typed records, dictionaries, arrays and `Resource`/
 | `decompiled/src/shop.c` | `scripts/systems/shop_system.gd` | Complete |
 | `decompiled/src/shop_display.c` | `scripts/ported/shop_display.gd, scripts/ui/game_screens.gd` | Partial: the 5x7 shop view, selected card info, buy/sell/sort popup labels, refresh scopes and selection events use Godot controls/signals; visual comparison and hardware-era blend/palette timing remain |
 | `decompiled/src/shop_graphics.c` | `scripts/ported/shop_graphics.gd, scripts/ported/shop_display.gd, art/ui/shop/` | Partial: miniature tribute/attribute/stat overlays and row scrollbar geometry use recovered assets and typed card data; selection sprites, tile layout and runtime comparison remain |
-| `decompiled/src/shop_menu.c` | `scripts/ported/shop_menu.gd` | Not started |
+| `decompiled/src/shop_menu.c` | `scripts/ported/shop_menu.gd, scripts/ui/game_screens.gd, scripts/ported/shop_display.gd` | Partial: buy/sell action and sort popups, cursor state, list movement/page changes, sorting, card info routing, and inventory transactions use Godot state and UI; recovered sort transition tables, ring-buffer row updates, palette fades and frame-exact refresh/audio ordering remain |
 | `decompiled/src/shop_panel.c` | `scripts/ported/shop_panel.gd, scripts/ui/game_screens.gd` | Partial: selected-card metadata, stock/collection/deck counts, buy/sell prices, projected balance, and buy shortfall are computed from typed Godot data and shown in the shop screen; native icon palette layouts and in-engine comparison remain |
 | `decompiled/src/spell_effects.c` | `scripts/systems/spell_effect_rules.gd, resources/spell_ritual_recipes.json, scripts/systems/effect_rule_bindings.gd, scripts/ui/game_screens.gd` | Partial: all 37 nonempty handlers have typed state logic and metadata dispatch bindings, including sweeps, hand/deck/grave effects, control, and ritual materials; animation/audio event playback and full duel-flow integration remain |
 | `decompiled/src/summon_rules.c` | `scripts/systems/summon_rules.gd` | Complete |

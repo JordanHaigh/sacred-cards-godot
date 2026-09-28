@@ -39,6 +39,7 @@ const CARD_PRESENTATION_SCRIPT = preload("res://scripts/ported/card_presentation
 const COLLECTION_DISPLAY_SCRIPT = preload("res://scripts/ported/collection_display.gd")
 const SHOP_PANEL_SCRIPT = preload("res://scripts/ported/shop_panel.gd")
 const SHOP_DISPLAY_SCRIPT = preload("res://scripts/ported/shop_display.gd")
+const SHOP_MENU_SCRIPT = preload("res://scripts/ported/shop_menu.gd")
 ## Temporary screen shell for exercising the recovered state and data models.
 
 const SCREEN_SIZE := Vector2(240, 160)
@@ -67,6 +68,7 @@ var card_database: CardDatabase
 var shop_rules: ShopSystem
 var shop_panel: ShopPanel
 var shop_display: ShopDisplay
+var shop_menu: ShopMenuState
 var deck_rules: DeckBuilderState
 var deck_management: DeckManagement
 var deck_builder_menu: DeckBuilderMenu
@@ -156,6 +158,8 @@ func _ready() -> void:
 	title_menu.initialize(title_has_save)
 	shop_rules = SHOP_SYSTEM_SCRIPT.new(card_database)
 	shop_panel = SHOP_PANEL_SCRIPT.new(card_database, shop_rules)
+	shop_menu = SHOP_MENU_SCRIPT.new()
+	shop_menu.begin(false, 7)
 	deck_rules = DECK_BUILDER_SCRIPT.new()
 	deck_management = DECK_MANAGEMENT_SCRIPT.new()
 	deck_builder_menu = DECK_BUILDER_MENU_SCRIPT.new()
@@ -215,6 +219,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 				if screen == "deck_hub": _handle_deck_hub_buttons(DeckManagement.BUTTON_B)
 				elif screen == "player_status": _show("deck_hub")
 				elif screen == "card_detail": _show(card_detail_return_screen)
+				elif screen == "shop": _handle_shop_escape()
 				elif screen == "deck": _handle_deck_builder_key(2)
 				else: _show("title")
 			KEY_F1: _show("title")
@@ -224,44 +229,54 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			KEY_F5: _request_password_entry()
 			KEY_LEFT:
 				if screen == "card_detail": _card_detail_page(-1)
+				elif screen == "shop": _handle_shop_direction(Vector2i(-1, 0))
 				elif screen == "deck" and deck_builder_menu.popup in [DeckBuilderMenu.Popup.COLLECTION_SORT, DeckBuilderMenu.Popup.DECK_SORT]: _handle_deck_builder_key(64)
 				else: _step_selection(-1)
 			KEY_RIGHT:
 				if screen == "card_detail": _card_detail_page(1)
+				elif screen == "shop": _handle_shop_direction(Vector2i(1, 0))
 				elif screen == "deck" and deck_builder_menu.popup in [DeckBuilderMenu.Popup.COLLECTION_SORT, DeckBuilderMenu.Popup.DECK_SORT]: _handle_deck_builder_key(128)
 				else: _step_selection(1)
 			KEY_UP:
 				if screen == "title" and title_has_save: _toggle_title_choice()
+				elif screen == "shop": _handle_shop_direction(Vector2i(0, -1))
 				elif screen == "deck_hub": _handle_deck_hub_buttons(DeckManagement.BUTTON_UP)
 				elif screen == "deck" and deck_builder_menu.popup != DeckBuilderMenu.Popup.NONE: _handle_deck_builder_key(64)
 				elif screen == "deck": _move_deck_selection(1, false)
 				else: _step_selection(-1)
 			KEY_DOWN:
 				if screen == "title" and title_has_save: _toggle_title_choice()
+				elif screen == "shop": _handle_shop_direction(Vector2i(0, 1))
 				elif screen == "deck_hub": _handle_deck_hub_buttons(DeckManagement.BUTTON_DOWN)
 				elif screen == "deck" and deck_builder_menu.popup != DeckBuilderMenu.Popup.NONE: _handle_deck_builder_key(128)
 				elif screen == "deck": _move_deck_selection(1, true)
 				else: _step_selection(1)
 			KEY_PAGEUP:
-				if screen == "deck": _handle_deck_builder_key(0x140)
+				if screen == "shop": _handle_shop_page(-1)
+				elif screen == "deck": _handle_deck_builder_key(0x140)
 				else: _step_selection(-10)
 			KEY_PAGEDOWN:
-				if screen == "deck": _handle_deck_builder_key(0x180)
+				if screen == "shop": _handle_shop_page(1)
+				elif screen == "deck": _handle_deck_builder_key(0x180)
 				else: _step_selection(10)
 			KEY_X:
 				if screen == "deck": _handle_deck_builder_key(16)
 			KEY_Y:
 				if screen == "deck": _handle_deck_builder_key(32)
 			KEY_S:
-				if screen == "deck": _handle_deck_builder_key(4)
+				if screen == "shop": _handle_shop_sort_cycle()
+				elif screen == "deck": _handle_deck_builder_key(4)
 			KEY_D:
-				if screen == "deck": _handle_deck_builder_key(8)
+				if screen == "shop": _handle_shop_sort_open()
+				elif screen == "deck": _handle_deck_builder_key(8)
 			KEY_W:
 				if screen == "deck": _handle_deck_builder_key(512)
 			KEY_TAB:
 				if screen == "shop":
 					selling = not selling
-					shop_selected = 0
+					shop_selected = 7
+					shop_menu.set_selling(selling)
+					shop_menu.select(shop_selected, _visible_shop_cards().size())
 					_build_screen()
 				elif screen == "deck":
 					_set_deck_view(not editing_deck)
@@ -270,6 +285,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			KEY_ENTER:
 				if screen == "deck_hub": _handle_deck_hub_buttons(DeckManagement.BUTTON_A)
 				elif screen == "deck": _handle_deck_builder_key(1)
+				elif screen == "shop": _handle_shop_confirm()
 				else: _confirm()
 			KEY_SPACE:
 				if screen == "deck_hub": _handle_deck_hub_buttons(DeckManagement.BUTTON_B)
@@ -469,7 +485,7 @@ func _draw_duel() -> void:
 func _draw_shop() -> void:
 	_text("SELL" if selling else "BUY", Vector2(8, 4), 8, GOLD)
 	_text("%d" % credits, Vector2(184, 4), 8, PAPER)
-	var visible_cards := collection if selling else stock
+	var visible_cards := _visible_shop_cards()
 	if visible_cards.is_empty():
 		return
 	shop_display = SHOP_DISPLAY_SCRIPT.new()
@@ -477,7 +493,7 @@ func _draw_shop() -> void:
 	shop_display.size = SCREEN_SIZE
 	shop_display.card_selected.connect(_select_shop_index)
 	screen_root.add_child(shop_display)
-	shop_display.present(visible_cards, shop_selected, selling, card_database, shop_panel, shop_rules, wallet, deck)
+	shop_display.present(visible_cards, shop_selected, selling, card_database, shop_panel, shop_rules, wallet, deck, shop_menu.popup, shop_menu.choice)
 
 func _draw_deck() -> void:
 	_text("%05d" % (progression.capacity if not editing_deck else deck_rules.deck_cost(card_database)), Vector2(78, 8), 8, PAPER)
@@ -638,9 +654,7 @@ func _set_deck_view(show_deck: bool) -> void:
 
 func _step_selection(step: int) -> void:
 	if screen == "shop":
-		var shop_list := collection if selling else stock
-		if not shop_list.is_empty():
-			shop_selected = posmod(shop_selected + step, shop_list.size())
+		shop_selected = shop_menu.move(step, _visible_shop_cards().size())
 	elif screen == "deck":
 		if editing_deck:
 			selected = clampi(selected + step, 0, maxi(_visible_cards().size() - 1, 0))
@@ -651,8 +665,78 @@ func _step_selection(step: int) -> void:
 	_build_screen()
 
 func _select_shop_index(index: int) -> void:
-	shop_selected = clampi(index, 0, maxi((collection if selling else stock).size() - 1, 0))
+	shop_selected = shop_menu.select(index, _visible_shop_cards().size())
 	_build_screen()
+
+func _visible_shop_cards() -> Array[int]:
+	var source: Array[int] = collection if selling else stock
+	if card_sorter == null or shop_menu == null:
+		return source.duplicate()
+	var card_method := shop_menu.sort_method()
+	return card_sorter.sort_cards(source, card_method, shop_rules.collection, shop_rules.stock, shop_rules.collection, shop_rules.collection)
+
+func _handle_shop_direction(direction: Vector2i) -> void:
+	if shop_menu.popup != ShopMenuState.Popup.NONE:
+		shop_menu.navigate_popup(direction)
+		if audio_dispatch != null: audio_dispatch.play_game_audio(54)
+	else:
+		var count := _visible_shop_cards().size()
+		var delta := direction.x if direction.x != 0 else direction.y * 7
+		shop_selected = shop_menu.move(delta, count)
+		if audio_dispatch != null: audio_dispatch.play_game_audio(54)
+	_build_screen()
+
+func _handle_shop_page(direction: int) -> void:
+	if shop_menu.popup != ShopMenuState.Popup.NONE: return
+	shop_selected = shop_menu.page(direction, _visible_shop_cards().size())
+	if audio_dispatch != null: audio_dispatch.play_game_audio(54)
+	_build_screen()
+
+func _handle_shop_sort_cycle() -> void:
+	if shop_menu.popup != ShopMenuState.Popup.NONE: return
+	shop_menu.cycle_sort()
+	shop_selected = shop_menu.select(shop_selected, _visible_shop_cards().size())
+	if audio_dispatch != null: audio_dispatch.play_game_audio(55)
+	_build_screen()
+
+func _handle_shop_sort_open() -> void:
+	shop_menu.open_sort()
+	if audio_dispatch != null: audio_dispatch.play_game_audio(55)
+	_build_screen()
+
+func _handle_shop_escape() -> void:
+	if shop_menu.popup != ShopMenuState.Popup.NONE:
+		shop_menu.close_popup()
+		if audio_dispatch != null: audio_dispatch.play_game_audio(56)
+		_build_screen()
+	else:
+		if audio_dispatch != null: audio_dispatch.play_game_audio(56)
+		_show("title")
+
+func _handle_shop_confirm() -> void:
+	if _visible_shop_cards().is_empty(): return
+	if shop_menu.popup == ShopMenuState.Popup.NONE:
+		var current_id: int = _visible_shop_cards()[shop_menu.selected_index]
+		if current_id in [0, 832, 833, 834]:
+			if audio_dispatch != null: audio_dispatch.play_game_audio(57)
+			return
+	var result := shop_menu.confirm()
+	var sound := int(result.get("sound", 0))
+	if sound != 0 and audio_dispatch != null: audio_dispatch.play_game_audio(sound)
+	match int(result.get("action", ShopMenuState.Action.NONE)):
+		ShopMenuState.Action.BUY_OR_SELL:
+			var card_id: int = _visible_shop_cards()[shop_menu.selected_index]
+			if selling: _sell(card_id)
+			else: _buy(card_id)
+		ShopMenuState.Action.CARD_INFO:
+			selected_card_detail_id = _visible_shop_cards()[shop_menu.selected_index]
+			card_detail_return_screen = "shop"
+			_show("card_detail")
+		ShopMenuState.Action.SORT_SELECTED:
+			shop_selected = shop_menu.select(shop_selected, _visible_shop_cards().size())
+			_build_screen()
+		ShopMenuState.Action.CANCEL, ShopMenuState.Action.SORT_CLOSED:
+			_build_screen()
 
 func _select_deck_card(index: int) -> void:
 	selected = index
@@ -792,10 +876,7 @@ func _confirm() -> void:
 		"title": _confirm_title()
 		"duel": _duel_summon()
 		"shop":
-			var shop_list := collection if selling else stock
-			if not shop_list.is_empty():
-				if selling: _sell(shop_list[posmod(shop_selected, shop_list.size())])
-				else: _buy(shop_list[posmod(shop_selected, shop_list.size())])
+			_handle_shop_confirm()
 		"deck": _deck_transfer()
 
 func _confirm_title() -> void:
@@ -884,16 +965,19 @@ func _buy(card_id: int) -> void:
 	var price := _shop_price(card_id)
 	if not wallet.can_afford(price):
 		_toast("Not enough gold.")
+		_build_screen()
 		return
 	if not shop_rules.buy(card_id, wallet):
 		_toast("This card cannot be purchased.")
+		_build_screen()
 		return
 	credits = wallet.gold
 	if not collection.has(card_id):
 		collection.append(card_id)
 	if int(shop_rules.stock.get(card_id, 0)) == 0:
 		stock.erase(card_id)
-	shop_selected = clampi(shop_selected, 0, maxi(stock.size() - 1, 0))
+		shop_menu.close_popup()
+	shop_selected = shop_menu.select(shop_selected, _visible_shop_cards().size())
 	_save_current_state()
 	_build_screen()
 
@@ -909,6 +993,7 @@ func _sell(card_id: int) -> void:
 	credits = wallet.gold
 	if not stock.has(card_id):
 		stock.append(card_id)
+	shop_selected = shop_menu.select(shop_selected, _visible_shop_cards().size())
 	_save_current_state()
 	_build_screen()
 
