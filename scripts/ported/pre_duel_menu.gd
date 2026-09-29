@@ -3,7 +3,7 @@ extends RefCounted
 ## Typed wager/list state from pre_duel_menu.c. Card order and inventory
 ## ownership are delegated to CardSortSystem and the caller's save model.
 
-enum Popup { NONE, ACTION, SPECIAL_WAGER, NO_WAGER, SORT }
+enum PopupKind { NONE, ACTION, SPECIAL_WAGER, NO_WAGER, SORT }
 enum Action { NONE, INSPECT, WAGER, CANCEL, START_WITHOUT_WAGER, START_WITH_WAGER }
 
 const CARD_COUNT := 900
@@ -18,7 +18,7 @@ var special_wager_cards: Dictionary[int, bool] = {}
 var selected_index := 0
 var sort_mode := 0
 var view_mode := 1
-var popup: Popup = Popup.NONE
+var popup: PopupKind = PopupKind.NONE
 var choice := 0
 var wagered_card_id := 0
 
@@ -73,33 +73,33 @@ func card_at_visible_row(row: int) -> int:
 	return int(sorted_card_ids[index]) if index >= 0 and index < sorted_card_ids.size() else 0
 
 func open_action() -> void:
-	popup = Popup.ACTION
+	popup = PopupKind.ACTION
 	choice = 0
 
 func open_sort() -> void:
-	popup = Popup.SORT
+	popup = PopupKind.SORT
 	choice = sort_mode
 
 func navigate_popup(direction: int) -> int:
-	var count := 3 if popup == Popup.ACTION else 10 if popup == Popup.SORT else 2
+	var count := 3 if popup == PopupKind.ACTION else 10 if popup == PopupKind.SORT else 2
 	choice = posmod(choice + direction, count)
 	return choice
 
 func confirm() -> Dictionary:
 	match popup:
-		Popup.NONE:
+		PopupKind.NONE:
 			var card_id := selected_card_id()
 			if card_id == 0 or not wagerable_cards.get(card_id, false):
 				return {"action": Action.NONE, "reason": "card_cannot_be_wagered", "sound": 57}
 			open_action()
 			return {"action": Action.NONE, "sound": 55}
-		Popup.ACTION:
+		PopupKind.ACTION:
 			if choice == 0: return {"action": Action.INSPECT, "card_id": selected_card_id(), "sound": 55}
 			if choice == 1:
 				if not wagerable_cards.get(selected_card_id(), false): return {"action": Action.NONE, "reason": "card_cannot_be_wagered", "sound": 57}
 				if int(collection_counts.get(selected_card_id(), 0)) <= 0: return {"action": Action.NONE, "reason": "card_not_owned", "sound": 57}
 				if special_wager_cards.get(selected_card_id(), false):
-					popup = Popup.SPECIAL_WAGER
+					popup = PopupKind.SPECIAL_WAGER
 					choice = 0
 					return {"action": Action.NONE, "popup": popup, "sound": 55}
 				wagered_card_id = selected_card_id()
@@ -107,21 +107,21 @@ func confirm() -> Dictionary:
 				return {"action": Action.START_WITH_WAGER, "card_id": wagered_card_id, "sound": 222}
 			close_popup()
 			return {"action": Action.CANCEL, "sound": 56}
-		Popup.SPECIAL_WAGER:
+		PopupKind.SPECIAL_WAGER:
 			if choice == 1:
 				wagered_card_id = selected_card_id()
 				close_popup()
 				return {"action": Action.START_WITH_WAGER, "card_id": wagered_card_id, "sound": 222}
 			close_popup()
 			return {"action": Action.CANCEL, "sound": 55}
-		Popup.NO_WAGER:
+		PopupKind.NO_WAGER:
 			if choice == 1:
 				wagered_card_id = 0
 				close_popup()
 				return {"action": Action.START_WITHOUT_WAGER, "sound": 222}
 			close_popup()
 			return {"action": Action.CANCEL, "sound": 55}
-		Popup.SORT:
+		PopupKind.SORT:
 			if choice == 9:
 				close_popup()
 				return {"action": Action.CANCEL, "sound": 56}
@@ -131,9 +131,9 @@ func confirm() -> Dictionary:
 	return {"action": Action.NONE}
 
 func open_no_wager() -> void:
-	popup = Popup.NO_WAGER
+	popup = PopupKind.NO_WAGER
 	choice = 0
 
 func close_popup() -> void:
-	popup = Popup.NONE
+	popup = PopupKind.NONE
 	choice = 0
