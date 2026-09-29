@@ -38,11 +38,7 @@ func apply_password(password: String, save_data: PlayerSaveData, progression: Pl
 	var card_result := find_card_password(password)
 	if int(card_result.status) == FOUND:
 		var card_id := int(card_result.id)
-		if card_id <= 0 or card_id >= save_data.shop_stock.size():
-			return {"found": true, "kind": "card", "id": card_id, "added": false}
-		var count := save_data.shop_stock[card_id]
-		save_data.shop_stock[card_id] = mini(250, count + 1)
-		return {"found": true, "kind": "card", "id": card_id, "added": true}
+		return {"found": true, "kind": "card", "id": card_id, "added": false, "pending_add": true}
 	var bonus_result := find_bonus_password(password)
 	if int(bonus_result.status) != FOUND:
 		return {"found": false, "kind": "unknown"}
@@ -61,8 +57,14 @@ func apply_password(password: String, save_data: PlayerSaveData, progression: Pl
 			save_data.deck_capacity = progression.capacity
 			save_data.duelist_level = progression.duelist_level
 			return {"found": true, "kind": "bonus", "id": bonus_id, "used": false, "applied": true, "capacity": CAPACITY_BONUS}
-		_:
+		_: 
 			return {"found": true, "kind": "bonus", "id": bonus_id, "used": false, "applied": false}
+
+func add_card_password_reward(card_id: int, save_data: PlayerSaveData) -> bool:
+	if save_data == null or card_id <= 0 or card_id >= save_data.shop_stock.size():
+		return false
+	save_data.shop_stock[card_id] = mini(250, save_data.shop_stock[card_id] + 1)
+	return true
 
 func _find_in_records(password: String, records: Array) -> Dictionary:
 	if not _is_eight_digits(password):
