@@ -18,13 +18,28 @@ const REGION_SIZES := {
 	"unknown_020237CC": 4,
 	"unknown_020237C4": 2,
 }
+const REGION_ORDER := [
+	"player_name_17_bytes",
+	"unknown_02020770",
+	"player_deck_40_u16",
+	"deck_capacity_u32",
+	"duelist_level_u32",
+	"unknown_02020CB0",
+	"unknown_02020CB4",
+	"unknown_02020DA8",
+	"unknown_02020DB0",
+	"money_u64",
+	"event_flags_first_32_bytes",
+	"unknown_020237CC",
+	"unknown_020237C4",
+]
 const PAYLOAD_SIZE := 2058
 
 static func pack_regions(regions: Dictionary) -> PackedByteArray:
 	var payload := PackedByteArray()
 	payload.resize(PAYLOAD_SIZE)
 	var offset := 0
-	for region_name: String in REGION_SIZES:
+	for region_name: String in REGION_ORDER:
 		var size: int = REGION_SIZES[region_name]
 		var bytes: Variant = regions.get(region_name, PackedByteArray())
 		if not bytes is PackedByteArray or bytes.size() != size:
@@ -41,7 +56,7 @@ static func unpack_regions(payload: PackedByteArray) -> Dictionary:
 		return {}
 	var regions: Dictionary = {}
 	var offset := 0
-	for region_name: String in REGION_SIZES:
+	for region_name: String in REGION_ORDER:
 		var size: int = REGION_SIZES[region_name]
 		var bytes := PackedByteArray()
 		bytes.resize(size)
