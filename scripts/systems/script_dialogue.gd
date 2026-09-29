@@ -101,14 +101,23 @@ func _binary_choice_input(pressed_mask: int, horizontal: int, vertical: int) -> 
 		state.branch_flags = int(state.get("branch_flags", 0)) & 0x7F
 		_finish_embedded_input()
 		return
-	var new_selection := selection
-	if (horizontal < 0 or vertical < 0) and new_selection == 1: new_selection = 0
-	if (horizontal > 0 or vertical > 0) and new_selection == 0: new_selection = 1
-	if new_selection != selection: audio_requested.emit(54)
-	selection = new_selection
-	state.branch_flags = (int(state.get("branch_flags", 0)) & 0x80) | selection
-	glyph_requested.emit(0x20 if selection == 0 else 0x720, 0, selection == 0)
-	glyph_requested.emit(0x720 if selection == 0 else 0xA40, 1, selection == 1)
+	# The recovered handler checks both direction masks independently. If both
+	# are pressed, the second check observes any change made by the first.
+	var flags := int(state.get("branch_flags", 0))
+	if (horizontal < 0 or vertical < 0) and (flags & 0x7F) == 1:
+		audio_requested.emit(54)
+		flags &= 0x80
+	if (horizontal > 0 or vertical > 0) and (flags & 0x7F) == 0:
+		audio_requested.emit(54)
+		flags |= 1
+	state.branch_flags = flags
+	selection = flags & 1
+	var first_position := 0x20 if (flags & 0x80) != 0 else 0x720
+	var second_position := 0x720 if (flags & 0x80) != 0 else 0xA40
+	var first_glyph := 0x4081 if selection != 0 else 0x7281
+	var second_glyph := 0x7281 if selection != 0 else 0x4081
+	glyph_requested.emit(first_glyph, first_position, selection != 0)
+	glyph_requested.emit(second_glyph, second_position, selection == 0)
 
 func _free_choice_input(pressed_mask: int, vertical: int) -> void:
 	if vertical != 0:
