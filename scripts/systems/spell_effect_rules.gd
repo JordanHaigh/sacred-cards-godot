@@ -212,7 +212,7 @@ func _draw_two(state: SacredDuelState, active: int, target: DuelCardSlot, card_i
 	return consumed
 
 func _restructer_revolution(state: SacredDuelState, active: int, target: DuelCardSlot, card_id: int, suppressed: bool) -> Dictionary:
-	var damage := maxi(0, 5 - mini(5, state.side(1 - active).hand.size())) * 200
+	var damage := maxi(0, 5 - mini(5, state.side(1 - active).hand_count())) * 200
 	var battle_result := _damage(state, 1 - active, damage)
 	var consumed := _consume(state, active, target, card_id, 77, suppressed)
 	consumed["damage"] = damage
@@ -312,19 +312,14 @@ func _clear_all_fields(state: SacredDuelState, active: int, card_id: int, clear_
 		var removed: Array[int] = []
 		for side_id in range(2):
 			var side := state.side(side_id)
-			var remaining_hand: Array[int] = []
-			var remaining_flags: Array[int] = []
 			for hand_index in range(side.hand.size()):
 				var hand_card_id: int = side.hand[hand_index]
-				if state.is_effect_immune(hand_card_id):
-					remaining_hand.append(hand_card_id)
-					remaining_flags.append(side.hand_flags[hand_index] if hand_index < side.hand_flags.size() else 0)
-				else:
-					if _is_monster(hand_card_id):
-						state.remember_grave_card(side_id, hand_card_id, true)
-					removed.append(hand_card_id)
-			side.hand = remaining_hand
-			side.hand_flags = remaining_flags
+				if hand_card_id == 0 or state.is_effect_immune(hand_card_id):
+					continue
+				if _is_monster(hand_card_id):
+					state.remember_grave_card(side_id, hand_card_id, true)
+			removed.append(hand_card_id)
+			side.remove_hand_at(hand_index)
 		return {"resolved": true, "kind": "field_and_hand_clear", "removed_hand_card_ids": removed, "presentation": _present(card_id, 75, suppressed)}
 	return {"resolved": true, "kind": "field_clear", "presentation": _present(card_id, 75, suppressed)}
 
