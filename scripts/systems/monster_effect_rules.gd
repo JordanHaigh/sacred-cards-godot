@@ -41,7 +41,7 @@ func resolve(state: SacredDuelState, acting_side: int, handler_index: int, selec
 		3: result = _absorb(state, acting_side, selected, 731, 0, presentation_suppressed)
 		4: result = _absorb(state, acting_side, selected, 734, 2, presentation_suppressed)
 		5:
-			var drawn := DuelDeck.draw_card(state.side(acting_side))
+			var drawn := DuelDeck.draw_card(state.side(acting_side), state)
 			result = _shown(540, 59, presentation_suppressed)
 			result["drawn_card_id"] = drawn
 		6: result = _boost_card(state, acting_side, 386, 1, 62, 386, 73, presentation_suppressed)
@@ -58,7 +58,7 @@ func resolve(state: SacredDuelState, acting_side: int, handler_index: int, selec
 		17: result = _lower_opponent_row(state, acting_side, 59, 59, 74, presentation_suppressed)
 		18: result = _catapult_turtle(state, acting_side, selected_column, selected, presentation_suppressed)
 		19:
-			var drawn := DuelDeck.draw_card(state.side(acting_side))
+			var drawn := DuelDeck.draw_card(state.side(acting_side), state)
 			_discard_slot(state, acting_side, selected, ACTIVE_MONSTERS, true)
 			result = _shown(429, 59, presentation_suppressed)
 			result["drawn_card_id"] = drawn
