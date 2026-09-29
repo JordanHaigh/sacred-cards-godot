@@ -17,10 +17,11 @@ func midi_key_frequency(channel: int, key: int, fine: int) -> int:
 	var noise: Array = tables.gPsgNoiseFrequencies
 	var key_scale: Array = tables.gPsgKeyScale
 	var pitch_table: Array = tables.gPsgPitchTable
-	if channel == 4:
-		return int(noise[clampi(key - 21, 0, 59)])
-	var adjusted_key := key
-	var interpolation := fine
+	var channel_byte := channel & 0xff
+	var adjusted_key := key & 0xff
+	var interpolation := fine & 0xff
+	if channel_byte == 4:
+		return int(noise[clampi(adjusted_key - 21, 0, 59)])
 	if adjusted_key < 36:
 		adjusted_key = 36
 		interpolation = 0
