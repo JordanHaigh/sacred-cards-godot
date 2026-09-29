@@ -28,7 +28,6 @@ static func draw_card(side: DuelSideState, duel_state: SacredDuelState = null) -
 		side.hand_flags.append(0)
 	else:
 		side.hand[hand_slot] = card_id
-		side.hand_flags[hand_slot] = 0
 	return card_id
 
 static func set_attack_restriction(side: DuelSideState) -> void:
