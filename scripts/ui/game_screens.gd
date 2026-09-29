@@ -1283,6 +1283,8 @@ func _draw_duel() -> void:
 		duel_ui.cell_selected.connect(_duel_cell_selected)
 		screen_root.add_child(duel_ui)
 		duel_ui.present(active_duel_state, card_database, player_duel_controller.cursor)
+		if duel_menus != null and duel_menus.menu == DuelMenus.Menu.CONTEXT:
+			_draw_duel_context_panel()
 		if duel_menus != null and duel_menus.menu == DuelMenus.Menu.MONSTER_ACTION:
 			var popup := PopupMenu.new()
 			popup.name = "MonsterActionMenu"
@@ -1319,6 +1321,19 @@ func _draw_duel() -> void:
 	_button("END TURN", Rect2(180, 69, 52, 17), func(): _duel_end())
 	_text("TURN 03", Vector2(185, 96), 8, GOLD)
 	_text("F2 FIELD", Vector2(190, 106), 6, PAPER)
+
+func _draw_duel_context_panel() -> void:
+	var rows := duel_menus.context_rows(card_database)
+	_overlay_rect(Rect2(12, 35, 216, 88), Color(0.035, 0.05, 0.055, 0.98), Color("d0b46f"))
+	_text("DUEL STATUS", Vector2(18, 39), 8, GOLD)
+	for row_index in range(rows.size()):
+		var row: Dictionary = rows[row_index]
+		var y := 52 + row_index * 33
+		_text("%s  LP %04d  DECK %02d" % [row.label, row.life_points, row.deck_count], Vector2(18, y), 7, PAPER)
+		var grave_name := str(row.grave_card_name).to_upper().left(19)
+		_text("GRAVE  %s" % grave_name, Vector2(18, y + 10), 6, PAPER)
+		if int(row.grave_card_id) > 0:
+			_draw_miniature(int(row.grave_card_id), Vector2(194, y - 2))
 
 func _draw_shop() -> void:
 	_text("SELL" if selling else "BUY", Vector2(8, 4), 8, GOLD)
