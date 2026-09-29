@@ -97,7 +97,11 @@ func clear_saves() -> void:
 			DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
 
 func _make_record(save_data: PlayerSaveData) -> Dictionary:
-	var payload := JSON.stringify(save_data.to_dictionary())
+	var semantic_data := save_data.to_dictionary()
+	# The native save descriptor persists only the first 32 of the 50 live
+	# event-flag bytes. from_dictionary pads the remaining runtime bytes with 0.
+	semantic_data["event_flags"] = Array(save_data.event_flags.slice(0, 32))
+	var payload := JSON.stringify(semantic_data)
 	var native_payload := SavePayloadAdapter.pack_save(save_data)
 	return {
 		"signature": SAVE_SIGNATURE,
