@@ -524,11 +524,15 @@ func _pinch_hopper(state: SacredDuelState, active: int, selected: DuelCardSlot, 
 			if attack >= best_attack:
 				best_attack = attack
 				best_index = hand_index
-		var card_id: int = opponent.remove_hand_at(best_index)
+		var card_id: int = opponent.hand[best_index]
+		var hand_flags := opponent.hand_flags[best_index] if best_index < opponent.hand_flags.size() else 0
+		opponent.remove_hand_at(best_index)
 		selected.card_id = card_id
 		selected.controller = active
-		_ready(selected)
+		selected.persistent_flags = (selected.persistent_flags & 0xC0) | (hand_flags & 0x3F)
 		selected.stage = 0
+		selected.zone_mode = 0
+		_ready(selected)
 	return _shown(766, 58, suppressed)
 
 func _rocket_warrior(state: SacredDuelState, active: int, suppressed: bool) -> Dictionary:
