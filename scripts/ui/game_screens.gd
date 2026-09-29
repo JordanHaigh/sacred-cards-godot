@@ -41,6 +41,7 @@ const SHOP_PANEL_SCRIPT = preload("res://scripts/ported/shop_panel.gd")
 const SHOP_DISPLAY_SCRIPT = preload("res://scripts/ported/shop_display.gd")
 const SHOP_MENU_SCRIPT = preload("res://scripts/ported/shop_menu.gd")
 const PLAYER_DUEL_SCRIPT = preload("res://scripts/ported/duel_player.gd")
+const DUEL_MENUS_SCRIPT = preload("res://scripts/ported/duel_menus.gd")
 const DUEL_TEXT_SCRIPT = preload("res://scripts/ported/duel_text.gd")
 const DUEL_UI_SCRIPT = preload("res://scripts/ported/duel_ui.gd")
 const MENU_GRAPHICS_SCRIPT = preload("res://scripts/ported/menu_graphics.gd")
@@ -86,6 +87,7 @@ var shop_panel: ShopPanel
 var shop_display: ShopDisplay
 var shop_menu: ShopMenuState
 var player_duel_controller: PlayerDuelController
+var duel_menus: DuelMenus
 var duel_text_presenter: DuelTextPresenter
 var duel_ui: DuelUiDisplay
 var active_duel_state: SacredDuelState
@@ -234,6 +236,7 @@ func _ready() -> void:
 	shop_menu = SHOP_MENU_SCRIPT.new()
 	shop_menu.begin(false, 7)
 	player_duel_controller = PLAYER_DUEL_SCRIPT.new()
+	duel_menus = DUEL_MENUS_SCRIPT.new()
 	duel_text_presenter = DUEL_TEXT_SCRIPT.new(card_database)
 	duel_text_presenter.text_changed.connect(func(value: String, glyph_position: int, wait_state: bool): duel_text_changed.emit(value, glyph_position, wait_state))
 	duel_text_presenter.text_finished.connect(func(): duel_text_finished.emit())
@@ -526,6 +529,7 @@ func _confirm_player_field_selection(duel_state: SacredDuelState, side_id: int) 
 	if cell.y == 2:
 		var slot := duel_state.side(side_id).monster_zones[cell.x]
 		if (slot.persistent_flags & 1) != 0: return {"accepted": false, "reason": "monster_already_used"}
+		duel_menus.open_monster_action(cell, slot.defense_position)
 		return {"accepted": true, "action": "open_monster_action_menu", "card_id": card_id, "cursor": cell}
 	if cell.y == 3:
 		var definition := card_database.get_card(card_id)
@@ -542,6 +546,60 @@ func _confirm_player_field_selection(duel_state: SacredDuelState, side_id: int) 
 		if needed > 0: return {"accepted": false, "reason": "tributes_required", "remaining": needed}
 		return player_duel_controller.begin_card_placement(duel_state, side_id, card_id, duel_summon_rules, card_database)
 	return {"accepted": false, "reason": "invalid_row"}
+
+func _on_monster_action_selected(action_id: int, duel_state: SacredDuelState) -> void:
+	if duel_menus == null or duel_state == null:
+		return
+	duel_menus.choice = action_id
+	var selection := duel_menus.confirm()
+	var cell: Vector2i = selection.get("cell", duel_menus.selected_cell)
+	var side_id := duel_state.active_side
+	if side_id < 0 or side_id >= duel_state.sides.size() or cell.x < 0 or cell.x >= 5:
+		duel_menus.close()
+		return
+	var slot: DuelCardSlot = duel_state.sides[side_id].monster_zones[cell.x]
+	match str(selection.get("action", "cancel")):
+		"attack":
+			if audio_dispatch != null: audio_dispatch.play_game_audio(55)
+			duel_menus.close()
+			if player_duel_controller.direct_attack_available(duel_state, 1 - side_id):
+				var direct_result := resolve_player_attack(duel_state, cell.x)
+				if not bool(direct_result.get("accepted", false)): _toast(str(direct_result.get("reason", "Attack failed.")))
+			else:
+				player_duel_controller.begin_attack_target(duel_state, 1 - side_id)
+		"defense":
+			if (duel_state.sides[side_id].duel_flags & 4) != 0:
+				slot.persistent_flags &= 0xFD
+				slot.defense_position = false
+			else:
+				slot.persistent_flags |= 3
+				slot.defense_position = true
+				slot.has_attacked = true
+			duel_menus.close()
+			if audio_dispatch != null: audio_dispatch.play_game_audio(55)
+		"tribute":
+			duel_state.tributes_committed += 1
+			duel_state.discard_slot(side_id, 2, cell.x, true)
+			duel_menus.close()
+			if audio_dispatch != null: audio_dispatch.play_game_audio(61)
+		"effect":
+			var definition := card_database.get_card(slot.card_id)
+			if definition == null or definition.metadata_1b == 0:
+				_toast("This monster has no activated effect.")
+			else:
+				slot.persistent_flags = (slot.persistent_flags & 0xFD) | 0x11
+				var effect_result := monster_effect_rules.resolve(duel_state, side_id, definition.metadata_1b, cell.x, false, duel_random)
+				if not bool(effect_result.get("resolved", false)):
+					_toast(str(effect_result.get("reason", "Monster effect failed.")))
+				else:
+					duel_special_wins.check_exodia(duel_state, side_id)
+					duel_special_wins.check_destiny_board(duel_state, side_id)
+			duel_menus.close()
+			if audio_dispatch != null: audio_dispatch.play_game_audio(64)
+		"cancel":
+			duel_menus.close()
+			if audio_dispatch != null: audio_dispatch.play_game_audio(56)
+	_build_screen()
 
 func _load_spell_target_classes() -> void:
 	_spell_target_classes.clear()
@@ -1147,6 +1205,14 @@ func _draw_duel() -> void:
 		duel_ui.cell_selected.connect(_duel_cell_selected)
 		screen_root.add_child(duel_ui)
 		duel_ui.present(active_duel_state, card_database, player_duel_controller.cursor)
+		if duel_menus != null and duel_menus.menu == DuelMenus.Menu.MONSTER_ACTION:
+			var popup := PopupMenu.new()
+			popup.name = "MonsterActionMenu"
+			for action_index in range(duel_menus.labels().size()):
+				popup.add_item(duel_menus.labels()[action_index], action_index)
+			popup.id_pressed.connect(_on_monster_action_selected.bind(active_duel_state))
+			screen_root.add_child(popup)
+			popup.popup_centered()
 		return
 	_overlay_rect(Rect2(3, 2, 103, 15), Color(0.04, 0.08, 0.10, 0.9), Color("d7bf82"))
 	_text("RIVAL  %04d" % rival_lp, Vector2(7, 5), 9, PAPER)
