@@ -7,6 +7,8 @@ class_name AiTurn
 signal candidate_selected(candidate_id: int, action_kind: int, score: int)
 signal action_starting(candidate_id: int, action_kind: int)
 signal action_completed(candidate_id: int, action_kind: int, result: Dictionary)
+signal action_presentation_requested(candidate_id: int, action_kind: int, result: Dictionary)
+signal action_presentation_finished
 signal turn_completed(report: Dictionary)
 
 var candidates: AiCandidateDatabase
@@ -14,6 +16,7 @@ var validation: AiValidation
 var scoring: AiScoring
 var actions: AiActions
 var special_wins: DuelSpecialWins
+var _presentation_pending := false
 
 func _init(candidate_database: AiCandidateDatabase = null, validator: AiValidation = null, scorer: AiScoring = null, executor: AiActions = null, wins: DuelSpecialWins = null) -> void:
 	candidates = candidate_database
@@ -21,6 +24,12 @@ func _init(candidate_database: AiCandidateDatabase = null, validator: AiValidati
 	scoring = scorer
 	actions = executor
 	special_wins = wins if wins != null else DuelSpecialWins.new()
+
+func complete_action_presentation() -> void:
+	if not _presentation_pending:
+		return
+	_presentation_pending = false
+	action_presentation_finished.emit()
 
 ## Evaluates the full candidate table on independent state copies, then executes
 ## the top result. Like the C controller, it keeps selecting actions until no
@@ -74,9 +83,6 @@ func run_opponent_turn(state: SacredDuelState, acting_side: int, random_service:
 			report["failure"] = execution
 			stopped_early = true
 			break
-		if special_wins != null:
-			special_wins.check_destiny_board(state, acting_side)
-			special_wins.check_exodia(state, acting_side)
 		var action_record := {
 			"candidate_id": int(selected.id),
 			"action_kind": int(selected.kind),
@@ -87,6 +93,13 @@ func run_opponent_turn(state: SacredDuelState, acting_side: int, random_service:
 		completed_actions.append(action_record)
 		report.actions = completed_actions
 		action_completed.emit(int(selected.id), int(selected.kind), execution)
+		if not action_presentation_requested.get_connections().is_empty():
+			_presentation_pending = true
+			action_presentation_requested.emit(int(selected.id), int(selected.kind), execution)
+			await action_presentation_finished
+		if special_wins != null:
+			special_wins.check_destiny_board(state, acting_side)
+			special_wins.check_exodia(state, acting_side)
 		action_index += 1
 		if state.has_ended():
 			report.stop_reason = "duel_ended"
