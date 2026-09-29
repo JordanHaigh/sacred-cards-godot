@@ -94,6 +94,8 @@ func tick_channel_envelope(channel: PsgChannelState, frame_zero: bool = false) -
 		if channel.release_rate == 0:
 			if not _enter_echo(channel):
 				return false
+			_sync_channel_gain(channel)
+			return channel.active
 		else:
 			_decrement_rate(channel, frame_zero)
 			_sync_channel_gain(channel)
