@@ -77,6 +77,7 @@ func move_actor(actor_id: int, direction: int, step_count: int, keep_flag: int =
 	actor.animation_state = 19
 	_refresh_actor(actor_id)
 	actor_frame_changed.emit(actor_id, actor.sprite_id, _frame_index(actor))
+	await get_tree().create_timer(1.0 / 60.0).timeout
 
 func place_actor(actor_id: int, x: int, y: int, frame: int) -> void:
 	var actor := _actor(actor_id)
@@ -90,7 +91,26 @@ func place_actor(actor_id: int, x: int, y: int, frame: int) -> void:
 	if sprite != null:
 		sprite.texture = animation_database.get_frame_texture(actor.sprite_id, frame_index, actor.palette_index)
 		_refresh_actor(actor_id)
+		sprite.texture = animation_database.get_frame_texture(actor.sprite_id, frame_index, actor.palette_index)
 	actor_frame_changed.emit(actor_id, actor.sprite_id, frame_index)
+	await get_tree().create_timer(1.0 / 60.0).timeout
+
+func position_actor(actor_id: int, x: int, y: int) -> void:
+	var actor := _actor(actor_id)
+	if actor == null:
+		return
+	dialogue_hide_requested.emit()
+	actor.position = Vector2i(x, y)
+	_update_actor_height(actor)
+	_refresh_actor(actor_id)
+	actor_frame_changed.emit(actor_id, actor.sprite_id, _frame_index(actor))
+	await get_tree().create_timer(1.0 / 60.0).timeout
+
+func set_actor_orientation(actor_id: int, orientation: int) -> void:
+	var actor := _actor(actor_id)
+	if actor == null:
+		return
+	actor.orientation = orientation
 
 func pose_four(actor_id: int) -> void:
 	var actor := _actor(actor_id)
@@ -102,6 +122,7 @@ func pose_four(actor_id: int) -> void:
 	actor.animation_state = 0
 	_refresh_actor(actor_id)
 	actor_frame_changed.emit(actor_id, actor.sprite_id, _frame_index(actor))
+	await get_tree().create_timer(1.0 / 60.0).timeout
 
 func fade_to_dark(delay_frames: int) -> void:
 	if _fade_layer == null:
@@ -127,6 +148,7 @@ func change_sprite(actor_id: int, sprite_id: int) -> void:
 	actor.palette_index = (actor.flags & 0x1F) >> 3
 	_refresh_actor(actor_id)
 	actor_frame_changed.emit(actor_id, actor.sprite_id, _frame_index(actor))
+	await get_tree().create_timer(1.0 / 60.0).timeout
 
 func move_actor_to_x(actor_id: int, x: int) -> void:
 	var actor := _actor(actor_id)

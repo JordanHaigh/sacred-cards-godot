@@ -644,7 +644,8 @@ func start_scene_script(scene_id: int, variant: int, role: StringName = &"scene_
 		context["player_name"] = current_save.player_name
 	if scene_grid != null:
 		context["scene_grid"] = scene_grid
-	context["event"] = func(event_id: int, _runtime: SceneScriptRuntime) -> void: scene_script_events.dispatch(event_id, scene_script_runtime.state)
+	context["event"] = func(event_id: int, _runtime: SceneScriptRuntime) -> void:
+		await _execute_scene_script_event(event_id, _runtime.state)
 	context["condition"] = func(condition_id: int, _runtime: SceneScriptRuntime) -> int:
 		if condition_id == 0: return 1 if progression.duelist_level < 80 else 0
 		if condition_id == 1: return 1 if _bit_count(scene_script_events.progress_rank & 0x3F) == 6 else 0
@@ -757,6 +758,7 @@ func _draw_scene() -> void:
 		if current_scene_grid != null:
 			scene_actor_runtime.set_scene_grid(current_scene_grid)
 		screen_root.add_child(scene_actor_runtime)
+		scene_actor_runtime.dialogue_hide_requested.connect(func() -> void: _set_scene_dialogue_visible(false))
 	scene_dialogue_view = SCENE_DIALOGUE_DISPLAY_SCRIPT.new()
 	screen_root.add_child(scene_dialogue_view)
 	scene_dialogue_view.visible = false
@@ -769,7 +771,7 @@ func _execute_scene_actor_command(command: StringName, operands: Array) -> void:
 					await scene_actor_runtime.move_actor(int(operands[0]), int(operands[1]), int(operands[2]), int(operands[3]))
 			&"@1":
 				if operands.size() >= 4:
-					scene_actor_runtime.place_actor(int(operands[0]), int(operands[1]), int(operands[2]), int(operands[3]))
+					await scene_actor_runtime.place_actor(int(operands[0]), int(operands[1]), int(operands[2]), int(operands[3]))
 			&"@4":
 				if operands.size() >= 2:
 					await scene_actor_runtime.move_actor_to_x(int(operands[0]), int(operands[1]))
@@ -777,10 +779,77 @@ func _execute_scene_actor_command(command: StringName, operands: Array) -> void:
 				if operands.size() >= 2:
 					await scene_actor_runtime.move_actor_to_y(int(operands[0]), int(operands[1]))
 			&"@6":
-				if not operands.is_empty(): scene_actor_runtime.pose_four(int(operands[0]))
+				if not operands.is_empty(): await scene_actor_runtime.pose_four(int(operands[0]))
 			&"^5":
-				if operands.size() >= 2: scene_actor_runtime.change_sprite(int(operands[0]), int(operands[1]))
+				if operands.size() >= 2: await scene_actor_runtime.change_sprite(int(operands[0]), int(operands[1]))
 	scene_script_service_requested.emit(&"actor_command", {"command": command, "operands": operands})
+
+func _execute_scene_script_event(event_id: int, script_state: Dictionary) -> void:
+	if scene_script_events.is_door_event(event_id):
+		audio_dispatch.fade_game_music(1)
+		await _wait_scene_frames(8)
+		audio_dispatch.play_game_audio(92)
+		await _wait_scene_frames(50)
+		scene_script_events.dispatch(event_id, script_state, true)
+		return
+	scene_script_events.dispatch(event_id, script_state)
+	if not scene_script_events.motion_events.has(event_id):
+		return
+	var descriptor: Dictionary = scene_script_events.motion_events[event_id]
+	var paths: Dictionary = scene_script_events.motion_path_for_event(event_id)
+	for entry: Variant in descriptor.get("sequence", []):
+		if not entry is Dictionary:
+			continue
+		match StringName(entry.get("op", "")):
+			&"hide_dialogue":
+				_set_scene_dialogue_visible(false)
+			&"wait":
+				await _wait_scene_frames(int(entry.get("frames", 0)))
+			&"audio":
+				audio_dispatch.play_game_audio(int(entry.get("id", 0)))
+			&"stop_effect_music":
+				audio_dispatch.stop_effect_music_player()
+			&"actor_orientation":
+				if scene_actor_runtime != null:
+					scene_actor_runtime.set_actor_orientation(int(entry.get("actor", 0)), int(entry.get("value", 0)))
+			&"position_actor":
+				var actor_id := int(entry.get("actor", descriptor.get("actor", 0)))
+				var position: Array = entry.get("position", [0, 0])
+				if scene_actor_runtime != null and position.size() >= 2:
+					await scene_actor_runtime.position_actor(actor_id, int(position[0]), int(position[1]))
+			&"move_actor":
+				if scene_actor_runtime != null:
+					await scene_actor_runtime.move_actor(int(entry.get("actor", 0)), int(entry.get("direction", 0)), int(entry.get("steps", 0)))
+			&"follow_motion":
+				await _run_scene_follow_motion(descriptor, paths)
+			&"hide_actors":
+				for actor_value: Variant in entry.get("actors", []):
+					if scene_actor_runtime != null:
+						await scene_actor_runtime.position_actor(int(actor_value), 192, 192)
+					else:
+						await _wait_scene_frames(1)
+					await _wait_scene_frames(1)
+				_: scene_script_service_requested.emit(&"scene_motion_operation", {"event_id": event_id, "operation": entry})
+
+func _run_scene_follow_motion(descriptor: Dictionary, paths: Dictionary) -> void:
+	var x_steps: Array = paths.get("x", [])
+	var y_steps: Array = paths.get("y", [])
+	var actor_id := int(descriptor.get("actor", -1))
+	for index in range(mini(x_steps.size(), y_steps.size())):
+		var actor := scene_actor_runtime.actor(actor_id) if scene_actor_runtime != null else null
+		if actor != null:
+			await scene_actor_runtime.position_actor(actor_id, _signed_scene_word(actor.position.x + int(x_steps[index])), _signed_scene_word(actor.position.y + int(y_steps[index])))
+		else:
+			await _wait_scene_frames(1)
+		await _wait_scene_frames(1)
+
+func _signed_scene_word(value: int) -> int:
+	var word := value & 0xFFFF
+	return word - 0x10000 if word >= 0x8000 else word
+
+func _wait_scene_frames(frame_count: int) -> void:
+	if frame_count > 0:
+		await get_tree().create_timer(float(frame_count) / 60.0).timeout
 
 func _handle_scene_dialogue(operation: StringName, data: Dictionary) -> void:
 	if operation != &"portrait" or screen != "scene" or screen_root == null:

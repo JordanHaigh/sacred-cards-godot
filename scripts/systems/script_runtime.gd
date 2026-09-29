@@ -46,7 +46,6 @@ func configure(script_database: SceneScriptDatabase, command_adapter: SceneScrip
 	dialogue.glyph_requested.connect(func(code: int, position: int, highlighted: bool) -> void: dialogue_glyph_requested.emit(code, position, highlighted))
 	dialogue.text_clear_requested.connect(func() -> void: dialogue_clear_requested.emit())
 	dialogue.audio_requested.connect(_on_audio_requested)
-	commands.event_requested.connect(_on_event_requested)
 	commands.condition_requested.connect(_on_condition_requested)
 	commands.dialogue_requested.connect(_on_dialogue_requested)
 	commands.audio_requested.connect(_on_audio_requested)
@@ -154,6 +153,13 @@ func _physics_process(_delta: float) -> void:
 				if awaited_generation != execution_generation: return
 				blocking_service_waiting = false
 				if not running: return
+			if result.has("script_event_id"):
+				blocking_service_waiting = true
+				awaited_generation = execution_generation
+				await _service(&"event", [int(result.script_event_id), self])
+				if awaited_generation != execution_generation: return
+				blocking_service_waiting = false
+				if not running: return
 		_: pass
 	token_processed.emit(node_id, token_index - 1, token)
 	_update_portrait()
@@ -201,7 +207,6 @@ func _service(name: StringName, args: Array = []) -> Variant:
 	if callback.is_valid(): return callback.callv(args)
 	return null
 
-func _on_event_requested(event_id: int) -> void: _service(&"event", [event_id, self])
 func _on_condition_requested(condition_id: int) -> void:
 	var result: Variant = _service(&"condition", [condition_id, self])
 	if result != null: state.branch_flags = int(result)

@@ -84,7 +84,10 @@ func execute(token: Dictionary, context: Dictionary) -> Dictionary:
 			state.branch_flags = 1 if actual != expected else 0
 		"^0": condition_requested.emit(_operand(operands, 0))
 		"^1": effect_music_stop_requested.emit()
-		"^2": event_requested.emit(_operand(operands, 0))
+		"^2":
+			var event_id := _operand(operands, 0)
+			event_requested.emit(event_id)
+			return {"handled": true, "script_event_id": event_id}
 		"^3":
 			var delay_frames := _operand(operands, 0)
 			fade_requested.emit(delay_frames)
