@@ -19,6 +19,11 @@ var shop: ShopSystem
 var deck: Array[int] = []
 var language := 0
 var name_ranks: Array = []
+## Native card_sort.c replaces records with five ROM-backed output orders for
+## methods 1 and 3-6. Store those orders as ordinary Godot arrays when the
+## exact table data is available; keys are sort method IDs and values are card
+## IDs in source table order.
+var fixed_output_lists: Dictionary = {}
 
 func _init(card_database: CardDatabase = null, shop_system: ShopSystem = null) -> void:
 	database = card_database
@@ -34,13 +39,31 @@ func sort_cards(card_ids: Array[int], method: int, collection: Dictionary = {}, 
 	if method < 0 or method >= METHOD_TABLE.size():
 		return card_ids.duplicate()
 	var rows: Array[Dictionary] = []
-	for card_id in card_ids:
-		rows.append({"id": card_id, "key": _key(card_id, method, collection, buy_stock, sell_collection, totals)})
+	var fixed_order: Array = fixed_output_lists.get(method, [])
+	for index in range(card_ids.size()):
+		var card_id := card_ids[index]
+		var output_id := int(fixed_order[index]) if index < fixed_order.size() else card_id
+		rows.append({"id": output_id, "key": _key(card_id, method, collection, buy_stock, sell_collection, totals)})
 	_sort_records_descending(rows)
 	var result: Array[int] = []
 	for row in rows:
 		result.append(int(row.id))
 	return result
+
+## Accepts recovered ROM orders without retaining their original addresses.
+## The arrays are copied and normalized so callers cannot mutate sorter state
+## accidentally after configuration.
+func set_fixed_output_lists(orders: Dictionary) -> void:
+	fixed_output_lists.clear()
+	for raw_method: Variant in orders:
+		var method := int(raw_method)
+		var raw_order: Variant = orders[raw_method]
+		if method < 0 or method >= METHOD_TABLE.size() or not raw_order is Array:
+			continue
+		var order: Array[int] = []
+		for raw_card_id: Variant in raw_order:
+			order.append(int(raw_card_id))
+		fixed_output_lists[method] = order
 
 ## Mirrors SortRecords' midpoint-pivot partition and range push order. Equal
 ## keys swap as the native routine does instead of retaining input order.
