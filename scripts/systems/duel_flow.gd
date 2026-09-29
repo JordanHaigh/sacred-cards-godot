@@ -124,10 +124,11 @@ func resolve_outcome(duel: SacredDuelState, save_data: PlayerSaveData, opponent_
 		var card_rewards := reward_system.award_duel_cards(save_data, opponent_id, wagered_card_id, reward_count, random)
 		reward_system.restock_shop(save_data, opponent_id, random)
 		var money_before := save_data.money
-		reward_system.award_money(save_data, opponent_id, random)
+		var money_words := reward_system.award_money(save_data, opponent_id, random)
 		report.capacity_reward = capacity_reward
 		report.card_rewards = card_rewards
 		report.money_reward = save_data.money - money_before
+		report.money_reward_words = money_words
 		if duel.sides[1].life_points <= 0:
 			_push_message(report, 19, 0)
 		elif duel.sides[1].deck_out:
@@ -135,6 +136,7 @@ func resolve_outcome(duel: SacredDuelState, save_data: PlayerSaveData, opponent_
 		if show_results:
 			_push_message(report, 2, 0)
 			_push_message(report, 6, capacity_reward)
+			_push_money_reward_message(report, int(money_words.get("high", 0)), int(money_words.get("low", 0)))
 			for card_id in card_rewards:
 				_push_message(report, 5, card_id)
 	else:
@@ -154,6 +156,40 @@ func _push_message(report: Dictionary, message_id: int, number: int) -> void:
 	var messages: Array = report.messages
 	messages.append({"message_id": message_id, "number": number})
 	report.messages = messages
+
+func _push_money_reward_message(report: Dictionary, high: int, low: int) -> void:
+	var message_id := 8
+	var divisor := 1
+	if high == 0 and low < 10000:
+		message_id = 8
+	elif high == 0 and low < 100000000:
+		message_id = 9
+		divisor = 10000
+	elif high < 232 or (high == 232 and low < 3567587328):
+		message_id = 10
+		divisor = 100000000
+	else:
+		message_id = 11
+		divisor = 1000000000000
+	if high == 0 and low == 0:
+		message_id = 12
+		divisor = 1
+	var number := _divide_u64_words(high, low, divisor) & 0xFFFF
+	_push_message(report, message_id, number)
+
+## The selected divisors keep the quotient in a signed 32-bit range. Long
+## division keeps the input as two uint32 words, including values above int64.
+func _divide_u64_words(high: int, low: int, divisor: int) -> int:
+	var quotient := 0
+	var remainder := 0
+	for bit_index in range(63, -1, -1):
+		var bit_value := ((high >> (bit_index - 32)) & 1) if bit_index >= 32 else ((low >> bit_index) & 1)
+		remainder = remainder * 2 + bit_value
+		if remainder >= divisor:
+			remainder -= divisor
+			if bit_index < 31:
+				quotient |= 1 << bit_index
+	return quotient
 
 func _shuffle(cards: Array[int], random: SacredRandom) -> void:
 	for _swap_index in range(200):
