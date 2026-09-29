@@ -9,14 +9,16 @@ const PAPER := Color("f5e6c3")
 const PANEL := Color("171817")
 
 var definition: CardDefinition
+var card_art: CardArt
 var pages: Array[String] = []
 var page_index := 0
 var card_texture: Texture2D
 var page_counter: PixelText
 var page_lines: Array[PixelText] = []
 
-func present(card: CardDefinition) -> void:
+func present(card: CardDefinition, art_renderer: CardArt = null) -> void:
 	definition = card
+	card_art = art_renderer
 	pages = _parse_description_pages(card.description)
 	page_index = 0
 	_build_view()
@@ -44,8 +46,11 @@ func _build_view() -> void:
 	card_panel.size = Vector2(78, 106)
 	card_panel.add_theme_stylebox_override("panel", _panel_style(Color("33291e")))
 	add_child(card_panel)
-	if definition != null and ResourceLoader.exists(definition.art_path):
-		card_texture = load(definition.art_path) as Texture2D
+	if definition != null:
+		card_texture = card_art.load_card_texture(definition.id) if card_art != null else null
+		if card_texture == null and ResourceLoader.exists(definition.art_path):
+			card_texture = load(definition.art_path) as Texture2D
+	if card_texture != null:
 		var image := TextureRect.new()
 		image.texture = card_texture
 		image.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
