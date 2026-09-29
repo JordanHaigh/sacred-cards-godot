@@ -221,6 +221,7 @@ func _ready() -> void:
 		push_error("Could not load the recovered Sacred Cards database (error %d)." % load_result)
 	battle_animation_player = BATTLE_ANIMATION_SCRIPT.new()
 	battle_animation_player.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	battle_animation_player.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	battle_animation_player.z_index = 100
 	battle_animation_player.sound_requested.connect(_on_battle_animation_sound_requested)
 	add_child(battle_animation_player)
