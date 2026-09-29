@@ -3,6 +3,7 @@ class_name PlayerProgression
 
 const TABLE_PATH := "res://resources/game_tables.json"
 const MAX_CAPACITY := 99999
+const U32_MASK := 0xffffffff
 
 var capacity: int = 1600
 var duelist_level: int = 72
@@ -27,11 +28,19 @@ func update_level() -> void:
 		duelist_level += 1
 
 func add_capacity(amount: int) -> void:
-	capacity = mini(capacity + amount, MAX_CAPACITY)
+	var native_capacity := capacity & U32_MASK
+	var native_amount := amount & U32_MASK
+	var room := (MAX_CAPACITY - native_capacity) & U32_MASK
+	if native_amount > room:
+		capacity = MAX_CAPACITY
+	else:
+		capacity = (native_capacity + native_amount) & U32_MASK
 	update_level()
 
 func subtract_capacity(amount: int) -> void:
-	capacity = maxi(0, capacity - amount)
+	var native_capacity := capacity & U32_MASK
+	var native_amount := amount & U32_MASK
+	capacity = 0 if native_amount > native_capacity else native_capacity - native_amount
 	# Native subtraction deliberately does not lower the saved level.
 
 func deck_capacity() -> int:
