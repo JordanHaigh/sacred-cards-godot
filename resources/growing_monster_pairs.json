@@ -1,0 +1,24 @@
+{
+  "source": "decompiled/src/duel_flow.c: TransformGrowingMonsters; IDs resolved against resources/card_database.json",
+  "source_table": "4 input/output pairs at recovered ROM data offsets 0x08D419CC and 0x08D419D4; the ROM payload values were not exported",
+  "status": "inferred_from_card_line",
+  "note": "The four-pair Petit Moth evolution chain is inferred from the recovered card identities and the documented turn-start evolution behavior. Keep provenance explicit until the original table bytes are extracted.",
+  "pairs": [
+    {
+      "from_card_id": 278,
+      "to_card_id": 56
+    },
+    {
+      "from_card_id": 56,
+      "to_card_id": 72
+    },
+    {
+      "from_card_id": 72,
+      "to_card_id": 57
+    },
+    {
+      "from_card_id": 57,
+      "to_card_id": 67
+    }
+  ]
+}
