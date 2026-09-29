@@ -6,6 +6,12 @@ const SMALL_ATLAS: Texture2D = preload("res://art/ui/font-small.png")
 const LARGE_ATLAS: Texture2D = preload("res://art/ui/font-large.png")
 const FONT_MAPPING_PATH := "res://decompiled/build/assets/ui/font-mapping.json"
 const ASCII_GLYPH_CODES_PATH := "res://resources/ascii_glyph_codes.json"
+const GLYPHS: Dictionary = {
+	32: 0, 33: 1, 34: 2, 35: 3, 36: 4, 37: 5, 38: 6, 39: 7,
+	40: 8, 41: 9, 42: 10, 43: 11, 44: 12, 45: 13, 46: 14, 47: 15,
+	48: 16, 49: 17, 50: 18, 51: 19, 52: 20, 53: 21, 54: 22, 55: 23,
+	56: 24, 57: 25, 58: 26, 59: 27, 60: 28, 61: 29, 62: 30, 63: 31,
+}
 
 var unicode_glyphs: Dictionary = {}
 var ascii_glyphs: Dictionary = {}
@@ -41,7 +47,7 @@ func _ready() -> void:
 	for entry: Dictionary in mapping:
 		var candidate := str(entry.get("unicode_candidate", ""))
 		if candidate.length() == 1:
-			unicode_glyphs[candidate.unicode_at(0)] = int(entry.get("glyph_index", GLYPHS.get(63, 31)))
+			unicode_glyphs[candidate.unicode_at(0)] = int(entry.get("glyph_index", 31))
 
 func _draw() -> void:
 	var atlas: Texture2D = LARGE_ATLAS if use_large_font else SMALL_ATLAS
@@ -53,5 +59,5 @@ func _draw() -> void:
 		var source := Rect2((glyph % 32) * 8, (glyph / 32) * glyph_height, 8, glyph_height)
 		var target := Rect2(index * 8, 0, 8, glyph_height)
 		if shadowed:
-			draw_texture_rect_region(atlas, target.translated(Vector2(1, 1)), source, Color(0.04, 0.04, 0.04, 0.9))
+			draw_texture_rect_region(atlas, Rect2(target.position + Vector2(1, 1), target.size), source, Color(0.04, 0.04, 0.04, 0.9))
 		draw_texture_rect_region(atlas, target, source, font_color)
