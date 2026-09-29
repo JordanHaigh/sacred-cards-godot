@@ -1654,12 +1654,12 @@ func _draw_deck_builder_popup() -> void:
 	elif deck_builder_menu.popup == DeckBuilderMenu.PopupKind.DECK_ACTION:
 		labels = ["CARD INFO", "REMOVE CARD"]
 	else:
-		var modes := ["NUMBER", "NAME", "ATTACK", "DEFENSE", "TYPE", "ATTRIBUTE", "COST", "LEVEL", "QUANTITY"]
+		var modes := ["NUMBER", "NAME", "ATTACK", "DEFENSE", "TYPE", "ATTRIBUTE", "COST", "LEVEL", "QUANTITY", "CANCEL"]
 		labels = modes
 		if deck_builder_menu.popup == DeckBuilderMenu.PopupKind.COLLECTION_SORT:
-			labels = ["COPY", "NUMBER", "NAME", "ATTACK", "DEFENSE", "TYPE", "ATTRIBUTE", "COST", "QUANTITY"]
+			labels = ["COPY", "NUMBER", "NAME", "ATTACK", "DEFENSE", "TYPE", "ATTRIBUTE", "COST", "QUANTITY", "CANCEL"]
 		if deck_builder_menu.popup == DeckBuilderMenu.PopupKind.DECK_SORT:
-			labels = ["NUMBER", "NAME", "ATTACK", "DEFENSE", "TYPE", "ATTRIBUTE", "DECK COUNT", "COST", "LEVEL"]
+			labels = ["NUMBER", "NAME", "ATTACK", "DEFENSE", "TYPE", "ATTRIBUTE", "DECK COUNT", "COST", "LEVEL", "CANCEL"]
 	var first := maxi(deck_builder_menu.choice - 2, 0)
 	for index in range(first, mini(first + 5, labels.size())):
 		var line := index - first
