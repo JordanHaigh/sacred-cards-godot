@@ -406,26 +406,26 @@ func _unhandled_key_input(event: InputEvent) -> void:
 				if screen == "title": pass
 				elif screen == "card_detail": _card_detail_page(-1)
 				elif screen == "shop": _handle_shop_direction(Vector2i(-1, 0))
-				elif screen == "deck" and deck_builder_menu.popup in [DeckBuilderMenu.Popup.COLLECTION_SORT, DeckBuilderMenu.Popup.DECK_SORT]: _handle_deck_builder_key(64)
+				elif screen == "deck" and deck_builder_menu.popup in [DeckBuilderMenu.PopupKind.COLLECTION_SORT, DeckBuilderMenu.PopupKind.DECK_SORT]: _handle_deck_builder_key(64)
 				else: _step_selection(-1)
 			KEY_RIGHT:
 				if screen == "title": pass
 				elif screen == "card_detail": _card_detail_page(1)
 				elif screen == "shop": _handle_shop_direction(Vector2i(1, 0))
-				elif screen == "deck" and deck_builder_menu.popup in [DeckBuilderMenu.Popup.COLLECTION_SORT, DeckBuilderMenu.Popup.DECK_SORT]: _handle_deck_builder_key(128)
+				elif screen == "deck" and deck_builder_menu.popup in [DeckBuilderMenu.PopupKind.COLLECTION_SORT, DeckBuilderMenu.PopupKind.DECK_SORT]: _handle_deck_builder_key(128)
 				else: _step_selection(1)
 			KEY_UP:
 				if screen == "title": pass
 				elif screen == "shop": _handle_shop_direction(Vector2i(0, -1))
 				elif screen == "deck_hub": _handle_deck_hub_buttons(DeckManagement.BUTTON_UP)
-				elif screen == "deck" and deck_builder_menu.popup != DeckBuilderMenu.Popup.NONE: _handle_deck_builder_key(64)
+				elif screen == "deck" and deck_builder_menu.popup != DeckBuilderMenu.PopupKind.NONE: _handle_deck_builder_key(64)
 				elif screen == "deck": _move_deck_selection(1, false)
 				else: _step_selection(-1)
 			KEY_DOWN:
 				if screen == "title": pass
 				elif screen == "shop": _handle_shop_direction(Vector2i(0, 1))
 				elif screen == "deck_hub": _handle_deck_hub_buttons(DeckManagement.BUTTON_DOWN)
-				elif screen == "deck" and deck_builder_menu.popup != DeckBuilderMenu.Popup.NONE: _handle_deck_builder_key(128)
+				elif screen == "deck" and deck_builder_menu.popup != DeckBuilderMenu.PopupKind.NONE: _handle_deck_builder_key(128)
 				elif screen == "deck": _move_deck_selection(1, true)
 				else: _step_selection(1)
 			KEY_PAGEUP:
@@ -1073,7 +1073,7 @@ func _pre_duel_code_for_key(keycode: int) -> int:
 func process_pre_duel_code(code: int, opponent_id: int) -> Dictionary:
 	if pre_duel_menu == null:
 		return {"accepted": false, "reason": "pre_duel_menu_not_initialized"}
-	if pre_duel_menu.popup != PreDuelMenuState.Popup.NONE:
+	if pre_duel_menu.popup != PreDuelMenuState.PopupKind.NONE:
 		if code == 2 or code == 8:
 			pre_duel_menu.close_popup()
 			if audio_dispatch != null: audio_dispatch.play_game_audio(56)
@@ -1487,13 +1487,13 @@ func _draw_pre_duel() -> void:
 	pre_duel_display.present(pre_duel_menu, card_database, deck, progression.capacity, deck_rules.deck_cost(card_database))
 
 func _on_pre_duel_row_selected(row: int) -> void:
-	if pre_duel_menu == null or pre_duel_menu.popup != PreDuelMenuState.Popup.NONE: return
+	if pre_duel_menu == null or pre_duel_menu.popup != PreDuelMenuState.PopupKind.NONE: return
 	pre_duel_menu.move(row - 2)
 	_build_screen()
 
 func _on_pre_duel_popup_selected(choice: int) -> void:
-	if pre_duel_menu == null or pre_duel_menu.popup == PreDuelMenuState.Popup.NONE: return
-	var max_choice := 9 if pre_duel_menu.popup == PreDuelMenuState.Popup.SORT else 2 if pre_duel_menu.popup == PreDuelMenuState.Popup.ACTION else 1
+	if pre_duel_menu == null or pre_duel_menu.popup == PreDuelMenuState.PopupKind.NONE: return
+	var max_choice := 9 if pre_duel_menu.popup == PreDuelMenuState.PopupKind.SORT else 2 if pre_duel_menu.popup == PreDuelMenuState.PopupKind.ACTION else 1
 	pre_duel_menu.choice = clampi(choice, 0, max_choice)
 	_build_screen()
 
@@ -1632,7 +1632,7 @@ func _draw_shop() -> void:
 	shop_display.size = SCREEN_SIZE
 	shop_display.card_selected.connect(_select_shop_index)
 	screen_root.add_child(shop_display)
-	shop_display.present(visible_cards, shop_selected, selling, card_database, shop_panel, shop_rules, wallet, deck, shop_menu.popup, shop_menu.choice)
+	shop_display.present(visible_cards, shop_selected, selling, card_database, shop_panel, shop_rules, wallet, deck, int(shop_menu.popup), shop_menu.choice)
 
 func _draw_deck() -> void:
 	_text("%05d" % (progression.capacity if not editing_deck else deck_rules.deck_cost(card_database)), Vector2(78, 8), 8, PAPER)
@@ -1646,19 +1646,19 @@ func _draw_deck() -> void:
 	_draw_deck_builder_popup()
 
 func _draw_deck_builder_popup() -> void:
-	if deck_builder_menu.popup == DeckBuilderMenu.Popup.NONE: return
+	if deck_builder_menu.popup == DeckBuilderMenu.PopupKind.NONE: return
 	_overlay_rect(Rect2(54, 43, 132, 76), Color(0.04, 0.06, 0.06, 0.96), Color("d0b46f"))
 	var labels: Array[String] = []
-	if deck_builder_menu.popup == DeckBuilderMenu.Popup.COLLECTION_ACTION:
+	if deck_builder_menu.popup == DeckBuilderMenu.PopupKind.COLLECTION_ACTION:
 		labels = ["CARD INFO", "ADD TO DECK", "REMOVE FROM DECK"]
-	elif deck_builder_menu.popup == DeckBuilderMenu.Popup.DECK_ACTION:
+	elif deck_builder_menu.popup == DeckBuilderMenu.PopupKind.DECK_ACTION:
 		labels = ["CARD INFO", "REMOVE CARD"]
 	else:
 		var modes := ["NUMBER", "NAME", "ATTACK", "DEFENSE", "TYPE", "ATTRIBUTE", "COST", "LEVEL", "QUANTITY"]
 		labels = modes
-		if deck_builder_menu.popup == DeckBuilderMenu.Popup.COLLECTION_SORT:
+		if deck_builder_menu.popup == DeckBuilderMenu.PopupKind.COLLECTION_SORT:
 			labels = ["COPY", "NUMBER", "NAME", "ATTACK", "DEFENSE", "TYPE", "ATTRIBUTE", "COST", "QUANTITY"]
-		if deck_builder_menu.popup == DeckBuilderMenu.Popup.DECK_SORT:
+		if deck_builder_menu.popup == DeckBuilderMenu.PopupKind.DECK_SORT:
 			labels = ["NUMBER", "NAME", "ATTACK", "DEFENSE", "TYPE", "ATTRIBUTE", "DECK COUNT", "COST", "LEVEL"]
 	var first := maxi(deck_builder_menu.choice - 2, 0)
 	for index in range(first, mini(first + 5, labels.size())):
@@ -1779,6 +1779,14 @@ func _card_panel(rect: Rect2, card_id: int, highlight: bool, back := false, show
 		art.color = [Color("75614a"), Color("546a5d"), Color("765a42"), Color("6d6650")][card_id % 4]
 		panel.add_child(art)
 
+func _card_name(card_id: int) -> String:
+	var definition: CardDefinition = card_database.get_card(card_id) if card_database != null else null
+	return definition.name if definition != null else "CARD %03d" % card_id
+
+func _card_attack(card_id: int) -> int:
+	var definition: CardDefinition = card_database.get_card(card_id) if card_database != null else null
+	return definition.attack if definition != null else 0
+
 func _short_name(card_id: int) -> String:
 	var name: String = _card_name(card_id)
 	return name.left(7).to_upper()
@@ -1815,7 +1823,7 @@ func _visible_shop_cards() -> Array[int]:
 	return card_sorter.sort_cards(source, card_method, shop_rules.collection, shop_rules.stock, shop_rules.collection, shop_rules.collection)
 
 func _handle_shop_direction(direction: Vector2i) -> void:
-	if shop_menu.popup != ShopMenuState.Popup.NONE:
+	if shop_menu.popup != ShopMenuState.PopupKind.NONE:
 		shop_menu.navigate_popup(direction)
 		if audio_dispatch != null: audio_dispatch.play_game_audio(54)
 	else:
@@ -1826,13 +1834,13 @@ func _handle_shop_direction(direction: Vector2i) -> void:
 	_build_screen()
 
 func _handle_shop_page(direction: int) -> void:
-	if shop_menu.popup != ShopMenuState.Popup.NONE: return
+	if shop_menu.popup != ShopMenuState.PopupKind.NONE: return
 	shop_selected = shop_menu.page(direction, _visible_shop_cards().size())
 	if audio_dispatch != null: audio_dispatch.play_game_audio(54)
 	_build_screen()
 
 func _handle_shop_sort_cycle() -> void:
-	if shop_menu.popup != ShopMenuState.Popup.NONE: return
+	if shop_menu.popup != ShopMenuState.PopupKind.NONE: return
 	shop_menu.cycle_sort()
 	shop_selected = shop_menu.select(shop_selected, _visible_shop_cards().size())
 	if audio_dispatch != null: audio_dispatch.play_game_audio(55)
@@ -1844,7 +1852,7 @@ func _handle_shop_sort_open() -> void:
 	_build_screen()
 
 func _handle_shop_escape() -> void:
-	if shop_menu.popup != ShopMenuState.Popup.NONE:
+	if shop_menu.popup != ShopMenuState.PopupKind.NONE:
 		shop_menu.close_popup()
 		if audio_dispatch != null: audio_dispatch.play_game_audio(56)
 		_build_screen()
@@ -1857,7 +1865,7 @@ func _handle_shop_escape() -> void:
 
 func _handle_shop_confirm() -> void:
 	if _visible_shop_cards().is_empty(): return
-	if shop_menu.popup == ShopMenuState.Popup.NONE:
+	if shop_menu.popup == ShopMenuState.PopupKind.NONE:
 		var current_id: int = _visible_shop_cards()[shop_menu.selected_index]
 		if current_id in [0, 832, 833, 834]:
 			if audio_dispatch != null: audio_dispatch.play_game_audio(57)
@@ -1909,7 +1917,7 @@ func _handle_deck_hub_buttons(buttons: int) -> void:
 
 func _handle_deck_builder_key(key: int) -> void:
 	if deck_builder_menu == null: return
-	if deck_builder_menu.popup == DeckBuilderMenu.Popup.NONE and key in [0x140, 0x180]:
+	if deck_builder_menu.popup == DeckBuilderMenu.PopupKind.NONE and key in [0x140, 0x180]:
 		_move_deck_selection(10 if editing_deck else 50, key == 0x180)
 		return
 	var result := deck_builder_menu.handle_key(key, editing_deck)
