@@ -127,6 +127,8 @@ var card_sorter: CardSortSystem
 var wallet: PlayerWallet
 var progression: PlayerProgression
 var title_menu: TitleMenuState
+var title_exit_action := TITLE_MENU_SCRIPT.Action.NONE
+var _title_fade_transition_pending := false
 var password_system: SacredPasswordSystem
 var save_storage: SaveStorage
 var current_save: PlayerSaveData
@@ -295,11 +297,22 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	if screen != "title" or title_menu == null:
 		return
+	if _title_fade_transition_pending:
+		_complete_title_exit()
+		return
+	if title_menu.fade_active:
+		if title_menu.step_title_fade():
+			_title_fade_transition_pending = true
+		_apply_title_pulse()
+		return
 	title_menu.step_title_pulse()
 	_apply_title_pulse()
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
+		if screen == "title" and title_menu != null and (title_menu.fade_active or _title_fade_transition_pending):
+			get_viewport().set_input_as_handled()
+			return
 		if screen == "pre_duel" and pre_duel_menu != null:
 			var pre_duel_code := _pre_duel_code_for_key(event.keycode)
 			if pre_duel_code != 0:
@@ -1363,8 +1376,16 @@ func _apply_title_pulse() -> void:
 	if screen_root == null or screen_root.get_child_count() == 0 or title_menu == null:
 		return
 	var background := screen_root.get_child(0) as TextureRect
-	if background != null:
-		background.modulate.a = float(title_menu.pulse_coefficient) / 16.0
+	if title_menu.fade_active or _title_fade_transition_pending:
+		var brightness := 1.0 - float(title_menu.fade_brightness) / 16.0
+		var alpha := float(title_menu.fade_alpha) / 16.0
+		screen_root.modulate = Color(brightness, brightness, brightness, alpha)
+		if background != null:
+			background.modulate = Color.WHITE
+	else:
+		screen_root.modulate = Color.WHITE
+		if background != null:
+			background.modulate.a = float(title_menu.pulse_coefficient) / 16.0
 
 func _draw_duel() -> void:
 	if active_duel_state != null:
@@ -1837,6 +1858,22 @@ func _confirm_title() -> void:
 		prompt.popup_centered()
 		prompt.get_cancel_button().grab_focus()
 		return
+	if action in [TITLE_MENU_SCRIPT.Action.START_NEW_GAME, TITLE_MENU_SCRIPT.Action.CONTINUE_GAME]:
+		_begin_title_exit(action)
+
+func _begin_title_exit(action: int) -> void:
+	if title_menu == null or title_menu.fade_active:
+		return
+	title_exit_action = action
+	_title_fade_transition_pending = false
+	if audio_dispatch != null:
+		audio_dispatch.fade_game_music(1)
+	title_menu.begin_title_fade()
+
+func _complete_title_exit() -> void:
+	_title_fade_transition_pending = false
+	var action := title_exit_action
+	title_exit_action = TITLE_MENU_SCRIPT.Action.NONE
 	if action == TITLE_MENU_SCRIPT.Action.START_NEW_GAME:
 		_start_new_game()
 	elif action == TITLE_MENU_SCRIPT.Action.CONTINUE_GAME:
@@ -1878,7 +1915,7 @@ func _submit_password(password: String, entry_view: PasswordEntryView) -> void:
 func _resolve_overwrite(confirmed: bool) -> void:
 	title_menu.overwrite_choice = TITLE_MENU_SCRIPT.OverwriteChoice.CONFIRM if confirmed else TITLE_MENU_SCRIPT.OverwriteChoice.CANCEL
 	if title_menu.resolve_overwrite() == TITLE_MENU_SCRIPT.Action.START_NEW_GAME:
-		_start_new_game()
+		_begin_title_exit(TITLE_MENU_SCRIPT.Action.START_NEW_GAME)
 
 func _toggle_title_choice() -> void:
 	title_menu.toggle_choice()
