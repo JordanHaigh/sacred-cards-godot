@@ -1020,7 +1020,7 @@ func _prepare_recovered_side_turn(side_id: int) -> void:
 	if side_id < 0 or side_id >= active_duel_state.sides.size():
 		return
 	var side := active_duel_state.sides[side_id]
-	DUEL_DECK_SCRIPT.draw_card(side)
+	DUEL_DECK_SCRIPT.draw_card(side, active_duel_state)
 	if side.deck_out:
 		active_duel_state.auxiliary_flags[side_id] = 2
 		active_duel_state.status = SacredDuelState.Status.PLAYER_TWO_WON if side_id == 0 else SacredDuelState.Status.PLAYER_ONE_WON
