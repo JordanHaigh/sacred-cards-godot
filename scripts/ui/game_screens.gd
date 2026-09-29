@@ -470,7 +470,9 @@ func _unhandled_key_input(event: InputEvent) -> void:
 				elif screen == "shop": _handle_shop_confirm()
 				else: _confirm()
 			KEY_SPACE:
-				if screen == "deck_hub": _handle_deck_hub_buttons(DeckManagement.BUTTON_B)
+				if screen == "title":
+					if title_has_save: _return_to_continue_title()
+				elif screen == "deck_hub": _handle_deck_hub_buttons(DeckManagement.BUTTON_B)
 				elif screen == "player_status": _show("deck_hub")
 				elif screen == "deck": _handle_deck_builder_key(2)
 				else: _confirm()
