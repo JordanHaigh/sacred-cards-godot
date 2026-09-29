@@ -55,9 +55,6 @@ func finish_turn(duel: SacredDuelState) -> void:
 		return
 	_return_borrowed_monsters(duel)
 	var outgoing_side := duel.sides[duel.active_side]
-	outgoing_side.duel_flags &= 0xF7
-	for hand_index in range(outgoing_side.hand_flags.size()):
-		outgoing_side.hand_flags[hand_index] &= 0xFE
 	for side_index in range(duel.auxiliary_flags.size()):
 		if duel.auxiliary_flags[side_index] != 2:
 			duel.auxiliary_flags[side_index] = 1
@@ -68,17 +65,18 @@ func finish_turn(duel: SacredDuelState) -> void:
 	duel.turn_number += 1
 	duel.phase = SacredDuelState.Phase.DRAW
 	duel.tributes_committed = 0
-	var next_side := duel.sides[duel.active_side]
-	next_side.duel_flags &= 0xF7
-	for hand_index in range(next_side.hand_flags.size()):
-		next_side.hand_flags[hand_index] &= 0xFE
-	if next_side.attack_restriction_turns & 3:
-		next_side.attack_restriction_turns = (next_side.attack_restriction_turns - 1) & 3
-	for slot in next_side.monster_zones:
+	# The native board still has the outgoing side oriented at side index 0 here.
+	# FinishDuelTurn clears its defense-restriction bit, attack countdown, and used bits.
+	outgoing_side.duel_flags &= 0xFB
+	if outgoing_side.attack_restriction_turns & 3:
+		outgoing_side.attack_restriction_turns = (outgoing_side.attack_restriction_turns - 1) & 3
+	for slot in outgoing_side.monster_zones:
 		slot.persistent_flags &= 0xFE
 		slot.has_attacked = false
-	for slot in next_side.back_row_zones:
-		slot.persistent_flags &= 0xFE
+	for hand_index in range(outgoing_side.hand_flags.size()):
+		outgoing_side.hand_flags[hand_index] &= 0xFE
+	var next_side := duel.sides[duel.active_side]
+	next_side.duel_flags &= 0xF7
 
 ## Applies the four recovered-ID pairs to the active side before it acts.
 ## Pair IDs are isolated in a Godot resource because their ROM data table was
