@@ -2,13 +2,13 @@ class_name ShopMenuState
 extends RefCounted
 ## Shop navigation, popup and sort state recovered from shop_menu.c.
 
-enum Popup { NONE, ACTION, SORT }
+enum PopupKind { NONE, ACTION, SORT }
 enum Action { NONE, BUY_OR_SELL, CARD_INFO, CANCEL, SORT_SELECTED, SORT_CLOSED }
 
 const SORT_METHODS_BUY := [1, 2, 3, 4, 5, 6, 7, 9, 8]
 const SORT_METHODS_SELL := [1, 2, 3, 4, 5, 6, 7, 10, 8]
 
-var popup: Popup = Popup.NONE
+var popup: PopupKind = PopupKind.NONE
 var choice := 0
 var sort_mode := 0
 var selected_index := 0
@@ -17,13 +17,13 @@ var selling := false
 func begin(is_selling: bool, selection: int = 0) -> void:
 	selling = is_selling
 	selected_index = maxi(selection, 0)
-	popup = Popup.NONE
+	popup = PopupKind.NONE
 	choice = 0
 
 func set_selling(is_selling: bool) -> void:
 	selling = is_selling
 	selected_index = 0
-	popup = Popup.NONE
+	popup = PopupKind.NONE
 	choice = 0
 	sort_mode = 0
 
@@ -40,21 +40,21 @@ func page(delta_pages: int, count: int) -> int:
 	return move(delta_pages * 70, count)
 
 func open_action() -> void:
-	popup = Popup.ACTION
+	popup = PopupKind.ACTION
 	choice = 0
 
 func open_sort() -> void:
-	popup = Popup.SORT
+	popup = PopupKind.SORT
 	choice = sort_mode
 
 func close_popup() -> void:
-	popup = Popup.NONE
+	popup = PopupKind.NONE
 	choice = 0
 
 func navigate_popup(direction: Vector2i) -> void:
-	if popup == Popup.ACTION:
+	if popup == PopupKind.ACTION:
 		choice = posmod(choice + direction.y, 3)
-	elif popup == Popup.SORT:
+	elif popup == PopupKind.SORT:
 		var next := choice
 		if direction.x < 0: next -= 1
 		elif direction.x > 0: next += 1
@@ -69,10 +69,10 @@ func cycle_sort() -> void:
 	sort_mode = posmod(sort_mode + 1, 9)
 
 func confirm() -> Dictionary:
-	if popup == Popup.NONE:
+	if popup == PopupKind.NONE:
 		open_action()
 		return {"action": Action.NONE, "sound": 55}
-	if popup == Popup.ACTION:
+	if popup == PopupKind.ACTION:
 		if choice == 0:
 			return {"action": Action.BUY_OR_SELL, "sound": 0}
 		if choice == 1:
