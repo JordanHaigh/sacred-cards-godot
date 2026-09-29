@@ -35,6 +35,7 @@ var _sprite_layer: Node2D
 var _sprite_sheets: Dictionary[String, Texture2D] = {}
 var _destruction_sheet: Texture2D
 var _destruction_alpha_bytes: PackedByteArray
+var _destruction_frame_bytes: PackedByteArray
 
 ## Stages the combatants with their recovered full-card art, then runs the
 ## result-code phases. Combat-side ordering follows the battle record; life
@@ -292,7 +293,7 @@ func _animate_destruction_particles(side_id: int, card: CanvasItem, random_servi
 						particle.plane = 1
 			if int(particle.life) > 0 and int(particle.delay) == 0:
 				particle.counter = int(particle.counter) + 1
-				if int(particle.counter) >= 2:
+				if int(particle.counter) >= _destruction_frame_duration(int(particle.frame)):
 					particle.counter = 0
 					particle.frame = (int(particle.frame) + 1) % 4
 			particles[particle_index] = particle
@@ -319,6 +320,12 @@ func _destruction_alpha(step: int) -> int:
 	if _destruction_alpha_bytes.is_empty():
 		_destruction_alpha_bytes = FileAccess.get_file_as_bytes(PLAYER_MENU_ASSETS + "battle-destruction.alpha.bin")
 	return int(_destruction_alpha_bytes[step % 3]) if _destruction_alpha_bytes.size() >= 3 else 8
+
+func _destruction_frame_duration(frame_index: int) -> int:
+	if _destruction_frame_bytes.is_empty():
+		_destruction_frame_bytes = FileAccess.get_file_as_bytes(PLAYER_MENU_ASSETS + "battle-destruction.frames.bin")
+	var byte_offset := frame_index * 8
+	return maxi(1, int(_destruction_frame_bytes[byte_offset])) if byte_offset < _destruction_frame_bytes.size() else 1
 
 func _animate_life_points(side_id: int, old_value: int, new_value: int) -> void:
 	if side_id >= life_point_labels.size() or life_point_labels[side_id] == null or new_value >= old_value:
