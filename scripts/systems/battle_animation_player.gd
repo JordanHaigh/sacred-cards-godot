@@ -12,6 +12,10 @@ const RESULT_FLAGS := [
 	[0xcf, 0], [0, 0xcf], [0, 9], [0xc2, 9], [0x21, 0x67], [0x67, 0x21],
 ]
 const PLAYER_MENU_ASSETS := "res://decompiled/build/assets/player-menus/"
+const SACRED_RANDOM_SCRIPT = preload("res://scripts/systems/sacred_random.gd")
+const DESTRUCTION_SEEDS := [0x99, 0x129, 0x1C9, 0x1FF]
+const DESTRUCTION_PARTICLES := 12
+const DESTRUCTION_FRAGMENTS := 5
 const OAM_DIMENSIONS := {
 	0: [[8, 8], [16, 16], [32, 32], [64, 64]],
 	1: [[16, 8], [32, 8], [32, 16], [64, 32]],
@@ -29,11 +33,13 @@ var is_presenting := false
 var _presentation_root: Control
 var _sprite_layer: Node2D
 var _sprite_sheets: Dictionary[String, Texture2D] = {}
+var _destruction_sheet: Texture2D
+var _destruction_alpha_bytes: PackedByteArray
 
 ## Stages the combatants with their recovered full-card art, then runs the
 ## result-code phases. Combat-side ordering follows the battle record; life
 ## values are remapped from physical duel sides using the supplied owners.
-func play_duel_result(result_code: int, card_ids: Array[int], owners: Array[int], old_life_points: Array[int], new_life_points: Array[int], database: CardDatabase) -> void:
+func play_duel_result(result_code: int, card_ids: Array[int], owners: Array[int], old_life_points: Array[int], new_life_points: Array[int], database: CardDatabase, random_service: SacredRandom = null) -> void:
 	if database == null or card_ids.size() < 2 or owners.size() < 2 or old_life_points.size() < 2 or new_life_points.size() < 2:
 		return
 	if is_instance_valid(_presentation_root):
@@ -84,7 +90,7 @@ func play_duel_result(result_code: int, card_ids: Array[int], owners: Array[int]
 		return
 	is_presenting = true
 	await get_tree().create_timer(12 * FRAME_TIME).timeout
-	await present_result(result_code, combat_old, combat_new)
+	await present_result(result_code, combat_old, combat_new, random_service)
 	is_presenting = false
 	if is_instance_valid(_presentation_root):
 		_presentation_root.queue_free()
@@ -101,7 +107,7 @@ func animation_flags(result_code: int) -> Array[int]:
 		return [0, 0]
 	return [int(RESULT_FLAGS[result_code][0]), int(RESULT_FLAGS[result_code][1])]
 
-func present_result(result_code: int, old_life_points: Array[int], new_life_points: Array[int]) -> void:
+func present_result(result_code: int, old_life_points: Array[int], new_life_points: Array[int], random_service: SacredRandom = null) -> void:
 	var flags := animation_flags(result_code)
 	if flags[0] == 0 and flags[1] == 0:
 		return
@@ -113,7 +119,7 @@ func present_result(result_code: int, old_life_points: Array[int], new_life_poin
 			await get_tree().create_timer(6 * FRAME_TIME).timeout
 		if (side_flags & 4) != 0:
 			sound_requested.emit(70)
-			await _animate_card_destruction(side_id)
+			await _animate_card_destruction(side_id, random_service)
 		if (side_flags & 64) != 0 and side_id < old_life_points.size() and side_id < new_life_points.size():
 			await _animate_life_points(side_id, old_life_points[side_id], new_life_points[side_id])
 		if side_id == 1 and (flags[0] & 6) != 0:
@@ -223,15 +229,96 @@ func _clear_sprite_layer() -> void:
 	for child in _sprite_layer.get_children():
 		child.free()
 
-func _animate_card_destruction(side_id: int) -> void:
+func _animate_card_destruction(side_id: int, random_service: SacredRandom) -> void:
 	if side_id >= card_nodes.size() or card_nodes[side_id] == null:
 		return
 	var card := card_nodes[side_id]
 	phase_started.emit(side_id, &"destruction")
-	var tween := create_tween()
-	tween.tween_property(card, "modulate:a", 0.0, 12 * FRAME_TIME)
-	await tween.finished
+	if random_service != null:
+		await _animate_destruction_particles(side_id, card, random_service)
+	else:
+		var tween := create_tween()
+		tween.tween_property(card, "modulate:a", 0.0, 12 * FRAME_TIME)
+		await tween.finished
 	phase_finished.emit(side_id, &"destruction")
+
+func _animate_destruction_particles(side_id: int, card: CanvasItem, random_service: SacredRandom) -> void:
+	var seed_choice := random_service.byte_inclusive(0, 3)
+	var local_random := SACRED_RANDOM_SCRIPT.new() as SacredRandom
+	local_random.state = DESTRUCTION_SEEDS[seed_choice]
+	var particles: Array[Dictionary] = []
+	for column in range(3):
+		for row in range(4):
+			var delay := local_random.next_byte() % 4 if row == 0 else local_random.next_byte() % 2 + int(particles[particles.size() - 1].delay) + 1
+			var particle := {
+				"position": Vector2((122 if side_id == 1 else 4) + column * 40, posmod(94 - int(row * 112 / 3), 256)),
+				"delay": delay, "hold": 4, "life": 3, "plane": 0, "flip": local_random.next_byte() % 2,
+				"frame": 0, "counter": 0, "offsets": []
+			}
+			particles.append(particle)
+	for particle in particles:
+		for _fragment in range(DESTRUCTION_FRAGMENTS):
+			particle.offsets.append(Vector2(16 - local_random.next_byte() % 32, 20 - local_random.next_byte() % 40))
+	# The C animation restores the global stream after its one seed-selection draw.
+	# Its local seeded particle stream has no effect on duel randomness.
+	var fragments: Array[Sprite2D] = []
+	for _particle_index in range(DESTRUCTION_PARTICLES):
+		for _fragment_index in range(DESTRUCTION_FRAGMENTS):
+			var fragment := Sprite2D.new()
+			fragment.centered = false
+			fragment.texture = _destruction_sprite_sheet()
+			fragment.region_enabled = true
+			fragment.region_rect = Rect2(0, 0, 8, 8)
+			fragment.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			_sprite_layer.add_child(fragment)
+			fragments.append(fragment)
+	var original_modulate := card.modulate
+	for step in range(1, 18):
+		var blend_alpha := _destruction_alpha(step)
+		if is_instance_valid(card):
+			var darkening := float(step * 2) / 31.0
+			card.modulate = Color(maxf(0.0, original_modulate.r - darkening), maxf(0.0, original_modulate.g - darkening), maxf(0.0, original_modulate.b - darkening), original_modulate.a)
+		for particle_index in range(DESTRUCTION_PARTICLES):
+			var particle: Dictionary = particles[particle_index]
+			if int(particle.delay) > 0:
+				particle.delay = int(particle.delay) - 1
+			elif int(particle.life) > 0:
+				if int(particle.hold) > 0:
+					particle.hold = int(particle.hold) - 1
+				elif step % 3 == 0 or int(particle.plane) == 1:
+					if int(particle.plane) == 1:
+						particle.life = int(particle.life) - 1
+					else:
+						particle.plane = 1
+			if int(particle.life) > 0 and int(particle.delay) == 0:
+				particle.counter = int(particle.counter) + 1
+				if int(particle.counter) >= 2:
+					particle.counter = 0
+					particle.frame = (int(particle.frame) + 1) % 4
+			particles[particle_index] = particle
+			for fragment_index in range(DESTRUCTION_FRAGMENTS):
+				var sprite := fragments[particle_index * DESTRUCTION_FRAGMENTS + fragment_index]
+				var offset: Vector2 = particle.offsets[fragment_index]
+				sprite.visible = int(particle.life) > 0 and int(particle.delay) == 0
+				sprite.position = particle.position + offset
+				var tile := (int(particle.frame) * 5 + fragment_index) % 128
+				sprite.region_rect = Rect2((tile % 16) * 8, (tile / 16) * 8, 8, 8)
+				sprite.modulate.a = float(blend_alpha) / 16.0
+			sprite.flip_h = int(particle.flip) != 0
+		# C advances one destruction step for every three uploaded display frames.
+		await get_tree().create_timer(3 * FRAME_TIME).timeout
+	if is_instance_valid(card):
+		card.modulate = Color(original_modulate.r, original_modulate.g, original_modulate.b, 0.0)
+
+func _destruction_sprite_sheet() -> Texture2D:
+	if _destruction_sheet == null:
+		_destruction_sheet = load(PLAYER_MENU_ASSETS + "battle-destruction.png") as Texture2D
+	return _destruction_sheet
+
+func _destruction_alpha(step: int) -> int:
+	if _destruction_alpha_bytes.is_empty():
+		_destruction_alpha_bytes = FileAccess.get_file_as_bytes(PLAYER_MENU_ASSETS + "battle-destruction.alpha.bin")
+	return int(_destruction_alpha_bytes[step % 3]) if _destruction_alpha_bytes.size() >= 3 else 8
 
 func _animate_life_points(side_id: int, old_value: int, new_value: int) -> void:
 	if side_id >= life_point_labels.size() or life_point_labels[side_id] == null or new_value >= old_value:
