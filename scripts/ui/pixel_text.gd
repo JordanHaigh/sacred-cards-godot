@@ -6,12 +6,6 @@ const SMALL_ATLAS: Texture2D = preload("res://art/ui/font-small.png")
 const LARGE_ATLAS: Texture2D = preload("res://art/ui/font-large.png")
 const FONT_MAPPING_PATH := "res://decompiled/build/assets/ui/font-mapping.json"
 const ASCII_GLYPH_CODES_PATH := "res://resources/ascii_glyph_codes.json"
-const GLYPHS: Dictionary = {
-	32: 0, 33: 1, 34: 2, 35: 3, 36: 4, 37: 5, 38: 6, 39: 7,
-	40: 8, 41: 9, 42: 10, 43: 11, 44: 12, 45: 13, 46: 14, 47: 15,
-	48: 16, 49: 17, 50: 18, 51: 19, 52: 20, 53: 21, 54: 22, 55: 23,
-	56: 24, 57: 25, 58: 26, 59: 27, 60: 28, 61: 29, 62: 30, 63: 31,
-}
 
 var unicode_glyphs: Dictionary = {}
 var ascii_glyphs: Dictionary = {}
@@ -31,6 +25,17 @@ var ascii_glyphs: Dictionary = {}
 @export var shadowed: bool = true
 
 func _ready() -> void:
+	ascii_glyphs = load_ascii_glyphs()
+	var mapping: Variant = JSON.parse_string(FileAccess.get_file_as_string(FONT_MAPPING_PATH)) if FileAccess.file_exists(FONT_MAPPING_PATH) else null
+	if not mapping is Array:
+		return
+	for entry: Dictionary in mapping:
+		var candidate := str(entry.get("unicode_candidate", ""))
+		if candidate.length() == 1:
+			unicode_glyphs[candidate.unicode_at(0)] = int(entry.get("glyph_index", 31))
+
+static func load_ascii_glyphs() -> Dictionary:
+	var result: Dictionary = {}
 	var ascii_data: Variant = JSON.parse_string(FileAccess.get_file_as_string(ASCII_GLYPH_CODES_PATH)) if FileAccess.file_exists(ASCII_GLYPH_CODES_PATH) else null
 	if ascii_data is Dictionary:
 		var encoded_codes: Variant = ascii_data.get("encoded_codes", [])
@@ -40,14 +45,8 @@ func _ready() -> void:
 					continue
 				var encoded := int(encoded_codes[index]) & 0xffff
 				var code := ((encoded << 8) | (encoded >> 8)) & 0xffff
-				ascii_glyphs[index + 32] = SacredTextRules.bitmap_glyph_index(code)
-	var mapping: Variant = JSON.parse_string(FileAccess.get_file_as_string(FONT_MAPPING_PATH)) if FileAccess.file_exists(FONT_MAPPING_PATH) else null
-	if not mapping is Array:
-		return
-	for entry: Dictionary in mapping:
-		var candidate := str(entry.get("unicode_candidate", ""))
-		if candidate.length() == 1:
-			unicode_glyphs[candidate.unicode_at(0)] = int(entry.get("glyph_index", 31))
+				result[index + 32] = SacredTextRules.bitmap_glyph_index(code)
+	return result
 
 func _draw() -> void:
 	var atlas: Texture2D = LARGE_ATLAS if use_large_font else SMALL_ATLAS
