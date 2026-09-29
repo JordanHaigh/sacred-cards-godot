@@ -132,7 +132,7 @@ func _run_handler(id: int, state: SacredDuelState, active: int, candidate: Dicti
 			return _ritual_score(state, active, candidate, recipe_id, false, false)
 		31: return {"score": _choice(_empty_hand(state.side(enemy).hand) >= 2, 0x7EEB5B58)}
 		32:
-			var hand_size := state.side(enemy).hand.size()
+			var hand_size := state.side(enemy).hand_count()
 			if hand_size == 0: return {"score": LOW}
 			return {"score": 0x7FFFFFFF if hand_size * 200 < state.side(enemy).life_points else 0x7FFFFFF5}
 		33: return {"score": _choice(_count_type(enemy_monsters, 2) > 0, 0x7FF99742)}
@@ -525,10 +525,14 @@ func _hidden_row(row: Array, priority: int) -> int:
 	return LOW
 
 func _empty_hand(hand: Array[int]) -> int:
-	return maxi(0, 5 - hand.size())
+	var occupied := 0
+	for card_id in hand:
+		if card_id != 0: occupied += 1
+	return maxi(0, 5 - occupied)
 
 func _hidden_hand(hand: Array[int], flags: Array[int], priority: int) -> int:
 	for index in range(hand.size()):
+		if hand[index] == 0: continue
 		if index >= flags.size() or (flags[index] & 0x10) == 0: return priority
 	return LOW
 
