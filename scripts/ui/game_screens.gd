@@ -1445,7 +1445,7 @@ func _run_scene_shop(is_selling: bool) -> void:
 	scene_shop_return_screen = screen
 	scene_shop_active = true
 	selling = is_selling
-	shop_selected = 0
+	shop_selected = 7 # Native shop starts at row 1, column 0; row 0 is the wraparound row.
 	shop_menu.begin(is_selling, shop_selected)
 	_show("shop")
 	await scene_shop_closed
@@ -1860,17 +1860,29 @@ func _visible_shop_cards() -> Array[int]:
 	var source: Array[int] = []
 	for card_id in range(1, PreDuelMenuState.CARD_COUNT + 1):
 		source.append(card_id)
-	if card_sorter == null or shop_menu == null:
-		var available: Array[int] = collection if selling else stock
-		return available.duplicate()
-	var card_method := shop_menu.sort_method()
-	var sorted_ids := card_sorter.sort_cards(source, card_method, shop_rules.collection, shop_rules.stock, shop_rules.collection, shop_rules.collection)
-	var inventory: Dictionary = shop_rules.collection if selling else shop_rules.stock
-	var visible: Array[int] = []
+	var sorted_ids: Array[int] = source
+	var inventory: Dictionary = {}
+	if card_sorter != null and shop_menu != null and shop_rules != null:
+		var card_method := shop_menu.sort_method()
+		sorted_ids = card_sorter.sort_cards(source, card_method, shop_rules.collection, shop_rules.stock, shop_rules.collection, shop_rules.collection)
+		inventory = shop_rules.collection if selling else shop_rules.stock
+	else:
+		var available_cards: Array[int] = collection if selling else stock
+		for card_id in available_cards:
+			inventory[card_id] = 1
+	var sorted_slots: Array[int] = []
 	for card_id in sorted_ids:
-		if int(inventory.get(card_id, 0)) > 0:
-			visible.append(card_id)
-	return visible
+		sorted_slots.append(card_id if int(inventory.get(card_id, 0)) > 0 else 0)
+	# The source fills 129 seven-card rows from 900 sorted IDs. The last row
+	# keeps three zero slots, and row 128 is shown above row 0 at menu entry.
+	while sorted_slots.size() < 903:
+		sorted_slots.append(0)
+	var native_view_order: Array[int] = []
+	for index in range(896, 903):
+		native_view_order.append(sorted_slots[index])
+	for index in range(896):
+		native_view_order.append(sorted_slots[index])
+	return native_view_order
 
 func _handle_shop_direction(direction: Vector2i) -> void:
 	if shop_menu.popup != ShopMenuState.PopupKind.NONE:
