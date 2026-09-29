@@ -1844,11 +1844,20 @@ func _select_shop_index(index: int) -> void:
 	_build_screen()
 
 func _visible_shop_cards() -> Array[int]:
-	var source: Array[int] = collection if selling else stock
+	var source: Array[int] = []
+	for card_id in range(1, PreDuelMenuState.CARD_COUNT + 1):
+		source.append(card_id)
 	if card_sorter == null or shop_menu == null:
-		return source.duplicate()
+		var available: Array[int] = collection if selling else stock
+		return available.duplicate()
 	var card_method := shop_menu.sort_method()
-	return card_sorter.sort_cards(source, card_method, shop_rules.collection, shop_rules.stock, shop_rules.collection, shop_rules.collection)
+	var sorted_ids := card_sorter.sort_cards(source, card_method, shop_rules.collection, shop_rules.stock, shop_rules.collection, shop_rules.collection)
+	var inventory: Dictionary = shop_rules.collection if selling else shop_rules.stock
+	var visible: Array[int] = []
+	for card_id in sorted_ids:
+		if int(inventory.get(card_id, 0)) > 0:
+			visible.append(card_id)
+	return visible
 
 func _handle_shop_direction(direction: Vector2i) -> void:
 	if shop_menu.popup != ShopMenuState.PopupKind.NONE:
