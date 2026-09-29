@@ -47,6 +47,6 @@ func describe(card_id: int, selling: bool, wallet: PlayerWallet, deck: Array[int
 		"transaction_price": payout if selling else buy_cost,
 		"balance_after": balance_after,
 		"shortfall": shortfall,
-		"can_receive_payout": wallet.gold + payout <= PlayerWalletScript.MONEY_LIMIT,
+		"can_receive_payout": wallet.can_receive(payout),
 		"selling": selling,
 	}
