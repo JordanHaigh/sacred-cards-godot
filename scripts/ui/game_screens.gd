@@ -222,6 +222,7 @@ func _ready() -> void:
 	battle_animation_player = BATTLE_ANIMATION_SCRIPT.new()
 	battle_animation_player.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	battle_animation_player.z_index = 100
+	battle_animation_player.sound_requested.connect(_on_battle_animation_sound_requested)
 	add_child(battle_animation_player)
 	duel_battle_setup = BATTLE_SETUP_SCRIPT.new(card_database)
 	duel_effect_dispatcher = EFFECT_DISPATCHER_SCRIPT.new(card_database)
@@ -813,6 +814,10 @@ func _on_monster_action_selected(action_id: int, duel_state: SacredDuelState) ->
 func _finish_duel_if_ended() -> void:
 	if active_duel_state != null and (active_duel_state.has_ended() or active_duel_state.status != SacredDuelState.Status.ACTIVE):
 		_resolve_recovered_duel_outcome()
+
+func _on_battle_animation_sound_requested(sound_id: int) -> void:
+	if audio_dispatch != null:
+		audio_dispatch.play_game_audio(sound_id)
 
 func _load_spell_target_classes() -> void:
 	_spell_target_classes.clear()
