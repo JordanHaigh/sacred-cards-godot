@@ -5,10 +5,10 @@ extends RefCounted
 
 enum Menu { NONE, CONTEXT, MONSTER_ACTION }
 enum ContextAction { SUMMON, SET, ACTIVATE }
-enum MonsterAction { ATTACK, DEFENSE, CHANGE_POSITION, CANCEL }
+enum MonsterAction { ATTACK, DEFENSE, TRIBUTE, EFFECT, CANCEL }
 
 const CONTEXT_LABELS := ["SUMMON", "SET", "ACTIVATE"]
-const MONSTER_LABELS := ["ATTACK", "DEFENSE", "CHANGE POSITION", "CANCEL"]
+const MONSTER_LABELS := ["ATTACK", "DEFENSE", "TRIBUTE", "EFFECT", "CANCEL"]
 
 var menu := Menu.NONE
 var choice := 0
@@ -27,9 +27,9 @@ func open_context(cell: Vector2i, player_life: int, rival_life: int, player_deck
 	deck_counts = [player_deck_count, rival_deck_count]
 	grave_card_ids = [player_grave_id, rival_grave_id]
 
-func open_monster_action(cell: Vector2i, starts_in_defense: bool = false) -> void:
+func open_monster_action(cell: Vector2i, _starts_in_defense: bool = false) -> void:
 	menu = Menu.MONSTER_ACTION
-	choice = 1 if starts_in_defense else 0
+	choice = int(MonsterAction.ATTACK)
 	selected_cell = cell
 
 func labels() -> PackedStringArray:
@@ -46,12 +46,17 @@ func move(direction: int) -> int:
 
 func confirm() -> Dictionary:
 	if menu == Menu.MONSTER_ACTION:
-		if choice < 2:
-			return {"action": "position", "defense": choice == 1, "cell": selected_cell}
-		if choice == int(MonsterAction.CANCEL):
+		if choice == MonsterAction.ATTACK:
+			return {"action": "attack", "cell": selected_cell}
+		if choice == MonsterAction.DEFENSE:
+			return {"action": "defense", "cell": selected_cell}
+		if choice == MonsterAction.TRIBUTE:
+			return {"action": "tribute", "cell": selected_cell}
+		if choice == MonsterAction.EFFECT:
+			return {"action": "effect", "cell": selected_cell}
+		if choice == MonsterAction.CANCEL:
 			close()
 			return {"action": "cancel"}
-		return {"action": "change_position", "cell": selected_cell}
 	if menu == Menu.CONTEXT:
 		var action := String(["summon", "set", "activate"][choice])
 		close()
