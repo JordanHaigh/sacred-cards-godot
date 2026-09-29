@@ -100,8 +100,7 @@ func confirm_placement(duel: SacredDuelState, acting_side: int, summon_rules: Su
 	var placed_row := cursor.y
 	var placed_column := cursor.x
 	var card_id := side.hand[hand_index]
-	side.hand.remove_at(hand_index)
-	if hand_index < side.hand_flags.size(): side.hand_flags.remove_at(hand_index)
+	side.remove_hand_at(hand_index)
 	destination.card_id = card_id
 	destination.controller = acting_side
 	destination.face_down = cursor.y == 3
