@@ -14,7 +14,6 @@ signal token_processed(node_id: StringName, token_index: int, token: Dictionary)
 
 const COMMANDS_SCRIPT := preload("res://scripts/systems/script_commands.gd")
 const DIALOGUE_SCRIPT := preload("res://scripts/systems/script_dialogue.gd")
-const KEY_ADVANCE_MASK := 0x103
 const BLINK_DURATIONS := [50, 1, 1, 80, 1, 1, 2, 1, 1, 60, 1, 1, 70, 1, 1, 50, 1, 1, 50, 1, 1, 60, 1, 1, 70, 1, 1, 65, 1, 1]
 const BLINK_FRAMES := [0, 2, 1, 0, 2, 1, 0, 2, 1, 0, 2, 1, 0, 2, 1, 0, 2, 1, 0, 2, 1, 0, 2, 1, 0, 2, 1, 0, 2, 1]
 const MOUTH_DURATIONS := [2, 3, 2, 3]
@@ -90,8 +89,6 @@ func stop() -> void:
 func submit_dialogue_input(pressed_mask: int, horizontal: int = 0, vertical: int = 0) -> void:
 	if not running: return
 	dialogue.handle_input(pressed_mask, horizontal, vertical)
-	if (pressed_mask & KEY_ADVANCE_MASK) != 0 and state.mode == &"text":
-		state.wait_frames = 0
 
 func _physics_process(_delta: float) -> void:
 	if not running or blocking_service_waiting: return
