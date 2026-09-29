@@ -5,12 +5,10 @@ class_name DuelDeck
 
 static func draw_card(side: DuelSideState, duel_state: SacredDuelState = null) -> int:
 	var hand_slot := -1
-	for index in range(mini(side.hand.size(), 5)):
+	for index in range(side.hand.size()):
 		if side.hand[index] == 0:
 			hand_slot = index
 			break
-	if hand_slot < 0 and side.hand.size() < 5:
-		hand_slot = side.hand.size()
 	if hand_slot < 0:
 		return 0
 	if side.deck_remaining_count <= 0:
@@ -23,11 +21,7 @@ static func draw_card(side: DuelSideState, duel_state: SacredDuelState = null) -
 	var card_id := int(side.deck[side.deck_remaining_count])
 	if card_id == 0:
 		return 0
-	if hand_slot == side.hand.size():
-		side.hand.append(card_id)
-		side.hand_flags.append(0)
-	else:
-		side.hand[hand_slot] = card_id
+	side.hand[hand_slot] = card_id
 	return card_id
 
 static func set_attack_restriction(side: DuelSideState) -> void:
