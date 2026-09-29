@@ -10,7 +10,8 @@ func _init(database: OpponentDatabase) -> void:
 	opponent_database = database
 
 func uses_normal_reward_table(wagered_card_id: int) -> bool:
-	return not opponent_database.special_wager_cards.has(wagered_card_id)
+	var card_id := wagered_card_id & 0xFFFF
+	return card_id == 0 or not opponent_database.special_wager_cards.has(card_id)
 
 func pick_duel_reward_card(opponent_id: int, wagered_card_id: int, random: SacredRandom) -> int:
 	var table_type := "normal" if uses_normal_reward_table(wagered_card_id) else "special"
