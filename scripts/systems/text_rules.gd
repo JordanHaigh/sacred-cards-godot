@@ -7,6 +7,7 @@ class_name SacredTextRules
 const BLANK_DIGIT := 10
 const SMALL_FONT_PATH := "res://decompiled/build/assets/ui/font-small.bin"
 const LARGE_FONT_PATH := "res://decompiled/build/assets/ui/font-large.bin"
+const ASCII_GLYPH_CODES_PATH := "res://resources/ascii_glyph_codes.json"
 
 ## Reproduces RenderBitmapGlyph as owned bytes. The returned data uses the
 ## source's little-endian packed rows; unsupported modes and truncated glyph
@@ -57,12 +58,18 @@ static func _render_bitmap_glyph_from_fonts(encoded: int, mode: int, small_font:
 		_shadow_packed_rows(pixels, blocks)
 	return {"valid": true, "glyph_index": glyph_index, "format": format, "pixels": pixels}
 
-## Ports RenderBitmapString. ascii_codes is a 256-entry-or-larger packed
-## little-endian table of encoded glyph pairs indexed by byte minus 32, just
-## like the source's ASCII glyph pointer table after dereferencing it.
-static func render_bitmap_string(encoded_text: PackedByteArray, mode: int, language: int, ascii_codes: PackedByteArray) -> Dictionary:
+## Ports RenderBitmapString using owned little-endian glyph codes. Callers can
+## supply an override table; the default is the portable recovered mapping.
+static func render_bitmap_string(encoded_text: PackedByteArray, mode: int, language: int, ascii_codes: PackedByteArray = PackedByteArray()) -> Dictionary:
 	var segment := select_language_segment(encoded_text, language)
 	var text_bytes: PackedByteArray = segment.bytes
+	var ascii_supported := PackedByteArray()
+	if ascii_codes.is_empty():
+		var default_table := _load_ascii_glyph_codes()
+		ascii_codes = default_table.get("codes", PackedByteArray())
+		ascii_supported = default_table.get("supported", PackedByteArray())
+		if ascii_codes.is_empty():
+			return {"valid": false, "reason": "ascii_glyph_table_unavailable", "pixels": PackedByteArray(), "glyph_count": 0}
 	var format := mode & 0x1f00
 	if format not in [0x0000, 0x0100, 0x0400, 0x0500, 0x0800, 0x0900, 0x1000, 0x1800]:
 		return {"valid": false, "reason": "unsupported_format", "pixels": PackedByteArray(), "glyph_count": 0}
@@ -82,7 +89,7 @@ static func render_bitmap_string(encoded_text: PackedByteArray, mode: int, langu
 		else:
 			var ascii_index := int(text_bytes[cursor]) - 32
 			var table_offset := ascii_index * 2
-			if ascii_index < 0 or table_offset + 1 >= ascii_codes.size():
+			if ascii_index < 0 or table_offset + 1 >= ascii_codes.size() or (not ascii_supported.is_empty() and (ascii_index >= ascii_supported.size() or ascii_supported[ascii_index] == 0)):
 				return {"valid": false, "reason": "ascii_glyph_mapping_unavailable", "pixels": PackedByteArray(), "glyph_count": glyph_count}
 			encoded = int(ascii_codes[table_offset]) | (int(ascii_codes[table_offset + 1]) << 8)
 			cursor += 1
@@ -113,6 +120,29 @@ static func render_bitmap_string(encoded_text: PackedByteArray, mode: int, langu
 			rendered[destination_offset + byte_index] = glyph_pixels[byte_index]
 		glyph_count += 1
 	return {"valid": true, "language_offset": int(segment.offset), "glyph_count": glyph_count, "pixels": rendered}
+
+static func _load_ascii_glyph_codes() -> Dictionary:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(ASCII_GLYPH_CODES_PATH)) if FileAccess.file_exists(ASCII_GLYPH_CODES_PATH) else null
+	if not parsed is Dictionary or int(parsed.get("ascii_start", -1)) != 32:
+		return {}
+	var raw_codes: Variant = parsed.get("encoded_codes", [])
+	if not raw_codes is Array or raw_codes.size() != 96:
+		return {}
+	var codes := PackedByteArray()
+	var supported := PackedByteArray()
+	codes.resize(96 * 2)
+	codes.fill(0)
+	supported.resize(96)
+	supported.fill(0)
+	for index in range(raw_codes.size()):
+		var encoded: Variant = raw_codes[index]
+		if encoded == null:
+			continue
+		var value := int(encoded) & 0xffff
+		codes[index * 2] = value & 0xff
+		codes[index * 2 + 1] = (value >> 8) & 0xff
+		supported[index] = 1
+	return {"codes": codes, "supported": supported}
 
 static func _bitmap_string_offset(glyph_count: int, odd: bool, first_stride: int, second_stride: int) -> int:
 	return (glyph_count >> 1) * (first_stride + second_stride) + (first_stride if odd else 0)
