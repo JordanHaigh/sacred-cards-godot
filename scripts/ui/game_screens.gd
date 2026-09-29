@@ -438,7 +438,11 @@ func process_player_duel_code(code: int, duel_state: SacredDuelState) -> Diction
 		PlayerDuelController.InputCode.DOWN: player_duel_controller.move_cursor(Vector2i.DOWN)
 		PlayerDuelController.InputCode.LEFT: player_duel_controller.move_cursor(Vector2i.LEFT)
 		PlayerDuelController.InputCode.RIGHT: player_duel_controller.move_cursor(Vector2i.RIGHT)
-		PlayerDuelController.InputCode.CANCEL: return player_duel_controller.cancel_selection()
+		PlayerDuelController.InputCode.CANCEL:
+			var cancel_result := player_duel_controller.cancel_selection()
+			if str(cancel_result.get("action", "")) == "open_context_menu":
+				duel_menus.open_context(player_duel_controller.cursor, duel_state.sides[0].life_points, duel_state.sides[1].life_points, duel_state.sides[0].deck.size(), duel_state.sides[1].deck.size(), duel_state.absolute_graveyard_ids[0], duel_state.absolute_graveyard_ids[1])
+			return cancel_result
 		PlayerDuelController.InputCode.END_PLAYER_TURN:
 			duel_state.auxiliary_flags[side_id] = 2
 			player_duel_controller.player_turn_done = true
@@ -565,6 +569,61 @@ func _preview_monster_action(action_id: int, duel_state: SacredDuelState) -> voi
 		return
 	if is_instance_valid(duel_ui):
 		duel_ui.queue_redraw()
+
+func _on_duel_context_selected(action_id: int, duel_state: SacredDuelState) -> void:
+	if duel_menus == null or duel_state == null:
+		return
+	duel_menus.choice = action_id
+	var selection := duel_menus.confirm()
+	var cell: Vector2i = selection.get("cell", duel_menus.selected_cell)
+	var card_id := _duel_cell_card_id(duel_state, cell)
+	match str(selection.get("action", "")):
+		"inspect":
+			if card_id <= 0:
+				_toast("That card cannot be inspected.")
+			else:
+				selected_card_detail_id = card_id
+				card_detail_return_screen = "duel"
+				_show("card_detail")
+				return
+		"end_turn":
+			duel_state.auxiliary_flags[duel_state.active_side] = 2
+			player_duel_controller.player_turn_done = true
+			if audio_dispatch != null: audio_dispatch.play_game_audio(55)
+		"discard":
+			if cell.y < 2 or card_id <= 0:
+				_toast("There is no discardable card in that position.")
+			else:
+				var side := duel_state.sides[duel_state.active_side]
+				var definition := card_database.get_card(card_id)
+				if cell.y == 4:
+					duel_state.remember_grave_card(duel_state.active_side, card_id, definition != null and definition.frame_type <= 2, true)
+					side.hand.remove_at(cell.x)
+					if cell.x < side.hand_flags.size(): side.hand_flags.remove_at(cell.x)
+				else:
+					duel_state.discard_slot(duel_state.active_side, cell.y, cell.x, definition != null and definition.frame_type <= 2, true)
+					duel_state.discard_slot(duel_state.active_side, cell.y, cell.x, cell.y == 2 and definition != null and definition.frame_type <= 2, true)
+				if audio_dispatch != null: audio_dispatch.play_game_audio(62)
+		"cancel":
+			if audio_dispatch != null: audio_dispatch.play_game_audio(56)
+	_build_screen()
+
+func _duel_cell_card_id(duel_state: SacredDuelState, cell: Vector2i) -> int:
+	if duel_state == null or cell.x < 0 or cell.x >= 5:
+		return 0
+	var active := duel_state.sides[duel_state.active_side]
+	var opponent := duel_state.sides[1 - duel_state.active_side]
+	match cell.y:
+		0:
+			var opponent_back_row_slot: DuelCardSlot = opponent.back_row_zones[cell.x]
+			return opponent_back_row_slot.card_id if not opponent_back_row_slot.face_down else 0
+		1:
+			var opponent_monster_slot: DuelCardSlot = opponent.monster_zones[cell.x]
+			return opponent_monster_slot.card_id if not opponent_monster_slot.face_down else 0
+		2: return active.monster_zones[cell.x].card_id
+		3: return active.back_row_zones[cell.x].card_id
+		4: return int(active.hand[cell.x]) if cell.x < active.hand.size() else 0
+	return 0
 
 func _on_monster_action_selected(action_id: int, duel_state: SacredDuelState) -> void:
 	if duel_menus == null or duel_state == null:
@@ -1231,6 +1290,14 @@ func _draw_duel() -> void:
 				popup.add_item(duel_menus.labels()[action_index], action_index)
 			popup.id_focused.connect(_preview_monster_action.bind(active_duel_state))
 			popup.id_pressed.connect(_on_monster_action_selected.bind(active_duel_state))
+			screen_root.add_child(popup)
+			popup.popup_centered()
+		elif duel_menus != null and duel_menus.menu == DuelMenus.Menu.CONTEXT:
+			var popup := PopupMenu.new()
+			popup.name = "DuelContextMenu"
+			for action_index in range(duel_menus.labels().size()):
+				popup.add_item(duel_menus.labels()[action_index], action_index)
+			popup.id_pressed.connect(_on_duel_context_selected.bind(active_duel_state))
 			screen_root.add_child(popup)
 			popup.popup_centered()
 		return
