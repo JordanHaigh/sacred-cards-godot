@@ -106,6 +106,8 @@ var duel_flow: DuelFlow
 var duel_message_catalog: DuelMessageCatalog
 var _pending_duel_messages: Array[Dictionary] = []
 var _duel_message_active := false
+var _duel_stats_visible := false
+var _duel_hand_visible := false
 var duel_random: SacredRandom
 var duel_rewards: DuelRewards
 var active_opponent_id := -1
@@ -319,7 +321,19 @@ func _process(_delta: float) -> void:
 	_apply_title_pulse()
 
 func _unhandled_key_input(event: InputEvent) -> void:
+	if event is InputEventKey and not event.pressed and screen == "duel" and event.keycode == KEY_Q and _duel_stats_visible:
+		_duel_stats_visible = false
+		if duel_menus != null: duel_menus.set_inspect_stats_held(false)
+		_build_screen()
+		get_viewport().set_input_as_handled()
+		return
 	if event is InputEventKey and event.pressed and not event.echo:
+		if screen == "duel" and _duel_hand_visible:
+			if event.keycode in [KEY_ENTER, KEY_SPACE, KEY_ESCAPE]:
+				_duel_hand_visible = false
+				_build_screen()
+			get_viewport().set_input_as_handled()
+			return
 		if screen == "title" and title_menu != null and (title_menu.fade_active or _title_fade_transition_pending):
 			get_viewport().set_input_as_handled()
 			return
@@ -521,10 +535,14 @@ func process_player_duel_code(code: int, duel_state: SacredDuelState) -> Diction
 			player_duel_controller.player_turn_done = true
 			return {"accepted": true, "action": "end_opponent_turn", "side": 1 - side_id}
 		PlayerDuelController.InputCode.STATS:
+			_duel_stats_visible = true
+			duel_menus.set_inspect_stats_held(true)
 			return {"accepted": true, "action": "show_stats", "cursor": player_duel_controller.cursor}
 		PlayerDuelController.InputCode.OPPONENT_HAND:
 			duel_state.side(1 - side_id).hand_revealed = true
-			return {"accepted": true, "action": "show_opponent_hand", "cards": duel_state.side(1 - side_id).hand.duplicate()}
+			_duel_hand_visible = true
+			duel_menus.begin_opponent_hand(duel_state.side(1 - side_id).hand)
+			return {"accepted": true, "action": "show_opponent_hand", "cards": duel_menus.opponent_hand_cards()}
 		PlayerDuelController.InputCode.CONFIRM:
 			if player_duel_controller.mode == PlayerDuelController.Mode.PLACE_CARD:
 				return player_duel_controller.confirm_placement(duel_state, side_id, duel_summon_rules, card_database)
@@ -832,6 +850,9 @@ func begin_recovered_duel(opponent_id: int, wagered_card_id: int = 0) -> bool:
 	if player_deck.is_empty() or opponent_deck.is_empty():
 		return false
 	_save_current_state()
+	_duel_stats_visible = false
+	_duel_hand_visible = false
+	duel_menus.close()
 	var life_points: Array = opponent.get("life_points", [8000, 8000])
 	var player_start_lp := int(life_points[0]) if life_points.size() > 0 else 8000
 	var opponent_start_lp := int(life_points[1]) if life_points.size() > 1 else player_start_lp
@@ -1442,6 +1463,7 @@ func _draw_duel() -> void:
 		duel_ui.cell_selected.connect(_duel_cell_selected)
 		screen_root.add_child(duel_ui)
 		duel_ui.present(active_duel_state, card_database, player_duel_controller.cursor)
+		duel_ui.set_inspection_overlays(_duel_stats_visible, duel_menus.opponent_hand_cards(), _duel_hand_visible)
 		if duel_menus != null and duel_menus.menu == DuelMenus.Menu.CONTEXT:
 			_draw_duel_context_panel()
 		if duel_menus != null and duel_menus.menu == DuelMenus.Menu.MONSTER_ACTION:
