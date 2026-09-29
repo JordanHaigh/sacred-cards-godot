@@ -31,9 +31,11 @@ const METADATA_1A_BY_CARD := {
 }
 
 var traps: TrapEffectRules
+var battle_state: SacredBattleState
 
 func _init(trap_rules: TrapEffectRules = null) -> void:
 	traps = trap_rules
+	battle_state = SacredBattleState.new()
 
 func supported_metadata_1a() -> Array[int]:
 	var result: Array[int] = []
@@ -71,21 +73,20 @@ func resolve(state: SacredDuelState, acting_side: int, card_id: int, row: int, c
 	return {"resolved": false}
 
 func _apply_life_operation(state: SacredDuelState, affected_side: int, amount: int, damage: bool) -> Dictionary:
-	var battle := SacredBattleState.new()
 	var side_a := {"owner": 0, "attack": 0}
 	var side_b := {"owner": 1, "attack": 0}
 	if affected_side == 0:
 		side_a.attack = amount
-		if damage: battle.prepare_damage_side_a(amount)
-		else: battle.prepare_heal_side_a(amount)
+		if damage: battle_state.prepare_damage_side_a(amount)
+		else: battle_state.prepare_heal_side_a(amount)
 	else:
 		side_b.attack = amount
-		if damage: battle.prepare_damage_side_b(amount)
-		else: battle.prepare_heal_side_b(amount)
-	battle.resolve(state, side_a, side_b)
-	if (battle.last_result_flags & 4) != 0: state.auxiliary_flags[0] = 2
-	if (battle.last_result_flags & 16) != 0: state.auxiliary_flags[1] = 2
-	return {"code": battle.last_result_code, "flags": battle.last_result_flags}
+		if damage: battle_state.prepare_damage_side_b(amount)
+		else: battle_state.prepare_heal_side_b(amount)
+	battle_state.resolve(state, side_a, side_b)
+	if (battle_state.last_result_flags & 4) != 0: state.auxiliary_flags[0] = 2
+	if (battle_state.last_result_flags & 16) != 0: state.auxiliary_flags[1] = 2
+	return {"code": battle_state.last_result_code, "flags": battle_state.last_result_flags}
 
 func _slot(state: SacredDuelState, side_id: int, row: int, column: int) -> DuelCardSlot:
 	var side := state.side(side_id)
