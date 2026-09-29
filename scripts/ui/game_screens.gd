@@ -292,6 +292,12 @@ func _ready() -> void:
 	title_choice = 1 if title_has_save else 0
 	_build_screen()
 
+func _process(_delta: float) -> void:
+	if screen != "title" or title_menu == null:
+		return
+	title_menu.step_title_pulse()
+	_apply_title_pulse()
+
 func _unhandled_key_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		if screen == "pre_duel" and pre_duel_menu != null:
@@ -1345,12 +1351,20 @@ func set_scene_dialogue_window_visible(visible: bool) -> Dictionary:
 
 func _draw_title() -> void:
 	# The backdrop is the recovered title layer; native choices sit directly over it.
+	_apply_title_pulse()
 	if title_has_save:
 		_text("CONTINUE", Vector2(90, 126), 8, GOLD if title_menu.choice == TITLE_MENU_SCRIPT.Choice.CONTINUE else PAPER)
 		_text("NEW GAME", Vector2(90, 137), 8, GOLD if title_menu.choice == TITLE_MENU_SCRIPT.Choice.NEW_GAME else PAPER)
 	else:
 		_text("NEW GAME", Vector2(90, 132), 8, GOLD)
 	_click_area(Rect2(76, 122, 88, 34), _confirm_title)
+
+func _apply_title_pulse() -> void:
+	if screen_root == null or screen_root.get_child_count() == 0 or title_menu == null:
+		return
+	var background := screen_root.get_child(0) as TextureRect
+	if background != null:
+		background.modulate.a = float(title_menu.pulse_coefficient) / 16.0
 
 func _draw_duel() -> void:
 	if active_duel_state != null:
