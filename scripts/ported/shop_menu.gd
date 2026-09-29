@@ -5,14 +5,20 @@ extends RefCounted
 enum PopupKind { NONE, ACTION, SORT }
 enum Action { NONE, BUY_OR_SELL, CARD_INFO, CANCEL, SORT_SELECTED, SORT_CLOSED }
 
-const SORT_METHODS_BUY := [1, 2, 3, 4, 5, 6, 7, 9, 8]
-const SORT_METHODS_SELL := [1, 2, 3, 4, 5, 6, 7, 10, 8]
+const SORT_METHODS_BUY_PATH := "res://decompiled/build/assets/player-menus/shop.buy-sort-methods.bin"
+const SORT_METHODS_SELL_PATH := "res://decompiled/build/assets/player-menus/shop.sell-sort-methods.bin"
 
 var popup: PopupKind = PopupKind.NONE
 var choice := 0
 var sort_mode := 0
 var selected_index := 0
 var selling := false
+var sort_methods_buy := PackedByteArray()
+var sort_methods_sell := PackedByteArray()
+
+func _init() -> void:
+	sort_methods_buy = FileAccess.get_file_as_bytes(SORT_METHODS_BUY_PATH)
+	sort_methods_sell = FileAccess.get_file_as_bytes(SORT_METHODS_SELL_PATH)
 
 func begin(is_selling: bool, selection: int = 0) -> void:
 	selling = is_selling
@@ -87,5 +93,7 @@ func confirm() -> Dictionary:
 	return {"action": Action.SORT_SELECTED, "sort_mode": sort_mode, "sound": 55}
 
 func sort_method() -> int:
-	var methods := SORT_METHODS_SELL if selling else SORT_METHODS_BUY
+	var methods := sort_methods_sell if selling else sort_methods_buy
+	if methods.size() != 9:
+		return 28 if selling else 20
 	return int(methods[clampi(sort_mode, 0, methods.size() - 1)])
