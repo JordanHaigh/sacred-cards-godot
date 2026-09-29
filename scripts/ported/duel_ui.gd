@@ -258,7 +258,7 @@ func _card_is_public(row: int, column: int) -> bool:
 
 func _gui_input(event: InputEvent) -> void:
 	if not (event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT): return
-	var local := event.position - GRID_ORIGIN
+	var local: Vector2 = event.position - GRID_ORIGIN
 	var column := floori(local.x / COLUMN_STEP)
 	var row := floori(local.y / ROW_STEP)
 	if row >= 0 and row < 5 and column >= 0 and column < 5:
