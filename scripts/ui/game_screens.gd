@@ -784,12 +784,11 @@ func _on_duel_context_selected(action_id: int, duel_state: SacredDuelState) -> v
 				_toast("There is no discardable card in that position.")
 			else:
 				var side := duel_state.sides[duel_state.active_side]
-				var definition := card_database.get_card(card_id)
 				if cell.y == 4:
-					duel_state.remember_grave_card(duel_state.active_side, card_id, definition != null and definition.frame_type <= 2, true)
+					duel_state.remember_grave_card(duel_state.active_side, card_id, duel_summon_rules.classify_card(card_id, card_database) == 1, true)
 					side.remove_hand_at(cell.x)
 				else:
-					duel_state.discard_slot(duel_state.active_side, cell.y, cell.x, cell.y == 2 and definition != null and definition.frame_type <= 2, true)
+					duel_state.discard_slot(duel_state.active_side, cell.y, cell.x, cell.y == 2 and duel_summon_rules.classify_card(card_id, card_database) == 1, true)
 				if audio_dispatch != null: audio_dispatch.play_game_audio(62)
 		"cancel":
 			if audio_dispatch != null: audio_dispatch.play_game_audio(56)
