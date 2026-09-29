@@ -25,10 +25,13 @@ var wagered_card_id := 0
 func initialize(collection: Dictionary, deck: Array[int], wagerable_ids: Array[int], special_ids: Array[int]) -> void:
 	collection_counts.clear()
 	for raw_id: Variant in collection:
-		collection_counts[int(raw_id)] = int(collection[raw_id])
+		var card_id := int(raw_id)
+		if card_id >= 0 and card_id <= CARD_COUNT:
+			collection_counts[card_id] = int(collection[raw_id]) & 0xFF
 	total_counts = collection_counts.duplicate()
 	for card_id in deck:
-		total_counts[card_id] = int(total_counts.get(card_id, 0)) + 1
+		if card_id >= 0 and card_id <= CARD_COUNT:
+			total_counts[card_id] = (int(total_counts.get(card_id, 0)) + 1) & 0xFF
 	wagerable_cards.clear()
 	for card_id in wagerable_ids: wagerable_cards[card_id] = true
 	special_wager_cards.clear()
