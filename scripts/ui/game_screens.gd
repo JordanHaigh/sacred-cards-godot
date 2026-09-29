@@ -253,7 +253,7 @@ func _ready() -> void:
 	scene_script_events.service_requested.connect(_on_scene_script_service_requested)
 	scene_script_events.actor_motion_requested.connect(func(event_id: int, actors: Array, choreography: StringName) -> void: scene_script_motion_requested.emit(event_id, actors, choreography))
 	scene_script_events.actor_motion_path_requested.connect(func(event_id: int, descriptor: Dictionary, x_steps: Array[int], y_steps: Array[int]) -> void: scene_script_motion_path.emit(event_id, descriptor, x_steps, y_steps))
-	scene_script_events.actor_state_requested.connect(func(actor_id: int, changes: Dictionary) -> void: scene_script_actor_state.emit(actor_id, changes))
+	scene_script_events.actor_state_requested.connect(_apply_scene_script_actor_state)
 	scene_script_runtime.script_error.connect(func(message: String) -> void: push_warning(message))
 	_apply_save_data(current_save)
 	title_choice = 1 if title_has_save else 0
@@ -829,7 +829,12 @@ func _execute_scene_script_event(event_id: int, script_state: Dictionary) -> voi
 					else:
 						await _wait_scene_frames(1)
 					await _wait_scene_frames(1)
-				_: scene_script_service_requested.emit(&"scene_motion_operation", {"event_id": event_id, "operation": entry})
+			_: scene_script_service_requested.emit(&"scene_motion_operation", {"event_id": event_id, "operation": entry})
+
+func _apply_scene_script_actor_state(actor_id: int, changes: Dictionary) -> void:
+	if scene_actor_runtime != null:
+		scene_actor_runtime.apply_script_state(actor_id, changes)
+	scene_script_actor_state.emit(actor_id, changes)
 
 func _run_scene_follow_motion(descriptor: Dictionary, paths: Dictionary) -> void:
 	var x_steps: Array = paths.get("x", [])

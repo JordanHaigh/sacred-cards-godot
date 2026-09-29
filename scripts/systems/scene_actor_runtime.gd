@@ -112,6 +112,16 @@ func set_actor_orientation(actor_id: int, orientation: int) -> void:
 		return
 	actor.orientation = orientation
 
+func apply_script_state(actor_id: int, changes: Dictionary) -> void:
+	var actor := _actor(actor_id)
+	if actor == null:
+		return
+	if changes.get("position") is Vector2i:
+		actor.position = changes.position
+	actor.flags &= ~int(changes.get("clear_flag_mask", 0))
+	actor.palette_index = (actor.flags & 0x1F) >> 3
+	_refresh_actor(actor_id)
+
 func pose_four(actor_id: int) -> void:
 	var actor := _actor(actor_id)
 	if actor == null:
