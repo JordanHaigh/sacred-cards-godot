@@ -46,6 +46,7 @@ const DUEL_UI_SCRIPT = preload("res://scripts/ported/duel_ui.gd")
 const MENU_GRAPHICS_SCRIPT = preload("res://scripts/ported/menu_graphics.gd")
 const NAME_ENTRY_SCRIPT = preload("res://scripts/ported/name_entry.gd")
 const SCENE_GRAPHICS_SCRIPT = preload("res://scripts/ported/scene_graphics.gd")
+const ACTOR_ANIMATION_DATABASE_SCRIPT = preload("res://scripts/data/actor_animation_database.gd")
 const PRE_DUEL_MENU_SCRIPT = preload("res://scripts/ported/pre_duel_menu.gd")
 const PRE_DUEL_DISPLAY_SCRIPT = preload("res://scripts/ported/pre_duel_display.gd")
 const SUMMON_RULES_SCRIPT = preload("res://scripts/systems/summon_rules.gd")
@@ -91,6 +92,10 @@ var pre_duel_display: PreDuelDisplay
 var pre_duel_opponent_id := 0
 var duel_summon_rules: SummonRules
 var scene_graphics: SceneGraphics
+var actor_animation_database: ActorAnimationDatabase
+var current_scene_configuration: SceneConfiguration
+var current_scene_grid: SceneGrid
+var scene_actor_runtime: SceneActorRuntime
 var current_scene_id := 0
 var current_scene_variant := 0
 var current_scene_graphics: Dictionary = {}
@@ -155,6 +160,10 @@ func _ready() -> void:
 	var scene_graphics_error: Error = scene_graphics.load_recovered_data()
 	if scene_graphics_error != OK:
 		push_error("Could not load recovered scene graphics (error %d)." % scene_graphics_error)
+	actor_animation_database = ACTOR_ANIMATION_DATABASE_SCRIPT.new()
+	var actor_animation_error: Error = actor_animation_database.load_recovered_data()
+	if actor_animation_error != OK:
+		push_error("Could not load recovered actor animation data (error %d)." % actor_animation_error)
 	duel_graphics = DUEL_GRAPHICS_SCRIPT.new()
 	duel_graphics.select(0, 0)
 	card_art = CARD_ART_SCRIPT.new()
@@ -617,8 +626,19 @@ func start_scene_script(scene_id: int, variant: int, role: StringName = &"scene_
 	scene_script_events.scene_id = scene_id
 	scene_script_events.scene_variant = variant
 	audio_dispatch.play_scene_music(scene_id, variant)
-	show_scene(scene_id, variant)
+	var scene_configuration: SceneConfiguration
+	var scene_configuration_data: Variant = initial_context.get("scene_configuration")
+	if scene_configuration_data is SceneConfiguration:
+		scene_configuration = scene_configuration_data
+	elif scene_configuration_data is Dictionary:
+		scene_configuration = SceneConfiguration.from_dictionary(scene_configuration_data)
+	var scene_grid := initial_context.get("scene_grid") as SceneGrid
+	if scene_grid == null and initial_context.get("scene_grid_cells") is PackedInt32Array:
+		scene_grid = SceneGrid.new(initial_context.scene_grid_cells)
+	show_scene(scene_id, variant, scene_configuration, scene_grid)
 	var context := initial_context.duplicate()
+	if scene_grid != null:
+		context["scene_grid"] = scene_grid
 	context["event"] = func(event_id: int, _runtime: SceneScriptRuntime) -> void: scene_script_events.dispatch(event_id, scene_script_runtime.state)
 	context["condition"] = func(condition_id: int, _runtime: SceneScriptRuntime) -> int:
 		if condition_id == 0: return 1 if progression.duelist_level < 80 else 0
@@ -628,7 +648,13 @@ func start_scene_script(scene_id: int, variant: int, role: StringName = &"scene_
 	context["dialogue"] = func(operation: StringName, data: Dictionary, _runtime: SceneScriptRuntime) -> void:
 		_handle_scene_dialogue(operation, data)
 		scene_script_service_requested.emit(&"dialogue", {"operation": operation, "data": data})
-	context["actor"] = func(command: StringName, operands: Array, _runtime: SceneScriptRuntime) -> void: scene_script_service_requested.emit(&"actor_command", {"command": command, "operands": operands})
+	context["actor"] = func(command: StringName, operands: Array, _runtime: SceneScriptRuntime) -> void:
+		await _execute_scene_actor_command(command, operands)
+	context["fade"] = func(delay_frames: int) -> void:
+		if scene_actor_runtime != null:
+			await scene_actor_runtime.fade_to_dark(delay_frames)
+		else:
+			scene_script_service_requested.emit(&"fade", {"delay_frames": delay_frames})
 	context["audio"] = func(audio_id: int) -> void:
 		audio_dispatch.play_game_audio(audio_id)
 		scene_script_service_requested.emit(&"audio", {"audio_id": audio_id})
@@ -694,7 +720,7 @@ func _build_screen() -> void:
 	menu_graphics.upload_menu_graphics(screen_root)
 
 ## Presents a recovered scene background in the Godot screen shell.
-func show_scene(scene_id: int, variant: int = 0) -> bool:
+func show_scene(scene_id: int, variant: int = 0, configuration: SceneConfiguration = null, grid: SceneGrid = null) -> bool:
 	if scene_graphics == null:
 		return false
 	var graphics: Dictionary = scene_graphics.scene_background(scene_id, variant)
@@ -703,6 +729,8 @@ func show_scene(scene_id: int, variant: int = 0) -> bool:
 	current_scene_id = scene_id
 	current_scene_variant = variant
 	current_scene_graphics = graphics
+	current_scene_configuration = configuration
+	current_scene_grid = grid
 	_show("scene")
 	scene_graphics_changed.emit(scene_id, variant, graphics)
 	return true
@@ -715,6 +743,34 @@ func _draw_scene() -> void:
 	if background != null:
 		background.texture = graphics.texture as Texture2D
 	current_scene_portrait_layer = null
+	scene_actor_runtime = null
+	if actor_animation_database != null:
+		var configuration := current_scene_configuration if current_scene_configuration != null else SceneConfiguration.new()
+		scene_actor_runtime = configuration.instantiate_actors(actor_animation_database) as SceneActorRuntime
+		if current_scene_grid != null:
+			scene_actor_runtime.set_scene_grid(current_scene_grid)
+		screen_root.add_child(scene_actor_runtime)
+
+func _execute_scene_actor_command(command: StringName, operands: Array) -> void:
+	if scene_actor_runtime != null:
+		match command:
+			&"@0":
+				if operands.size() >= 4:
+					await scene_actor_runtime.move_actor(int(operands[0]), int(operands[1]), int(operands[2]), int(operands[3]))
+			&"@1":
+				if operands.size() >= 4:
+					scene_actor_runtime.place_actor(int(operands[0]), int(operands[1]), int(operands[2]), int(operands[3]))
+			&"@4":
+				if operands.size() >= 2:
+					await scene_actor_runtime.move_actor_to_x(int(operands[0]), int(operands[1]))
+			&"@5":
+				if operands.size() >= 2:
+					await scene_actor_runtime.move_actor_to_y(int(operands[0]), int(operands[1]))
+			&"@6":
+				if not operands.is_empty(): scene_actor_runtime.pose_four(int(operands[0]))
+			&"^5":
+				if operands.size() >= 2: scene_actor_runtime.change_sprite(int(operands[0]), int(operands[1]))
+	scene_script_service_requested.emit(&"actor_command", {"command": command, "operands": operands})
 
 func _handle_scene_dialogue(operation: StringName, data: Dictionary) -> void:
 	if operation != &"portrait" or screen != "scene" or screen_root == null:
