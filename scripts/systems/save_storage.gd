@@ -57,7 +57,13 @@ func clear_saves() -> void:
 
 func _make_record(save_data: PlayerSaveData) -> Dictionary:
 	var payload := JSON.stringify(save_data.to_dictionary())
-	return {"checksum": _checksum(payload), "payload": payload}
+	var native_payload := SavePayloadAdapter.pack_save(save_data)
+	return {
+		"checksum": _checksum(payload),
+		"payload": payload,
+		"native_payload": Array(native_payload),
+		"native_checksum": SavePayloadCodec.checksum(native_payload),
+	}
 
 func _read_record(path: String) -> Dictionary:
 	if not FileAccess.file_exists(path):
@@ -68,6 +74,19 @@ func _read_record(path: String) -> Dictionary:
 	var payload: String = envelope.payload
 	if str(envelope.get("checksum", "")) != _checksum(payload):
 		return {"valid": false}
+	if envelope.has("native_payload") or envelope.has("native_checksum"):
+		var native_bytes: Variant = envelope.get("native_payload", null)
+		if not native_bytes is Array or native_bytes.size() != SavePayloadCodec.PAYLOAD_SIZE:
+			return {"valid": false}
+		var native_payload := PackedByteArray()
+		native_payload.resize(native_bytes.size())
+		for index in range(native_bytes.size()):
+			var value := int(native_bytes[index])
+			if value < 0 or value > 255:
+				return {"valid": false}
+			native_payload[index] = value
+		if int(envelope.get("native_checksum", -1)) != SavePayloadCodec.checksum(native_payload):
+			return {"valid": false}
 	var data: Variant = JSON.parse_string(payload)
 	if not data is Dictionary or int(data.get("version", 0)) != 1:
 		return {"valid": false}
