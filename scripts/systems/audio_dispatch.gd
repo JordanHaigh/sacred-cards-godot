@@ -47,8 +47,8 @@ func play_scene_music(scene_id: int, variant: int) -> int:
 func fade_game_music(step_interval: int) -> void:
 	if mixer != null: mixer.fade_music(step_interval)
 
-func play_psg_note(channel_id: int, key: int, fine: int = 0, volume: float = 1.0, waveform: StringName = &"square") -> bool:
-	return mixer.play_psg_note(channel_id, key, fine, volume, waveform) if mixer != null else false
+func play_psg_note(channel_id: int, key: int, fine: int = 0, volume: float = 1.0, waveform: StringName = &"square", wave_samples: PackedFloat32Array = PackedFloat32Array()) -> bool:
+	return mixer.play_psg_note(channel_id, key, fine, volume, waveform, wave_samples) if mixer != null else false
 
 func play_psg_voice(channel_id: int, frequency_hz: float, left_volume: int, right_volume: int, waveform: StringName = &"square", wave_samples: PackedFloat32Array = PackedFloat32Array()) -> bool:
 	return mixer.play_psg_voice(channel_id, frequency_hz, left_volume, right_volume, waveform, wave_samples) if mixer != null else false
