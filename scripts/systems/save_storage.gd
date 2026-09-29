@@ -38,11 +38,13 @@ func load_game() -> Dictionary:
 			return {"found": true, "recovered": false, "data": PlayerSaveData.from_dictionary(primary.data)}
 		2:
 			if not primary_valid: return {"found": false, "recovered": false, "data": null}
+			_write_commit_state(2)
 			_write_atomic(BACKUP_PATH, JSON.stringify(primary.envelope))
 			_write_commit_state(0)
 			return {"found": true, "recovered": true, "data": PlayerSaveData.from_dictionary(primary.data)}
 		3:
 			if not backup_valid: return {"found": false, "recovered": false, "data": null}
+			_write_commit_state(1)
 			_write_atomic(PRIMARY_PATH, JSON.stringify(backup.envelope))
 			_write_commit_state(0)
 			return {"found": true, "recovered": true, "data": PlayerSaveData.from_dictionary(backup.data)}
