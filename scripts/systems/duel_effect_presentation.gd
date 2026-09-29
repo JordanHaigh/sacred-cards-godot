@@ -6,23 +6,29 @@ class_name DuelEffectPresentation
 
 func events_for(result: Variant) -> Array[Dictionary]:
 	var events: Array[Dictionary] = []
-	_collect_result(result, events)
+	_collect_result(result, events, {})
 	return events
 
-func _collect_result(value: Variant, events: Array[Dictionary]) -> void:
+func _collect_result(value: Variant, events: Array[Dictionary], seen_sequences: Dictionary[String, bool]) -> void:
 	if not value is Dictionary:
 		return
 	var presentation: Variant = value.get("presentation", [])
 	if presentation is Array and not presentation.is_empty():
-		_append_sequence(presentation, String(value.get("kind", "")), events)
+		var sequence_key := JSON.stringify(presentation)
+		if not seen_sequences.has(sequence_key):
+			seen_sequences[sequence_key] = true
+			var result_kind := String(value.get("kind", ""))
+			if result_kind.is_empty() and value.get("effect") is Dictionary:
+				result_kind = String(value.effect.get("kind", ""))
+			_append_sequence(presentation, result_kind, events)
 	for key: Variant in value:
 		var child: Variant = value[key]
 		if child is Dictionary:
-			_collect_result(child, events)
+			_collect_result(child, events, seen_sequences)
 		elif child is Array:
 			for item: Variant in child:
 				if item is Dictionary:
-					_collect_result(item, events)
+					_collect_result(item, events, seen_sequences)
 
 func _append_sequence(sequence: Array, result_kind: String, events: Array[Dictionary]) -> void:
 	if sequence.is_empty():
