@@ -15,6 +15,12 @@ var overwrite_pending := false
 var pulse_values: Array[int] = []
 var pulse_phase := 0
 var pulse_coefficient := 0
+var fade_active := false
+var fade_frame := 0
+var fade_step := 0
+var fade_alpha := 0
+var fade_backdrop_alpha := 16
+var fade_brightness := 0
 
 func initialize(save_exists: bool) -> void:
 	has_save = save_exists
@@ -23,6 +29,12 @@ func initialize(save_exists: bool) -> void:
 	overwrite_pending = false
 	pulse_phase = 0
 	pulse_coefficient = 0
+	fade_active = false
+	fade_frame = 0
+	fade_step = 0
+	fade_alpha = 0
+	fade_backdrop_alpha = 16
+	fade_brightness = 0
 	_load_pulse_values()
 
 ## Mirrors StepTitlePulse's per-frame table lookup. The table contains the
@@ -36,6 +48,31 @@ func step_title_pulse() -> int:
 	pulse_coefficient = pulse_values[pulse_phase] & 15
 	pulse_phase += 1
 	return pulse_coefficient
+
+func begin_title_fade() -> void:
+	fade_active = true
+	fade_frame = 0
+	fade_step = 0
+	fade_alpha = pulse_coefficient & 31
+	fade_backdrop_alpha = 16
+	fade_brightness = 0
+
+## Returns true after the sixteenth update and its 61st rendered frame.
+func step_title_fade() -> bool:
+	if not fade_active:
+		return false
+	fade_frame += 1
+	if (fade_frame - 1) % 4 == 0:
+		if fade_alpha > 0:
+			fade_alpha -= 1
+		if fade_backdrop_alpha > 0:
+			fade_backdrop_alpha -= 1
+		fade_brightness = fade_step & 31
+		fade_step += 1
+	if fade_frame >= 61:
+		fade_active = false
+		return true
+	return false
 
 func _load_pulse_values() -> void:
 	pulse_values.clear()
