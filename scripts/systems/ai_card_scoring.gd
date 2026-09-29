@@ -195,7 +195,7 @@ func _run_handler(id: int, state: SacredDuelState, active: int, candidate: Dicti
 		80, 120: return {"score": _choice(9999 - state.side(active).life_points >= 500, 0x7FFFFFEE if id == 80 else 0x7FFFFFED)}
 		82: return {"score": 0x7FFFFFFF if state.side(enemy).life_points <= 50 else 0x7EEB5B57}
 		83: return {"score": _choice(_count_attack_max(own_monsters, state.terrain, 500) > 0, 0x7EF2D579)}
-		84: return {"score": _choice(not state.side(enemy).hand.is_empty(), 0x7EED7E3F)}
+		84: return {"score": _choice(state.side(enemy).hand_count() > 0, 0x7EED7E3F)}
 		86: return {"score": _choice(_count_card(own_monsters, 554) > 0, 0x7EF2D578)}
 		87: return {"score": _choice(_count_card(own_monsters, 12) > 0, 0x7EF2D577)}
 		89: return {"score": _choice(_count_card(own_monsters, 366) > 0, 0x7EF2D577)}
