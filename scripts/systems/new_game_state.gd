@@ -27,9 +27,15 @@ static func initialize() -> PlayerSaveData:
 	return save
 
 static func add_collection_card(save: PlayerSaveData, card_id: int, count: int) -> void:
-	if card_id <= 0 or card_id >= save.collection_counts.size():
+	if card_id < 0 or card_id >= save.collection_counts.size():
 		return
-	save.collection_counts[card_id] = mini(250, save.collection_counts[card_id] + count)
+	var current := int(save.collection_counts[card_id]) & 0xff
+	var native_count := count & 0xff
+	var remaining_space := 250 - current
+	if remaining_space < native_count:
+		save.collection_counts[card_id] = 250
+	else:
+		save.collection_counts[card_id] = (current + native_count) & 0xff
 
 static func _int_array(values: Variant, size: int) -> Array[int]:
 	var result: Array[int] = []
