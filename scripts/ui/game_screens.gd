@@ -674,9 +674,14 @@ func start_scene_script(scene_id: int, variant: int, role: StringName = &"scene_
 	context["music_fade"] = func(frames: int) -> void: audio_dispatch.fade_game_music(frames)
 	context["effect_music_stop"] = func() -> void: audio_dispatch.stop_effect_music_player()
 	context["save"] = func() -> void: scene_script_service_requested.emit(&"save", {})
-	context["duel"] = func(opponent_id: int) -> int:
-		scene_script_service_requested.emit(&"duel", {"opponent_id": opponent_id})
-		return 0
+	var supplied_duel_service: Callable = initial_context.get("duel_service", Callable())
+	if supplied_duel_service.is_valid():
+		context["duel"] = func(opponent_id: int, _runtime: SceneScriptRuntime) -> Variant:
+			return await supplied_duel_service.call(opponent_id)
+	else:
+		context["duel"] = func(opponent_id: int, _runtime: SceneScriptRuntime) -> int:
+			scene_script_service_requested.emit(&"duel", {"opponent_id": opponent_id})
+			return 0
 	context["collection_card"] = func(card_id: int, count: int) -> void: scene_script_service_requested.emit(&"collection_card", {"card_id": card_id, "count": count})
 	return scene_script_runtime.start(root_id, context)
 
