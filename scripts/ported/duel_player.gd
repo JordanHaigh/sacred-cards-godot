@@ -65,7 +65,11 @@ func begin_spell_target(card_id: int, target_class: int) -> Dictionary:
 	if target_class == 0:
 		return {"accepted": true, "mode": "immediate_spell", "card_id": card_id}
 	if target_class == 2:
-		return {"accepted": false, "reason": "unsupported_target_class"}
+		saved_cursor = cursor
+		selected_hand_card_id = 0
+		mode = Mode.FIELD
+		view_row = cursor.y
+		return {"accepted": true, "mode": "cancelled_target_class", "card_id": card_id}
 	saved_cursor = cursor
 	selected_hand_card_id = card_id
 	mode = Mode.SPELL_TARGET
