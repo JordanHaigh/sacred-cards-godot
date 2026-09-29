@@ -54,7 +54,7 @@ func calculate_envelope_volume(channel: PsgChannelState) -> void:
 	else:
 		channel.stereo_mask = 255
 	channel.envelope_volume = volume
-	channel.sustain_volume = (volume * clampi(channel.sustain_level, 0, 255) + 15) >> 4
+	channel.sustain_volume = ((volume * clampi(channel.sustain_level, 0, 255) + 15) >> 4) & 0xff
 	channel.output_mask = channel.stereo_mask & clampi(channel.channel_mask, 0, 255)
 
 ## One TickPsgSound envelope visit. frame_zero performs the source's extra
@@ -117,28 +117,28 @@ func _decrement_rate(channel: PsgChannelState, frame_zero: bool) -> void:
 func _envelope_step(channel: PsgChannelState) -> bool:
 	match channel.status_flags & 3:
 		0:
-			channel.current_envelope_level -= 1
-			if channel.current_envelope_level <= 0:
+			channel.current_envelope_level = (channel.current_envelope_level - 1) & 0xff
+			if _signed_byte(channel.current_envelope_level) <= 0:
 				return _enter_echo(channel)
-			channel.rate_countdown = channel.release_rate
+			channel.rate_countdown = channel.release_rate & 0xff
 		1:
 			channel.current_envelope_level = channel.sustain_volume
 			channel.rate_countdown = 7
 		2:
-			channel.current_envelope_level -= 1
-			if channel.current_envelope_level <= channel.sustain_volume:
+			channel.current_envelope_level = (channel.current_envelope_level - 1) & 0xff
+			if _signed_byte(channel.current_envelope_level) <= _signed_byte(channel.sustain_volume):
 				return _enter_sustain(channel)
-			channel.rate_countdown = channel.decay_rate
+			channel.rate_countdown = channel.decay_rate & 0xff
 		3:
-			channel.current_envelope_level += 1
+			channel.current_envelope_level = (channel.current_envelope_level + 1) & 0xff
 			if channel.current_envelope_level >= channel.envelope_volume:
 				return _start_decay(channel)
-			channel.rate_countdown = channel.attack_rate
+			channel.rate_countdown = channel.attack_rate & 0xff
 	return true
 
 func _start_decay(channel: PsgChannelState) -> bool:
 	channel.status_flags = (channel.status_flags - 1) & 0xFF
-	channel.rate_countdown = channel.decay_rate
+	channel.rate_countdown = channel.decay_rate & 0xff
 	channel.current_envelope_level = channel.envelope_volume
 	if channel.decay_rate == 0:
 		return _enter_sustain(channel)
@@ -149,7 +149,7 @@ func _enter_sustain(channel: PsgChannelState) -> bool:
 		channel.status_flags &= 0xFC
 		return _enter_echo(channel)
 	channel.status_flags = (channel.status_flags - 1) & 0xFF
-	channel.current_envelope_level = channel.sustain_volume
+	channel.current_envelope_level = channel.sustain_volume & 0xff
 	channel.rate_countdown = 7
 	return true
 
@@ -177,3 +177,7 @@ func _stop_channel(channel: PsgChannelState) -> void:
 	channel.current_envelope_level = 0
 	channel.gain = 0.0
 	channel.active = false
+
+func _signed_byte(value: int) -> int:
+	var byte_value := value & 0xff
+	return byte_value - 0x100 if byte_value >= 0x80 else byte_value
