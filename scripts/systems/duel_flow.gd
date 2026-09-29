@@ -51,7 +51,7 @@ func initialize_duel(duel: SacredDuelState, player_deck: Array[int], opponent_de
 	duel.sides[1].deck_out = false
 	for side in duel.sides:
 		for _draw_index in range(5):
-			DECK_DRAW_SCRIPT.draw_card(side)
+			DECK_DRAW_SCRIPT.draw_card(side, duel)
 		for side_index in range(duel.sides.size()):
 			if duel.sides[side_index].deck_out:
 				duel.auxiliary_flags[side_index] = 2
