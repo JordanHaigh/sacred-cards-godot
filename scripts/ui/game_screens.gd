@@ -2060,6 +2060,7 @@ func _confirm() -> void:
 func _confirm_title() -> void:
 	var action: int = title_menu.request_confirm()
 	if action == TITLE_MENU_SCRIPT.Action.CONFIRM_OVERWRITE:
+		if audio_dispatch != null: audio_dispatch.play_game_audio(201)
 		var prompt := ConfirmationDialog.new()
 		prompt.dialog_text = "Start a new game and overwrite the current save?"
 		prompt.confirmed.connect(_resolve_overwrite.bind(true))
@@ -2143,6 +2144,8 @@ func _resolve_overwrite(confirmed: bool) -> void:
 	title_menu.overwrite_choice = TITLE_MENU_SCRIPT.OverwriteChoice.CONFIRM if confirmed else TITLE_MENU_SCRIPT.OverwriteChoice.CANCEL
 	if title_menu.resolve_overwrite() == TITLE_MENU_SCRIPT.Action.START_NEW_GAME:
 		_begin_title_exit(TITLE_MENU_SCRIPT.Action.START_NEW_GAME)
+	elif audio_dispatch != null:
+		audio_dispatch.play_game_audio(56)
 
 func _toggle_title_choice() -> void:
 	title_menu.toggle_choice()
