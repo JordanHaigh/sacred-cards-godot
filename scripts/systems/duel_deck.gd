@@ -18,6 +18,8 @@ static func draw_card(side: DuelSideState) -> int:
 		return 0
 	side.deck_remaining_count -= 1
 	var card_id := int(side.deck[side.deck_remaining_count])
+	if card_id == 0:
+		return 0
 	if hand_slot == side.hand.size():
 		side.hand.append(card_id)
 		side.hand_flags.append(0)
