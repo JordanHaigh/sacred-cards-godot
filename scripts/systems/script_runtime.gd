@@ -203,13 +203,13 @@ func _skip_to_language_segment(tokens: Array[Dictionary], marker: int) -> void:
 func _update_portrait() -> void:
 	if int(state.portrait) <= 0: return
 	state.blink_ticks = int(state.blink_ticks) - 1
-	if int(state.blink_ticks) <= 0:
+	if int(state.blink_ticks) == 0:
 		var index := posmod(int(state.blink_index), 30)
 		state.blink_ticks = BLINK_DURATIONS[index] * 4
 		portrait_tick.emit(int(state.portrait), &"blink", BLINK_FRAMES[index])
 		state.blink_index = posmod(index - 1, 30)
 	state.mouth_ticks = int(state.mouth_ticks) - 1
-	if int(state.mouth_ticks) <= 0:
+	if int(state.mouth_ticks) == 0:
 		var mouth_index := posmod(int(state.mouth_index), 4)
 		state.mouth_ticks = MOUTH_DURATIONS[mouth_index] if bool(state.speaking) else MOUTH_DURATIONS[mouth_index] * 4
 		portrait_tick.emit(int(state.portrait), &"mouth", MOUTH_FRAMES[mouth_index])
