@@ -10,6 +10,9 @@ var hand: Array[int] = []
 ## Per-card hand flags mirror duel-cell flags without byte aliases.
 var hand_flags: Array[int] = []
 var deck: Array[int] = []
+## Native deck storage has forty slots and a separate remaining-count byte.
+## Shuffling can move zero-filled slots, so array length is not the draw count.
+var deck_remaining_count: int = 0
 var deck_out: bool = false
 var attack_restriction_turns: int = 0
 var defeated: bool = false
