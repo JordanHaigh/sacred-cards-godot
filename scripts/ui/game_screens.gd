@@ -51,6 +51,8 @@ const SCENE_DIALOGUE_DISPLAY_SCRIPT = preload("res://scripts/ui/scene_dialogue_d
 const PRE_DUEL_MENU_SCRIPT = preload("res://scripts/ported/pre_duel_menu.gd")
 const PRE_DUEL_DISPLAY_SCRIPT = preload("res://scripts/ported/pre_duel_display.gd")
 const SUMMON_RULES_SCRIPT = preload("res://scripts/systems/summon_rules.gd")
+const BATTLE_SETUP_SCRIPT = preload("res://scripts/systems/battle_setup.gd")
+const BATTLE_STATE_SCRIPT = preload("res://scripts/state/battle_state.gd")
 const OPPONENT_DATABASE_SCRIPT = preload("res://scripts/data/opponent_database.gd")
 const DUEL_FLOW_SCRIPT = preload("res://scripts/systems/duel_flow.gd")
 const SACRED_RANDOM_SCRIPT = preload("res://scripts/systems/sacred_random.gd")
@@ -100,6 +102,7 @@ var duel_random: SacredRandom
 var active_opponent_id := -1
 var active_wagered_card_id := 0
 var duel_summon_rules: SummonRules
+var duel_battle_setup: BattleSetupSystem
 var scene_graphics: SceneGraphics
 var actor_animation_database: ActorAnimationDatabase
 var current_scene_configuration: SceneConfiguration
@@ -194,6 +197,7 @@ func _ready() -> void:
 	var load_result: Error = card_database.load_recovered_data()
 	if load_result != OK:
 		push_error("Could not load the recovered Sacred Cards database (error %d)." % load_result)
+	duel_battle_setup = BATTLE_SETUP_SCRIPT.new(card_database)
 	duel_effect_dispatcher = EFFECT_DISPATCHER_SCRIPT.new(card_database)
 	trap_effect_rules = TRAP_EFFECT_RULES_SCRIPT.new(card_database)
 	card_effect_rules = CARD_EFFECT_RULES_SCRIPT.new(trap_effect_rules)
@@ -457,9 +461,63 @@ func process_player_duel_code(code: int, duel_state: SacredDuelState) -> Diction
 			if player_duel_controller.mode == PlayerDuelController.Mode.ATTACK_TARGET:
 				var opponent_slot := duel_state.side(1 - side_id).monster_zones[player_duel_controller.cursor.x]
 				if opponent_slot.is_empty(): return {"accepted": false, "reason": "empty_attack_target"}
-				return {"accepted": true, "action": "attack_target", "attacker": player_duel_controller.saved_cursor, "target": player_duel_controller.cursor, "target_card_id": opponent_slot.card_id}
+				var attack_result := resolve_player_attack(duel_state, player_duel_controller.saved_cursor.x, player_duel_controller.cursor.x)
+				if bool(attack_result.get("accepted", false)): player_duel_controller.finish_target_action()
+				return attack_result
 			return _confirm_player_field_selection(duel_state, side_id)
 	return {"accepted": true, "action": "cursor_moved", "cursor": player_duel_controller.cursor, "view_row": player_duel_controller.view_row}
+
+## Resolves a player-side direct or monster attack with the recovered combat
+## setup/calculator and writes typed board, life-point and victory state back.
+func resolve_player_attack(duel_state: SacredDuelState, attacker_column: int, target_column: int = -1) -> Dictionary:
+	if duel_state == null or duel_battle_setup == null or duel_state.active_side < 0 or duel_state.active_side >= duel_state.sides.size():
+		return {"accepted": false, "reason": "battle_setup_unavailable"}
+	var acting_side := duel_state.active_side
+	if attacker_column < 0 or attacker_column >= duel_state.sides[acting_side].monster_zones.size():
+		return {"accepted": false, "reason": "invalid_attacker"}
+	var attacker: DuelCardSlot = duel_state.sides[acting_side].monster_zones[attacker_column]
+	if attacker.is_empty() or (attacker.persistent_flags & 1) != 0:
+		return {"accepted": false, "reason": "attacker_unavailable"}
+	var setup: Dictionary
+	if target_column < 0:
+		if player_duel_controller == null or not player_duel_controller.direct_attack_available(duel_state, 1 - acting_side):
+			return {"accepted": false, "reason": "opposing_monsters_remain"}
+		setup = duel_battle_setup.prepare_direct_attack(duel_state, attacker_column)
+	else:
+		if target_column >= duel_state.sides[1 - acting_side].monster_zones.size():
+			return {"accepted": false, "reason": "invalid_target"}
+		var target: DuelCardSlot = duel_state.sides[1 - acting_side].monster_zones[target_column]
+		if target.is_empty():
+			return {"accepted": false, "reason": "empty_attack_target"}
+		setup = duel_battle_setup.prepare_monster_attack(duel_state, attacker_column, target_column)
+	if setup.is_empty():
+		return {"accepted": false, "reason": "battle_setup_failed"}
+	attacker.persistent_flags = (attacker.persistent_flags & 0xFD) | 0x11
+	if target_column >= 0:
+		var target: DuelCardSlot = duel_state.sides[1 - acting_side].monster_zones[target_column]
+		target.persistent_flags |= 0x10
+		target.face_down = false
+	var battle: SacredBattleState = BATTLE_STATE_SCRIPT.new()
+	battle.resolve_setup(duel_state, setup)
+	if target_column >= 0:
+		_apply_player_battle_destruction(duel_state, setup, battle.last_result_flags)
+	player_lp = duel_state.sides[0].life_points
+	rival_lp = duel_state.sides[1].life_points
+	return {"accepted": true, "action": "attack_resolved", "battle": {"code": battle.last_result_code, "flags": battle.last_result_flags}, "battle_setup": setup, "duel_status": duel_state.status}
+
+func _apply_player_battle_destruction(duel_state: SacredDuelState, setup: Dictionary, flags: int) -> void:
+	var attacker: Dictionary = setup.get("attacker", {})
+	var target: Dictionary = setup.get("target", {})
+	var side_a: Dictionary = setup.get("side_a", {})
+	var side_b: Dictionary = setup.get("side_b", {})
+	var attacker_side := int(attacker.get("side", -1))
+	var attacker_lost := (int(side_a.get("owner", -1)) == attacker_side and (flags & 1) != 0) or (int(side_b.get("owner", -1)) == attacker_side and (flags & 2) != 0)
+	if attacker_lost:
+		duel_state.discard_slot(attacker_side, 2, int(attacker.get("column", -1)), true)
+	var target_side := int(target.get("side", -1))
+	var target_lost := (int(side_a.get("owner", -1)) == target_side and (flags & 1) != 0) or (int(side_b.get("owner", -1)) == target_side and (flags & 2) != 0)
+	if target_lost:
+		duel_state.discard_slot(target_side, 2, int(target.get("column", -1)), true)
 
 func _confirm_player_field_selection(duel_state: SacredDuelState, side_id: int) -> Dictionary:
 	var cell := player_duel_controller.cursor
