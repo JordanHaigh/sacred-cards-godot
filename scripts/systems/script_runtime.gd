@@ -65,7 +65,6 @@ func start(root_id: StringName, initial_context: Dictionary = {}) -> bool:
 		return false
 	context = initial_context.duplicate()
 	commands.scene_grid = context.get("scene_grid") as SceneGrid
-	commands.service_handlers[&"duel_result"] = context.get("duel_result", Callable())
 	state = {
 		"mode": &"text", "cursor": 0, "glyph_position": 1, "choice_layout": 0,
 		"branch_flags": 0, "portrait": 0, "portrait_flags": 0, "dirty": false,
