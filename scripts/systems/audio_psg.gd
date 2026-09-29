@@ -56,3 +56,114 @@ func calculate_envelope_volume(channel: PsgChannelState) -> void:
 	channel.envelope_volume = volume
 	channel.sustain_volume = (volume * clampi(channel.sustain_level, 0, 255) + 15) >> 4
 	channel.output_mask = channel.stereo_mask & clampi(channel.channel_mask, 0, 255)
+
+## One TickPsgSound envelope visit. frame_zero performs the source's extra
+## envelope step that occurs once every fifteen sound ticks.
+func tick_channel_envelope(channel: PsgChannelState, frame_zero: bool = false) -> bool:
+	if channel == null or (channel.status_flags & 0xC7) == 0:
+		return false
+	if (channel.status_flags & 0x80) != 0:
+		if (channel.status_flags & 0x40) != 0:
+			_stop_channel(channel)
+			return false
+		channel.status_flags = 3
+		channel.current_envelope_level = 0
+		calculate_envelope_volume(channel)
+		channel.rate_countdown = channel.attack_rate
+		if channel.attack_rate == 0:
+			if not _start_decay(channel):
+				return false
+			if (channel.status_flags & 4) != 0:
+				_sync_channel_gain(channel)
+				return channel.active
+			_decrement_rate(channel, frame_zero)
+			_sync_channel_gain(channel)
+			return channel.active
+		else:
+			_decrement_rate(channel, frame_zero)
+			_sync_channel_gain(channel)
+			return channel.active
+	if (channel.status_flags & 4) != 0:
+		channel.release_countdown = (channel.release_countdown - 1) & 0xFF
+		if channel.release_countdown == 0 or channel.release_countdown >= 0x80:
+			_stop_channel(channel)
+		return channel.active
+	if (channel.status_flags & 0x40) != 0 and (channel.status_flags & 3) != 0:
+		channel.status_flags &= 0xFC
+		channel.rate_countdown = channel.release_rate
+		if channel.release_rate == 0:
+			if not _enter_echo(channel):
+				return false
+		else:
+			_decrement_rate(channel, frame_zero)
+			_sync_channel_gain(channel)
+			return channel.active
+	if channel.rate_countdown == 0 and not _envelope_step(channel):
+		return false
+	if (channel.status_flags & 4) != 0:
+		_sync_channel_gain(channel)
+		return channel.active
+	_decrement_rate(channel, frame_zero)
+	_sync_channel_gain(channel)
+	return channel.active
+
+func _decrement_rate(channel: PsgChannelState, frame_zero: bool) -> void:
+	channel.rate_countdown = (channel.rate_countdown - 1) & 0xFF
+	if frame_zero:
+		_envelope_step(channel)
+
+func _envelope_step(channel: PsgChannelState) -> bool:
+	match channel.status_flags & 3:
+		0:
+			channel.current_envelope_level -= 1
+			if channel.current_envelope_level <= 0:
+				return _enter_echo(channel)
+			channel.rate_countdown = channel.release_rate
+		1:
+			channel.current_envelope_level = channel.sustain_volume
+			channel.rate_countdown = 7
+		2:
+			channel.current_envelope_level -= 1
+			if channel.current_envelope_level <= channel.sustain_volume:
+				return _enter_sustain(channel)
+			channel.rate_countdown = channel.decay_rate
+		3:
+			channel.current_envelope_level += 1
+			if channel.current_envelope_level >= channel.envelope_volume:
+				return _start_decay(channel)
+			channel.rate_countdown = channel.attack_rate
+	return true
+
+func _start_decay(channel: PsgChannelState) -> bool:
+	channel.status_flags = (channel.status_flags - 1) & 0xFF
+	channel.rate_countdown = channel.decay_rate
+	channel.current_envelope_level = channel.envelope_volume
+	if channel.decay_rate == 0:
+		return _enter_sustain(channel)
+	return true
+
+func _enter_sustain(channel: PsgChannelState) -> bool:
+	if channel.sustain_level == 0:
+		channel.status_flags &= 0xFC
+		return _enter_echo(channel)
+	channel.status_flags = (channel.status_flags - 1) & 0xFF
+	channel.current_envelope_level = channel.sustain_volume
+	channel.rate_countdown = 7
+	return true
+
+func _enter_echo(channel: PsgChannelState) -> bool:
+	channel.current_envelope_level = ((channel.envelope_volume * channel.echo_level) + 255) >> 8
+	if channel.current_envelope_level == 0:
+		_stop_channel(channel)
+		return false
+	channel.status_flags |= 4
+	return true
+
+func _sync_channel_gain(channel: PsgChannelState) -> void:
+	channel.gain = clampf(float(channel.current_envelope_level) / maxf(1.0, float(channel.envelope_volume)), 0.0, 1.0)
+
+func _stop_channel(channel: PsgChannelState) -> void:
+	channel.status_flags = 0
+	channel.current_envelope_level = 0
+	channel.gain = 0.0
+	channel.active = false

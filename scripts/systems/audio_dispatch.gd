@@ -56,6 +56,9 @@ func play_psg_voice(channel_id: int, frequency_hz: float, left_volume: int, righ
 func stop_psg_voice(channel_id: int) -> void:
 	if mixer != null: mixer.stop_psg_voice(channel_id)
 
+func release_psg_voice(channel_id: int) -> void:
+	if mixer != null: mixer.release_psg_voice(channel_id)
+
 func stop_effect_music_player() -> void:
 	if player != null: player.stop_effect_music()
 

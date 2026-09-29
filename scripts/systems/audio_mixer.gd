@@ -21,6 +21,7 @@ var psg_channels: Array[PsgChannelState] = []
 var _psg_stream: AudioStreamGenerator
 var _psg_player: AudioStreamPlayer
 var _psg_playback: AudioStreamGeneratorPlayback
+var _psg_envelope_frame := 0
 
 func _ready() -> void:
 	_ensure_bus("Music")
@@ -59,11 +60,15 @@ func play_psg_voice(channel_id: int, frequency_hz: float, left_volume: int, righ
 	channel.left_volume = clampi(left_volume, 0, 255)
 	channel.right_volume = clampi(right_volume, 0, 255)
 	psg_pitch_rules.calculate_envelope_volume(channel)
-	channel.gain = float(channel.envelope_volume) / 31.0
+	channel.gain = 0.0
 	channel.phase = 0.0
 	channel.noise_lfsr = 0x7FFF
-	channel.active = channel.gain > 0.0
-	return channel.active
+	channel.status_flags = 0x80
+	channel.rate_countdown = 0
+	channel.release_countdown = 0
+	channel.current_envelope_level = 0
+	channel.active = true
+	return true
 
 func play_psg_note(channel_id: int, key: int, fine: int = 0, volume: float = 1.0, waveform: StringName = &"square") -> bool:
 	if psg_pitch_rules == null:
@@ -81,7 +86,15 @@ func play_psg_note(channel_id: int, key: int, fine: int = 0, volume: float = 1.0
 func stop_psg_voice(channel_id: int) -> void:
 	if channel_id < 1 or channel_id > psg_channels.size():
 		return
-	psg_channels[channel_id - 1].active = false
+	var channel := psg_channels[channel_id - 1]
+	channel.active = false
+	channel.status_flags = 0
+	channel.gain = 0.0
+
+func release_psg_voice(channel_id: int) -> void:
+	if channel_id < 1 or channel_id > psg_channels.size():
+		return
+	psg_channels[channel_id - 1].status_flags |= 0x40
 
 func _process(_delta: float) -> void:
 	if _psg_player == null or not _psg_player.playing:
@@ -129,6 +142,9 @@ func _psg_sample(channel: PsgChannelState, cycles: int) -> float:
 		_: return 1.0 if channel.phase < 0.5 else -1.0
 
 func _physics_process(_delta: float) -> void:
+	_psg_envelope_frame = 14 if _psg_envelope_frame == 0 else _psg_envelope_frame - 1
+	for channel in psg_channels:
+		psg_pitch_rules.tick_channel_envelope(channel, _psg_envelope_frame == 0)
 	if _music_fade_interval <= 0:
 		return
 	if music_player == null or not music_player.playing or int(music_player.get_meta("song_id", -1)) != _music_fade_song_id:
