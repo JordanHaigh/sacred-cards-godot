@@ -57,6 +57,8 @@ const BATTLE_STATE_SCRIPT = preload("res://scripts/state/battle_state.gd")
 const OPPONENT_DATABASE_SCRIPT = preload("res://scripts/data/opponent_database.gd")
 const DUEL_FLOW_SCRIPT = preload("res://scripts/systems/duel_flow.gd")
 const SACRED_RANDOM_SCRIPT = preload("res://scripts/systems/sacred_random.gd")
+const DUEL_DECK_SCRIPT = preload("res://scripts/systems/duel_deck.gd")
+const DUEL_REWARDS_SCRIPT = preload("res://scripts/systems/duel_rewards.gd")
 ## Temporary screen shell for exercising the recovered state and data models.
 
 const SCREEN_SIZE := Vector2(240, 160)
@@ -101,8 +103,10 @@ var pre_duel_opponent_id := 0
 var opponent_database: OpponentDatabase
 var duel_flow: DuelFlow
 var duel_random: SacredRandom
+var duel_rewards: DuelRewards
 var active_opponent_id := -1
 var active_wagered_card_id := 0
+var _duel_outcome_resolved := false
 var duel_summon_rules: SummonRules
 var duel_battle_setup: BattleSetupSystem
 var scene_graphics: SceneGraphics
@@ -194,6 +198,7 @@ func _ready() -> void:
 		push_error("Could not load recovered opponent duel data (error %d)." % opponent_load_error)
 	duel_flow = DUEL_FLOW_SCRIPT.new()
 	duel_random = SACRED_RANDOM_SCRIPT.new()
+	duel_rewards = DUEL_REWARDS_SCRIPT.new(opponent_database)
 	card_art = CARD_ART_SCRIPT.new()
 	card_database = CARD_DATABASE_SCRIPT.new()
 	var load_result: Error = card_database.load_recovered_data()
@@ -301,6 +306,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			var duel_code := _duel_code_for_key(event.keycode)
 			if duel_code != PlayerDuelController.InputCode.NONE:
 				var result := process_player_duel_code(duel_code, active_duel_state)
+				_finish_duel_if_ended()
 				if result.has("reason"): _toast(str(result.reason))
 				_build_screen()
 				get_viewport().set_input_as_handled()
@@ -444,9 +450,7 @@ func process_player_duel_code(code: int, duel_state: SacredDuelState) -> Diction
 				duel_menus.open_context(player_duel_controller.cursor, duel_state.sides[0].life_points, duel_state.sides[1].life_points, duel_state.sides[0].deck.size(), duel_state.sides[1].deck.size(), duel_state.absolute_graveyard_ids[0], duel_state.absolute_graveyard_ids[1])
 			return cancel_result
 		PlayerDuelController.InputCode.END_PLAYER_TURN:
-			duel_state.auxiliary_flags[side_id] = 2
-			player_duel_controller.player_turn_done = true
-			return {"accepted": true, "action": "end_turn", "side": side_id}
+			return finish_recovered_player_turn()
 		PlayerDuelController.InputCode.END_OPPONENT_TURN:
 			duel_state.auxiliary_flags[1 - side_id] = 2
 			player_duel_controller.player_turn_done = true
@@ -587,9 +591,8 @@ func _on_duel_context_selected(action_id: int, duel_state: SacredDuelState) -> v
 				_show("card_detail")
 				return
 		"end_turn":
-			duel_state.auxiliary_flags[duel_state.active_side] = 2
-			player_duel_controller.player_turn_done = true
 			if audio_dispatch != null: audio_dispatch.play_game_audio(55)
+			finish_recovered_player_turn()
 		"discard":
 			if cell.y < 2 or card_id <= 0:
 				_toast("There is no discardable card in that position.")
@@ -601,7 +604,6 @@ func _on_duel_context_selected(action_id: int, duel_state: SacredDuelState) -> v
 					side.hand.remove_at(cell.x)
 					if cell.x < side.hand_flags.size(): side.hand_flags.remove_at(cell.x)
 				else:
-					duel_state.discard_slot(duel_state.active_side, cell.y, cell.x, definition != null and definition.frame_type <= 2, true)
 					duel_state.discard_slot(duel_state.active_side, cell.y, cell.x, cell.y == 2 and definition != null and definition.frame_type <= 2, true)
 				if audio_dispatch != null: audio_dispatch.play_game_audio(62)
 		"cancel":
@@ -677,7 +679,12 @@ func _on_monster_action_selected(action_id: int, duel_state: SacredDuelState) ->
 		"cancel":
 			duel_menus.close()
 			if audio_dispatch != null: audio_dispatch.play_game_audio(56)
+	_finish_duel_if_ended()
 	_build_screen()
+
+func _finish_duel_if_ended() -> void:
+	if active_duel_state != null and (active_duel_state.has_ended() or active_duel_state.status != SacredDuelState.Status.ACTIVE):
+		_resolve_recovered_duel_outcome()
 
 func _load_spell_target_classes() -> void:
 	_spell_target_classes.clear()
@@ -755,10 +762,11 @@ func begin_recovered_duel(opponent_id: int, wagered_card_id: int = 0) -> bool:
 	var opponent := opponent_database.get_opponent(opponent_id)
 	if opponent.is_empty():
 		return false
-	var player_deck := _nonzero_cards(current_save.deck)
+	var player_deck := _nonzero_cards(deck)
 	var opponent_deck := _int_cards(opponent.get("deck", []))
 	if player_deck.is_empty() or opponent_deck.is_empty():
 		return false
+	_save_current_state()
 	var life_points: Array = opponent.get("life_points", [8000, 8000])
 	var player_start_lp := int(life_points[0]) if life_points.size() > 0 else 8000
 	var opponent_start_lp := int(life_points[1]) if life_points.size() > 1 else player_start_lp
@@ -768,10 +776,79 @@ func begin_recovered_duel(opponent_id: int, wagered_card_id: int = 0) -> bool:
 	current_save.random_state = duel_random.state
 	active_opponent_id = opponent_id
 	active_wagered_card_id = wagered_card_id
+	_duel_outcome_resolved = false
 	duel_graphics.select(active_duel_state.terrain, 0)
-	show_duel_state(active_duel_state)
 	audio_dispatch.play_game_audio(int(opponent.get("music_id", 0)))
+	_advance_recovered_duel_to_player()
 	return true
+
+## Ends the current player turn, advances the recovered turn state, runs any
+## opponent turn through AiTurn, and returns when control reaches the player.
+func finish_recovered_player_turn() -> Dictionary:
+	if active_duel_state == null or duel_flow == null or active_duel_state.status != SacredDuelState.Status.ACTIVE:
+		return {"accepted": false, "reason": "duel_not_active"}
+	if active_duel_state.active_side != 0:
+		return {"accepted": false, "reason": "not_player_turn"}
+	player_duel_controller.player_turn_done = true
+	duel_flow.finish_turn(active_duel_state)
+	return _advance_recovered_duel_to_player()
+
+func _advance_recovered_duel_to_player() -> Dictionary:
+	if active_duel_state == null:
+		return {"accepted": false, "reason": "duel_not_initialized"}
+	for _turn_guard in range(3):
+		if active_duel_state.status != SacredDuelState.Status.ACTIVE or active_duel_state.has_ended():
+			var outcome := _resolve_recovered_duel_outcome()
+			show_duel_state(active_duel_state)
+			return {"accepted": true, "action": "duel_finished", "outcome": outcome}
+		var acting_side := active_duel_state.active_side
+		_prepare_recovered_side_turn(acting_side)
+		if active_duel_state.has_ended():
+			continue
+		duel_special_wins.check_exodia(active_duel_state, acting_side)
+		duel_special_wins.check_destiny_board(active_duel_state, acting_side)
+		if active_duel_state.has_ended():
+			continue
+		if acting_side == 0:
+			duel_random.state = current_save.random_state & 0xFFFFFFFF
+			show_duel_state(active_duel_state)
+			return {"accepted": true, "action": "player_turn", "turn": active_duel_state.turn_number}
+		var ai_report := run_opponent_turn(active_duel_state, acting_side, duel_random)
+		current_save.random_state = duel_random.state
+		if not bool(ai_report.get("completed", false)):
+			show_duel_state(active_duel_state)
+			return {"accepted": false, "reason": str(ai_report.get("reason", "opponent_turn_failed")), "ai": ai_report}
+		if active_duel_state.has_ended():
+			continue
+		duel_flow.finish_turn(active_duel_state)
+	return {"accepted": false, "reason": "duel_turn_guard_exceeded"}
+
+func _prepare_recovered_side_turn(side_id: int) -> void:
+	if side_id < 0 or side_id >= active_duel_state.sides.size():
+		return
+	var side := active_duel_state.sides[side_id]
+	if side.hand.size() >= 5:
+		return
+	var drawn_card := DUEL_DECK_SCRIPT.draw_card(side)
+	if drawn_card != 0:
+		return
+	if side.deck_out:
+		active_duel_state.auxiliary_flags[side_id] = 2
+		active_duel_state.status = SacredDuelState.Status.PLAYER_TWO_WON if side_id == 0 else SacredDuelState.Status.PLAYER_ONE_WON
+
+func _resolve_recovered_duel_outcome() -> Dictionary:
+	if _duel_outcome_resolved:
+		return {}
+	if current_save == null or duel_flow == null or duel_random == null or duel_rewards == null:
+		return {"resolved": false, "reason": "duel_reward_services_missing"}
+	var report := duel_flow.resolve_outcome(active_duel_state, current_save, active_opponent_id, active_wagered_card_id, 1, progression, duel_random, duel_rewards)
+	if report.is_empty():
+		return {"resolved": false, "reason": "duel_outcome_unavailable"}
+	_duel_outcome_resolved = true
+	current_save.random_state = duel_random.state
+	_apply_save_data(current_save)
+	_save_current_state()
+	return {"resolved": true, "report": report}
 
 func _int_cards(values: Variant) -> Array[int]:
 	var result: Array[int] = []
