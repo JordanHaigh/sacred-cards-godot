@@ -162,7 +162,15 @@ func _enter_echo(channel: PsgChannelState) -> bool:
 	return true
 
 func _sync_channel_gain(channel: PsgChannelState) -> void:
-	channel.gain = clampf(float(channel.current_envelope_level) / maxf(1.0, float(channel.envelope_volume)), 0.0, 1.0)
+	if channel.channel_id == 3:
+		var wave_volumes: Array = tables.get("gPsgWaveVolumes", [])
+		if wave_volumes.is_empty():
+			channel.gain = 0.0
+			return
+		var level := clampi(channel.current_envelope_level, 0, wave_volumes.size() - 1)
+		channel.gain = float(wave_volumes[level]) / 128.0
+	else:
+		channel.gain = clampf(float(channel.current_envelope_level) / 31.0, 0.0, 1.0)
 
 func _stop_channel(channel: PsgChannelState) -> void:
 	channel.status_flags = 0

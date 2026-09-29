@@ -73,6 +73,8 @@ func play_psg_voice(channel_id: int, frequency_hz: float, left_volume: int, righ
 func play_psg_note(channel_id: int, key: int, fine: int = 0, volume: float = 1.0, waveform: StringName = &"square") -> bool:
 	if psg_pitch_rules == null:
 		return false
+	if channel_id == 3:
+		return false
 	var bounded_volume := clampf(volume, 0.0, 1.0)
 	var level := roundi(bounded_volume * 255.0)
 	var frequency_hz := 440.0 * pow(2.0, float(key - 69) / 12.0)
