@@ -640,6 +640,8 @@ func start_scene_script(scene_id: int, variant: int, role: StringName = &"scene_
 		scene_grid = SceneGrid.new(initial_context.scene_grid_cells)
 	show_scene(scene_id, variant, scene_configuration, scene_grid)
 	var context := initial_context.duplicate()
+	if not context.has("player_name") and current_save != null:
+		context["player_name"] = current_save.player_name
 	if scene_grid != null:
 		context["scene_grid"] = scene_grid
 	context["event"] = func(event_id: int, _runtime: SceneScriptRuntime) -> void: scene_script_events.dispatch(event_id, scene_script_runtime.state)
