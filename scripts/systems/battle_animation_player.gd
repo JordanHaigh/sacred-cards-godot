@@ -125,11 +125,14 @@ func _on_battle_resolved(result_code: int, _flags: int, old_life_points: Array[i
 	present_result(result_code, old_life_points, new_life_points)
 
 func _animate_card_impact(side_id: int, attribute_hit: bool) -> void:
-	if side_id >= card_nodes.size() or card_nodes[side_id] == null:
+	if side_id >= card_nodes.size():
 		return
-	var card := card_nodes[side_id]
 	phase_started.emit(side_id, &"attribute_hit" if attribute_hit else &"hit")
 	await _animate_recovered_sprite_sequence("battle-attribute" if attribute_hit else "battle-hit", side_id, 5 if attribute_hit else 4)
+	if card_nodes[side_id] == null:
+		phase_finished.emit(side_id, &"attribute_hit" if attribute_hit else &"hit")
+		return
+	var card := card_nodes[side_id]
 	var origin := card.position
 	var tween := create_tween()
 	tween.tween_property(card, "position", origin + Vector2(hit_distance, 0), FRAME_TIME)
