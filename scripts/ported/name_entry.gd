@@ -216,8 +216,8 @@ func _compose_voice_marks(value: String) -> String:
 		var is_dakuten := codepoint in [0x3099, 0x309B]
 		var is_handakuten := codepoint in [0x309A, 0x309C]
 		if (is_dakuten or is_handakuten) and not composed.is_empty():
-			var previous := composed.back()
-			var previous_codepoint := previous.unicode_at(0)
+			var previous: String = composed.back()
+			var previous_codepoint: int = previous.unicode_at(0)
 			var previous_code := int(unicode_to_encoded.get(previous_codepoint, -1))
 			var can_compose := false
 			if is_dakuten:
