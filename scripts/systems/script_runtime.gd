@@ -63,6 +63,7 @@ func start(root_id: StringName, initial_context: Dictionary = {}) -> bool:
 		script_error.emit("Unknown scene script node: %s" % String(root_id))
 		return false
 	context = initial_context.duplicate()
+	context["language_segment"] = clampi(int(context.get("language_segment", 0)), 0, 5)
 	commands.scene_grid = context.get("scene_grid") as SceneGrid
 	state = {
 		"mode": &"text", "cursor": 0, "glyph_position": 1, "choice_layout": 0,
@@ -105,7 +106,7 @@ func _physics_process(_delta: float) -> void:
 		var name := String(dialogue.player_name)
 		var name_index := int(state.embedded_text_index)
 		if name_index >= 0 and name_index < name.length():
-			text_requested.emit(name.substr(name_index, 1), int(context.get("language_segment", 0)), int(state.glyph_position))
+			text_requested.emit(name.substr(name_index, 1), int(context.language_segment), int(state.glyph_position))
 		dialogue.write_player_name()
 		return
 	var node := database.get_node(node_id)
@@ -126,11 +127,11 @@ func _physics_process(_delta: float) -> void:
 		&"text":
 			state.speaking = true
 			state.dirty = true
-			text_requested.emit(String(token.get("text", "")), int(token.get("language", 0)), int(state.glyph_position))
+			text_requested.emit(String(token.get("text", "")), int(context.language_segment), int(state.glyph_position))
 			if dialogue != null: dialogue.write_plain_token(token)
 			else: state.glyph_position += String(token.get("text", "")).length()
 		&"language":
-			context.language_segment = int(token.get("language", 0))
+			_skip_to_language_segment(node.tokens, int(token.get("marker", 6)))
 		&"command":
 			var result := commands.execute(token, {"state": state, "node_id": node_id, "player_cell": context.get("player_cell", Vector2i.ZERO)})
 			if not bool(result.get("handled", false)):
@@ -181,6 +182,23 @@ func _follow_branch(node: SceneScriptNode) -> void:
 	state.branch_flags = 0
 	state.glyph_position = 1 if int(state.choice_layout) != 1 else 0
 	state.mode = &"text"
+
+## The recovered '$' command scans forward to the selected language marker,
+## skipping other language payloads in one interpreter step. Marker 6 is the
+## shared fallback segment used when the requested language is not present.
+func _skip_to_language_segment(tokens: Array[Dictionary], marker: int) -> void:
+	var selected := int(context.get("language_segment", 0))
+	if marker == selected or marker == 6:
+		return
+	var target := selected if marker < selected else 6
+	while token_index < tokens.size():
+		var candidate: Dictionary = tokens[token_index]
+		token_index += 1
+		if StringName(candidate.get("kind", "")) != &"language":
+			continue
+		var candidate_marker := int(candidate.get("marker", 6))
+		if candidate_marker == target or candidate_marker == 6:
+			return
 
 func _update_portrait() -> void:
 	if int(state.portrait) <= 0: return
