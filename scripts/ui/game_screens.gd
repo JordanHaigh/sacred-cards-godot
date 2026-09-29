@@ -189,10 +189,14 @@ signal scene_graphics_changed(scene_id: int, variant: int, graphics: Dictionary)
 signal scene_shop_closed
 signal scene_name_entry_finished
 signal scene_password_entry_finished
+signal recovered_duel_start_resolved
+signal recovered_duel_finished
 
 var scene_shop_active := false
 var scene_shop_return_screen := "scene"
 var scene_password_entry_active := false
+var _last_recovered_duel_started := false
+var _last_recovered_duel_won := false
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_PASS
@@ -380,7 +384,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		if screen == "name_entry" and name_entry_view != null and name_entry_view.handle_key(event.keycode):
 			get_viewport().set_input_as_handled()
 			return
-		if scene_script_runtime != null and scene_script_runtime.running and not scene_shop_active and not scene_password_entry_active:
+		if screen == "scene" and scene_script_runtime != null and scene_script_runtime.running and not scene_shop_active and not scene_password_entry_active:
 			var pressed_mask := 0
 			if event.keycode == KEY_ENTER: pressed_mask = 1
 			elif event.keycode == KEY_SPACE: pressed_mask = 2
@@ -1032,10 +1036,34 @@ func _resolve_recovered_duel_outcome() -> Dictionary:
 	if report.is_empty():
 		return {"resolved": false, "reason": "duel_outcome_unavailable"}
 	_duel_outcome_resolved = true
+	_last_recovered_duel_won = bool(report.get("won", false))
 	current_save.random_state = duel_random.state
 	_apply_save_data(current_save)
 	_save_current_state()
+	recovered_duel_finished.emit()
 	return {"resolved": true, "report": report}
+
+func _run_builtin_scene_duel(opponent_id: int) -> int:
+	var wagerable_ids: Array[int] = []
+	for card_id in range(1, PreDuelMenuState.CARD_COUNT + 1):
+		if not card_id in SacredDuelState.EFFECT_IMMUNE_CARD_IDS:
+			wagerable_ids.append(card_id)
+	var special_ids: Array[int] = []
+	for card_id: Variant in opponent_database.special_wager_cards:
+		special_ids.append(int(card_id))
+	_last_recovered_duel_started = false
+	show_pre_duel_menu(opponent_id, wagerable_ids, special_ids)
+	await recovered_duel_start_resolved
+	if not _last_recovered_duel_started:
+		await _restore_scene_display()
+		_set_scene_dialogue_visible(true)
+		return 0
+	await recovered_duel_finished
+	if _last_recovered_duel_won:
+		await _restore_scene_display()
+		_set_scene_dialogue_visible(true)
+		return 1
+	return 0
 
 func _int_cards(values: Variant) -> Array[int]:
 	var result: Array[int] = []
@@ -1114,8 +1142,10 @@ func _handle_pre_duel_result(result: Dictionary, opponent_id: int) -> Dictionary
 			return result
 		PreDuelMenuState.Action.START_WITH_WAGER, PreDuelMenuState.Action.START_WITHOUT_WAGER:
 			if audio_dispatch != null: audio_dispatch.fade_game_music(2)
-			result["duel_started"] = begin_recovered_duel(opponent_id, int(result.get("card_id", 0)))
+			_last_recovered_duel_started = begin_recovered_duel(opponent_id, int(result.get("card_id", 0)))
+			result["duel_started"] = _last_recovered_duel_started
 			pre_duel_requested.emit(opponent_id, int(result.get("card_id", 0)))
+			recovered_duel_start_resolved.emit()
 	return result
 
 func _duel_code_for_key(keycode: int) -> int:
@@ -1195,8 +1225,7 @@ func start_scene_script(scene_id: int, variant: int, role: StringName = &"scene_
 			return outcome
 	else:
 		context["duel"] = func(opponent_id: int, _runtime: SceneScriptRuntime) -> int:
-			scene_script_service_requested.emit(&"duel", {"opponent_id": opponent_id})
-			return 0
+			return await _run_builtin_scene_duel(opponent_id)
 	context["collection_card"] = func(card_id: int, count: int) -> void: scene_script_service_requested.emit(&"collection_card", {"card_id": card_id, "count": count})
 	return scene_script_runtime.start(root_id, context)
 
