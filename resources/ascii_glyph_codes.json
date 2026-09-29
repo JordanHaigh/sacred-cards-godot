@@ -96,8 +96,8 @@
     28545,
     25217,
     28801,
-    null,
-    null
+    12324,
+    12324
   ],
   "sources": [
     "font_mapping",
@@ -194,12 +194,9 @@
     "font_mapping",
     "font_mapping",
     "font_mapping",
-    null,
-    null
+    "pointer_target:0x080B81D0",
+    "pointer_target:0x080B823A"
   ],
-  "unavailable_codepoints": [
-    126,
-    127
-  ],
-  "notes": "Portable little-endian encoded values for RenderBitmapGlyph after replacing GBA pointers. Full-width font mappings provide glyph identity for ASCII 0x20-0x7E where present; three atlas-confirmed glyph indices fill ASCII apostrophe and hyphen. The extracted pointer table contains addresses but not pointed-to bytes, so tilde and DEL remain explicitly unavailable."
+  "unavailable_codepoints": [],
+  "notes": "Portable little-endian encoded values for RenderBitmapGlyph after replacing GBA pointers. Full-width font mappings provide glyph identity for ASCII 0x20-0x7E where present; three atlas-confirmed glyph indices fill ASCII apostrophe and hyphen. Tilde and DEL use exact two-byte values recovered from their pointer targets at 0x080B81D0 and 0x080B823A; both values intentionally resolve to blank glyph index 0 through the native glyph-index clamp."
 }
