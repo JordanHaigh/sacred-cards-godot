@@ -5,9 +5,22 @@ class_name DuelFlow
 ## presentation and reward callbacks are owned by their separate systems.
 
 const DECK_DRAW_SCRIPT = preload("res://scripts/systems/duel_deck.gd")
+const GROWING_MONSTER_TABLE_PATH := "res://resources/growing_monster_pairs.json"
 
 signal card_transformed(side_id: int, column: int, previous_card_id: int, new_card_id: int)
 signal duel_message_requested(message_id: int, number: int)
+var growing_monster_pairs: Array[Vector2i] = []
+
+func _init() -> void:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(GROWING_MONSTER_TABLE_PATH)) if FileAccess.file_exists(GROWING_MONSTER_TABLE_PATH) else null
+	if not parsed is Dictionary or not parsed.get("pairs", []) is Array:
+		push_error("Missing recovered growing-monster pair table.")
+		return
+	for raw_pair: Variant in parsed.pairs:
+		if raw_pair is Dictionary:
+			growing_monster_pairs.append(Vector2i(int(raw_pair.get("from_card_id", 0)), int(raw_pair.get("to_card_id", 0))))
+	if growing_monster_pairs.size() != 4:
+		push_error("Growing-monster pair table must contain four source pairs.")
 
 func initialize_duel(duel: SacredDuelState, player_deck: Array[int], opponent_deck: Array[int], terrain: int, player_lp: int, opponent_lp: int, random: SacredRandom) -> void:
 	for side in duel.sides:
@@ -67,15 +80,16 @@ func finish_turn(duel: SacredDuelState) -> void:
 	for slot in next_side.back_row_zones:
 		slot.persistent_flags &= 0xFE
 
-## Applies the four source-defined growing-monster pairs to the active side.
-## The recovered ROM pair table is supplied as data instead of read by address.
-func transform_growing_monsters(duel: SacredDuelState, card_pairs: Array[Vector2i]) -> Array[Dictionary]:
+## Applies the four recovered-ID pairs to the active side before it acts.
+## Pair IDs are isolated in a Godot resource because their ROM data table was
+## not included in the extracted payloads; see that resource's provenance.
+func transform_growing_monsters(duel: SacredDuelState) -> Array[Dictionary]:
 	var transformed: Array[Dictionary] = []
 	if duel == null or duel.active_side < 0 or duel.active_side >= duel.sides.size():
 		return transformed
 	for column in range(duel.sides[duel.active_side].monster_zones.size()):
 		var slot: DuelCardSlot = duel.sides[duel.active_side].monster_zones[column]
-		for pair in card_pairs:
+		for pair in growing_monster_pairs:
 			if slot.card_id == pair.x:
 				var previous_id := slot.card_id
 				slot.card_id = pair.y
