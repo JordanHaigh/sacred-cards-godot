@@ -542,6 +542,7 @@ func _confirm_player_field_selection(duel_state: SacredDuelState, side_id: int) 
 		var slot := duel_state.side(side_id).monster_zones[cell.x]
 		if (slot.persistent_flags & 1) != 0: return {"accepted": false, "reason": "monster_already_used"}
 		duel_menus.open_monster_action(cell, slot.defense_position)
+		duel_menus.preview_monster_action(duel_state, int(DuelMenus.MonsterAction.ATTACK))
 		return {"accepted": true, "action": "open_monster_action_menu", "card_id": card_id, "cursor": cell}
 	if cell.y == 3:
 		var definition := card_database.get_card(card_id)
@@ -558,6 +559,12 @@ func _confirm_player_field_selection(duel_state: SacredDuelState, side_id: int) 
 		if needed > 0: return {"accepted": false, "reason": "tributes_required", "remaining": needed}
 		return player_duel_controller.begin_card_placement(duel_state, side_id, card_id, duel_summon_rules, card_database)
 	return {"accepted": false, "reason": "invalid_row"}
+
+func _preview_monster_action(action_id: int, duel_state: SacredDuelState) -> void:
+	if duel_menus == null or not duel_menus.preview_monster_action(duel_state, action_id):
+		return
+	if is_instance_valid(duel_ui):
+		duel_ui.queue_redraw()
 
 func _on_monster_action_selected(action_id: int, duel_state: SacredDuelState) -> void:
 	if duel_menus == null or duel_state == null:
@@ -1222,6 +1229,7 @@ func _draw_duel() -> void:
 			popup.name = "MonsterActionMenu"
 			for action_index in range(duel_menus.labels().size()):
 				popup.add_item(duel_menus.labels()[action_index], action_index)
+			popup.id_focused.connect(_preview_monster_action.bind(active_duel_state))
 			popup.id_pressed.connect(_on_monster_action_selected.bind(active_duel_state))
 			screen_root.add_child(popup)
 			popup.popup_centered()
