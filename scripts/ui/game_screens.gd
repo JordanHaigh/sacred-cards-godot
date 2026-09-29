@@ -2042,7 +2042,7 @@ func _draw_card_detail() -> void:
 		_text("CARD DATA UNAVAILABLE", Vector2(20, 70), 8, PAPER)
 		return
 	var presentation: CardPresentation = CARD_PRESENTATION_SCRIPT.new()
-	presentation.present(card, card_art)
+	presentation.present(card, card_art, progression.duelist_level if progression != null else -1)
 	screen_root.add_child(presentation)
 
 func _card_detail_page(direction: int) -> void:
