@@ -268,7 +268,7 @@ func _copy_slot(destination: DuelCardSlot, source: DuelCardSlot, active: int) ->
 	destination.has_attacked = source.has_attacked
 	destination.stage = source.stage
 	destination.zone_mode = source.zone_mode
-	destination.persistent_flags = source.persistent_flags
+	destination.persistent_flags = (destination.persistent_flags & 0xC0) | (source.persistent_flags & 0x3F)
 
 func _attack_pose(slot: DuelCardSlot) -> void:
 	slot.persistent_flags = (slot.persistent_flags & 0xFD) | 0x11
