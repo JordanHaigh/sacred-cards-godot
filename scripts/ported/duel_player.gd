@@ -88,7 +88,10 @@ func begin_attack_target(duel: SacredDuelState, opposing_side: int) -> Dictionar
 func confirm_placement(duel: SacredDuelState, acting_side: int, summon_rules: SummonRules, database: CardDatabase) -> Dictionary:
 	if mode != Mode.PLACE_CARD or not _valid_side(duel, acting_side):
 		return {"accepted": false}
-	var required := summon_rules.remaining_monster_tributes(selected_hand_card_id, duel.tributes_committed, database) if cursor.y == 2 else summon_rules.remaining_category_four_requirement(selected_hand_card_id, duel.tributes_committed, database)
+	var card_kind := summon_rules.classify_card(selected_hand_card_id, database)
+	if (card_kind == 1 and cursor.y != 2) or (card_kind > 1 and card_kind < 5 and cursor.y != 3) or card_kind < 1 or card_kind >= 5:
+		return {"accepted": false, "reason": "invalid_placement_row"}
+	var required := summon_rules.remaining_monster_tributes(selected_hand_card_id, duel.tributes_committed, database) if card_kind == 1 else summon_rules.remaining_category_four_requirement(selected_hand_card_id, duel.tributes_committed, database)
 	if required > 0:
 		return {"accepted": false, "reason": "tributes_required", "remaining": required}
 	var hand_index := saved_cursor.x
@@ -112,8 +115,16 @@ func confirm_placement(duel: SacredDuelState, acting_side: int, summon_rules: Su
 	destination.face_down = cursor.y == 3
 	destination.defense_position = false
 	destination.has_attacked = false
+	if card_kind == 1:
+		side.duel_flags |= 8
+		for remaining_index in range(side.hand.size()):
+			var remaining_card_id: int = side.hand[remaining_index]
+			if remaining_card_id != 0 and summon_rules.classify_card(remaining_card_id, database) == 1:
+				side.hand_flags[remaining_index] |= 1
+		duel.tributes_committed = 0
 	mode = Mode.FIELD
-	cursor = saved_cursor
+	saved_cursor = cursor
+	selected_hand_card_id = 0
 	return {"accepted": true, "action": "place", "card_id": card_id, "row": placed_row, "column": placed_column}
 
 func validate_spell_target(duel: SacredDuelState, acting_side: int, target_class: int) -> Dictionary:
@@ -126,7 +137,12 @@ func validate_spell_target(duel: SacredDuelState, acting_side: int, target_class
 		return {"accepted": false, "reason": "invalid_target"}
 	return {"accepted": true, "action": "resolve_spell", "card_id": selected_hand_card_id, "target_card_id": target.card_id, "source_row": saved_cursor.y, "source_column": saved_cursor.x, "target_row": cursor.y, "target_column": cursor.x, "target_class": target_class}
 
-func finish_target_action() -> void:
+func finish_spell_target_action() -> void:
+	mode = Mode.FIELD
+	saved_cursor = cursor
+	selected_hand_card_id = 0
+
+func finish_attack_target_action() -> void:
 	mode = Mode.FIELD
 	cursor = saved_cursor
 	selected_hand_card_id = 0
