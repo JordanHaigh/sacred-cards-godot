@@ -14,12 +14,19 @@ func _collect_result(value: Variant, events: Array[Dictionary], seen_sequences: 
 		return
 	var presentation: Variant = value.get("presentation", [])
 	if presentation is Array and not presentation.is_empty():
+		var mirrored_in_child := false
+		for child_value: Variant in value.values():
+			if child_value is Dictionary and child_value.get("presentation", null) == presentation:
+				mirrored_in_child = true
+				break
 		var sequence_key := JSON.stringify(presentation)
-		if not seen_sequences.has(sequence_key):
+		if not mirrored_in_child and not seen_sequences.has(sequence_key):
 			seen_sequences[sequence_key] = true
 			var result_kind := String(value.get("kind", ""))
 			if result_kind.is_empty() and value.get("effect") is Dictionary:
 				result_kind = String(value.effect.get("kind", ""))
+			if value.has("trap_card_id"):
+				_append_sound(66, events)
 			_append_sequence(presentation, result_kind, events)
 	for key: Variant in value:
 		var child: Variant = value[key]
