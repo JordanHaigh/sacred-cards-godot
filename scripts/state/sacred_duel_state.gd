@@ -106,6 +106,7 @@ func duplicate_state() -> SacredDuelState:
 		destination.hand = source.hand.duplicate()
 		destination.hand_flags = source.hand_flags.duplicate()
 		destination.deck = source.deck.duplicate()
+		destination.deck_remaining_count = source.deck_remaining_count
 		destination.deck_out = source.deck_out
 		destination.attack_restriction_turns = source.attack_restriction_turns
 		destination.defeated = source.defeated
