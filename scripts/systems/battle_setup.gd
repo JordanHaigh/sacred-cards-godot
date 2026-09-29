@@ -39,6 +39,12 @@ func prepare_monster_attack(duel: SacredDuelState, attacker_column: int, target_
 	var target_defends := target_slot.defense_position
 	var attacker := _combatant(duel, attacker_side, 2, attacker_column, true)
 	var target := _combatant(duel, target_side, 1, target_column, true)
+	# battle_setup.c's 080066D0 branch assigns reversed defeat-mask owners
+	# only for side 0 attacking an attack-position target. Preserve that native
+	# result-flag quirk without changing which duel side owns either LP value.
+	if attacker_side == 0 and not target_defends:
+		attacker["owner"] = 1
+		target["owner"] = 0
 	var side_a: Dictionary
 	var side_b: Dictionary
 	var command: int
