@@ -153,6 +153,10 @@ signal duel_text_changed(value: String, glyph_position: int, wait_state: bool)
 signal duel_text_finished
 signal pre_duel_requested(opponent_id: int, wagered_card_id: int)
 signal scene_graphics_changed(scene_id: int, variant: int, graphics: Dictionary)
+signal scene_shop_closed
+
+var scene_shop_active := false
+var scene_shop_return_screen := "scene"
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_PASS
@@ -280,7 +284,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		if screen == "name_entry" and name_entry_view != null and name_entry_view.handle_key(event.keycode):
 			get_viewport().set_input_as_handled()
 			return
-		if scene_script_runtime != null and scene_script_runtime.running:
+		if scene_script_runtime != null and scene_script_runtime.running and not scene_shop_active:
 			var pressed_mask := 0
 			if event.keycode == KEY_ENTER: pressed_mask = 1
 			elif event.keycode == KEY_SPACE: pressed_mask = 2
@@ -785,6 +789,10 @@ func _execute_scene_actor_command(command: StringName, operands: Array) -> void:
 	scene_script_service_requested.emit(&"actor_command", {"command": command, "operands": operands})
 
 func _execute_scene_script_event(event_id: int, script_state: Dictionary) -> void:
+	if event_id == 8 or event_id == 11:
+		scene_script_events.dispatch(event_id, script_state, false, true)
+		await _run_scene_shop(event_id == 11)
+		return
 	if scene_script_events.is_door_event(event_id):
 		audio_dispatch.fade_game_music(1)
 		await _wait_scene_frames(8)
@@ -855,6 +863,22 @@ func _signed_scene_word(value: int) -> int:
 func _wait_scene_frames(frame_count: int) -> void:
 	if frame_count > 0:
 		await get_tree().create_timer(float(frame_count) / 60.0).timeout
+
+func _run_scene_shop(is_selling: bool) -> void:
+	scene_shop_return_screen = screen
+	scene_shop_active = true
+	selling = is_selling
+	shop_selected = 0
+	shop_menu.begin(is_selling, shop_selected)
+	_show("shop")
+	await scene_shop_closed
+
+func _leave_scene_shop() -> void:
+	scene_shop_active = false
+	_show(scene_shop_return_screen)
+	if scene_shop_return_screen == "scene":
+		_set_scene_dialogue_visible(true)
+	scene_shop_closed.emit()
 
 func _handle_scene_dialogue(operation: StringName, data: Dictionary) -> void:
 	if operation != &"portrait" or screen != "scene" or screen_root == null:
@@ -1212,7 +1236,10 @@ func _handle_shop_escape() -> void:
 		_build_screen()
 	else:
 		if audio_dispatch != null: audio_dispatch.play_game_audio(56)
-		_show("title")
+		if scene_shop_active:
+			_leave_scene_shop()
+		else:
+			_show("title")
 
 func _handle_shop_confirm() -> void:
 	if _visible_shop_cards().is_empty(): return

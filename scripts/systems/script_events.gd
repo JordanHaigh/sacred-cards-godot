@@ -42,7 +42,7 @@ const CHOREOGRAPHY := {
 	53: [&"vanish_actor_6", [6]], 56: [&"group_entrance", [1, 10, 11, 12]]
 }
 
-func dispatch(event_id: int, script_state: Dictionary = {}, door_timing_handled: bool = false) -> void:
+func dispatch(event_id: int, script_state: Dictionary = {}, door_timing_handled: bool = false, native_services_handled: bool = false) -> void:
 	if event_id < 0 or event_id > 57:
 		return
 	if CHOREOGRAPHY.has(event_id):
@@ -59,16 +59,20 @@ func dispatch(event_id: int, script_state: Dictionary = {}, door_timing_handled:
 		3, 4, 5, 6, 7:
 			progress_rank |= 1 << (event_id - 2)
 			service_requested.emit(&"progress_rank_changed", {"rank": progress_rank})
-		8: service_requested.emit(&"buy_shop", {})
+		8:
+			if not native_services_handled: service_requested.emit(&"buy_shop", {})
 		9: service_requested.emit(&"native_scene_service", {"source_routine": "08000224"})
-		10: service_requested.emit(&"name_entry", {"save_after": true})
-		11: service_requested.emit(&"sell_shop", {})
+		10:
+			if not native_services_handled: service_requested.emit(&"name_entry", {"save_after": true})
+		11:
+			if not native_services_handled: service_requested.emit(&"sell_shop", {})
 		17:
 			if event_flags != null: event_flags.clear_flag(114)
 		23:
 			for actor_id in range(2, 8):
 				actor_state_requested.emit(actor_id, {"position": Vector2i.ZERO, "clear_flag_mask": 0x24})
-		24: service_requested.emit(&"password_feature", {})
+		24:
+			if not native_services_handled: service_requested.emit(&"password_feature", {})
 		36: pass
 		57: service_requested.emit(&"restore_scene_and_dialogue", {})
 
