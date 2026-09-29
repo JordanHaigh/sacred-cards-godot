@@ -4,6 +4,7 @@ extends Control
 ## GBA glyph workspace and OAM keyboard sprites.
 
 const BACKGROUND_PATH := "res://art/screens/name-entry-background.png"
+const FONT_MAPPING_PATH := "res://decompiled/build/assets/ui/font-mapping.json"
 const PAGE_LABELS := ["A-Z", "a-z", "0-9", "SYMBOLS"]
 const PAGE_KEYS := [
 	"ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 -_",
@@ -12,6 +13,8 @@ const PAGE_KEYS := [
 	"!?.,:;'+-()[]@#$%&*=/\\ \""
 ]
 const MAX_NAME_GLYPHS := 8
+const VOICEABLE_CODES := [0x834A, 0x834C, 0x834E, 0x8350, 0x8152, 0x8352, 0x8154, 0x8354, 0x8356, 0x8358, 0x835A, 0x835C, 0x835E, 0x8360, 0x8363, 0x8365, 0x8367, 0x836E, 0x8371, 0x8374, 0x8377, 0x837A, 0x82A9, 0x82AB, 0x82AD, 0x82AF, 0x82B1, 0x82B3, 0x82B5, 0x82B7, 0x82B9, 0x82BB, 0x82BD, 0x82BF, 0x82C2, 0x82C4, 0x82C6, 0x82CD, 0x82D0, 0x82D3, 0x82D6, 0x82D9]
+const SEMIVOICEABLE_CODES := [0x836E, 0x8371, 0x8374, 0x8377, 0x837A, 0x82CD, 0x82D0, 0x82D3, 0x82D6, 0x82D9]
 
 signal name_confirmed(value: String)
 signal cancelled
@@ -22,10 +25,14 @@ var selected_key := Vector2i.ZERO
 var name_field: LineEdit
 var page_button: Button
 var key_buttons: Array[Button] = []
+var unicode_to_encoded: Dictionary = {}
+var encoded_to_unicode: Dictionary = {}
+var _normalizing_input := false
 
 func _ready() -> void:
 	focus_mode = Control.FOCUS_ALL
 	mouse_filter = Control.MOUSE_FILTER_STOP
+	_load_glyph_mapping()
 	_build()
 
 func begin(initial_name: String = "") -> void:
@@ -35,7 +42,11 @@ func begin(initial_name: String = "") -> void:
 		name_field.caret_column = name_field.text.length()
 
 func accept_name() -> bool:
-	var value := name_field.text.strip_edges() if name_field != null else player_name.strip_edges()
+	var value := _compose_voice_marks(name_field.text if name_field != null else player_name)
+	if value.is_empty() or value.begins_with(" ") or value.begins_with("　"):
+		return false
+	while value.ends_with(" ") or value.ends_with("　"):
+		value = value.substr(0, value.length() - 1)
 	if value.is_empty() or _glyph_count(value) > MAX_NAME_GLYPHS:
 		return false
 	player_name = value
@@ -91,12 +102,12 @@ func _build() -> void:
 	for index in range(77):
 		var key_button := Button.new()
 		key_button.custom_minimum_size = Vector2(16, 11)
-	key_button.size = Vector2(16, 11)
-	key_button.add_theme_font_size_override("font_size", 6)
-	key_button.focus_mode = Control.FOCUS_ALL
-	key_button.pressed.connect(_insert_key.bind(index))
-	key_buttons.append(key_button)
-	grid.add_child(key_button)
+		key_button.size = Vector2(16, 11)
+		key_button.add_theme_font_size_override("font_size", 6)
+		key_button.focus_mode = Control.FOCUS_ALL
+		key_button.pressed.connect(_insert_key.bind(index))
+		key_buttons.append(key_button)
+		grid.add_child(key_button)
 	page_button = Button.new()
 	page_button.position = Vector2(17, 130)
 	page_button.size = Vector2(42, 14)
@@ -141,10 +152,10 @@ func _insert_key(index: int) -> void:
 	if index >= page_text.length() or name_field == null: return
 	var insertion := page_text.substr(index, 1)
 	var value := name_field.text
-	var codepoint := insertion.unicode_at(0)
-	var combining := codepoint >= 0x0300 and codepoint <= 0x036F
-	if _glyph_count(value) >= MAX_NAME_GLYPHS and not combining: return
-	name_field.insert_text_at_caret(insertion)
+	var candidate := _compose_voice_marks(value.insert(name_field.caret_column, insertion))
+	if _glyph_count(candidate) > MAX_NAME_GLYPHS: return
+	name_field.text = candidate
+	name_field.caret_column = mini(name_field.caret_column + insertion.length(), candidate.length())
 	name_field.grab_focus()
 
 func _delete_character() -> void:
@@ -165,13 +176,60 @@ func _focus_selected_key() -> void:
 		key_buttons[index].grab_focus()
 
 func _on_name_changed(value: String) -> void:
-	player_name = value
+	if _normalizing_input:
+		player_name = value
+		return
+	var normalized := _compose_voice_marks(value)
+	if _glyph_count(normalized) > MAX_NAME_GLYPHS:
+		normalized = normalized.substr(0, MAX_NAME_GLYPHS)
+	if normalized != value and name_field != null:
+		var caret := name_field.caret_column
+		_normalizing_input = true
+		name_field.text = normalized
+		name_field.caret_column = mini(caret, normalized.length())
+		_normalizing_input = false
+	player_name = normalized
 	queue_redraw()
 
 func _glyph_count(value: String) -> int:
-	var count := 0
+	return value.length()
+
+func _load_glyph_mapping() -> void:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(FONT_MAPPING_PATH)) if FileAccess.file_exists(FONT_MAPPING_PATH) else null
+	if not parsed is Array:
+		push_warning("Recovered glyph map is unavailable; kana voicing cannot be composed.")
+		return
+	for entry: Dictionary in parsed:
+		var candidate := str(entry.get("unicode_candidate", ""))
+		if candidate.length() != 1:
+			continue
+		var encoded := str(entry.get("encoded", "0x0")).trim_prefix("0x").hex_to_int()
+		var codepoint := candidate.unicode_at(0)
+		unicode_to_encoded[codepoint] = encoded
+		encoded_to_unicode[encoded] = candidate
+
+func _compose_voice_marks(value: String) -> String:
+	var composed: Array[String] = []
 	for index in range(value.length()):
-		var codepoint := value.unicode_at(index)
-		if not (codepoint >= 0x0300 and codepoint <= 0x036F) and codepoint not in [0x3099, 0x309A]:
-			count += 1
-	return count
+		var character := value.substr(index, 1)
+		var codepoint := character.unicode_at(0)
+		var is_dakuten := codepoint in [0x3099, 0x309B]
+		var is_handakuten := codepoint in [0x309A, 0x309C]
+		if (is_dakuten or is_handakuten) and not composed.is_empty():
+			var previous := composed.back()
+			var previous_codepoint := previous.unicode_at(0)
+			var previous_code := int(unicode_to_encoded.get(previous_codepoint, -1))
+			var can_compose := false
+			if is_dakuten:
+				can_compose = previous_code in VOICEABLE_CODES
+			else:
+				can_compose = previous_code in SEMIVOICEABLE_CODES
+			if is_dakuten and previous_code == 0x8345:
+				can_compose = true
+			if can_compose:
+				var voiced_code := 0x8394 if is_dakuten and previous_code == 0x8345 else previous_code + (1 if is_dakuten else 2)
+				if encoded_to_unicode.has(voiced_code):
+					composed[composed.size() - 1] = str(encoded_to_unicode[voiced_code])
+					continue
+		composed.append(character)
+	return "".join(composed)
