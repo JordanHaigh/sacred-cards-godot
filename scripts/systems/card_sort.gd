@@ -49,11 +49,11 @@ func _sort_records_descending(records: Array[Dictionary]) -> void:
 		return
 	var ranges: Array[Vector2i] = [Vector2i(0, records.size() - 1)]
 	while not ranges.is_empty():
-		var current := ranges.pop_back()
-		var first := current.x
-		var last := current.y
-		var left := first
-		var right := last
+		var current: Vector2i = ranges.pop_back()
+		var first: int = current.x
+		var last: int = current.y
+		var left: int = first
+		var right: int = last
 		var pivot := int(records[(left + right) >> 1].get("key", 0))
 		while true:
 			while int(records[left].get("key", 0)) > pivot:
