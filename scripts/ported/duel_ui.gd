@@ -223,7 +223,7 @@ func _draw_details() -> void:
 	_draw_text("LV %d  TYPE %d" % [card.level, card.card_type], Vector2(153, 79), 5, GOLD)
 	_draw_text("ATTR %d" % card.attribute, Vector2(153, 89), 5, GOLD)
 	_draw_text("GRAVE %d" % duel_state.absolute_graveyard_ids[duel_state.active_side], Vector2(153, 101), 5, PAPER)
-	_draw_text("DECK %d" % duel_state.side(duel_state.active_side).deck.size(), Vector2(153, 111), 5, PAPER)
+	_draw_text("DECK %d" % duel_state.side(duel_state.active_side).deck_remaining_count, Vector2(153, 111), 5, PAPER)
 
 func _draw_text(value: String, at: Vector2, font_size: int, color: Color) -> void:
 	draw_string(ThemeDB.fallback_font, at, value, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, color)
