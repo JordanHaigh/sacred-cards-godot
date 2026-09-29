@@ -4,10 +4,10 @@ extends RefCounted
 ## Callers render the returned labels and preview data with Godot Controls.
 
 enum Menu { NONE, CONTEXT, MONSTER_ACTION }
-enum ContextAction { SUMMON, SET, ACTIVATE }
+enum ContextAction { INSPECT, END_TURN, DISCARD }
 enum MonsterAction { ATTACK, DEFENSE, TRIBUTE, EFFECT, CANCEL }
 
-const CONTEXT_LABELS := ["SUMMON", "SET", "ACTIVATE"]
+const CONTEXT_LABELS := ["VIEW CARD", "END TURN", "DISCARD CARD"]
 const MONSTER_LABELS := ["ATTACK", "DEFENSE", "TRIBUTE", "EFFECT", "CANCEL"]
 
 var menu := Menu.NONE
@@ -75,7 +75,7 @@ func confirm() -> Dictionary:
 			close()
 			return {"action": "cancel"}
 	if menu == Menu.CONTEXT:
-		var action := String(["summon", "set", "activate"][choice])
+		var action := String(["inspect", "end_turn", "discard"][choice])
 		close()
 		return {"action": action, "cell": selected_cell}
 	return {"action": "none"}
