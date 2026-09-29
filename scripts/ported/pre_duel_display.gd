@@ -76,17 +76,17 @@ func _draw_scrollbar() -> void:
 	draw_rect(Rect2(234, y, 4, 6), GOLD, true)
 
 func _draw_popup() -> void:
-	if menu_state.popup == PreDuelMenuState.Popup.NONE: return
+	if menu_state.popup == PreDuelMenuState.PopupKind.NONE: return
 	var box := Rect2(55, 43, 130, 72)
 	draw_rect(box, Color(0.05, 0.06, 0.07, 0.96), true)
 	draw_rect(box, GOLD, false, 1.0)
 	var labels: Array = []
 	match menu_state.popup:
-		PreDuelMenuState.Popup.ACTION: labels = ACTION_LABELS
-		PreDuelMenuState.Popup.SPECIAL_WAGER: labels = SPECIAL_LABELS
-		PreDuelMenuState.Popup.NO_WAGER: labels = NO_WAGER_LABELS
-		PreDuelMenuState.Popup.SORT: labels = SORT_LABELS
-	if menu_state.popup == PreDuelMenuState.Popup.SORT:
+		PreDuelMenuState.PopupKind.ACTION: labels = ACTION_LABELS
+		PreDuelMenuState.PopupKind.SPECIAL_WAGER: labels = SPECIAL_LABELS
+		PreDuelMenuState.PopupKind.NO_WAGER: labels = NO_WAGER_LABELS
+		PreDuelMenuState.PopupKind.SORT: labels = SORT_LABELS
+	if menu_state.popup == PreDuelMenuState.PopupKind.SORT:
 		for index in range(labels.size()):
 			var column := index % 2
 			var row := floori(float(index) / 2.0)
@@ -102,16 +102,16 @@ func _draw_text(value: String, at: Vector2, font_size: int, color: Color) -> voi
 
 func _gui_input(event: InputEvent) -> void:
 	if not (event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT): return
-	if menu_state != null and menu_state.popup != PreDuelMenuState.Popup.NONE:
+	if menu_state != null and menu_state.popup != PreDuelMenuState.PopupKind.NONE:
 		var choice_row := floori((event.position.y - 52) / 11.0)
 		var choice_column := floori((event.position.x - 63) / 60.0)
-		var selected_choice := choice_row * 2 + choice_column if menu_state.popup == PreDuelMenuState.Popup.SORT else floori((event.position.y - 57) / 16.0)
+		var selected_choice := choice_row * 2 + choice_column if menu_state.popup == PreDuelMenuState.PopupKind.SORT else floori((event.position.y - 57) / 16.0)
 		if selected_choice >= 0:
 			popup_selected.emit(selected_choice)
 			accept_event()
 		return
 	for row_index in range(5):
-		var row_y := ROW_Y[row_index]
+		var row_y: int = ROW_Y[row_index]
 		if event.position.y >= row_y - 2 and event.position.y <= row_y + ROW_HEIGHTS[row_index]:
 			row_selected.emit(row_index)
 			accept_event()
