@@ -874,7 +874,7 @@ func execute_ai_action(duel_state: SacredDuelState, acting_side: int, candidate:
 	return ai_actions.execute(duel_state, acting_side, candidate, simulate)
 
 ## Runs a full opponent decision loop using independent candidate state copies.
-func run_opponent_turn(duel_state: SacredDuelState, acting_side: int, random_service: SacredRandom = null, max_actions: int = 616) -> Dictionary:
+func run_opponent_turn(duel_state: SacredDuelState, acting_side: int, random_service: SacredRandom = null, max_actions: int = -1) -> Dictionary:
 	if ai_turn == null:
 		return {"completed": false, "reason": "ai_turn_unavailable", "actions": []}
 	return ai_turn.run_opponent_turn(duel_state, acting_side, random_service, max_actions)
