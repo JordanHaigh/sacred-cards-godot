@@ -163,7 +163,7 @@ func _physics_process(_delta: float) -> void:
 
 func play_music(stream: AudioStream, song_id: int, restart: bool = false) -> void:
 	if stream == null or music_player == null: return
-	if not restart and music_player.playing and music_player.stream == stream: return
+	if not restart and music_player.playing and int(music_player.get_meta("song_id", -1)) == song_id: return
 	_cancel_music_fade(true)
 	music_player.stream = stream
 	music_player.set_meta("song_id", song_id)
