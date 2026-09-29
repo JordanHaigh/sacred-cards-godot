@@ -140,7 +140,7 @@ func _animate_card_impact(side_id: int, attribute_hit: bool) -> void:
 		phase_finished.emit(side_id, &"attribute_hit" if attribute_hit else &"hit")
 		return
 	var card := card_nodes[side_id]
-	var origin := card.position
+	var origin: Vector2 = card.position
 	var tween := create_tween()
 	tween.tween_property(card, "position", origin + Vector2(hit_distance, 0), FRAME_TIME)
 	tween.tween_property(card, "position", origin - Vector2(hit_distance, 0), FRAME_TIME)
@@ -305,7 +305,7 @@ func _animate_destruction_particles(side_id: int, card: CanvasItem, random_servi
 				var tile := (int(particle.frame) * 5 + fragment_index) % 128
 				sprite.region_rect = Rect2((tile % 16) * 8, (tile / 16) * 8, 8, 8)
 				sprite.modulate.a = float(blend_alpha) / 16.0
-			sprite.flip_h = int(particle.flip) != 0
+				sprite.flip_h = int(particle.flip) != 0
 		# C advances one destruction step for every three uploaded display frames.
 		await get_tree().create_timer(3 * FRAME_TIME).timeout
 	if is_instance_valid(card):
