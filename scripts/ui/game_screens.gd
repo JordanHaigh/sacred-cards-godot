@@ -96,6 +96,7 @@ var duel_menus: DuelMenus
 var duel_text_presenter: DuelTextPresenter
 var duel_ui: DuelUiDisplay
 var active_duel_state: SacredDuelState
+var _ai_turn_running := false
 var menu_graphics: MenuGraphics
 var name_entry_view: NameEntryView
 var name_entry_return_screen := "title"
@@ -249,7 +250,7 @@ func _ready() -> void:
 		push_error("Could not load the recovered AI candidate table (error %d)." % ai_candidates_error)
 	ai_turn = AI_TURN_SCRIPT.new(ai_candidate_database, ai_validation, ai_scoring, ai_actions, duel_special_wins)
 	ai_turn.action_starting.connect(_on_ai_duel_action_starting)
-	ai_turn.action_completed.connect(_on_ai_duel_action_completed)
+	ai_turn.action_presentation_requested.connect(_on_ai_duel_action_presentation_requested)
 	duel_effect_bindings = EFFECT_RULE_BINDINGS_SCRIPT.new()
 	if not duel_effect_bindings.install(duel_effect_dispatcher, card_effect_rules, effect_family_rules, spell_effect_rules, monster_effect_rules):
 		push_error("Could not bind recovered duel effect rules to the metadata dispatcher.")
@@ -344,6 +345,9 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		return
 	if event is InputEventKey and event.pressed and not event.echo:
 		if screen == "duel" and battle_animation_player != null and battle_animation_player.is_presenting:
+			get_viewport().set_input_as_handled()
+			return
+		if _ai_turn_running:
 			get_viewport().set_input_as_handled()
 			return
 		if screen == "duel" and _duel_hand_visible:
@@ -490,11 +494,33 @@ func _on_ai_duel_action_starting(_candidate_id: int, action_kind: int) -> void:
 	if action_kind == 23 and audio_dispatch != null:
 		audio_dispatch.play_game_audio(64)
 
-func _on_ai_duel_action_completed(_candidate_id: int, _action_kind: int, result: Dictionary) -> void:
-	_consume_duel_effect_presentation(result)
+func _on_ai_duel_action_presentation_requested(_candidate_id: int, _action_kind: int, result: Dictionary) -> void:
+	# Yield once so AiTurn begins waiting before a no-animation action completes.
+	await get_tree().process_frame
+	var battle_presentation: Dictionary = result.get("battle_presentation", {})
+	if not battle_presentation.is_empty() and battle_animation_player != null:
+		await battle_animation_player.play_duel_result(
+			int(battle_presentation.get("result_code", 0)),
+			battle_presentation.get("card_ids", []),
+			battle_presentation.get("owners", []),
+			battle_presentation.get("old_life_points", []),
+			battle_presentation.get("new_life_points", []),
+			card_database,
+			duel_random
+		)
+	else:
+		var events := duel_effect_presentation.events_for(result) if duel_effect_presentation != null else []
+		_consume_duel_effect_presentation(result)
+		for event: Dictionary in events:
+			if event.get("kind", "") == "cards":
+				await get_tree().create_timer(1.2).timeout
+				break
+	_build_screen()
 	var audio_id := int(result.get("audio_id", 0))
 	if audio_id > 0 and audio_dispatch != null:
 		audio_dispatch.play_game_audio(audio_id)
+	if ai_turn != null:
+		ai_turn.complete_action_presentation()
 
 func _consume_duel_effect_presentation(result: Variant) -> void:
 	if duel_effect_presentation == null:
@@ -885,7 +911,7 @@ func execute_ai_action(duel_state: SacredDuelState, acting_side: int, candidate:
 func run_opponent_turn(duel_state: SacredDuelState, acting_side: int, random_service: SacredRandom = null, max_actions: int = -1) -> Dictionary:
 	if ai_turn == null:
 		return {"completed": false, "reason": "ai_turn_unavailable", "actions": []}
-	return ai_turn.run_opponent_turn(duel_state, acting_side, random_service, max_actions)
+	return await ai_turn.run_opponent_turn(duel_state, acting_side, random_service, max_actions)
 
 ## Connects a game-owned duel state to the playable Godot battlefield view.
 func show_duel_state(duel_state: SacredDuelState) -> void:
@@ -924,7 +950,9 @@ func begin_recovered_duel(opponent_id: int, wagered_card_id: int = 0) -> bool:
 	_duel_outcome_resolved = false
 	duel_graphics.select(active_duel_state.terrain, 0)
 	audio_dispatch.play_game_audio(int(opponent.get("music_id", 0)))
-	_advance_recovered_duel_to_player()
+	_ai_turn_running = true
+	show_duel_state(active_duel_state)
+	call_deferred("_advance_recovered_duel_to_player")
 	return true
 
 ## Ends the current player turn, advances the recovered turn state, runs any
@@ -934,17 +962,24 @@ func finish_recovered_player_turn() -> Dictionary:
 		return {"accepted": false, "reason": "duel_not_active"}
 	if active_duel_state.active_side != 0:
 		return {"accepted": false, "reason": "not_player_turn"}
+	if _ai_turn_running:
+		return {"accepted": false, "reason": "opponent_turn_in_progress"}
+	_ai_turn_running = true
 	player_duel_controller.player_turn_done = true
 	duel_flow.finish_turn(active_duel_state)
-	return _advance_recovered_duel_to_player()
+	call_deferred("_advance_recovered_duel_to_player")
+	return {"accepted": true, "action": "end_player_turn"}
 
 func _advance_recovered_duel_to_player() -> Dictionary:
 	if active_duel_state == null:
+		_ai_turn_running = false
 		return {"accepted": false, "reason": "duel_not_initialized"}
+	_ai_turn_running = true
 	for _turn_guard in range(3):
 		if active_duel_state.status != SacredDuelState.Status.ACTIVE or active_duel_state.has_ended():
 			var outcome := _resolve_recovered_duel_outcome()
 			show_duel_state(active_duel_state)
+			_ai_turn_running = false
 			return {"accepted": true, "action": "duel_finished", "outcome": outcome}
 		var acting_side := active_duel_state.active_side
 		_prepare_recovered_side_turn(acting_side)
@@ -958,15 +993,20 @@ func _advance_recovered_duel_to_player() -> Dictionary:
 		if acting_side == 0:
 			duel_random.state = current_save.random_state & 0xFFFFFFFF
 			show_duel_state(active_duel_state)
+			_ai_turn_running = false
 			return {"accepted": true, "action": "player_turn", "turn": active_duel_state.turn_number}
-		var ai_report := run_opponent_turn(active_duel_state, acting_side, duel_random)
+		_ai_turn_running = true
+		var ai_report: Dictionary = await run_opponent_turn(active_duel_state, acting_side, duel_random)
 		current_save.random_state = duel_random.state
+		await _wait_scene_frames(30)
 		if not bool(ai_report.get("completed", false)):
 			show_duel_state(active_duel_state)
+			_ai_turn_running = false
 			return {"accepted": false, "reason": str(ai_report.get("reason", "opponent_turn_failed")), "ai": ai_report}
 		if active_duel_state.has_ended():
 			continue
 		duel_flow.finish_turn(active_duel_state)
+	_ai_turn_running = false
 	return {"accepted": false, "reason": "duel_turn_guard_exceeded"}
 
 func _prepare_recovered_side_turn(side_id: int) -> void:
