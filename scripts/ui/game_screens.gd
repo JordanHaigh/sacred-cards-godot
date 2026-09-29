@@ -56,6 +56,7 @@ const BATTLE_SETUP_SCRIPT = preload("res://scripts/systems/battle_setup.gd")
 const BATTLE_STATE_SCRIPT = preload("res://scripts/state/battle_state.gd")
 const OPPONENT_DATABASE_SCRIPT = preload("res://scripts/data/opponent_database.gd")
 const DUEL_FLOW_SCRIPT = preload("res://scripts/systems/duel_flow.gd")
+const DUEL_EFFECT_PRESENTATION_SCRIPT = preload("res://scripts/systems/duel_effect_presentation.gd")
 const DUEL_MESSAGE_CATALOG_SCRIPT = preload("res://scripts/data/duel_message_catalog.gd")
 const SACRED_RANDOM_SCRIPT = preload("res://scripts/systems/sacred_random.gd")
 const DUEL_DECK_SCRIPT = preload("res://scripts/systems/duel_deck.gd")
@@ -103,11 +104,14 @@ var pre_duel_display: PreDuelDisplay
 var pre_duel_opponent_id := 0
 var opponent_database: OpponentDatabase
 var duel_flow: DuelFlow
+var duel_effect_presentation: DuelEffectPresentation
 var duel_message_catalog: DuelMessageCatalog
 var _pending_duel_messages: Array[Dictionary] = []
 var _duel_message_active := false
 var _duel_stats_visible := false
 var _duel_hand_visible := false
+var _pending_duel_effect_cards: Array[int] = []
+var _pending_duel_effect_until_msec := 0
 var duel_random: SacredRandom
 var duel_rewards: DuelRewards
 var active_opponent_id := -1
@@ -205,6 +209,7 @@ func _ready() -> void:
 	if opponent_load_error != OK:
 		push_error("Could not load recovered opponent duel data (error %d)." % opponent_load_error)
 	duel_flow = DUEL_FLOW_SCRIPT.new()
+	duel_effect_presentation = DUEL_EFFECT_PRESENTATION_SCRIPT.new()
 	duel_random = SACRED_RANDOM_SCRIPT.new()
 	duel_rewards = DUEL_REWARDS_SCRIPT.new(opponent_database)
 	card_art = CARD_ART_SCRIPT.new()
@@ -235,6 +240,7 @@ func _ready() -> void:
 	if ai_candidates_error != OK:
 		push_error("Could not load the recovered AI candidate table (error %d)." % ai_candidates_error)
 	ai_turn = AI_TURN_SCRIPT.new(ai_candidate_database, ai_validation, ai_scoring, ai_actions, duel_special_wins)
+	ai_turn.action_completed.connect(_on_ai_duel_action_completed)
 	duel_effect_bindings = EFFECT_RULE_BINDINGS_SCRIPT.new()
 	if not duel_effect_bindings.install(duel_effect_dispatcher, card_effect_rules, effect_family_rules, spell_effect_rules, monster_effect_rules):
 		push_error("Could not bind recovered duel effect rules to the metadata dispatcher.")
@@ -463,9 +469,33 @@ func dispatch_duel_effect(card_id: int, duel_state: SacredDuelState, row: int, c
 		"presentation_suppressed": presentation_suppressed,
 		"random_service": random_service,
 	}
-	if monster_effect:
-		return duel_effect_dispatcher.dispatch_metadata_1b(card_id, context)
-	return duel_effect_dispatcher.dispatch_metadata_1a(card_id, context)
+	var result: Variant = duel_effect_dispatcher.dispatch_metadata_1b(card_id, context) if monster_effect else duel_effect_dispatcher.dispatch_metadata_1a(card_id, context)
+	if not presentation_suppressed:
+		_consume_duel_effect_presentation(result)
+	return result
+
+func _on_ai_duel_action_completed(_candidate_id: int, _action_kind: int, result: Dictionary) -> void:
+	_consume_duel_effect_presentation(result)
+
+func _consume_duel_effect_presentation(result: Variant) -> void:
+	if duel_effect_presentation == null:
+		return
+	for event: Dictionary in duel_effect_presentation.events_for(result):
+		match StringName(event.get("kind", "")):
+			&"sound":
+				if audio_dispatch != null:
+					audio_dispatch.play_game_audio(int(event.get("sound_id", 0)))
+			&"cards":
+				_pending_duel_effect_cards.assign(event.get("card_ids", []))
+				_pending_duel_effect_until_msec = Time.get_ticks_msec() + 1200
+				if is_instance_valid(duel_ui):
+					duel_ui.present_effect_cards(_pending_duel_effect_cards)
+			&"terrain":
+				if active_duel_state != null:
+					active_duel_state.terrain = int(event.get("terrain", active_duel_state.terrain))
+					duel_graphics.select(active_duel_state.terrain, 0)
+			&"message":
+				_toast(String(event.get("text", "")))
 
 func present_duel_text(text: String, card_id: int = 0, other_card_id: int = 0, number: int = 0, other_number: int = 0, language: int = 0, player_name: String = "") -> void:
 	if duel_text_presenter == null:
@@ -580,9 +610,7 @@ func resolve_player_attack(duel_state: SacredDuelState, attacker_column: int, ta
 			rival_lp = duel_state.sides[1].life_points
 			if audio_dispatch != null:
 				audio_dispatch.play_game_audio(66)
-				var presentation: Array = trap_result.get("presentation", [])
-				if not presentation.is_empty() and presentation.back() is int:
-					audio_dispatch.play_game_audio(int(presentation.back()))
+			_consume_duel_effect_presentation(trap_result)
 			return {"accepted": true, "action": "attack_trap_activated", "trap": trap_match, "trap_result": trap_result, "duel_status": duel_state.status}
 	var setup: Dictionary
 	if target_column < 0:
@@ -1464,6 +1492,12 @@ func _draw_duel() -> void:
 		screen_root.add_child(duel_ui)
 		duel_ui.present(active_duel_state, card_database, player_duel_controller.cursor)
 		duel_ui.set_inspection_overlays(_duel_stats_visible, duel_menus.opponent_hand_cards(), _duel_hand_visible)
+		var effect_overlay_remaining := _pending_duel_effect_until_msec - Time.get_ticks_msec()
+		if effect_overlay_remaining > 0 and not _pending_duel_effect_cards.is_empty():
+			duel_ui.present_effect_cards(_pending_duel_effect_cards, effect_overlay_remaining)
+		else:
+			_pending_duel_effect_cards.clear()
+			_pending_duel_effect_until_msec = 0
 		if duel_menus != null and duel_menus.menu == DuelMenus.Menu.CONTEXT:
 			_draw_duel_context_panel()
 		if duel_menus != null and duel_menus.menu == DuelMenus.Menu.MONSTER_ACTION:
