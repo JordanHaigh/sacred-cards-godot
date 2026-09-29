@@ -25,14 +25,17 @@ func _init() -> void:
 func initialize_duel(duel: SacredDuelState, player_deck: Array[int], opponent_deck: Array[int], terrain: int, player_lp: int, opponent_lp: int, random: SacredRandom) -> void:
 	for side in duel.sides:
 		side.deck.clear()
+		side.deck_remaining_count = 0
 		side.hand.clear()
 		side.hand_flags.clear()
 		for slot in side.monster_zones:
 			slot.clear()
 		for slot in side.back_row_zones:
 			slot.clear()
-	duel.sides[0].deck = _compact_deck(player_deck)
-	duel.sides[1].deck = _compact_deck(opponent_deck)
+	duel.sides[0].deck = _fixed_deck(player_deck)
+	duel.sides[1].deck = _fixed_deck(opponent_deck)
+	duel.sides[0].deck_remaining_count = _count_deck(duel.sides[0].deck)
+	duel.sides[1].deck_remaining_count = _count_deck(duel.sides[1].deck)
 	_shuffle(duel.sides[0].deck, random)
 	_shuffle(duel.sides[1].deck, random)
 	duel.active_side = random.byte_inclusive(0, 1)
@@ -49,6 +52,11 @@ func initialize_duel(duel: SacredDuelState, player_deck: Array[int], opponent_de
 	for side in duel.sides:
 		for _draw_index in range(5):
 			DECK_DRAW_SCRIPT.draw_card(side)
+		for side_index in range(duel.sides.size()):
+			if duel.sides[side_index].deck_out:
+				duel.auxiliary_flags[side_index] = 2
+		if duel.auxiliary_flags[0] == 2 or duel.auxiliary_flags[1] == 2:
+			duel.status = SacredDuelState.Status.PLAYER_TWO_WON if duel.auxiliary_flags[0] == 2 else SacredDuelState.Status.PLAYER_ONE_WON
 
 func finish_turn(duel: SacredDuelState) -> void:
 	if duel.status != SacredDuelState.Status.ACTIVE:
@@ -148,26 +156,24 @@ func _push_message(report: Dictionary, message_id: int, number: int) -> void:
 	report.messages = messages
 
 func _shuffle(cards: Array[int], random: SacredRandom) -> void:
-	if cards.is_empty():
-		return
 	for _swap_index in range(200):
 		var a := random.byte_inclusive(0, 39)
 		var b := random.byte_inclusive(0, 39)
-		if a >= cards.size() or b >= cards.size():
-			continue
 		var value := cards[a]
 		cards[a] = cards[b]
 		cards[b] = value
 
-func _compact_deck(cards: Array[int]) -> Array[int]:
+func _fixed_deck(cards: Array[int]) -> Array[int]:
 	var result: Array[int] = []
-	for card_id in cards:
-		if card_id == 0:
-			break
-		result.append(card_id)
-		if result.size() == 40:
-			break
+	for index in range(40):
+		result.append(int(cards[index]) if index < cards.size() else 0)
 	return result
+
+func _count_deck(cards: Array[int]) -> int:
+	var count := 0
+	while count < 40 and cards[count] != 0:
+		count += 1
+	return count
 
 func _return_borrowed_monsters(duel: SacredDuelState) -> void:
 	var source_side := duel.sides[duel.active_side]
