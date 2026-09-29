@@ -94,8 +94,8 @@ func _key(card_id: int, method: int, collection: Dictionary, buy_stock: Dictiona
 			if language >= 0 and language < name_ranks.size() and card_id >= 0 and card_id < name_ranks[language].size():
 				rank = int(name_ranks[language][card_id])
 			return 900 - rank + (900 if count > 0 else 0)
-		3: return _packed_key(base, card.attack + 1 if card != null else 1, count)
-		4: return _packed_key(base, card.defense + 1 if card != null else 1, count)
+		3: return _packed_key(base, ((card.attack + 1) & 0xffff) if card != null else 1, count)
+		4: return _packed_key(base, ((card.defense + 1) & 0xffff) if card != null else 1, count)
 		5: return _packed_key(base, 255 - card.card_type if card != null else 255, count)
 		6: return _packed_key(base, (256 - card.attribute) & 255 if card != null else 0, count)
 		7: return _packed_key(base, card.cost if card != null else 0, count)
