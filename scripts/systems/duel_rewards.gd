@@ -49,10 +49,12 @@ func award_money(save_data: PlayerSaveData, opponent_id: int, random: SacredRand
 	var low := low_product & 0xFFFFFFFF
 	var high := ((high_product + (low_product >> 32)) & 0xFFFFFFFF)
 	var available := MONEY_LIMIT - save_data.money
-	if high > 0 or low > available:
+	var available_high := available >> 32
+	var available_low := available & 0xFFFFFFFF
+	if high > available_high or (high == available_high and low > available_low):
 		save_data.money = MONEY_LIMIT
 	else:
-		save_data.money += low
+		save_data.money += high * 4294967296 + low
 	return {"high": high, "low": low}
 
 func _selected_table(opponent_id: int, table_type: String) -> Array:
