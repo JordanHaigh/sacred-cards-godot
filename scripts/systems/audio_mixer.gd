@@ -5,12 +5,10 @@ class_name GodotAudioMixer
 ## This service only manages native players and a small reusable effect pool.
 const PSG_RULES_SCRIPT := preload("res://scripts/systems/audio_psg.gd")
 const PSG_SAMPLE_RATE := 44100
-const EFFECT_PLAYER_COUNT := 12
+const NATIVE_SECONDARY_PLAYER_COUNT := 10
 
 var music_player: AudioStreamPlayer
-var effect_music_player: AudioStreamPlayer
 var effect_players: Array[AudioStreamPlayer] = []
-var _effect_started_at: Array[int] = []
 var _music_fade_interval := 0
 var _music_fade_countdown := 0
 var _music_fade_volume := 256
@@ -28,11 +26,9 @@ func _ready() -> void:
 	_ensure_bus("SFX")
 	if music_player == null:
 		music_player = _make_player("SceneMusic", "Music")
-	if effect_music_player == null:
-		effect_music_player = _make_player("EffectMusic", "Music")
-	while effect_players.size() < EFFECT_PLAYER_COUNT:
-		effect_players.append(_make_player("Effect_%02d" % effect_players.size(), "SFX"))
-		_effect_started_at.append(0)
+	while effect_players.size() < NATIVE_SECONDARY_PLAYER_COUNT:
+		var native_player_index := effect_players.size() + 1
+		effect_players.append(_make_player("M4A_Player_%02d" % native_player_index, "SFX"))
 	psg_pitch_rules = PSG_RULES_SCRIPT.new()
 	if not psg_pitch_rules.load_tables():
 		push_error("Could not load recovered PSG pitch tables.")
@@ -173,30 +169,33 @@ func play_music(stream: AudioStream, song_id: int, restart: bool = false) -> voi
 	music_player.set_meta("song_id", song_id)
 	music_player.play()
 
-func play_effect_music(stream: AudioStream, song_id: int, restart: bool = false) -> void:
-	if stream == null or effect_music_player == null: return
-	if not restart and effect_music_player.playing and effect_music_player.stream == stream: return
-	effect_music_player.stream = stream
-	effect_music_player.set_meta("song_id", song_id)
-	effect_music_player.play()
+func play_native_secondary(
+		stream: AudioStream,
+		song_id: int,
+		category: int,
+		priority: int,
+		native_player_index: int,
+		track_capacity: int,
+		priority_enabled: bool,
+		restart: bool
+	) -> bool:
+	if stream == null or native_player_index < 1 or native_player_index > effect_players.size(): return false
+	var player := effect_players[native_player_index - 1]
+	if not restart and player.playing and int(player.get_meta("song_id", -1)) == song_id:
+		return true
+	if priority_enabled and player.playing and priority < int(player.get_meta("priority", 0)):
+		return true
+	player.stream = stream
+	player.set_meta("song_id", song_id)
+	player.set_meta("category", category)
+	player.set_meta("priority", priority)
+	player.set_meta("native_player", native_player_index)
+	player.set_meta("track_capacity", track_capacity)
+	player.play()
+	return true
 
-func play_effect(stream: AudioStream, priority: int = 0) -> void:
-	if stream == null or effect_players.is_empty(): return
-	var chosen: AudioStreamPlayer
-	for index in range(effect_players.size()):
-		if not effect_players[index].playing:
-			chosen = effect_players[index]
-			_effect_started_at[index] = Time.get_ticks_msec()
-			break
-	if chosen == null:
-		var oldest_index := 0
-		for index in range(1, _effect_started_at.size()):
-			if _effect_started_at[index] < _effect_started_at[oldest_index]: oldest_index = index
-		oldest_index = posmod(oldest_index + (1 if priority > 0 else 0), effect_players.size())
-		chosen = effect_players[oldest_index]
-		_effect_started_at[oldest_index] = Time.get_ticks_msec()
-	chosen.stream = stream
-	chosen.play()
+func stop_native_music() -> void:
+	if music_player != null: music_player.stop()
 
 func fade_music(step_interval: int) -> void:
 	if step_interval <= 0 or music_player == null or not music_player.playing: return
@@ -217,12 +216,15 @@ func _cancel_music_fade(restore_volume: bool) -> void:
 	_music_fade_song_id = -1
 
 func stop_effect_music() -> void:
-	if effect_music_player != null: effect_music_player.stop()
+	stop_native_secondary(8)
+
+func stop_native_secondary(native_player_index: int) -> void:
+	if native_player_index < 1 or native_player_index > effect_players.size(): return
+	effect_players[native_player_index - 1].stop()
 
 func stop_all() -> void:
 	if music_player != null: music_player.stop()
 	_cancel_music_fade(true)
-	stop_effect_music()
 	for player in effect_players: player.stop()
 
 func _make_player(player_name: String, preferred_bus: String) -> AudioStreamPlayer:
