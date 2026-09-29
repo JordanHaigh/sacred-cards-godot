@@ -104,8 +104,8 @@ var pre_duel_opponent_id := 0
 var opponent_database: OpponentDatabase
 var duel_flow: DuelFlow
 var duel_message_catalog: DuelMessageCatalog
-var _pending_transformation_messages: Array[Dictionary] = []
-var _transformation_message_active := false
+var _pending_duel_messages: Array[Dictionary] = []
+var _duel_message_active := false
 var duel_random: SacredRandom
 var duel_rewards: DuelRewards
 var active_opponent_id := -1
@@ -255,7 +255,8 @@ func _ready() -> void:
 	if not duel_message_catalog.load_default():
 		push_error("Could not load recovered duel messages: %s" % duel_message_catalog.load_error)
 	duel_flow.card_transformed.connect(_on_duel_card_transformed)
-	duel_text_presenter.text_finished.connect(_on_transformation_message_finished)
+	duel_flow.duel_message_requested.connect(_on_duel_flow_message_requested)
+	duel_text_presenter.text_finished.connect(_on_duel_message_finished)
 	duel_summon_rules = SUMMON_RULES_SCRIPT.new()
 	_load_spell_target_classes()
 	deck_rules = DECK_BUILDER_SCRIPT.new()
@@ -459,26 +460,37 @@ func present_duel_text(text: String, card_id: int = 0, other_card_id: int = 0, n
 	duel_text_presenter.begin(text, card_id, other_card_id, number, other_number, language, player_name)
 
 func _on_duel_card_transformed(_side_id: int, _column: int, previous_card_id: int, new_card_id: int) -> void:
+	_enqueue_duel_message(14, 0, previous_card_id, new_card_id)
+
+
+func _on_duel_flow_message_requested(message_id: int, number: int) -> void:
+	# Transformation events carry both card IDs through card_transformed.
+	if message_id == 14:
+		return
+	var card_id := number if message_id == 5 else 0
+	_enqueue_duel_message(message_id, number, card_id, 0)
+
+func _enqueue_duel_message(message_id: int, number: int, card_id: int, other_card_id: int) -> void:
 	if duel_message_catalog == null or current_save == null:
 		return
-	var message := duel_message_catalog.get_message(14)
+	var message := duel_message_catalog.get_message(message_id)
 	if message.is_empty():
 		return
-	_pending_transformation_messages.append({"text": message, "previous_card_id": previous_card_id, "new_card_id": new_card_id})
-	_present_next_transformation_message()
+	_pending_duel_messages.append({"text": message, "number": number, "card_id": card_id, "other_card_id": other_card_id})
+	_present_next_duel_message()
 
-func _present_next_transformation_message() -> void:
-	if _transformation_message_active or _pending_transformation_messages.is_empty():
+func _present_next_duel_message() -> void:
+	if _duel_message_active or _pending_duel_messages.is_empty():
 		return
-	var message: Dictionary = _pending_transformation_messages.pop_front()
-	_transformation_message_active = true
-	present_duel_text(String(message.text), int(message.previous_card_id), int(message.new_card_id), 0, 0, 0, current_save.player_name)
+	var message: Dictionary = _pending_duel_messages.pop_front()
+	_duel_message_active = true
+	present_duel_text(String(message.text), int(message.card_id), int(message.other_card_id), int(message.number), 0, 0, current_save.player_name)
 
-func _on_transformation_message_finished() -> void:
-	if not _transformation_message_active:
+func _on_duel_message_finished() -> void:
+	if not _duel_message_active:
 		return
-	_transformation_message_active = false
-	call_deferred("_present_next_transformation_message")
+	_duel_message_active = false
+	call_deferred("_present_next_duel_message")
 
 func advance_duel_text(max_steps: int = 1) -> Dictionary:
 	return duel_text_presenter.run_to_next_pause(max_steps) if duel_text_presenter != null else {"finished": true}
