@@ -22,7 +22,7 @@ static func apply_terrain(stat_input: int, modifier_input: int) -> int:
 	var stat := stat_input & 0xFFFF
 	var result: int = stat
 	match modifier_input & 0xFF:
-		1: result = int(float(stat) * (5.0 / 9.0)) & 0xFFFF
+		1: result = int(float(stat) * 0.7) & 0xFFFF
 		3:
 			result = int(float(stat) * 1.3) & 0xFFFF
 			if result > 65533:
