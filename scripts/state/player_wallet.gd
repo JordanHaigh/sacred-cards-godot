@@ -8,8 +8,14 @@ const MONEY_LIMIT := 9999999999999
 func can_afford(amount: int) -> bool:
 	return amount >= 0 and gold >= amount
 
+func can_receive(amount: int) -> bool:
+	return amount >= 0 and amount <= MONEY_LIMIT - gold
+
 func add(amount: int) -> void:
-	gold = mini(gold + amount, MONEY_LIMIT)
+	if amount < 0 or amount > MONEY_LIMIT - gold:
+		gold = MONEY_LIMIT
+	else:
+		gold += amount
 
 func spend(amount: int) -> bool:
 	if not can_afford(amount):
