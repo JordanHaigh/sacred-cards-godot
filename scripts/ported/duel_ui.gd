@@ -24,6 +24,8 @@ var detail_card_id := 0
 var stats_overlay_visible := false
 var opponent_hand_overlay: Array[int] = []
 var opponent_hand_overlay_visible := false
+var effect_card_overlay: Array[int] = []
+var effect_overlay_until_msec := 0
 
 func present(state: SacredDuelState, database: CardDatabase, selected_cell: Vector2i) -> void:
 	duel_state = state
@@ -38,6 +40,19 @@ func set_inspection_overlays(show_stats: bool, opponent_hand: Array[int], show_h
 	opponent_hand_overlay_visible = show_hand
 	queue_redraw()
 
+func present_effect_cards(card_ids: Array[int], duration_msec: int = 1200) -> void:
+	effect_card_overlay = card_ids.duplicate()
+	effect_overlay_until_msec = Time.get_ticks_msec() + maxi(duration_msec, 1)
+	queue_redraw()
+
+func _process(_delta: float) -> void:
+	if effect_overlay_until_msec == 0:
+		return
+	queue_redraw()
+	if Time.get_ticks_msec() >= effect_overlay_until_msec:
+		effect_overlay_until_msec = 0
+		effect_card_overlay.clear()
+
 func _draw() -> void:
 	if duel_state == null or card_database == null: return
 	draw_rect(Rect2(Vector2.ZERO, size), Color("10171b"), true)
@@ -48,6 +63,8 @@ func _draw() -> void:
 		_draw_opponent_hand_overlay()
 	elif stats_overlay_visible:
 		_draw_stats_overlay()
+	if effect_overlay_until_msec > 0:
+		_draw_effect_cards_overlay()
 
 func _draw_stats_overlay() -> void:
 	var panel := Rect2(3, 23, 234, 101)
@@ -90,6 +107,30 @@ func _draw_opponent_hand_overlay() -> void:
 			draw_rect(rect, Color("293d4b"), true)
 			draw_rect(rect, Color("758596"), false)
 		_draw_text(card.name.left(8).to_upper() if card != null else "CARD", rect.position + Vector2(1, 54), 5, PAPER)
+
+func _draw_effect_cards_overlay() -> void:
+	var count := mini(effect_card_overlay.size(), 3)
+	if count == 0:
+		return
+	var card_width := 48.0
+	var card_height := 68.0
+	var gap := 8.0
+	var start_x := (size.x - count * card_width - (count - 1) * gap) * 0.5
+	var top := maxf((size.y - card_height) * 0.5, 54.0)
+	var panel := Rect2(start_x - 5, top - 16, count * card_width + (count - 1) * gap + 10, card_height + 24)
+	draw_rect(panel, Color(0.035, 0.05, 0.055, 0.98), true)
+	draw_rect(panel, Color("d0b46f"), false)
+	_draw_text("EFFECT", Vector2(panel.position.x + 4, panel.position.y + 11), 6, GOLD)
+	for index in range(count):
+		var card_id := effect_card_overlay[index]
+		var rect := Rect2(Vector2(start_x + index * (card_width + gap), top), Vector2(card_width, card_height))
+		var card := card_database.get_card(card_id)
+		if card != null and ResourceLoader.exists(card.miniature_path):
+			draw_texture_rect(load(card.miniature_path) as Texture2D, rect, false)
+		else:
+			draw_rect(rect, Color("293d4b"), true)
+			draw_rect(rect, Color("758596"), false)
+		_draw_text(card.name.left(10).to_upper() if card != null else "CARD", rect.position + Vector2(0, card_height + 8), 5, PAPER)
 
 func _draw_hud() -> void:
 	var rival := duel_state.side(1 - duel_state.active_side)
