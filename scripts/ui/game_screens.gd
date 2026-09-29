@@ -248,6 +248,7 @@ func _ready() -> void:
 	if ai_candidates_error != OK:
 		push_error("Could not load the recovered AI candidate table (error %d)." % ai_candidates_error)
 	ai_turn = AI_TURN_SCRIPT.new(ai_candidate_database, ai_validation, ai_scoring, ai_actions, duel_special_wins)
+	ai_turn.action_starting.connect(_on_ai_duel_action_starting)
 	ai_turn.action_completed.connect(_on_ai_duel_action_completed)
 	duel_effect_bindings = EFFECT_RULE_BINDINGS_SCRIPT.new()
 	if not duel_effect_bindings.install(duel_effect_dispatcher, card_effect_rules, effect_family_rules, spell_effect_rules, monster_effect_rules):
@@ -485,8 +486,15 @@ func dispatch_duel_effect(card_id: int, duel_state: SacredDuelState, row: int, c
 		_consume_duel_effect_presentation(result)
 	return result
 
+func _on_ai_duel_action_starting(_candidate_id: int, action_kind: int) -> void:
+	if action_kind == 23 and audio_dispatch != null:
+		audio_dispatch.play_game_audio(64)
+
 func _on_ai_duel_action_completed(_candidate_id: int, _action_kind: int, result: Dictionary) -> void:
 	_consume_duel_effect_presentation(result)
+	var audio_id := int(result.get("audio_id", 0))
+	if audio_id > 0 and audio_dispatch != null:
+		audio_dispatch.play_game_audio(audio_id)
 
 func _consume_duel_effect_presentation(result: Variant) -> void:
 	if duel_effect_presentation == null:
