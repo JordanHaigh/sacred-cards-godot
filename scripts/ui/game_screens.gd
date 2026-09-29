@@ -779,8 +779,7 @@ func _on_duel_context_selected(action_id: int, duel_state: SacredDuelState) -> v
 				var definition := card_database.get_card(card_id)
 				if cell.y == 4:
 					duel_state.remember_grave_card(duel_state.active_side, card_id, definition != null and definition.frame_type <= 2, true)
-					side.hand.remove_at(cell.x)
-					if cell.x < side.hand_flags.size(): side.hand_flags.remove_at(cell.x)
+					side.remove_hand_at(cell.x)
 				else:
 					duel_state.discard_slot(duel_state.active_side, cell.y, cell.x, cell.y == 2 and definition != null and definition.frame_type <= 2, true)
 				if audio_dispatch != null: audio_dispatch.play_game_audio(62)
