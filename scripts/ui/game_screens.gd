@@ -606,7 +606,7 @@ func process_player_duel_code(code: int, duel_state: SacredDuelState) -> Diction
 		PlayerDuelController.InputCode.CANCEL:
 			var cancel_result := player_duel_controller.cancel_selection()
 			if str(cancel_result.get("action", "")) == "open_context_menu":
-				duel_menus.open_context(player_duel_controller.cursor, duel_state.sides[0].life_points, duel_state.sides[1].life_points, duel_state.sides[0].deck.size(), duel_state.sides[1].deck.size(), duel_state.absolute_graveyard_ids[0], duel_state.absolute_graveyard_ids[1])
+				duel_menus.open_context(player_duel_controller.cursor, duel_state.sides[0].life_points, duel_state.sides[1].life_points, duel_state.sides[0].deck_remaining_count, duel_state.sides[1].deck_remaining_count, duel_state.absolute_graveyard_ids[0], duel_state.absolute_graveyard_ids[1])
 			return cancel_result
 		PlayerDuelController.InputCode.END_PLAYER_TURN:
 			return finish_recovered_player_turn()
@@ -1018,11 +1018,7 @@ func _prepare_recovered_side_turn(side_id: int) -> void:
 	if side_id < 0 or side_id >= active_duel_state.sides.size():
 		return
 	var side := active_duel_state.sides[side_id]
-	if side.hand.size() >= 5:
-		return
-	var drawn_card := DUEL_DECK_SCRIPT.draw_card(side)
-	if drawn_card != 0:
-		return
+	DUEL_DECK_SCRIPT.draw_card(side)
 	if side.deck_out:
 		active_duel_state.auxiliary_flags[side_id] = 2
 		active_duel_state.status = SacredDuelState.Status.PLAYER_TWO_WON if side_id == 0 else SacredDuelState.Status.PLAYER_ONE_WON
