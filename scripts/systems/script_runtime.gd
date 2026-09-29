@@ -160,6 +160,15 @@ func _physics_process(_delta: float) -> void:
 				if awaited_generation != execution_generation: return
 				blocking_service_waiting = false
 				if not running: return
+			if result.has("duel_opponent_id"):
+				blocking_service_waiting = true
+				awaited_generation = execution_generation
+				var outcome: Variant = await _service(&"duel", [int(result.duel_opponent_id), self])
+				if awaited_generation != execution_generation: return
+				blocking_service_waiting = false
+				if not running: return
+				state.branch_flags = 0 if int(outcome) == 1 else 1
+				state.portrait = 0
 		_: pass
 	token_processed.emit(node_id, token_index - 1, token)
 	_update_portrait()
