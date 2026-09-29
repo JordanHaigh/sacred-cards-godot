@@ -23,7 +23,7 @@ var selection := 0
 var state: Dictionary = {}
 
 func _init() -> void:
-	var ascii_glyphs: Dictionary = PIXEL_TEXT_SCRIPT.GLYPHS
+	var ascii_glyphs: Dictionary = PIXEL_TEXT_SCRIPT.load_ascii_glyphs()
 	for codepoint: Variant in ascii_glyphs:
 		glyph_codes[int(codepoint)] = int(ascii_glyphs[codepoint])
 
