@@ -634,18 +634,23 @@ func process_player_duel_code(code: int, duel_state: SacredDuelState) -> Diction
 			return {"accepted": true, "action": "show_opponent_hand", "cards": duel_menus.opponent_hand_cards()}
 		PlayerDuelController.InputCode.CONFIRM:
 			if player_duel_controller.mode == PlayerDuelController.Mode.PLACE_CARD:
-				return player_duel_controller.confirm_placement(duel_state, side_id, duel_summon_rules, card_database)
+				var placement_result := player_duel_controller.confirm_placement(duel_state, side_id, duel_summon_rules, card_database)
+				if bool(placement_result.get("accepted", false)):
+					if audio_dispatch != null: audio_dispatch.play_game_audio(58)
+					if int(placement_result.get("row", -1)) == 3:
+						duel_special_wins.check_destiny_board(duel_state, side_id)
+				return placement_result
 			if player_duel_controller.mode == PlayerDuelController.Mode.SPELL_TARGET:
 				var target_result := player_duel_controller.validate_spell_target(duel_state, side_id, 1)
 				if not bool(target_result.get("accepted", false)): return target_result
 				var effect_result: Variant = dispatch_duel_effect(int(target_result.card_id), duel_state, int(target_result.target_row), int(target_result.target_column), int(target_result.source_row), int(target_result.source_column))
-				if bool(effect_result.get("resolved", false)): player_duel_controller.finish_target_action()
+				if bool(effect_result.get("resolved", false)): player_duel_controller.finish_spell_target_action()
 				return effect_result if effect_result is Dictionary else {"resolved": true, "result": effect_result}
 			if player_duel_controller.mode == PlayerDuelController.Mode.ATTACK_TARGET:
 				var opponent_slot := duel_state.side(1 - side_id).monster_zones[player_duel_controller.cursor.x]
 				if opponent_slot.is_empty(): return {"accepted": false, "reason": "empty_attack_target"}
 				var attack_result := resolve_player_attack(duel_state, player_duel_controller.saved_cursor.x, player_duel_controller.cursor.x)
-				if bool(attack_result.get("accepted", false)): player_duel_controller.finish_target_action()
+				if bool(attack_result.get("accepted", false)): player_duel_controller.finish_attack_target_action()
 				return attack_result
 			return _confirm_player_field_selection(duel_state, side_id)
 	return {"accepted": true, "action": "cursor_moved", "cursor": player_duel_controller.cursor, "view_row": player_duel_controller.view_row}
