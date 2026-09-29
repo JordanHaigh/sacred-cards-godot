@@ -349,6 +349,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 				elif screen == "card_detail": _show(card_detail_return_screen)
 				elif screen == "shop": _handle_shop_escape()
 				elif screen == "deck": _handle_deck_builder_key(2)
+				elif screen == "title" and title_has_save: _return_to_continue_title()
 				else: _show("title")
 			KEY_F1: _show("title")
 			KEY_F2: _show("duel")
@@ -356,24 +357,26 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			KEY_F4: _enter_deck_hub()
 			KEY_F5: _request_password_entry()
 			KEY_LEFT:
-				if screen == "card_detail": _card_detail_page(-1)
+				if screen == "title": pass
+				elif screen == "card_detail": _card_detail_page(-1)
 				elif screen == "shop": _handle_shop_direction(Vector2i(-1, 0))
 				elif screen == "deck" and deck_builder_menu.popup in [DeckBuilderMenu.Popup.COLLECTION_SORT, DeckBuilderMenu.Popup.DECK_SORT]: _handle_deck_builder_key(64)
 				else: _step_selection(-1)
 			KEY_RIGHT:
-				if screen == "card_detail": _card_detail_page(1)
+				if screen == "title": pass
+				elif screen == "card_detail": _card_detail_page(1)
 				elif screen == "shop": _handle_shop_direction(Vector2i(1, 0))
 				elif screen == "deck" and deck_builder_menu.popup in [DeckBuilderMenu.Popup.COLLECTION_SORT, DeckBuilderMenu.Popup.DECK_SORT]: _handle_deck_builder_key(128)
 				else: _step_selection(1)
 			KEY_UP:
-				if screen == "title" and title_has_save: _toggle_title_choice()
+				if screen == "title": pass
 				elif screen == "shop": _handle_shop_direction(Vector2i(0, -1))
 				elif screen == "deck_hub": _handle_deck_hub_buttons(DeckManagement.BUTTON_UP)
 				elif screen == "deck" and deck_builder_menu.popup != DeckBuilderMenu.Popup.NONE: _handle_deck_builder_key(64)
 				elif screen == "deck": _move_deck_selection(1, false)
 				else: _step_selection(-1)
 			KEY_DOWN:
-				if screen == "title" and title_has_save: _toggle_title_choice()
+				if screen == "title": pass
 				elif screen == "shop": _handle_shop_direction(Vector2i(0, 1))
 				elif screen == "deck_hub": _handle_deck_hub_buttons(DeckManagement.BUTTON_DOWN)
 				elif screen == "deck" and deck_builder_menu.popup != DeckBuilderMenu.Popup.NONE: _handle_deck_builder_key(128)
@@ -1920,6 +1923,13 @@ func _resolve_overwrite(confirmed: bool) -> void:
 func _toggle_title_choice() -> void:
 	title_menu.toggle_choice()
 	title_choice = title_menu.choice
+	if audio_dispatch != null: audio_dispatch.play_game_audio(54)
+	_build_screen()
+
+func _return_to_continue_title() -> void:
+	title_menu.choice = TITLE_MENU_SCRIPT.Choice.CONTINUE
+	title_choice = title_menu.choice
+	if audio_dispatch != null: audio_dispatch.play_game_audio(54)
 	_build_screen()
 
 func _start_new_game() -> void:
