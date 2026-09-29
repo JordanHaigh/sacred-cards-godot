@@ -481,6 +481,18 @@ func resolve_player_attack(duel_state: SacredDuelState, attacker_column: int, ta
 	var attacker: DuelCardSlot = duel_state.sides[acting_side].monster_zones[attacker_column]
 	if attacker.is_empty() or (attacker.persistent_flags & 1) != 0:
 		return {"accepted": false, "reason": "attacker_unavailable"}
+	if trap_effect_rules != null:
+		var trap_match := trap_effect_rules.find_activating_trap(duel_state, 1 - acting_side, acting_side, 2, attacker_column)
+		if bool(trap_match.get("found", false)):
+			var trap_result := trap_effect_rules.activate(duel_state, 1 - acting_side, int(trap_match.slot), acting_side, 2, attacker_column, int(trap_match.kind), 0)
+			player_lp = duel_state.sides[0].life_points
+			rival_lp = duel_state.sides[1].life_points
+			if audio_dispatch != null:
+				audio_dispatch.play_game_audio(66)
+				var presentation: Array = trap_result.get("presentation", [])
+				if not presentation.is_empty() and presentation.back() is int:
+					audio_dispatch.play_game_audio(int(presentation.back()))
+			return {"accepted": true, "action": "attack_trap_activated", "trap": trap_match, "trap_result": trap_result, "duel_status": duel_state.status}
 	var setup: Dictionary
 	if target_column < 0:
 		if player_duel_controller == null or not player_duel_controller.direct_attack_available(duel_state, 1 - acting_side):
