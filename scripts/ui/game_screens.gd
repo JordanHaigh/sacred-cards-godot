@@ -173,6 +173,7 @@ var duel_graphics: DuelGraphics
 var card_art: CardArt
 var card_detail_return_screen := "deck"
 var selected_card_detail_id := 0
+var pending_password_card_reward_id := 0
 var collection_display: CollectionDisplay
 
 signal scene_script_text(text: String, language: int, glyph_position: int)
@@ -392,7 +393,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			KEY_ESCAPE:
 				if screen == "deck_hub": _handle_deck_hub_buttons(DeckManagement.BUTTON_B)
 				elif screen == "player_status": _show("deck_hub")
-				elif screen == "card_detail": _show(card_detail_return_screen)
+				elif screen == "card_detail": _close_card_detail()
 				elif screen == "shop": _handle_shop_escape()
 				elif screen == "deck": _handle_deck_builder_key(2)
 				elif screen == "title" and title_has_save: _return_to_continue_title()
@@ -2076,7 +2077,8 @@ func _cancel_password_entry(entry_view: PasswordEntryView) -> void:
 func _submit_password(password: String, entry_view: PasswordEntryView) -> void:
 	var result: Dictionary = password_system.apply_password(password, current_save, progression)
 	entry_view.queue_free()
-	if scene_password_entry_active:
+	var card_reward_pending := bool(result.get("found", false)) and str(result.get("kind", "")) == "card"
+	if scene_password_entry_active and not card_reward_pending:
 		scene_password_entry_active = false
 		scene_password_entry_finished.emit()
 	if not bool(result.get("found", false)):
@@ -2085,7 +2087,12 @@ func _submit_password(password: String, entry_view: PasswordEntryView) -> void:
 	_apply_save_data(current_save)
 	_save_current_state()
 	match str(result.get("kind", "")):
-		"card": _toast("Card %04d added to the shop." % int(result.get("id", 0)))
+		"card":
+			pending_password_card_reward_id = int(result.get("id", 0))
+			card_detail_return_screen = screen
+			selected_card_detail_id = pending_password_card_reward_id
+			if audio_dispatch != null: audio_dispatch.play_game_audio(95)
+			_show("card_detail")
 		"bonus":
 			if bool(result.get("used", false)):
 				_toast("That bonus password has already been used.")
@@ -2093,6 +2100,17 @@ func _submit_password(password: String, entry_view: PasswordEntryView) -> void:
 				_toast("Bonus applied.")
 			else:
 				_toast("Bonus password recorded.")
+
+func _close_card_detail() -> void:
+	_show(card_detail_return_screen)
+	if pending_password_card_reward_id > 0:
+		password_system.add_card_password_reward(pending_password_card_reward_id, current_save)
+		pending_password_card_reward_id = 0
+		_apply_save_data(current_save)
+		_save_current_state()
+		if scene_password_entry_active:
+			scene_password_entry_active = false
+			scene_password_entry_finished.emit()
 
 func _resolve_overwrite(confirmed: bool) -> void:
 	title_menu.overwrite_choice = TITLE_MENU_SCRIPT.OverwriteChoice.CONFIRM if confirmed else TITLE_MENU_SCRIPT.OverwriteChoice.CANCEL
