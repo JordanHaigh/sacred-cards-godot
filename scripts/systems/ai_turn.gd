@@ -5,6 +5,7 @@ class_name AiTurn
 ## replace the scratch-RAM snapshot and restoration routines.
 
 signal candidate_selected(candidate_id: int, action_kind: int, score: int)
+signal action_starting(candidate_id: int, action_kind: int)
 signal action_completed(candidate_id: int, action_kind: int, result: Dictionary)
 signal turn_completed(report: Dictionary)
 
@@ -66,6 +67,7 @@ func run_opponent_turn(state: SacredDuelState, acting_side: int, random_service:
 			stopped_early = true
 			break
 		candidate_selected.emit(int(selected.id), int(selected.kind), int(selected.score))
+		action_starting.emit(int(selected.id), int(selected.kind))
 		var execution := actions.execute(state, acting_side, selected, false)
 		if not bool(execution.get("resolved", false)):
 			report.stop_reason = "execution_failed"
