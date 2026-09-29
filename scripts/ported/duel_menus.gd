@@ -32,6 +32,23 @@ func open_monster_action(cell: Vector2i, _starts_in_defense: bool = false) -> vo
 	choice = int(MonsterAction.ATTACK)
 	selected_cell = cell
 
+## Mirrors the recovered live attack/defense pose preview. Tribute/effect menu
+## entries keep the last previewed pose, including when the menu is canceled.
+func preview_monster_action(duel: SacredDuelState, action_index: int) -> bool:
+	if menu != Menu.MONSTER_ACTION or action_index not in [MonsterAction.ATTACK, MonsterAction.DEFENSE]:
+		return false
+	var side := duel.side(duel.active_side) if duel != null else null
+	if side == null or selected_cell.x < 0 or selected_cell.x >= side.monster_zones.size():
+		return false
+	var slot: DuelCardSlot = side.monster_zones[selected_cell.x]
+	if action_index == MonsterAction.ATTACK:
+		slot.persistent_flags &= 0xFD
+		slot.defense_position = false
+	else:
+		slot.persistent_flags |= 2
+		slot.defense_position = true
+	return true
+
 func labels() -> PackedStringArray:
 	match menu:
 		Menu.CONTEXT: return PackedStringArray(CONTEXT_LABELS)
