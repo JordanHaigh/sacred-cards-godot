@@ -154,6 +154,7 @@ signal duel_text_finished
 signal pre_duel_requested(opponent_id: int, wagered_card_id: int)
 signal scene_graphics_changed(scene_id: int, variant: int, graphics: Dictionary)
 signal scene_shop_closed
+signal scene_name_entry_finished
 
 var scene_shop_active := false
 var scene_shop_return_screen := "scene"
@@ -696,9 +697,11 @@ func _finish_name_entry(value: String) -> void:
 		current_save.player_name = value
 		if name_entry_save_after: _save_current_state()
 	_show(name_entry_return_screen)
+	scene_name_entry_finished.emit()
 
 func _cancel_name_entry() -> void:
 	_show(name_entry_return_screen)
+	scene_name_entry_finished.emit()
 
 func _bit_count(value: int) -> int:
 	var bits := value
@@ -793,6 +796,10 @@ func _execute_scene_script_event(event_id: int, script_state: Dictionary) -> voi
 		scene_script_events.dispatch(event_id, script_state, false, true)
 		await _run_scene_shop(event_id == 11)
 		return
+	if event_id == 10:
+		scene_script_events.dispatch(event_id, script_state, false, true)
+		await _run_scene_name_entry()
+		return
 	if scene_script_events.is_door_event(event_id):
 		audio_dispatch.fade_game_music(1)
 		await _wait_scene_frames(8)
@@ -879,6 +886,16 @@ func _leave_scene_shop() -> void:
 	if scene_shop_return_screen == "scene":
 		_set_scene_dialogue_visible(true)
 	scene_shop_closed.emit()
+
+func _run_scene_name_entry() -> void:
+	name_entry_return_screen = screen
+	name_entry_save_after = false
+	_show("name_entry")
+	await scene_name_entry_finished
+	_save_current_state()
+	if screen != "scene":
+		_show("scene")
+	_set_scene_dialogue_visible(true)
 
 func _handle_scene_dialogue(operation: StringName, data: Dictionary) -> void:
 	if operation != &"portrait" or screen != "scene" or screen_root == null:
