@@ -69,8 +69,9 @@ func tick_channel_envelope(channel: PsgChannelState, frame_zero: bool = false) -
 		channel.status_flags = 3
 		channel.current_envelope_level = 0
 		calculate_envelope_volume(channel)
-		channel.rate_countdown = channel.attack_rate
-		if channel.attack_rate == 0:
+		var attack_rate := channel.attack_rate & 0xff
+		channel.rate_countdown = attack_rate
+		if attack_rate == 0:
 			if not _start_decay(channel):
 				return false
 			if (channel.status_flags & 4) != 0:
@@ -90,8 +91,9 @@ func tick_channel_envelope(channel: PsgChannelState, frame_zero: bool = false) -
 		return channel.active
 	if (channel.status_flags & 0x40) != 0 and (channel.status_flags & 3) != 0:
 		channel.status_flags &= 0xFC
-		channel.rate_countdown = channel.release_rate
-		if channel.release_rate == 0:
+		var release_rate := channel.release_rate & 0xff
+		channel.rate_countdown = release_rate
+		if release_rate == 0:
 			if not _enter_echo(channel):
 				return false
 			_sync_channel_gain(channel)
@@ -138,9 +140,10 @@ func _envelope_step(channel: PsgChannelState) -> bool:
 
 func _start_decay(channel: PsgChannelState) -> bool:
 	channel.status_flags = (channel.status_flags - 1) & 0xFF
-	channel.rate_countdown = channel.decay_rate & 0xff
+	var decay_rate := channel.decay_rate & 0xff
+	channel.rate_countdown = decay_rate
 	channel.current_envelope_level = channel.envelope_volume
-	if channel.decay_rate == 0:
+	if decay_rate == 0:
 		return _enter_sustain(channel)
 	return true
 
