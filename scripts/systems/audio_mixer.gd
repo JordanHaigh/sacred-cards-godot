@@ -70,10 +70,10 @@ func play_psg_voice(channel_id: int, frequency_hz: float, left_volume: int, righ
 	channel.active = true
 	return true
 
-func play_psg_note(channel_id: int, key: int, fine: int = 0, volume: float = 1.0, waveform: StringName = &"square") -> bool:
+func play_psg_note(channel_id: int, key: int, fine: int = 0, volume: float = 1.0, waveform: StringName = &"square", wave_samples: PackedFloat32Array = PackedFloat32Array()) -> bool:
 	if psg_pitch_rules == null:
 		return false
-	if channel_id == 3:
+	if channel_id == 3 and wave_samples.is_empty():
 		return false
 	var bounded_volume := clampf(volume, 0.0, 1.0)
 	var level := roundi(bounded_volume * 255.0)
@@ -83,7 +83,9 @@ func play_psg_note(channel_id: int, key: int, fine: int = 0, volume: float = 1.0
 		var period := psg_pitch_rules.midi_key_frequency(channel_id, key, fine)
 		if period < 2048:
 			frequency_hz = 131072.0 / float(2048 - period)
-	return play_psg_voice(channel_id, frequency_hz, level, level, resolved_waveform)
+	if channel_id == 3:
+		resolved_waveform = &"wave"
+	return play_psg_voice(channel_id, frequency_hz, level, level, resolved_waveform, wave_samples)
 
 func stop_psg_voice(channel_id: int) -> void:
 	if channel_id < 1 or channel_id > psg_channels.size():
