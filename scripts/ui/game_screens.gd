@@ -677,7 +677,11 @@ func start_scene_script(scene_id: int, variant: int, role: StringName = &"scene_
 	var supplied_duel_service: Callable = initial_context.get("duel_service", Callable())
 	if supplied_duel_service.is_valid():
 		context["duel"] = func(opponent_id: int, _runtime: SceneScriptRuntime) -> Variant:
-			return await supplied_duel_service.call(opponent_id)
+			var outcome: Variant = await supplied_duel_service.call(opponent_id)
+			if int(outcome) == 1:
+				await _restore_scene_display()
+				_set_scene_dialogue_visible(true)
+			return outcome
 	else:
 		context["duel"] = func(opponent_id: int, _runtime: SceneScriptRuntime) -> int:
 			scene_script_service_requested.emit(&"duel", {"opponent_id": opponent_id})
