@@ -30,11 +30,13 @@ static func apply_terrain(stat_input: int, modifier_input: int) -> int:
 	return result
 
 func apply_card_modifiers(attack: int, defense: int, metadata_1a: int, card_type: int, terrain: int, stage: int) -> Dictionary:
-	if metadata_1a != 2:
+	if (metadata_1a & 0xFF) != 2:
 		return {"attack": attack & 0xFFFF, "defense": defense & 0xFFFF}
-	if terrain < 0 or terrain >= _terrain_modifiers.size() or card_type < 0 or card_type >= 24:
+	var terrain_index := terrain & 0xFF
+	var type_index := card_type & 0xFF
+	if terrain_index >= _terrain_modifiers.size() or type_index >= 24:
 		return {"attack": attack & 0xFFFF, "defense": defense & 0xFFFF}
-	var modifier: int = _terrain_modifiers[terrain][card_type]
+	var modifier: int = _terrain_modifiers[terrain_index][type_index]
 	return {
 		"attack": apply_stage(apply_terrain(attack, modifier), stage),
 		"defense": apply_stage(apply_terrain(defense, modifier), stage),
