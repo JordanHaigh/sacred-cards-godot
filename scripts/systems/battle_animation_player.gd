@@ -4,6 +4,7 @@ class_name BattleAnimationPlayer
 ## Godot Tween choreography for battle_animation.c's semantic result phases.
 signal phase_started(side_id: int, phase: StringName)
 signal phase_finished(side_id: int, phase: StringName)
+signal sound_requested(sound_id: int)
 
 const RESULT_FLAGS := [
 	[0, 0], [9, 0x4f], [0x4f, 0x4f], [0x4f, 9], [9, 0x57], [9, 0x11],
@@ -14,7 +15,7 @@ const FRAME_TIME := 1.0 / 60.0
 
 @export var hit_distance := 5.0
 @export var life_points_step := 72
-@export var life_points_step_frames := 2
+@export var life_points_step_frames := 1
 
 var card_nodes: Array[CanvasItem] = []
 var life_point_labels: Array[CanvasItem] = []
@@ -66,10 +67,12 @@ func play_duel_result(result_code: int, card_ids: Array[int], owners: Array[int]
 		label.text = "%s  %04d" % ["YOU" if owner == 0 else "RIVAL", combat_old[combat_side]]
 		_presentation_root.add_child(label)
 		life_point_labels.append(label)
-	if animation_flags(result_code) == [0, 0]:
+	var flags := animation_flags(result_code)
+	if flags[0] == 0 and flags[1] == 0:
 		_presentation_root.queue_free()
 		return
 	is_presenting = true
+	await get_tree().create_timer(12 * FRAME_TIME).timeout
 	await present_result(result_code, combat_old, combat_new)
 	is_presenting = false
 	if is_instance_valid(_presentation_root):
@@ -94,9 +97,11 @@ func present_result(result_code: int, old_life_points: Array[int], new_life_poin
 	for side_id in [1, 0]:
 		var side_flags := flags[side_id]
 		if (side_flags & 6) != 0:
+			sound_requested.emit(69 if (side_flags & 128) != 0 else 68)
 			await _animate_card_impact(side_id, (side_flags & 128) != 0)
 			await get_tree().create_timer(6 * FRAME_TIME).timeout
 		if (side_flags & 4) != 0:
+			sound_requested.emit(70)
 			await _animate_card_destruction(side_id)
 		if (side_flags & 64) != 0 and side_id < old_life_points.size() and side_id < new_life_points.size():
 			await _animate_life_points(side_id, old_life_points[side_id], new_life_points[side_id])
@@ -146,6 +151,8 @@ func _animate_life_points(side_id: int, old_value: int, new_value: int) -> void:
 	while displayed > new_value and frames < 10000:
 		displayed = maxi(new_value, displayed - life_points_step)
 		label.set("text", str(displayed))
+		if frames % 2 == 0:
+			sound_requested.emit(71)
 		await get_tree().create_timer(life_points_step_frames * FRAME_TIME).timeout
 		frames += life_points_step_frames
 	await get_tree().create_timer(30 * FRAME_TIME).timeout
