@@ -655,7 +655,7 @@ func resolve_player_attack(duel_state: SacredDuelState, attacker_column: int, ta
 	player_lp = duel_state.sides[0].life_points
 	rival_lp = duel_state.sides[1].life_points
 	if battle_animation_player != null:
-		battle_animation_player.play_duel_result(battle.last_result_code, combat_cards, combat_owners, old_life_points, new_life_points, card_database)
+		battle_animation_player.play_duel_result(battle.last_result_code, combat_cards, combat_owners, old_life_points, new_life_points, card_database, duel_random)
 	return {"accepted": true, "action": "attack_resolved", "battle": {"code": battle.last_result_code, "flags": battle.last_result_flags}, "battle_setup": setup, "duel_status": duel_state.status}
 
 func _apply_player_battle_destruction(duel_state: SacredDuelState, setup: Dictionary, flags: int) -> void:
