@@ -12,14 +12,16 @@ var definition: CardDefinition
 var card_art: CardArt
 var pages: Array[String] = []
 var page_index := 0
+var description_locked := false
 var card_texture: Texture2D
 var page_counter: PixelText
 var page_lines: Array[PixelText] = []
 
-func present(card: CardDefinition, art_renderer: CardArt = null) -> void:
+func present(card: CardDefinition, art_renderer: CardArt = null, duelist_level: int = -1) -> void:
 	definition = card
 	card_art = art_renderer
-	pages = _parse_description_pages(card.description)
+	description_locked = duelist_level >= 0 and duelist_level < card.cost
+	pages = [] if description_locked else _parse_description_pages(card.description)
 	page_index = 0
 	_build_view()
 
