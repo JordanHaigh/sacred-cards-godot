@@ -21,7 +21,7 @@ func handle_key(key: int, deck_view: bool) -> Dictionary:
 			popup = PopupKind.NONE
 			return {"action": Action.CLOSED, "sound": 56}
 		if key == 64 or key == 128:
-			var maximum := 8 if popup in [PopupKind.COLLECTION_SORT, PopupKind.DECK_SORT] else (1 if deck_view else 2)
+			var maximum := 9 if popup in [PopupKind.COLLECTION_SORT, PopupKind.DECK_SORT] else (1 if deck_view else 2)
 			choice = posmod(choice + (-1 if key == 64 else 1), maximum + 1)
 			return {"action": Action.NONE, "sound": 54}
 		if key == 1:
@@ -35,10 +35,16 @@ func handle_key(key: int, deck_view: bool) -> Dictionary:
 					popup = PopupKind.NONE
 					return {"action": Action.REMOVE_FROM_DECK, "sound": 0}
 				PopupKind.COLLECTION_SORT:
+					if choice == 9:
+						popup = PopupKind.NONE
+						return {"action": Action.CLOSED, "sound": 55}
 					collection_sort = choice
 					popup = PopupKind.NONE
 					return {"action": Action.SORT_COLLECTION, "method": collection_sort, "reset_selection": true, "sound": 55}
 				PopupKind.DECK_SORT:
+					if choice == 9:
+						popup = PopupKind.NONE
+						return {"action": Action.CLOSED, "sound": 55}
 					deck_sort = choice
 					popup = PopupKind.NONE
 					return {"action": Action.SORT_DECK, "method": deck_sort, "reset_selection": true, "sound": 55}
