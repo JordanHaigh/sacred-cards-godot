@@ -204,7 +204,7 @@ func _spy(state: SacredDuelState, active: int, target: DuelCardSlot, card_id: in
 func _draw_two(state: SacredDuelState, active: int, target: DuelCardSlot, card_id: int, suppressed: bool) -> Dictionary:
 	var drawn: Array[int] = []
 	for _draw in range(2):
-		var card_id_drawn := DuelDeck.draw_card(state.side(active))
+		var card_id_drawn := DuelDeck.draw_card(state.side(active), state)
 		if card_id_drawn != 0:
 			drawn.append(card_id_drawn)
 	var consumed := _consume(state, active, target, card_id, 59, suppressed)
