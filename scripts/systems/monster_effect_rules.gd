@@ -346,9 +346,7 @@ func _summon_token(state: SacredDuelState, active: int, token_id: int, effect_ca
 func _hourglass(state: SacredDuelState, active: int, suppressed: bool) -> Dictionary:
 	for slot in _row(state, active, ACTIVE_MONSTERS):
 		if not slot.is_empty(): _raise(slot)
-	var side := state.side(active)
-	side.life_points = maxi(0, side.life_points - 1000)
-	state.check_victory()
+	_apply_life_operation(state, active, 1000, true)
 	return _shown_pair(229, 229, 73, suppressed)
 
 func _beastking(state: SacredDuelState, active: int, suppressed: bool) -> Dictionary:
