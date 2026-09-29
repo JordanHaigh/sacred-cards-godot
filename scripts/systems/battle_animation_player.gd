@@ -11,6 +11,12 @@ const RESULT_FLAGS := [
 	[0x4b, 0x11], [0x11, 0x4b], [0x11, 9], [0x57, 9], [9, 0xc2], [9, 0],
 	[0xcf, 0], [0, 0xcf], [0, 9], [0xc2, 9], [0x21, 0x67], [0x67, 0x21],
 ]
+const PLAYER_MENU_ASSETS := "res://decompiled/build/assets/player-menus/"
+const OAM_DIMENSIONS := {
+	0: [[8, 8], [16, 16], [32, 32], [64, 64]],
+	1: [[16, 8], [32, 8], [32, 16], [64, 32]],
+	2: [[8, 16], [8, 32], [16, 32], [32, 64]],
+}
 const FRAME_TIME := 1.0 / 60.0
 
 @export var hit_distance := 5.0
@@ -21,6 +27,8 @@ var card_nodes: Array[CanvasItem] = []
 var life_point_labels: Array[CanvasItem] = []
 var is_presenting := false
 var _presentation_root: Control
+var _sprite_layer: Node2D
+var _sprite_sheets: Dictionary[String, Texture2D] = {}
 
 ## Stages the combatants with their recovered full-card art, then runs the
 ## result-code phases. Combat-side ordering follows the battle record; life
@@ -38,6 +46,9 @@ func play_duel_result(result_code: int, card_ids: Array[int], owners: Array[int]
 	backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	backdrop.color = Color(0.015, 0.025, 0.035, 0.94)
 	_presentation_root.add_child(backdrop)
+	_sprite_layer = Node2D.new()
+	_sprite_layer.z_index = 5
+	_presentation_root.add_child(_sprite_layer)
 	card_nodes.clear()
 	life_point_labels.clear()
 	var combat_old: Array[int] = []
@@ -118,6 +129,7 @@ func _animate_card_impact(side_id: int, attribute_hit: bool) -> void:
 		return
 	var card := card_nodes[side_id]
 	phase_started.emit(side_id, &"attribute_hit" if attribute_hit else &"hit")
+	await _animate_recovered_sprite_sequence("battle-attribute" if attribute_hit else "battle-hit", side_id, 5 if attribute_hit else 4)
 	var origin := card.position
 	var tween := create_tween()
 	tween.tween_property(card, "position", origin + Vector2(hit_distance, 0), FRAME_TIME)
@@ -129,6 +141,84 @@ func _animate_card_impact(side_id: int, attribute_hit: bool) -> void:
 		tween.tween_property(card, "modulate", original_modulate, FRAME_TIME)
 	await tween.finished
 	phase_finished.emit(side_id, &"attribute_hit" if attribute_hit else &"hit")
+
+func _animate_recovered_sprite_sequence(animation_name: String, side_id: int, frame_count: int) -> void:
+	for frame_index in range(frame_count):
+		_render_oam_frame(animation_name, frame_index, side_id)
+		await get_tree().create_timer(2 * FRAME_TIME).timeout
+	_clear_sprite_layer()
+
+func _render_oam_frame(animation_name: String, frame_index: int, side_id: int) -> void:
+	if _sprite_layer == null:
+		return
+	_clear_sprite_layer()
+	var frame_path := PLAYER_MENU_ASSETS + "%s-frame-%02d.oam" % [animation_name, frame_index]
+	var bytes := FileAccess.get_file_as_bytes(frame_path)
+	if bytes.is_empty() or bytes.size() % 8 != 0:
+		return
+	var main_sheet := _sprite_sheet(animation_name)
+	var extra_sheet := _sprite_sheet("battle-hit-extra") if animation_name in ["battle-hit", "battle-attribute"] else null
+	var base_x := (124 if side_id == 1 else 4) if animation_name == "battle-hit" else (116 if side_id == 1 else -4)
+	for record_offset in range(0, bytes.size(), 8):
+		var attr0 := bytes.decode_u16(record_offset)
+		var attr1 := bytes.decode_u16(record_offset + 2)
+		var attr2 := bytes.decode_u16(record_offset + 4)
+		var shape := (attr0 >> 14) & 3
+		var object_size := (attr1 >> 14) & 3
+		if shape >= 3:
+			continue
+		var dimensions: Array = OAM_DIMENSIONS[shape][object_size]
+		var tiles_wide := int(dimensions[0]) >> 3
+		var tiles_high := int(dimensions[1]) >> 3
+		var base_tile := attr2 & 0x3FF
+		var x := (attr1 & 0x1FF) + base_x
+		if x < 0: x += 512
+		if x >= 256: x -= 512
+		var y := ((attr0 & 0xFF) + 4) & 0xFF
+		if y >= 160: y -= 256
+		var flip_h := (attr1 & 0x1000) != 0
+		var flip_v := (attr1 & 0x2000) != 0
+		for row in range(tiles_high):
+			for column in range(tiles_wide):
+				var source_row := tiles_high - row - 1 if flip_v else row
+				var source_column := tiles_wide - column - 1 if flip_h else column
+				var object_tile := base_tile + source_row * tiles_wide + source_column
+				var tile_sheet := main_sheet
+				var tile_offset := object_tile
+				if object_tile >= 512:
+					tile_sheet = extra_sheet
+					tile_offset = object_tile - 512
+				if tile_sheet == null:
+					continue
+				# Native transfer copies sixteen source tiles into each 32-tile
+				# object-memory row; reconstruct the compact PNG tile index.
+				var source_tile_index := ((tile_offset >> 5) << 4) + (tile_offset & 31)
+				var atlas_row := source_tile_index >> 4
+				var atlas_column := source_tile_index % 16
+				var tile := Sprite2D.new()
+				tile.centered = false
+				tile.texture = tile_sheet
+				tile.region_enabled = true
+				tile.region_rect = Rect2(atlas_column * 8, atlas_row * 8, 8, 8)
+				tile.flip_h = flip_h
+				tile.flip_v = flip_v
+				tile.position = Vector2(x + column * 8, y + row * 8)
+				tile.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+				_sprite_layer.add_child(tile)
+
+func _sprite_sheet(sheet_name: String) -> Texture2D:
+	if _sprite_sheets.has(sheet_name):
+		return _sprite_sheets[sheet_name]
+	var texture_path := PLAYER_MENU_ASSETS + sheet_name + ".png"
+	var texture := load(texture_path) as Texture2D if ResourceLoader.exists(texture_path) else null
+	_sprite_sheets[sheet_name] = texture
+	return texture
+
+func _clear_sprite_layer() -> void:
+	if _sprite_layer == null:
+		return
+	for child in _sprite_layer.get_children():
+		child.free()
 
 func _animate_card_destruction(side_id: int) -> void:
 	if side_id >= card_nodes.size() or card_nodes[side_id] == null:
