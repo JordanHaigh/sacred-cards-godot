@@ -155,9 +155,11 @@ signal pre_duel_requested(opponent_id: int, wagered_card_id: int)
 signal scene_graphics_changed(scene_id: int, variant: int, graphics: Dictionary)
 signal scene_shop_closed
 signal scene_name_entry_finished
+signal scene_password_entry_finished
 
 var scene_shop_active := false
 var scene_shop_return_screen := "scene"
+var scene_password_entry_active := false
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_PASS
@@ -285,7 +287,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		if screen == "name_entry" and name_entry_view != null and name_entry_view.handle_key(event.keycode):
 			get_viewport().set_input_as_handled()
 			return
-		if scene_script_runtime != null and scene_script_runtime.running and not scene_shop_active:
+		if scene_script_runtime != null and scene_script_runtime.running and not scene_shop_active and not scene_password_entry_active:
 			var pressed_mask := 0
 			if event.keycode == KEY_ENTER: pressed_mask = 1
 			elif event.keycode == KEY_SPACE: pressed_mask = 2
@@ -800,6 +802,10 @@ func _execute_scene_script_event(event_id: int, script_state: Dictionary) -> voi
 		scene_script_events.dispatch(event_id, script_state, false, true)
 		await _run_scene_name_entry()
 		return
+	if event_id == 24:
+		scene_script_events.dispatch(event_id, script_state, false, true)
+		await _run_scene_password_entry()
+		return
 	if scene_script_events.is_door_event(event_id):
 		audio_dispatch.fade_game_music(1)
 		await _wait_scene_frames(8)
@@ -893,6 +899,14 @@ func _run_scene_name_entry() -> void:
 	_show("name_entry")
 	await scene_name_entry_finished
 	_save_current_state()
+	if screen != "scene":
+		_show("scene")
+	_set_scene_dialogue_visible(true)
+
+func _run_scene_password_entry() -> void:
+	scene_password_entry_active = true
+	_request_password_entry()
+	await scene_password_entry_finished
 	if screen != "scene":
 		_show("scene")
 	_set_scene_dialogue_visible(true)
@@ -1443,12 +1457,21 @@ func _confirm_title() -> void:
 func _request_password_entry() -> void:
 	var entry_view: PasswordEntryView = PASSWORD_ENTRY_VIEW_SCRIPT.new()
 	entry_view.submitted.connect(_submit_password.bind(entry_view))
-	entry_view.canceled.connect(entry_view.queue_free)
+	entry_view.canceled.connect(_cancel_password_entry.bind(entry_view))
 	add_child(entry_view)
+
+func _cancel_password_entry(entry_view: PasswordEntryView) -> void:
+	entry_view.queue_free()
+	if scene_password_entry_active:
+		scene_password_entry_active = false
+		scene_password_entry_finished.emit()
 
 func _submit_password(password: String, entry_view: PasswordEntryView) -> void:
 	var result: Dictionary = password_system.apply_password(password, current_save, progression)
 	entry_view.queue_free()
+	if scene_password_entry_active:
+		scene_password_entry_active = false
+		scene_password_entry_finished.emit()
 	if not bool(result.get("found", false)):
 		_toast("That password was not recognized.")
 		return
