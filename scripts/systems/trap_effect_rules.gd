@@ -12,15 +12,18 @@ const ATTACK_LIMITS := {2: 500, 3: 1000, 4: 1500, 5: 2000, 6: 3000}
 const IMMUNE_FLAG := 0x10
 const LOCK_FLAG := 0x01
 const PRESENTATION_FLAG := 0x10
+const SUMMON_RULES_SCRIPT := preload("res://scripts/systems/summon_rules.gd")
 
 var card_database: CardDatabase
 var stat_rules: CardStatRules
 var battle_state: SacredBattleState
+var summon_rules: SummonRules
 
 func _init(database: CardDatabase = null, stats: CardStatRules = null) -> void:
 	card_database = database
 	stat_rules = stats if stats != null else CardStatRules.new()
 	battle_state = SacredBattleState.new()
+	summon_rules = SUMMON_RULES_SCRIPT.new()
 
 func can_activate(trap_card_id: int, trigger_card_id: int, trigger_slot: DuelCardSlot, terrain: int) -> Dictionary:
 	var trap := _card(trap_card_id)
@@ -28,7 +31,8 @@ func can_activate(trap_card_id: int, trigger_card_id: int, trigger_slot: DuelCar
 	if trap == null or trigger == null or trigger_slot == null:
 		return {"can_activate": false, "kind": 0}
 	var kind := trap.metadata_1c
-	var is_monster := trigger.frame_type <= 2
+	var card_class := summon_rules.classify_card(trigger_card_id, card_database)
+	var is_monster := card_class == 1
 	if kind == 1 or kind in [12, 13, 14]:
 		return {"can_activate": is_monster, "kind": kind if is_monster else 0}
 	if ATTACK_LIMITS.has(kind):
@@ -46,7 +50,7 @@ func can_activate(trap_card_id: int, trigger_card_id: int, trigger_slot: DuelCar
 			require_spell = false
 		11: accepted = RAIGEKI_SPELLS
 		_: return {"can_activate": false, "kind": 0}
-	if require_spell and trigger.frame_type != 3:
+	if require_spell and card_class != 2:
 		return {"can_activate": false, "kind": 0}
 	var matched := trigger.metadata_1a in accepted
 	return {"can_activate": matched, "kind": kind if matched else 0}
