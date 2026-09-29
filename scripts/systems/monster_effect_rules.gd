@@ -384,7 +384,7 @@ func _obelisk(state: SacredDuelState, active: int, suppressed: bool) -> Dictiona
 	return _shown(832, 86, suppressed)
 
 func _slifer(state: SacredDuelState, active: int, selected: DuelCardSlot, suppressed: bool) -> Dictionary:
-	var hand_size := state.side(1 - active).hand.size()
+	var hand_size := state.side(1 - active).hand_count()
 	for _card in range(hand_size):
 		for _stage in range(3): _raise(selected)
 	return _shown(833, 87, suppressed)
@@ -511,6 +511,7 @@ func _pinch_hopper(state: SacredDuelState, active: int, selected: DuelCardSlot, 
 	var opponent := state.side(1 - active)
 	var candidates: Array[int] = []
 	for index in range(opponent.hand.size()):
+		if opponent.hand[index] == 0: continue
 		var card := _card(opponent.hand[index])
 		if card != null and card.card_type == 10: candidates.append(index)
 	if not candidates.is_empty():
@@ -523,8 +524,7 @@ func _pinch_hopper(state: SacredDuelState, active: int, selected: DuelCardSlot, 
 			if attack >= best_attack:
 				best_attack = attack
 				best_index = hand_index
-		var card_id: int = opponent.hand.pop_at(best_index)
-		if best_index < opponent.hand_flags.size(): opponent.hand_flags.remove_at(best_index)
+		var card_id: int = opponent.remove_hand_at(best_index)
 		selected.card_id = card_id
 		selected.controller = active
 		_ready(selected)
