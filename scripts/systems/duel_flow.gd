@@ -26,8 +26,7 @@ func initialize_duel(duel: SacredDuelState, player_deck: Array[int], opponent_de
 	for side in duel.sides:
 		side.deck.clear()
 		side.deck_remaining_count = 0
-		side.hand.clear()
-		side.hand_flags.clear()
+		side.clear_hand()
 		for slot in side.monster_zones:
 			slot.clear()
 		for slot in side.back_row_zones:
