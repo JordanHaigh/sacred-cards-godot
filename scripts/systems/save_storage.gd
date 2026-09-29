@@ -8,7 +8,9 @@ const PRIMARY_PATH := "user://sacred_cards_primary.json"
 const BACKUP_PATH := "user://sacred_cards_backup.json"
 const TEMP_PATH := "user://sacred_cards_write.tmp"
 const COMMIT_STATE_PATH := "user://sacred_cards_commit_state.txt"
+const SAVE_SIGNATURE := "020322_DM7_KCEJ"
 const RECOVERY_OUTCOMES := [0, 3, 2, 1, 0, 3, 0, 3, 0, 0, 2, 2]
+const NEW_GAME_SCRIPT := preload("res://scripts/systems/new_game_state.gd")
 
 func save_game(save_data: PlayerSaveData) -> Error:
 	var record := _make_record(save_data)
@@ -50,6 +52,45 @@ func load_game() -> Dictionary:
 			return {"found": true, "recovered": true, "data": PlayerSaveData.from_dictionary(backup.data)}
 	return {"found": false, "recovered": false, "data": null}
 
+## Equivalent of DetectSaveState: 0 invalid/new, 1 ready, 2 repair backup,
+## 3 repair primary. Validation reads both copies before selecting an outcome.
+func detect_save_state() -> int:
+	var primary := _read_record(PRIMARY_PATH)
+	var backup := _read_record(BACKUP_PATH)
+	var commit_state := _read_commit_state()
+	if commit_state < 0 or commit_state >= 3:
+		return 0
+	var index := (commit_state << 2) | (int(bool(primary.get("valid", false))) << 1) | int(bool(backup.get("valid", false)))
+	return int(RECOVERY_OUTCOMES[index])
+
+## Equivalent of PrepareSaveState. Invalid storage is initialized from the
+## caller's save model (or the recovered new-game defaults).
+func prepare_save_state(state: int, save_data: PlayerSaveData = null) -> Error:
+	match state & 0xFF:
+		1:
+			return OK
+		2:
+			return _repair_copy(true)
+		3:
+			return _repair_copy(false)
+		_:
+			return initialize_save_storage(save_data)
+
+func repair_interrupted_save() -> Error:
+	match detect_save_state():
+		2:
+			return _repair_copy(true)
+		3:
+			return _repair_copy(false)
+	return OK
+
+## The native initializer clears SRAM, initializes new-game state, writes both
+## verified copies, and commits the signature last. Atomic files replace SRAM.
+func initialize_save_storage(save_data: PlayerSaveData = null) -> Error:
+	clear_saves()
+	var initial_save := save_data if save_data != null else NEW_GAME_SCRIPT.initialize()
+	return save_game(initial_save)
+
 func clear_saves() -> void:
 	for path in [PRIMARY_PATH, BACKUP_PATH, TEMP_PATH, COMMIT_STATE_PATH]:
 		if FileAccess.file_exists(path):
@@ -59,6 +100,7 @@ func _make_record(save_data: PlayerSaveData) -> Dictionary:
 	var payload := JSON.stringify(save_data.to_dictionary())
 	var native_payload := SavePayloadAdapter.pack_save(save_data)
 	return {
+		"signature": SAVE_SIGNATURE,
 		"checksum": _checksum(payload),
 		"payload": payload,
 		"native_payload": Array(native_payload),
@@ -70,6 +112,8 @@ func _read_record(path: String) -> Dictionary:
 		return {"valid": false}
 	var envelope: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
 	if not envelope is Dictionary or not envelope.get("payload", "") is String:
+		return {"valid": false}
+	if envelope.has("signature") and str(envelope.signature) != SAVE_SIGNATURE:
 		return {"valid": false}
 	var payload: String = envelope.payload
 	if str(envelope.get("checksum", "")) != _checksum(payload):
@@ -118,6 +162,21 @@ func _write_atomic(path: String, content: String) -> Error:
 
 func _write_commit_state(state: int) -> Error:
 	return _write_atomic(COMMIT_STATE_PATH, str(state))
+
+func _repair_copy(repair_backup: bool) -> Error:
+	var source_path := PRIMARY_PATH if repair_backup else BACKUP_PATH
+	var target_path := BACKUP_PATH if repair_backup else PRIMARY_PATH
+	var source := _read_record(source_path)
+	if not bool(source.get("valid", false)):
+		return ERR_FILE_CORRUPT
+	var state := 2 if repair_backup else 1
+	var error := _write_commit_state(state)
+	if error != OK:
+		return error
+	error = _write_atomic(target_path, JSON.stringify(source.envelope))
+	if error != OK:
+		return error
+	return _write_commit_state(0)
 
 func _read_commit_state() -> int:
 	if not FileAccess.file_exists(COMMIT_STATE_PATH):
