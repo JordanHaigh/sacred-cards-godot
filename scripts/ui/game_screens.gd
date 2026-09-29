@@ -806,6 +806,10 @@ func _execute_scene_script_event(event_id: int, script_state: Dictionary) -> voi
 		scene_script_events.dispatch(event_id, script_state, false, true)
 		await _run_scene_password_entry()
 		return
+	if event_id == 57:
+		scene_script_events.dispatch(event_id, script_state, false, true)
+		await _restore_scene_display()
+		return
 	if scene_script_events.is_door_event(event_id):
 		audio_dispatch.fade_game_music(1)
 		await _wait_scene_frames(8)
@@ -909,6 +913,11 @@ func _run_scene_password_entry() -> void:
 	await scene_password_entry_finished
 	if screen != "scene":
 		_show("scene")
+	_set_scene_dialogue_visible(true)
+
+func _restore_scene_display() -> void:
+	show_scene(current_scene_id, current_scene_variant, current_scene_configuration, current_scene_grid)
+	await _wait_scene_frames(1)
 	_set_scene_dialogue_visible(true)
 
 func _handle_scene_dialogue(operation: StringName, data: Dictionary) -> void:

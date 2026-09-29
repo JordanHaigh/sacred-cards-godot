@@ -74,7 +74,8 @@ func dispatch(event_id: int, script_state: Dictionary = {}, door_timing_handled:
 		24:
 			if not native_services_handled: service_requested.emit(&"password_feature", {})
 		36: pass
-		57: service_requested.emit(&"restore_scene_and_dialogue", {})
+		57:
+			if not native_services_handled: service_requested.emit(&"restore_scene_and_dialogue", {})
 
 func load_variant_rules(path: String = "res://resources/scene_variant_rules.json") -> bool:
 	var file := FileAccess.open(path, FileAccess.READ)
