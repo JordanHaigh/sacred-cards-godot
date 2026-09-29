@@ -9,7 +9,6 @@ signal dialogue_requested(operation: StringName, data: Dictionary)
 signal audio_requested(audio_id: int)
 signal music_fade_requested(frames: int)
 signal save_requested
-signal duel_requested(opponent_id: int)
 signal collection_card_requested(card_id: int, count: int)
 signal actor_command_requested(command: StringName, operands: Array)
 signal event_requested(event_id: int)
@@ -21,7 +20,6 @@ signal effect_music_stop_requested
 var event_flags: EventFlagBank
 var scene_grid: SceneGrid
 var service_handlers: Dictionary[StringName, Callable] = {}
-var duel_outcome := 0
 var player_name := ""
 
 func execute(token: Dictionary, context: Dictionary) -> Dictionary:
@@ -57,14 +55,8 @@ func execute(token: Dictionary, context: Dictionary) -> Dictionary:
 		"#7": state.branch_flags = 1 if _flag_is_set(_operand(operands, 0)) else 0
 		"#8":
 			var opponent := _operand(operands, 0)
-			var handler: Callable = service_handlers.get(&"duel_result", Callable())
-			if handler.is_valid():
-				var result: Variant = handler.call(opponent)
-				duel_outcome = int(result)
-			else:
-				duel_requested.emit(opponent)
-			state.branch_flags = 0 if duel_outcome == 1 else 1
 			state.portrait = 0
+			return {"handled": true, "duel_opponent_id": opponent}
 		"#9": collection_card_requested.emit(_u16(operands), 1)
 		"@0", "@1", "@4", "@5", "@6", "^5":
 			actor_command_requested.emit(StringName(command), operands.duplicate())
