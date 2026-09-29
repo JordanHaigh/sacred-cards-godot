@@ -95,8 +95,7 @@ func _move_card(state: SacredDuelState, active: int, source_packed: int, destina
 		if source_column >= side.hand.size(): return {"resolved": false, "reason": "source_empty"}
 		card_id = side.hand[source_column]
 		source_flags = side.hand_flags[source_column] if source_column < side.hand_flags.size() else 0
-		side.hand.remove_at(source_column)
-		if source_column < side.hand_flags.size(): side.hand_flags.remove_at(source_column)
+		side.remove_hand_at(source_column)
 	else:
 		var source := _slot(state, active, source_packed)
 		if source == null or source.is_empty(): return {"resolved": false, "reason": "source_empty"}
@@ -244,9 +243,7 @@ func _discard_operand(state: SacredDuelState, active: int, packed: int) -> int:
 	if row_id == 4:
 		var side := state.side(active)
 		if column >= side.hand.size(): return 0
-		var card_id: int = side.hand[column]
-		side.hand.remove_at(column)
-		if column < side.hand_flags.size(): side.hand_flags.remove_at(column)
+		var card_id := side.remove_hand_at(column)
 		if summon_rules.classify_card(card_id, card_database) == 1: state.remember_grave_card(active, card_id, true)
 		return card_id
 	var owner := active if row_id >= 2 else 1 - active
@@ -258,8 +255,7 @@ func _discard_operand(state: SacredDuelState, active: int, packed: int) -> int:
 
 func _lock_hand_monsters(side: DuelSideState) -> void:
 	for index in range(side.hand.size()):
-		if summon_rules.classify_card(side.hand[index], card_database) == 1:
-			while side.hand_flags.size() <= index: side.hand_flags.append(0)
+		if side.hand[index] != 0 and summon_rules.classify_card(side.hand[index], card_database) == 1:
 			side.hand_flags[index] |= 1
 
 func _copy_slot(destination: DuelCardSlot, source: DuelCardSlot, active: int) -> void:
