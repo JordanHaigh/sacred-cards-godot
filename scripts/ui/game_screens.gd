@@ -54,6 +54,7 @@ const PRE_DUEL_DISPLAY_SCRIPT = preload("res://scripts/ported/pre_duel_display.g
 const SUMMON_RULES_SCRIPT = preload("res://scripts/systems/summon_rules.gd")
 const BATTLE_SETUP_SCRIPT = preload("res://scripts/systems/battle_setup.gd")
 const BATTLE_STATE_SCRIPT = preload("res://scripts/state/battle_state.gd")
+const BATTLE_ANIMATION_SCRIPT = preload("res://scripts/systems/battle_animation_player.gd")
 const OPPONENT_DATABASE_SCRIPT = preload("res://scripts/data/opponent_database.gd")
 const DUEL_FLOW_SCRIPT = preload("res://scripts/systems/duel_flow.gd")
 const DUEL_EFFECT_PRESENTATION_SCRIPT = preload("res://scripts/systems/duel_effect_presentation.gd")
@@ -119,6 +120,7 @@ var active_wagered_card_id := 0
 var _duel_outcome_resolved := false
 var duel_summon_rules: SummonRules
 var duel_battle_setup: BattleSetupSystem
+var battle_animation_player: BattleAnimationPlayer
 var scene_graphics: SceneGraphics
 var actor_animation_database: ActorAnimationDatabase
 var current_scene_configuration: SceneConfiguration
@@ -217,6 +219,10 @@ func _ready() -> void:
 	var load_result: Error = card_database.load_recovered_data()
 	if load_result != OK:
 		push_error("Could not load the recovered Sacred Cards database (error %d)." % load_result)
+	battle_animation_player = BATTLE_ANIMATION_SCRIPT.new()
+	battle_animation_player.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	battle_animation_player.z_index = 100
+	add_child(battle_animation_player)
 	duel_battle_setup = BATTLE_SETUP_SCRIPT.new(card_database)
 	duel_effect_dispatcher = EFFECT_DISPATCHER_SCRIPT.new(card_database)
 	trap_effect_rules = TRAP_EFFECT_RULES_SCRIPT.new(card_database)
@@ -334,6 +340,9 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		return
 	if event is InputEventKey and event.pressed and not event.echo:
+		if screen == "duel" and battle_animation_player != null and battle_animation_player.is_presenting:
+			get_viewport().set_input_as_handled()
+			return
 		if screen == "duel" and _duel_hand_visible:
 			if event.keycode in [KEY_ENTER, KEY_SPACE, KEY_ESCAPE]:
 				_duel_hand_visible = false
@@ -624,6 +633,13 @@ func resolve_player_attack(duel_state: SacredDuelState, attacker_column: int, ta
 		setup = duel_battle_setup.prepare_monster_attack(duel_state, attacker_column, target_column)
 	if setup.is_empty():
 		return {"accepted": false, "reason": "battle_setup_failed"}
+	var old_life_points: Array[int] = [duel_state.sides[0].life_points, duel_state.sides[1].life_points]
+	var attacker_card_id := attacker.card_id
+	var target_card_id := duel_state.sides[1 - acting_side].monster_zones[target_column].card_id if target_column >= 0 else 0
+	var combat_owners: Array[int] = [int(setup.side_a.get("owner", 0)), int(setup.side_b.get("owner", 1))]
+	var combat_cards: Array[int] = [0, 0]
+	for combat_side in range(2):
+		combat_cards[combat_side] = attacker_card_id if combat_owners[combat_side] == acting_side else target_card_id
 	attacker.persistent_flags = (attacker.persistent_flags & 0xFD) | 0x11
 	if target_column >= 0:
 		var target: DuelCardSlot = duel_state.sides[1 - acting_side].monster_zones[target_column]
@@ -631,10 +647,13 @@ func resolve_player_attack(duel_state: SacredDuelState, attacker_column: int, ta
 		target.face_down = false
 	var battle: SacredBattleState = BATTLE_STATE_SCRIPT.new()
 	battle.resolve_setup(duel_state, setup)
+	var new_life_points: Array[int] = [duel_state.sides[0].life_points, duel_state.sides[1].life_points]
 	if target_column >= 0:
 		_apply_player_battle_destruction(duel_state, setup, battle.last_result_flags)
 	player_lp = duel_state.sides[0].life_points
 	rival_lp = duel_state.sides[1].life_points
+	if battle_animation_player != null:
+		battle_animation_player.play_duel_result(battle.last_result_code, combat_cards, combat_owners, old_life_points, new_life_points, card_database)
 	return {"accepted": true, "action": "attack_resolved", "battle": {"code": battle.last_result_code, "flags": battle.last_result_flags}, "battle_setup": setup, "duel_status": duel_state.status}
 
 func _apply_player_battle_destruction(duel_state: SacredDuelState, setup: Dictionary, flags: int) -> void:
@@ -1165,7 +1184,7 @@ func _show(next: String) -> void:
 	_build_screen()
 
 func _build_screen() -> void:
-	var persistent_children: Array = [scene_script_runtime, audio_dispatch]
+	var persistent_children: Array = [scene_script_runtime, audio_dispatch, battle_animation_player]
 	screen_root = menu_graphics.begin_screen(self, screen_root, persistent_children, _background_for_screen())
 	match screen:
 		"title": _draw_title()
