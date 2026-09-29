@@ -741,6 +741,8 @@ func _confirm_player_field_selection(duel_state: SacredDuelState, side_id: int) 
 		var target_class := int(_spell_target_classes[definition.metadata_1a]) if definition.metadata_1a >= 0 and definition.metadata_1a < _spell_target_classes.size() else 0
 		var started := player_duel_controller.begin_spell_target(card_id, target_class)
 		if not bool(started.get("accepted", false)): return started
+		if target_class == 1 and audio_dispatch != null: audio_dispatch.play_game_audio(55)
+		if target_class == 2 and audio_dispatch != null: audio_dispatch.play_game_audio(57)
 		if target_class == 0:
 			var effect_result: Variant = dispatch_duel_effect(card_id, duel_state, cell.y, cell.x)
 			return effect_result if effect_result is Dictionary else {"resolved": true, "result": effect_result}
@@ -748,6 +750,7 @@ func _confirm_player_field_selection(duel_state: SacredDuelState, side_id: int) 
 	if cell.y == 4:
 		var needed := duel_summon_rules.remaining_monster_tributes(card_id, duel_state.tributes_committed, card_database)
 		if needed > 0: return {"accepted": false, "reason": "tributes_required", "remaining": needed}
+		if audio_dispatch != null: audio_dispatch.play_game_audio(55)
 		return player_duel_controller.begin_card_placement(duel_state, side_id, card_id, duel_summon_rules, card_database)
 	return {"accepted": false, "reason": "invalid_row"}
 
