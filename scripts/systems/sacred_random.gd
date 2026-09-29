@@ -35,6 +35,8 @@ func next_halfword() -> int:
 	return (next_byte() << 8) | next_byte()
 
 func halfword_inclusive(minimum: int, maximum: int) -> int:
+	minimum &= 0xFFFF
+	maximum &= 0xFFFF
 	var value := next_halfword()
 	var span := maximum - minimum + 1
 	return (minimum + (value % span if span != 0 else 0)) & 0xFFFF
