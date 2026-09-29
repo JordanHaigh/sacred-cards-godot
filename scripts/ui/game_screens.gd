@@ -51,6 +51,9 @@ const SCENE_DIALOGUE_DISPLAY_SCRIPT = preload("res://scripts/ui/scene_dialogue_d
 const PRE_DUEL_MENU_SCRIPT = preload("res://scripts/ported/pre_duel_menu.gd")
 const PRE_DUEL_DISPLAY_SCRIPT = preload("res://scripts/ported/pre_duel_display.gd")
 const SUMMON_RULES_SCRIPT = preload("res://scripts/systems/summon_rules.gd")
+const OPPONENT_DATABASE_SCRIPT = preload("res://scripts/data/opponent_database.gd")
+const DUEL_FLOW_SCRIPT = preload("res://scripts/systems/duel_flow.gd")
+const SACRED_RANDOM_SCRIPT = preload("res://scripts/systems/sacred_random.gd")
 ## Temporary screen shell for exercising the recovered state and data models.
 
 const SCREEN_SIZE := Vector2(240, 160)
@@ -91,6 +94,11 @@ var name_entry_save_after := false
 var pre_duel_menu: PreDuelMenuState
 var pre_duel_display: PreDuelDisplay
 var pre_duel_opponent_id := 0
+var opponent_database: OpponentDatabase
+var duel_flow: DuelFlow
+var duel_random: SacredRandom
+var active_opponent_id := -1
+var active_wagered_card_id := 0
 var duel_summon_rules: SummonRules
 var scene_graphics: SceneGraphics
 var actor_animation_database: ActorAnimationDatabase
@@ -175,6 +183,12 @@ func _ready() -> void:
 		push_error("Could not load recovered actor animation data (error %d)." % actor_animation_error)
 	duel_graphics = DUEL_GRAPHICS_SCRIPT.new()
 	duel_graphics.select(0, 0)
+	opponent_database = OPPONENT_DATABASE_SCRIPT.new()
+	var opponent_load_error: Error = opponent_database.load_recovered_data()
+	if opponent_load_error != OK:
+		push_error("Could not load recovered opponent duel data (error %d)." % opponent_load_error)
+	duel_flow = DUEL_FLOW_SCRIPT.new()
+	duel_random = SACRED_RANDOM_SCRIPT.new()
 	card_art = CARD_ART_SCRIPT.new()
 	card_database = CARD_DATABASE_SCRIPT.new()
 	var load_result: Error = card_database.load_recovered_data()
@@ -533,8 +547,46 @@ func run_opponent_turn(duel_state: SacredDuelState, acting_side: int, random_ser
 ## Connects a game-owned duel state to the playable Godot battlefield view.
 func show_duel_state(duel_state: SacredDuelState) -> void:
 	active_duel_state = duel_state
+	if duel_state != null and duel_state.sides.size() >= 2:
+		player_lp = duel_state.sides[0].life_points
+		rival_lp = duel_state.sides[1].life_points
 	if player_duel_controller != null: player_duel_controller.reset_turn()
 	_show("duel")
+
+## Initializes and presents a duel using the recovered opponent and duel setup
+## data. Returns false when either side has no usable deck.
+func begin_recovered_duel(opponent_id: int, wagered_card_id: int = 0) -> bool:
+	if opponent_database == null or duel_flow == null or duel_random == null or current_save == null:
+		return false
+	var opponent := opponent_database.get_opponent(opponent_id)
+	if opponent.is_empty():
+		return false
+	var player_deck := _nonzero_cards(current_save.deck)
+	var opponent_deck := _int_cards(opponent.get("deck", []))
+	if player_deck.is_empty() or opponent_deck.is_empty():
+		return false
+	var life_points: Array = opponent.get("life_points", [8000, 8000])
+	var player_start_lp := int(life_points[0]) if life_points.size() > 0 else 8000
+	var opponent_start_lp := int(life_points[1]) if life_points.size() > 1 else player_start_lp
+	duel_random.state = current_save.random_state & 0xFFFFFFFF
+	active_duel_state = SacredDuelState.new()
+	duel_flow.initialize_duel(active_duel_state, player_deck, opponent_deck, int(opponent.get("terrain", 0)), player_start_lp, opponent_start_lp, duel_random)
+	current_save.random_state = duel_random.state
+	active_opponent_id = opponent_id
+	active_wagered_card_id = wagered_card_id
+	duel_graphics.select(active_duel_state.terrain, 0)
+	show_duel_state(active_duel_state)
+	audio_dispatch.play_game_audio(int(opponent.get("music_id", 0)))
+	return true
+
+func _int_cards(values: Variant) -> Array[int]:
+	var result: Array[int] = []
+	if values is Array:
+		for value: Variant in values:
+			var card_id := int(value)
+			if card_id > 0:
+				result.append(card_id)
+	return result
 
 func initialize_pre_duel_menu(wagerable_ids: Array[int], special_wager_ids: Array[int]) -> void:
 	if pre_duel_menu == null: pre_duel_menu = PRE_DUEL_MENU_SCRIPT.new()
@@ -604,6 +656,7 @@ func _handle_pre_duel_result(result: Dictionary, opponent_id: int) -> Dictionary
 			return result
 		PreDuelMenuState.Action.START_WITH_WAGER, PreDuelMenuState.Action.START_WITHOUT_WAGER:
 			if audio_dispatch != null: audio_dispatch.fade_game_music(2)
+			result["duel_started"] = begin_recovered_duel(opponent_id, int(result.get("card_id", 0)))
 			pre_duel_requested.emit(opponent_id, int(result.get("card_id", 0)))
 	return result
 
