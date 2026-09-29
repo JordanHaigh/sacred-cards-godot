@@ -86,4 +86,4 @@ Port rules: use card IDs and typed records, dictionaries, arrays and `Resource`/
 4. Screen composition, card presentation and audio playback.
 5. Compare each translated behavior against its recovered C contract and original assets; preserve unresolved contracts as explicit open items.
 
-The interactive screen script is still a temporary presentation shell. Its input and screen composition have not yet been ported from the recovered menu, duel, and graphics modules. Scene script roots can be started through the shell API; dialogue rendering and game-service callbacks remain in progress.
+The Godot shell now connects title, pre-duel, duel, shop, deck, password, and scene flows to typed GDScript services. This does not complete the port: 43 module entries above still document behavior or fidelity gaps, including unexported data, unrecovered presentation details, and absent ROM comparisons. Treat those entries as active work, not as hardware constraints; pointer-backed native state has been replaced with Godot-owned values where implemented.
