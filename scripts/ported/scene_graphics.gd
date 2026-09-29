@@ -98,6 +98,7 @@ func portrait_frame_paths(portrait_id: int, portrait_flags: int = 0, frame_indic
 func create_portrait_layer(parent: Control, portrait_id: int, portrait_flags: int = 0, frame_indices: Array[int] = []) -> Control:
 	var layer := Control.new()
 	layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	layer.z_index = 2
 	layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	for path in portrait_frame_paths(portrait_id, portrait_flags, frame_indices):
 		var texture := _texture(path)

@@ -47,6 +47,7 @@ const MENU_GRAPHICS_SCRIPT = preload("res://scripts/ported/menu_graphics.gd")
 const NAME_ENTRY_SCRIPT = preload("res://scripts/ported/name_entry.gd")
 const SCENE_GRAPHICS_SCRIPT = preload("res://scripts/ported/scene_graphics.gd")
 const ACTOR_ANIMATION_DATABASE_SCRIPT = preload("res://scripts/data/actor_animation_database.gd")
+const SCENE_DIALOGUE_DISPLAY_SCRIPT = preload("res://scripts/ui/scene_dialogue_display.gd")
 const PRE_DUEL_MENU_SCRIPT = preload("res://scripts/ported/pre_duel_menu.gd")
 const PRE_DUEL_DISPLAY_SCRIPT = preload("res://scripts/ported/pre_duel_display.gd")
 const SUMMON_RULES_SCRIPT = preload("res://scripts/systems/summon_rules.gd")
@@ -100,6 +101,7 @@ var current_scene_id := 0
 var current_scene_variant := 0
 var current_scene_graphics: Dictionary = {}
 var current_scene_portrait_layer: Control
+var scene_dialogue_view: SceneDialogueDisplay
 var _spell_target_classes: Array[int] = []
 var deck_rules: DeckBuilderState
 var deck_management: DeckManagement
@@ -240,7 +242,8 @@ func _ready() -> void:
 	audio_dispatch = AUDIO_DISPATCH_SCRIPT.new()
 	audio_dispatch.name = "GameAudioDispatch"
 	add_child(audio_dispatch)
-	scene_script_runtime.text_requested.connect(func(text: String, language: int, position: int) -> void: scene_script_text.emit(text, language, position))
+	scene_script_runtime.text_requested.connect(_on_scene_script_text_requested)
+	scene_script_runtime.dialogue_clear_requested.connect(_clear_scene_dialogue_text)
 	scene_script_events.scene_change_requested.connect(func(id: int, variant: int, spawn: int, _rules: bool) -> void:
 		scene_script_runtime.stop()
 		audio_dispatch.play_scene_music(id, variant)
@@ -644,7 +647,7 @@ func start_scene_script(scene_id: int, variant: int, role: StringName = &"scene_
 		if condition_id == 0: return 1 if progression.duelist_level < 80 else 0
 		if condition_id == 1: return 1 if _bit_count(scene_script_events.progress_rank & 0x3F) == 6 else 0
 		return 0
-	context["dialogue_visibility"] = func(visible: bool) -> void: scene_script_service_requested.emit(&"dialogue_visibility", {"visible": visible})
+	context["dialogue_visibility"] = func(visible: bool) -> void: _set_scene_dialogue_visible(visible)
 	context["dialogue"] = func(operation: StringName, data: Dictionary, _runtime: SceneScriptRuntime) -> void:
 		_handle_scene_dialogue(operation, data)
 		scene_script_service_requested.emit(&"dialogue", {"operation": operation, "data": data})
@@ -742,14 +745,19 @@ func _draw_scene() -> void:
 	var background := screen_root.get_child(0) as TextureRect if screen_root.get_child_count() > 0 else null
 	if background != null:
 		background.texture = graphics.texture as Texture2D
+		background.z_index = -200
 	current_scene_portrait_layer = null
 	scene_actor_runtime = null
 	if actor_animation_database != null:
 		var configuration := current_scene_configuration if current_scene_configuration != null else SceneConfiguration.new()
 		scene_actor_runtime = configuration.instantiate_actors(actor_animation_database) as SceneActorRuntime
+		scene_actor_runtime.z_index = -100
 		if current_scene_grid != null:
 			scene_actor_runtime.set_scene_grid(current_scene_grid)
 		screen_root.add_child(scene_actor_runtime)
+	scene_dialogue_view = SCENE_DIALOGUE_DISPLAY_SCRIPT.new()
+	screen_root.add_child(scene_dialogue_view)
+	scene_dialogue_view.visible = false
 
 func _execute_scene_actor_command(command: StringName, operands: Array) -> void:
 	if scene_actor_runtime != null:
@@ -781,6 +789,23 @@ func _handle_scene_dialogue(operation: StringName, data: Dictionary) -> void:
 	var portrait_id := int(data.get("portrait", 0))
 	if portrait_id > 0 and scene_graphics != null:
 		current_scene_portrait_layer = scene_graphics.create_portrait_layer(screen_root, portrait_id, int(data.get("flags", 0)))
+	_set_scene_dialogue_visible(true)
+
+func _on_scene_script_text_requested(value: String, language: int, glyph_position: int) -> void:
+	scene_script_text.emit(value, language, glyph_position)
+	if screen == "scene" and is_instance_valid(scene_dialogue_view):
+		scene_dialogue_view.present_text(value, glyph_position)
+
+func _clear_scene_dialogue_text() -> void:
+	if is_instance_valid(scene_dialogue_view):
+		scene_dialogue_view.clear_text()
+
+func _set_scene_dialogue_visible(should_show: bool) -> void:
+	if is_instance_valid(scene_dialogue_view):
+		scene_dialogue_view.set_window_visible(should_show)
+	if scene_graphics != null:
+		scene_graphics.set_dialogue_window_visible(should_show)
+	scene_script_service_requested.emit(&"dialogue_visibility", {"visible": should_show})
 
 func _background_for_screen() -> String:
 	match screen:
