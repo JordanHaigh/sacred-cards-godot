@@ -318,8 +318,8 @@ func _clear_all_fields(state: SacredDuelState, active: int, card_id: int, clear_
 					continue
 				if _is_monster(hand_card_id):
 					state.remember_grave_card(side_id, hand_card_id, true)
-			removed.append(hand_card_id)
-			side.remove_hand_at(hand_index)
+				removed.append(hand_card_id)
+				side.remove_hand_at(hand_index)
 		return {"resolved": true, "kind": "field_and_hand_clear", "removed_hand_card_ids": removed, "presentation": _present(card_id, 75, suppressed)}
 	return {"resolved": true, "kind": "field_clear", "presentation": _present(card_id, 75, suppressed)}
 
