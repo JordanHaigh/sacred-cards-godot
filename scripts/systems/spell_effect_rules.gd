@@ -5,6 +5,7 @@ class_name SpellEffectRules
 ## spell_effects.c. Relative C rows become explicit side/zone lookups here.
 
 const RITUAL_PATH := "res://resources/spell_ritual_recipes.json"
+const SUMMON_RULES_SCRIPT := preload("res://scripts/systems/summon_rules.gd")
 const CARD_METADATA_1A := {
 	336: 19, 337: 20, 318: 53, 320: 48, 329: 49, 348: 50, 350: 51, 349: 52,
 	669: 82, 658: 99, 672: 76, 661: 81, 653: 95, 656: 97, 655: 96,
@@ -28,6 +29,7 @@ var card_database: CardDatabase
 var stat_rules: CardStatRules
 var trap_rules: TrapEffectRules
 var battle_state: SacredBattleState
+var summon_rules: SummonRules
 var _ritual_recipes: Array = []
 
 func _init(database: CardDatabase = null, traps: TrapEffectRules = null, stats: CardStatRules = null) -> void:
@@ -35,6 +37,7 @@ func _init(database: CardDatabase = null, traps: TrapEffectRules = null, stats: 
 	trap_rules = traps
 	stat_rules = stats if stats != null else CardStatRules.new()
 	battle_state = SacredBattleState.new()
+	summon_rules = SUMMON_RULES_SCRIPT.new()
 	_load_rituals()
 
 func supported_metadata_1a() -> Array[int]:
@@ -484,8 +487,7 @@ func _attack(slot: DuelCardSlot, terrain: int) -> int:
 	return int(stats.attack)
 
 func _is_monster(card_id: int) -> bool:
-	var card := _card(card_id)
-	return card != null and card.frame_type <= 2
+	return summon_rules.classify_card(card_id, card_database) == 1
 
 func _card(card_id: int) -> CardDefinition:
 	return card_database.get_card(card_id) if card_database != null and card_id > 0 else null
