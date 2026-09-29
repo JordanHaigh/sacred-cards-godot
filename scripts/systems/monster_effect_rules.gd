@@ -467,11 +467,12 @@ func _buster_blader(state: SacredDuelState, active: int, selected_column: int, s
 		_boost_for_type(state, active, OPPONENT_MONSTERS, 1, selected_column)
 	return _shown(811, 73, suppressed)
 
-func _boost_for_type(state: SacredDuelState, active: int, row_id: int, card_type: int, selected_column: int) -> void:
+func _boost_for_type(state: SacredDuelState, active: int, row_id: int, card_type: int, selected_column: int, _suppressed: bool = false) -> Dictionary:
 	var selected := _row(state, active, ACTIVE_MONSTERS)[selected_column]
 	for slot in _row(state, active, row_id):
 		var card := _card(slot.card_id)
 		if card != null and card.card_type == card_type: _raise(selected)
+	return {"resolved": true, "kind": "type_boost", "presentation": []}
 
 func _barrel_dragon(state: SacredDuelState, active: int, suppressed: bool, random_service: SacredRandom) -> Dictionary:
 	if random_service == null:
