@@ -108,7 +108,9 @@ func _move_card(state: SacredDuelState, active: int, source_packed: int, destina
 	destination.controller = active
 	var destination_row := (destination_packed >> 4) & 15
 	var set_in_back_row := destination_row in [0, 3] and int(result.get("action_kind", -1)) in [14, 15, 18, 21, 24]
-	destination.persistent_flags = (source_flags & 0xEF) if set_in_back_row else ((source_flags | 0x10) & 0xFF)
+	# CopyDuelCell replaces the low six destination flag bits from the source,
+	# while preserving destination-owned high bits. Placement pose is separate.
+	destination.persistent_flags = (destination.persistent_flags & 0xC0) | (source_flags & 0x3F)
 	destination.stage = 0
 	destination.zone_mode = 0
 	destination.face_down = set_in_back_row
