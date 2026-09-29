@@ -55,6 +55,23 @@ func labels() -> PackedStringArray:
 		Menu.MONSTER_ACTION: return PackedStringArray(MONSTER_LABELS)
 	return PackedStringArray()
 
+## Builds display-ready duel status from the captured menu snapshot and card
+## records. The returned values own strings and IDs, not references into ROM data.
+func context_rows(card_database: CardDatabase) -> Array[Dictionary]:
+	var rows: Array[Dictionary] = []
+	for side_id in range(2):
+		var grave_card_id := int(grave_card_ids[side_id])
+		var definition := card_database.get_card(grave_card_id) if card_database != null and grave_card_id > 0 else null
+		rows.append({
+			"side_id": side_id,
+			"label": "YOU" if side_id == 0 else "RIVAL",
+			"life_points": int(life_points[side_id]),
+			"deck_count": int(deck_counts[side_id]),
+			"grave_card_id": grave_card_id,
+			"grave_card_name": definition.name if definition != null else "EMPTY",
+		})
+	return rows
+
 func move(direction: int) -> int:
 	var count := labels().size()
 	if count > 0:
