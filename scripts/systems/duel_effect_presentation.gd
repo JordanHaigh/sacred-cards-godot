@@ -14,7 +14,7 @@ func _collect_result(value: Variant, events: Array[Dictionary]) -> void:
 		return
 	var presentation: Variant = value.get("presentation", [])
 	if presentation is Array and not presentation.is_empty():
-		_append_sequence(presentation, events)
+		_append_sequence(presentation, String(value.get("kind", "")), events)
 	for key: Variant in value:
 		var child: Variant = value[key]
 		if child is Dictionary:
@@ -24,7 +24,7 @@ func _collect_result(value: Variant, events: Array[Dictionary]) -> void:
 				if item is Dictionary:
 					_collect_result(item, events)
 
-func _append_sequence(sequence: Array, events: Array[Dictionary]) -> void:
+func _append_sequence(sequence: Array, result_kind: String, events: Array[Dictionary]) -> void:
 	if sequence.is_empty():
 		return
 	if sequence[0] is String and String(sequence[0]) == "load_terrain":
@@ -35,7 +35,7 @@ func _append_sequence(sequence: Array, events: Array[Dictionary]) -> void:
 			events.append({"kind": "cards", "card_ids": terrain_cards})
 		_append_sound(sequence[sequence.size() - 1], events)
 		return
-	if sequence[0] is int and int(sequence[0]) == 65:
+	if sequence[0] is int and int(sequence[0]) == 65 and result_kind in ["field", "life_points", "equipment", "ritual", "field_clear", "field_and_hand_clear", "spell", "transformation"]:
 		_append_sound(sequence[0], events)
 		var wrapped_cards := _integer_values(sequence, 1, sequence.size() - 1)
 		if not wrapped_cards.is_empty():
