@@ -90,7 +90,8 @@ func play_duel_result(result_code: int, card_ids: Array[int], owners: Array[int]
 		_presentation_root.queue_free()
 		return
 	is_presenting = true
-	await get_tree().create_timer(12 * FRAME_TIME).timeout
+	# Native BlankBattle and ShowBattle each wait one frame, followed by 15.
+	await get_tree().create_timer(17 * FRAME_TIME).timeout
 	await present_result(result_code, combat_old, combat_new, random_service)
 	is_presenting = false
 	if is_instance_valid(_presentation_root):
@@ -115,11 +116,9 @@ func present_result(result_code: int, old_life_points: Array[int], new_life_poin
 	for side_id in [1, 0]:
 		var side_flags := flags[side_id]
 		if (side_flags & 6) != 0:
-			sound_requested.emit(69 if (side_flags & 128) != 0 else 68)
 			await _animate_card_impact(side_id, (side_flags & 128) != 0)
 			await get_tree().create_timer(6 * FRAME_TIME).timeout
 		if (side_flags & 4) != 0:
-			sound_requested.emit(70)
 			await _animate_card_destruction(side_id, random_service)
 		if (side_flags & 64) != 0 and side_id < old_life_points.size() and side_id < new_life_points.size():
 			await _animate_life_points(side_id, old_life_points[side_id], new_life_points[side_id])
@@ -134,23 +133,13 @@ func _on_battle_resolved(result_code: int, _flags: int, old_life_points: Array[i
 func _animate_card_impact(side_id: int, attribute_hit: bool) -> void:
 	if side_id >= card_nodes.size():
 		return
-	phase_started.emit(side_id, &"attribute_hit" if attribute_hit else &"hit")
+	var phase := &"attribute_hit" if attribute_hit else &"hit"
+	phase_started.emit(side_id, phase)
+	await get_tree().create_timer(FRAME_TIME).timeout
+	sound_requested.emit(69 if attribute_hit else 68)
 	await _animate_recovered_sprite_sequence("battle-attribute" if attribute_hit else "battle-hit", side_id, 5 if attribute_hit else 4)
-	if card_nodes[side_id] == null:
-		phase_finished.emit(side_id, &"attribute_hit" if attribute_hit else &"hit")
-		return
-	var card := card_nodes[side_id]
-	var origin: Vector2 = card.position
-	var tween := create_tween()
-	tween.tween_property(card, "position", origin + Vector2(hit_distance, 0), FRAME_TIME)
-	tween.tween_property(card, "position", origin - Vector2(hit_distance, 0), FRAME_TIME)
-	tween.tween_property(card, "position", origin, FRAME_TIME)
-	if attribute_hit:
-		var original_modulate := card.modulate
-		tween.parallel().tween_property(card, "modulate", Color(1.0, 0.45, 0.45, original_modulate.a), FRAME_TIME)
-		tween.tween_property(card, "modulate", original_modulate, FRAME_TIME)
-	await tween.finished
-	phase_finished.emit(side_id, &"attribute_hit" if attribute_hit else &"hit")
+	await get_tree().create_timer(FRAME_TIME).timeout
+	phase_finished.emit(side_id, phase)
 
 func _animate_recovered_sprite_sequence(animation_name: String, side_id: int, frame_count: int) -> void:
 	for frame_index in range(frame_count):
@@ -238,8 +227,10 @@ func _animate_card_destruction(side_id: int, random_service: SacredRandom) -> vo
 	if random_service != null:
 		await _animate_destruction_particles(side_id, card, random_service)
 	else:
+		await get_tree().create_timer(FRAME_TIME).timeout
+		sound_requested.emit(70)
 		var tween := create_tween()
-		tween.tween_property(card, "modulate:a", 0.0, 12 * FRAME_TIME)
+		tween.tween_property(card, "modulate:a", 0.0, 52 * FRAME_TIME)
 		await tween.finished
 	phase_finished.emit(side_id, &"destruction")
 
@@ -273,6 +264,8 @@ func _animate_destruction_particles(side_id: int, card: CanvasItem, random_servi
 			fragment.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 			_sprite_layer.add_child(fragment)
 			fragments.append(fragment)
+	await get_tree().create_timer(FRAME_TIME).timeout
+	sound_requested.emit(70)
 	var original_modulate := card.modulate
 	for step in range(1, 18):
 		var blend_alpha := _destruction_alpha(step)
@@ -308,6 +301,7 @@ func _animate_destruction_particles(side_id: int, card: CanvasItem, random_servi
 				sprite.flip_h = int(particle.flip) != 0
 		# C advances one destruction step for every three uploaded display frames.
 		await get_tree().create_timer(3 * FRAME_TIME).timeout
+	await get_tree().create_timer(FRAME_TIME).timeout
 	if is_instance_valid(card):
 		card.modulate = Color(original_modulate.r, original_modulate.g, original_modulate.b, 0.0)
 
@@ -332,6 +326,7 @@ func _animate_life_points(side_id: int, old_value: int, new_value: int) -> void:
 		return
 	var label := life_point_labels[side_id]
 	phase_started.emit(side_id, &"life_points")
+	await get_tree().create_timer(FRAME_TIME).timeout
 	await get_tree().create_timer(15 * FRAME_TIME).timeout
 	var displayed := old_value
 	var frames := 0
@@ -343,4 +338,5 @@ func _animate_life_points(side_id: int, old_value: int, new_value: int) -> void:
 		await get_tree().create_timer(life_points_step_frames * FRAME_TIME).timeout
 		frames += life_points_step_frames
 	await get_tree().create_timer(30 * FRAME_TIME).timeout
+	await get_tree().create_timer(FRAME_TIME).timeout
 	phase_finished.emit(side_id, &"life_points")
