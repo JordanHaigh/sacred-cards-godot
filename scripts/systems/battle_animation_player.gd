@@ -12,6 +12,7 @@ const RESULT_FLAGS := [
 	[0xcf, 0], [0, 0xcf], [0, 9], [0xc2, 9], [0x21, 0x67], [0x67, 0x21],
 ]
 const PLAYER_MENU_ASSETS := "res://decompiled/build/assets/player-menus/"
+const DESTRUCTION_FRAME_DATA_PATH := "res://resources/battle_destruction_frames.json"
 const SACRED_RANDOM_SCRIPT = preload("res://scripts/systems/sacred_random.gd")
 const DESTRUCTION_SEEDS := [0x99, 0x129, 0x1C9, 0x1FF]
 const DESTRUCTION_PARTICLES := 12
@@ -36,6 +37,8 @@ var _sprite_sheets: Dictionary[String, Texture2D] = {}
 var _destruction_sheet: Texture2D
 var _destruction_alpha_bytes: PackedByteArray
 var _destruction_frame_bytes: PackedByteArray
+var _destruction_frame_tile_ids: Array[int] = []
+var _destruction_frame_data_loaded := false
 
 ## Stages the combatants with their recovered full-card art, then runs the
 ## result-code phases. Combat-side ordering follows the battle record; life
@@ -299,7 +302,7 @@ func _animate_destruction_particles(side_id: int, card: CanvasItem, random_servi
 				var offset: Vector2 = particle.offsets[fragment_index]
 				sprite.visible = int(particle.life) > 0 and int(particle.delay) == 0
 				sprite.position = particle.position + offset
-				var tile := (int(particle.frame) * 5 + fragment_index) % 128
+				var tile := _destruction_frame_tile(int(particle.frame))
 				sprite.region_rect = Rect2((tile % 16) * 8, (tile / 16) * 8, 8, 8)
 				sprite.modulate.a = float(blend_alpha) / 16.0
 				sprite.flip_h = int(particle.flip) != 0
@@ -324,6 +327,24 @@ func _destruction_frame_duration(frame_index: int) -> int:
 		_destruction_frame_bytes = FileAccess.get_file_as_bytes(PLAYER_MENU_ASSETS + "battle-destruction.frames.bin")
 	var byte_offset := frame_index * 8
 	return maxi(1, int(_destruction_frame_bytes[byte_offset])) if byte_offset < _destruction_frame_bytes.size() else 1
+
+func _destruction_frame_tile(frame_index: int) -> int:
+	if not _destruction_frame_data_loaded:
+		_destruction_frame_data_loaded = true
+		var file := FileAccess.open(DESTRUCTION_FRAME_DATA_PATH, FileAccess.READ)
+		if file != null:
+			var parsed: Variant = JSON.parse_string(file.get_as_text())
+			var frame_rows: Variant = parsed.get("frames", []) if parsed is Dictionary else []
+			if frame_rows is Array and frame_rows.size() == 4:
+				for frame: Variant in frame_rows:
+					if not frame is Dictionary or int(frame.get("tile_id", -1)) < 0 or int(frame.get("tile_id", -1)) >= 128:
+						_destruction_frame_tile_ids.clear()
+						break
+					_destruction_frame_tile_ids.append(int(frame.tile_id))
+		if _destruction_frame_tile_ids.size() != 4:
+			_destruction_frame_tile_ids.clear()
+			push_warning("Recovered battle destruction frame tile IDs are unavailable; using tile 0.")
+	return _destruction_frame_tile_ids[clampi(frame_index, 0, _destruction_frame_tile_ids.size() - 1)] if not _destruction_frame_tile_ids.is_empty() else 0
 
 func _animate_life_points(side_id: int, old_value: int, new_value: int) -> void:
 	if side_id >= life_point_labels.size() or life_point_labels[side_id] == null or new_value >= old_value:
