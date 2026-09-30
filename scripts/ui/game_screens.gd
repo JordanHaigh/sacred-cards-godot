@@ -356,6 +356,23 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	if event is InputEventKey and screen == "pre_duel" and event.keycode in [KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT]:
 		get_viewport().set_input_as_handled()
 		return
+	if event is InputEventKey and screen == "title" and title_menu != null and title_menu.overwrite_pending:
+		if event.pressed and not event.echo:
+			match event.keycode:
+				KEY_UP:
+					title_menu.move_overwrite_choice(-1)
+					if audio_dispatch != null: audio_dispatch.play_game_audio(54)
+					_build_screen()
+				KEY_DOWN:
+					title_menu.move_overwrite_choice(1)
+					if audio_dispatch != null: audio_dispatch.play_game_audio(54)
+					_build_screen()
+				KEY_ENTER, KEY_KP_ENTER:
+					_resolve_overwrite(title_menu.overwrite_choice == TITLE_MENU_SCRIPT.OverwriteChoice.CONFIRM)
+				KEY_SPACE, KEY_ESCAPE:
+					_resolve_overwrite(false)
+		get_viewport().set_input_as_handled()
+		return
 	if event is InputEventKey and not event.pressed and screen == "duel" and event.keycode == KEY_Q and _duel_stats_visible:
 		_duel_stats_visible = false
 		if duel_menus != null: duel_menus.set_inspect_stats_held(false)
@@ -1607,7 +1624,18 @@ func _draw_title() -> void:
 		_text("NEW GAME", Vector2(90, 137), 8, GOLD if title_menu.choice == TITLE_MENU_SCRIPT.Choice.NEW_GAME else PAPER)
 	else:
 		_text("NEW GAME", Vector2(90, 132), 8, GOLD)
-	_click_area(Rect2(76, 122, 88, 34), _confirm_title)
+	if title_menu.overwrite_pending:
+		_overlay_rect(Rect2(Vector2.ZERO, SCREEN_SIZE), Color(0.0, 0.0, 0.0, 0.62))
+		_overlay_rect(Rect2(24, 52, 192, 58), Color("18211f"), GOLD)
+		_text("OVERWRITE SAVE DATA?", Vector2(40, 62), 8, PAPER)
+		var confirm_color := GOLD if title_menu.overwrite_choice == TITLE_MENU_SCRIPT.OverwriteChoice.CONFIRM else PAPER
+		var cancel_color := GOLD if title_menu.overwrite_choice == TITLE_MENU_SCRIPT.OverwriteChoice.CANCEL else PAPER
+		_text("CONFIRM", Vector2(48, 88), 8, confirm_color)
+		_text("CANCEL", Vector2(144, 88), 8, cancel_color)
+		_click_area(Rect2(38, 82, 76, 22), func() -> void: _resolve_overwrite(true))
+		_click_area(Rect2(132, 82, 76, 22), func() -> void: _resolve_overwrite(false))
+	else:
+		_click_area(Rect2(76, 122, 88, 34), _confirm_title)
 
 func _apply_title_pulse() -> void:
 	if screen_root == null or screen_root.get_child_count() == 0 or title_menu == null:
@@ -2124,13 +2152,7 @@ func _confirm_title() -> void:
 	var action: int = title_menu.request_confirm()
 	if action == TITLE_MENU_SCRIPT.Action.CONFIRM_OVERWRITE:
 		if audio_dispatch != null: audio_dispatch.play_game_audio(201)
-		var prompt := ConfirmationDialog.new()
-		prompt.dialog_text = "Start a new game and overwrite the current save?"
-		prompt.confirmed.connect(_resolve_overwrite.bind(true))
-		prompt.canceled.connect(_resolve_overwrite.bind(false))
-		add_child(prompt)
-		prompt.popup_centered()
-		prompt.get_cancel_button().grab_focus()
+		_build_screen()
 		return
 	if action in [TITLE_MENU_SCRIPT.Action.START_NEW_GAME, TITLE_MENU_SCRIPT.Action.CONTINUE_GAME]:
 		_begin_title_exit(action)
