@@ -84,7 +84,7 @@ func confirm() -> Dictionary:
 		if choice == 1:
 			return {"action": Action.CARD_INFO, "sound": 55}
 		close_popup()
-		return {"action": Action.CANCEL, "sound": 56}
+		return {"action": Action.CANCEL, "sound": 55}
 	if choice == 9:
 		close_popup()
 		return {"action": Action.SORT_CLOSED, "sound": 55}
