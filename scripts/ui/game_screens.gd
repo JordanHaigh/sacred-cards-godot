@@ -887,15 +887,17 @@ func _on_monster_action_selected(action_id: int, duel_state: SacredDuelState) ->
 			else:
 				player_duel_controller.begin_attack_target(duel_state, 1 - side_id, duel_summon_rules, card_database)
 		"defense":
+			var defense_sound := 55
 			if (duel_state.sides[side_id].duel_flags & 4) != 0:
 				slot.persistent_flags &= 0xFD
 				slot.defense_position = false
+				defense_sound = 57
 			else:
 				slot.persistent_flags |= 3
 				slot.defense_position = true
 				slot.has_attacked = true
 			duel_menus.close()
-			if audio_dispatch != null: audio_dispatch.play_game_audio(55)
+			if audio_dispatch != null: audio_dispatch.play_game_audio(defense_sound)
 		"tribute":
 			duel_state.tributes_committed += 1
 			duel_state.discard_slot(side_id, 2, cell.x, true)
@@ -916,6 +918,9 @@ func _on_monster_action_selected(action_id: int, duel_state: SacredDuelState) ->
 			duel_menus.close()
 			if audio_dispatch != null: audio_dispatch.play_game_audio(64)
 		"cancel":
+			if (slot.persistent_flags & 2) != 0 and (duel_state.sides[side_id].duel_flags & 4) != 0:
+				slot.persistent_flags &= 0xFD
+				slot.defense_position = false
 			duel_menus.close()
 			if audio_dispatch != null: audio_dispatch.play_game_audio(56)
 	_finish_duel_if_ended()
