@@ -106,6 +106,19 @@ func position_actor(actor_id: int, x: int, y: int) -> void:
 	actor_frame_changed.emit(actor_id, actor.sprite_id, _frame_index(actor))
 	await get_tree().create_timer(1.0 / 60.0).timeout
 
+## Rebuilds the visible actor composition for a native UpdateSceneActorFrame call.
+func update_scene_actor_frame() -> void:
+	var actor_ids: Array[int] = []
+	for actor_id: int in actors:
+		actor_ids.append(actor_id)
+	actor_ids.sort()
+	for actor_id in actor_ids:
+		var actor := _actor(actor_id)
+		if actor == null: continue
+		_refresh_actor(actor_id)
+		actor_frame_changed.emit(actor_id, actor.sprite_id, _frame_index(actor))
+	await get_tree().create_timer(1.0 / 60.0).timeout
+
 func set_actor_orientation(actor_id: int, orientation: int) -> void:
 	var actor := _actor(actor_id)
 	if actor == null:
