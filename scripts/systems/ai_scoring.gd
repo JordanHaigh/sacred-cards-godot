@@ -46,7 +46,7 @@ func score_before(state: SacredDuelState, acting_side: int, candidate: Dictionar
 	var card := _card(source.card_id)
 	match kind:
 		0: score = 0x7EE0ACEA
-		1: score = _score_discard(state, acting_side, source)
+		1: score = _score_discard(state, acting_side, source, operands[0] & 15)
 		2: score = _score_summon_zero(state, acting_side, source, _slot(state, acting_side, operands[1]))
 		3: score = _score_summon(state, acting_side, source, operands, 1, 0x7F5DA546)
 		4: score = _score_summon(state, acting_side, source, operands, 2, 0x7F7DB066)
@@ -127,21 +127,28 @@ func best_candidate(scored_candidates: Array[Dictionary]) -> Dictionary:
 			best = entry.duplicate(true)
 	return {} if int(best.get("id", 0)) == 0 else best
 
-func _score_discard(state: SacredDuelState, active: int, slot: DuelCardSlot) -> int:
+func _score_discard(state: SacredDuelState, active: int, slot: DuelCardSlot, source_column: int) -> int:
 	var card := _card(slot.card_id)
 	if card == null: return LOW_PRIORITY
 	if card.metadata_1a != 2: return 0x7EE4F2AF
 	match _remaining_tributes(slot.card_id, state):
 		0:
-			var same_count := 0
-			for hand_card in state.side(active).hand:
-				if hand_card == slot.card_id: same_count += 1
+			var same_count := _forward_hand_match_count(state.side(active).hand, source_column, slot.card_id)
 			var base := 0x7EE2CFCF if slot.card_id not in EXODIA_IDS or same_count > 1 else 0x7EE0ACEE
 			return _u32(base - _attack(slot, state.terrain) + 0x1FFFC - _defense(slot, state.terrain))
 		1: return 0x7EE4F2B4
 		2: return 0x7EE71594
 		3: return 0x7EE0ACEF if slot.card_id >= 832 and slot.card_id <= 834 else 0x7EE93874
 		_: return LOW_PRIORITY
+
+## AiScoreDiscardBefore starts its five-pointer count at the selected row-4
+## cell, so only this slot and later hand slots have portable value targets.
+func _forward_hand_match_count(hand: Array[int], source_column: int, card_id: int) -> int:
+	var matches := 0
+	for column in range(clampi(source_column, 0, hand.size()), mini(source_column + 5, hand.size())):
+		if hand[column] == card_id:
+			matches += 1
+	return matches
 
 func _score_summon_zero(state: SacredDuelState, active: int, card_slot: DuelCardSlot, destination: DuelCardSlot) -> int:
 	if not _unlocked_monster(card_slot) or _remaining_tributes(card_slot.card_id, state) != 0: return LOW_PRIORITY
