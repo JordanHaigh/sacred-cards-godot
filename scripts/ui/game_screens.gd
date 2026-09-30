@@ -27,6 +27,7 @@ const SPELL_EFFECT_RULES_SCRIPT = preload("res://scripts/systems/spell_effect_ru
 const MONSTER_EFFECT_RULES_SCRIPT = preload("res://scripts/systems/monster_effect_rules.gd")
 const AI_VALIDATION_SCRIPT = preload("res://scripts/systems/ai_validation.gd")
 const AI_CANDIDATE_DATABASE_SCRIPT = preload("res://scripts/data/ai_candidate_database.gd")
+const AI_ATTACK_TAG_DATABASE_SCRIPT = preload("res://scripts/data/ai_attack_tag_database.gd")
 const AI_SCORING_SCRIPT = preload("res://scripts/systems/ai_scoring.gd")
 const AI_CARD_SCORING_SCRIPT = preload("res://scripts/systems/ai_card_scoring.gd")
 const AI_ACTIONS_SCRIPT = preload("res://scripts/systems/ai_actions.gd")
@@ -164,6 +165,7 @@ var spell_effect_rules: SpellEffectRules
 var monster_effect_rules: MonsterEffectRules
 var ai_validation: AiValidation
 var ai_candidate_database: AiCandidateDatabase
+var ai_attack_tag_database: AiAttackTagDatabase
 var ai_scoring: AiScoring
 var ai_card_scoring: AiCardScoring
 var ai_actions: AiActions
@@ -253,7 +255,11 @@ func _ready() -> void:
 	var ai_candidates_error: Error = ai_candidate_database.load_recovered_data()
 	if ai_candidates_error != OK:
 		push_error("Could not load the recovered AI candidate table (error %d)." % ai_candidates_error)
-	ai_turn = AI_TURN_SCRIPT.new(ai_candidate_database, ai_validation, ai_scoring, ai_actions, duel_special_wins)
+	ai_attack_tag_database = AI_ATTACK_TAG_DATABASE_SCRIPT.new()
+	var ai_attack_tags_error: Error = ai_attack_tag_database.load_recovered_data()
+	if ai_attack_tags_error != OK:
+		push_error("Could not load the recovered AI attack-tag table (error %d)." % ai_attack_tags_error)
+	ai_turn = AI_TURN_SCRIPT.new(ai_candidate_database, ai_validation, ai_scoring, ai_actions, duel_special_wins, ai_attack_tag_database)
 	ai_turn.action_starting.connect(_on_ai_duel_action_starting)
 	ai_turn.action_presentation_requested.connect(_on_ai_duel_action_presentation_requested)
 	duel_effect_bindings = EFFECT_RULE_BINDINGS_SCRIPT.new()
@@ -931,7 +937,7 @@ func execute_ai_action(duel_state: SacredDuelState, acting_side: int, candidate:
 func run_opponent_turn(duel_state: SacredDuelState, acting_side: int, random_service: SacredRandom = null, max_actions: int = -1) -> Dictionary:
 	if ai_turn == null:
 		return {"completed": false, "reason": "ai_turn_unavailable", "actions": []}
-	return await ai_turn.run_opponent_turn(duel_state, acting_side, random_service, max_actions)
+	return await ai_turn.run_opponent_turn(duel_state, acting_side, random_service, max_actions, active_opponent_id)
 
 ## Connects a game-owned duel state to the playable Godot battlefield view.
 func show_duel_state(duel_state: SacredDuelState) -> void:

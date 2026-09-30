@@ -16,14 +16,16 @@ var validation: AiValidation
 var scoring: AiScoring
 var actions: AiActions
 var special_wins: DuelSpecialWins
+var attack_tags: AiAttackTagDatabase
 var _presentation_pending := false
 
-func _init(candidate_database: AiCandidateDatabase = null, validator: AiValidation = null, scorer: AiScoring = null, executor: AiActions = null, wins: DuelSpecialWins = null) -> void:
+func _init(candidate_database: AiCandidateDatabase = null, validator: AiValidation = null, scorer: AiScoring = null, executor: AiActions = null, wins: DuelSpecialWins = null, tag_database: AiAttackTagDatabase = null) -> void:
 	candidates = candidate_database
 	validation = validator
 	scoring = scorer
 	actions = executor
 	special_wins = wins if wins != null else DuelSpecialWins.new()
+	attack_tags = tag_database
 
 func complete_action_presentation() -> void:
 	if not _presentation_pending:
@@ -35,7 +37,7 @@ func complete_action_presentation() -> void:
 ## the top result. Like the C controller, it keeps selecting actions until no
 ## positive candidate remains or the duel ends. Callers may supply a limit for
 ## bounded simulations; the default preserves the native unbounded loop.
-func run_opponent_turn(state: SacredDuelState, acting_side: int, random_service: SacredRandom = null, max_actions: int = -1) -> Dictionary:
+func run_opponent_turn(state: SacredDuelState, acting_side: int, random_service: SacredRandom = null, max_actions: int = -1, opponent_id: int = -1) -> Dictionary:
 	if state == null or acting_side < 0 or acting_side > 1 or state.active_side != acting_side:
 		return {"completed": false, "reason": "invalid_context", "actions": []}
 	if candidates == null or validation == null or scoring == null or actions == null:
@@ -75,6 +77,7 @@ func run_opponent_turn(state: SacredDuelState, acting_side: int, random_service:
 			report.stop_reason = "no_candidate"
 			stopped_early = true
 			break
+		_before_action_presentation(state, acting_side, selected, opponent_id)
 		candidate_selected.emit(int(selected.id), int(selected.kind), int(selected.score))
 		action_starting.emit(int(selected.id), int(selected.kind))
 		var execution := actions.execute(state, acting_side, selected, false)
@@ -117,3 +120,15 @@ func run_opponent_turn(state: SacredDuelState, acting_side: int, random_service:
 	report.completed = true
 	turn_completed.emit(report)
 	return report
+
+func _before_action_presentation(state: SacredDuelState, acting_side: int, candidate: Dictionary, opponent_id: int) -> void:
+	var action_kind := int(candidate.get("kind", -1))
+	if action_kind not in [7, 8, 9, 10, 12, 13] or attack_tags == null:
+		return
+	var operands: Array = candidate.get("operands", [])
+	if operands.is_empty():
+		return
+	var attacker: DuelCardSlot = actions._slot(state, acting_side, int(operands[0]))
+	if attacker != null:
+		# The native lookup stores this tag in a local record that is not consumed.
+		attack_tags.find_attack_tag(opponent_id, attacker.card_id)
