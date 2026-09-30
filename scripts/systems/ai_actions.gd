@@ -173,9 +173,6 @@ func _apply_battle_destruction(state: SacredDuelState, setup: Dictionary, flags:
 func _trapped_attack(state: SacredDuelState, active: int, operands: Array[int], result: Dictionary) -> Dictionary:
 	var attacker_column := operands[0] & 15
 	_attack_pose(_slot(state, active, operands[0]))
-	if ((operands[0] >> 4) & 15) == 2 and operands.size() > 1:
-		var target := _slot(state, active, operands[1])
-		if target != null: target.persistent_flags |= 0x10
 	var found := trap_rules.find_activating_trap(state, 1 - active, active, 2, attacker_column) if trap_rules != null else {"found": false}
 	if not bool(found.get("found", false)): return {"resolved": false, "reason": "expected_trap_missing"}
 	var activated := trap_rules.activate(state, 1 - active, int(found.slot), active, 2, attacker_column, int(found.kind), 1)
