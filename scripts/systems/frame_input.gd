@@ -4,6 +4,7 @@ class_name FrameInput
 ## Per-frame input edges and repeat state using Godot actions, with no key matrix access.
 const REPEAT_DELAY := 10
 const REPEAT_INTERVAL := 3
+var repeat_interval: int = REPEAT_INTERVAL
 var held: Dictionary[StringName, bool] = {}
 var pressed: Dictionary[StringName, bool] = {}
 var repeated: Dictionary[StringName, bool] = {}
@@ -32,7 +33,7 @@ func poll_actions(actions: Array[StringName]) -> void:
 	else:
 		repeat_timer -= 1
 		if repeat_timer == 0:
-			repeat_timer = REPEAT_INTERVAL
+			repeat_timer = maxi(repeat_interval, 1)
 			for action in current:
 				if current[action]:
 					repeated[action] = true
@@ -50,3 +51,4 @@ func reset() -> void:
 	repeated.clear()
 	_known_actions.clear()
 	repeat_timer = REPEAT_DELAY
+	repeat_interval = REPEAT_INTERVAL

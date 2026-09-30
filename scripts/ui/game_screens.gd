@@ -52,6 +52,7 @@ const ACTOR_ANIMATION_DATABASE_SCRIPT = preload("res://scripts/data/actor_animat
 const SCENE_DIALOGUE_DISPLAY_SCRIPT = preload("res://scripts/ui/scene_dialogue_display.gd")
 const PRE_DUEL_MENU_SCRIPT = preload("res://scripts/ported/pre_duel_menu.gd")
 const PRE_DUEL_DISPLAY_SCRIPT = preload("res://scripts/ported/pre_duel_display.gd")
+const FRAME_INPUT_SCRIPT = preload("res://scripts/systems/frame_input.gd")
 const SUMMON_RULES_SCRIPT = preload("res://scripts/systems/summon_rules.gd")
 const BATTLE_SETUP_SCRIPT = preload("res://scripts/systems/battle_setup.gd")
 const BATTLE_STATE_SCRIPT = preload("res://scripts/state/battle_state.gd")
@@ -105,6 +106,7 @@ var name_entry_save_after := false
 var pre_duel_menu: PreDuelMenuState
 var pre_duel_display: PreDuelDisplay
 var pre_duel_opponent_id := 0
+var _pre_duel_frame_input = FRAME_INPUT_SCRIPT.new()
 var opponent_database: OpponentDatabase
 var duel_flow: DuelFlow
 var duel_effect_presentation: DuelEffectPresentation
@@ -335,6 +337,8 @@ func _ready() -> void:
 	_build_screen()
 
 func _process(_delta: float) -> void:
+	if screen == "pre_duel" and pre_duel_menu != null:
+		_process_pre_duel_direction_repeat()
 	if screen != "title" or title_menu == null:
 		return
 	if _title_fade_transition_pending:
@@ -349,14 +353,16 @@ func _process(_delta: float) -> void:
 	_apply_title_pulse()
 
 func _unhandled_key_input(event: InputEvent) -> void:
+	if event is InputEventKey and screen == "pre_duel" and event.keycode in [KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT]:
+		get_viewport().set_input_as_handled()
+		return
 	if event is InputEventKey and not event.pressed and screen == "duel" and event.keycode == KEY_Q and _duel_stats_visible:
 		_duel_stats_visible = false
 		if duel_menus != null: duel_menus.set_inspect_stats_held(false)
 		_build_screen()
 		get_viewport().set_input_as_handled()
 		return
-	var pre_duel_direction_repeat := event is InputEventKey and event.echo and screen == "pre_duel" and event.keycode in [KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT]
-	if event is InputEventKey and event.pressed and (not event.echo or pre_duel_direction_repeat):
+	if event is InputEventKey and event.pressed and not event.echo:
 		if screen == "duel" and battle_animation_player != null and battle_animation_player.is_presenting:
 			get_viewport().set_input_as_handled()
 			return
@@ -1097,8 +1103,23 @@ func initialize_pre_duel_menu(wagerable_ids: Array[int], special_wager_ids: Arra
 
 func show_pre_duel_menu(opponent_id: int, wagerable_ids: Array[int], special_wager_ids: Array[int]) -> void:
 	pre_duel_opponent_id = opponent_id
+	_pre_duel_frame_input.reset()
 	initialize_pre_duel_menu(wagerable_ids, special_wager_ids)
 	_show("pre_duel")
+
+func _process_pre_duel_direction_repeat() -> void:
+	var popup_open := pre_duel_menu.popup != PreDuelMenuState.PopupKind.NONE
+	_pre_duel_frame_input.repeat_interval = FrameInput.REPEAT_INTERVAL if popup_open else 1
+	_pre_duel_frame_input.poll_actions([&"ui_right", &"ui_left", &"ui_up", &"ui_down"])
+	var code := 0
+	if _pre_duel_frame_input.was_repeated(&"ui_down"): code = 128
+	elif _pre_duel_frame_input.was_repeated(&"ui_up"): code = 64
+	elif popup_open and _pre_duel_frame_input.was_repeated(&"ui_left"): code = 32
+	elif popup_open and _pre_duel_frame_input.was_repeated(&"ui_right"): code = 16
+	if code == 0: return
+	var result := process_pre_duel_code(code, pre_duel_opponent_id)
+	if result.has("reason"): _toast(str(result.reason))
+	_build_screen()
 
 func _pre_duel_code_for_key(keycode: int) -> int:
 	match keycode:
