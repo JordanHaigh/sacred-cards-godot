@@ -85,11 +85,11 @@ func _first_monster_column(duel: SacredDuelState, acting_side: int, summon_rules
 			return column
 	return 0
 
-func begin_attack_target(duel: SacredDuelState, opposing_side: int) -> Dictionary:
+func begin_attack_target(duel: SacredDuelState, opposing_side: int, summon_rules: SummonRules = null, database: CardDatabase = null) -> Dictionary:
 	if not _valid_side(duel, opposing_side):
 		return {"accepted": false}
 	var monsters: Array[DuelCardSlot] = duel.side(opposing_side).monster_zones
-	var target_column := _last_monster(monsters)
+	var target_column := _last_monster(monsters, summon_rules, database)
 	saved_cursor = cursor
 	mode = Mode.ATTACK_TARGET
 	view_row = cursor.y
@@ -195,7 +195,7 @@ func _first_empty(slots: Array[DuelCardSlot]) -> int:
 	# Native FirstEmpty returns column zero when all five cells are occupied.
 	return 0
 
-func _last_monster(slots: Array[DuelCardSlot]) -> int:
+func _last_monster(slots: Array[DuelCardSlot], summon_rules: SummonRules = null, database: CardDatabase = null) -> int:
 	for index in range(slots.size() - 1, -1, -1):
-		if not slots[index].is_empty(): return index
+		if not slots[index].is_empty() and (summon_rules == null or summon_rules.classify_card(slots[index].card_id, database) == 1): return index
 	return 4

@@ -885,7 +885,7 @@ func _on_monster_action_selected(action_id: int, duel_state: SacredDuelState) ->
 				var direct_result := resolve_player_attack(duel_state, cell.x)
 				if not bool(direct_result.get("accepted", false)): _toast(str(direct_result.get("reason", "Attack failed.")))
 			else:
-				player_duel_controller.begin_attack_target(duel_state, 1 - side_id)
+				player_duel_controller.begin_attack_target(duel_state, 1 - side_id, duel_summon_rules, card_database)
 		"defense":
 			if (duel_state.sides[side_id].duel_flags & 4) != 0:
 				slot.persistent_flags &= 0xFD
