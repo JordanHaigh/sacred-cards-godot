@@ -352,6 +352,32 @@ func _process(_delta: float) -> void:
 	title_menu.step_title_pulse()
 	_apply_title_pulse()
 
+func _input(event: InputEvent) -> void:
+	if screen != "duel" or active_duel_state == null or duel_menus == null or duel_menus.menu == DuelMenus.Menu.NONE:
+		return
+	if not event is InputEventKey or not event.pressed or event.echo:
+		return
+	if event.keycode in [KEY_ESCAPE, KEY_SPACE]:
+		duel_menus.close()
+		if audio_dispatch != null: audio_dispatch.play_game_audio(56)
+		_build_screen()
+		get_viewport().set_input_as_handled()
+		return
+	var direction := -1
+	match event.keycode:
+		KEY_UP: direction = DuelMenus.Direction.UP
+		KEY_DOWN: direction = DuelMenus.Direction.DOWN
+		KEY_LEFT: direction = DuelMenus.Direction.LEFT
+		KEY_RIGHT: direction = DuelMenus.Direction.RIGHT
+	if direction < 0:
+		return
+	if duel_menus.navigate(direction):
+		if audio_dispatch != null: audio_dispatch.play_game_audio(54)
+		if duel_menus.menu == DuelMenus.Menu.MONSTER_ACTION:
+			_preview_monster_action(duel_menus.choice, active_duel_state)
+		_build_screen()
+	get_viewport().set_input_as_handled()
+
 func _unhandled_key_input(event: InputEvent) -> void:
 	if event is InputEventKey and screen == "pre_duel" and event.keycode in [KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT]:
 		get_viewport().set_input_as_handled()
@@ -1673,6 +1699,7 @@ func _draw_duel() -> void:
 			popup.name = "MonsterActionMenu"
 			for action_index in range(duel_menus.labels().size()):
 				popup.add_item(duel_menus.labels()[action_index], action_index)
+			popup.set_focused_item(duel_menus.choice)
 			popup.id_focused.connect(_preview_monster_action.bind(active_duel_state))
 			popup.id_pressed.connect(_on_monster_action_selected.bind(active_duel_state))
 			screen_root.add_child(popup)
@@ -1682,6 +1709,7 @@ func _draw_duel() -> void:
 			popup.name = "DuelContextMenu"
 			for action_index in range(duel_menus.labels().size()):
 				popup.add_item(duel_menus.labels()[action_index], action_index)
+			popup.set_focused_item(duel_menus.choice)
 			popup.id_pressed.connect(_on_duel_context_selected.bind(active_duel_state))
 			screen_root.add_child(popup)
 			popup.popup_centered()

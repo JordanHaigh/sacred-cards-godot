@@ -8,7 +8,14 @@ enum ContextAction { INSPECT, END_TURN, DISCARD }
 enum MonsterAction { ATTACK, DEFENSE, TRIBUTE, EFFECT, CANCEL }
 
 const CONTEXT_LABELS := ["VIEW CARD", "END TURN", "DISCARD CARD"]
-const MONSTER_LABELS := ["ATTACK", "DEFENSE", "TRIBUTE", "EFFECT", "CANCEL"]
+const MONSTER_LABELS := ["ATTACK", "DEFENSE", "TRIBUTE", "EFFECT"]
+const NAVIGATION_PATH := "res://resources/duel_menu_navigation.json"
+
+enum Direction { UP, DOWN, LEFT, RIGHT }
+
+## These transition tables were read from the matching USA Rev. 00 ROM. The
+## menus use directional layouts, so a generic previous/next step is wrong.
+var navigation: Dictionary = {}
 
 var menu := Menu.NONE
 var choice := 0
@@ -18,6 +25,31 @@ var deck_counts := [40, 40]
 var grave_card_ids := [0, 0]
 var opponent_hand: Array[int] = []
 var inspect_stats_held := false
+
+func _init() -> void:
+	_load_navigation()
+
+func _load_navigation() -> void:
+	if not FileAccess.file_exists(NAVIGATION_PATH):
+		push_error("Missing duel menu navigation at %s" % NAVIGATION_PATH)
+		return
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(NAVIGATION_PATH))
+	if not parsed is Dictionary:
+		push_error("Invalid duel menu navigation at %s" % NAVIGATION_PATH)
+		return
+	navigation = parsed
+	for menu_key in ["context", "monster_action"]:
+		var menu_tables: Variant = navigation.get(menu_key, {})
+		var count := 3 if menu_key == "context" else 4
+		for direction_key in ["up", "down", "left", "right"]:
+			var table: Variant = menu_tables.get(direction_key, []) if menu_tables is Dictionary else []
+			if not table is Array or table.size() != count:
+				push_error("Invalid %s %s navigation table" % [menu_key, direction_key])
+				return
+			for destination in table:
+				if int(destination) < 0 or int(destination) >= count:
+					push_error("Out-of-range %s %s navigation target" % [menu_key, direction_key])
+					return
 
 func open_context(cell: Vector2i, player_life: int, rival_life: int, player_deck_count: int, rival_deck_count: int, player_grave_id: int, rival_grave_id: int) -> void:
 	menu = Menu.CONTEXT
@@ -77,6 +109,20 @@ func move(direction: int) -> int:
 	if count > 0:
 		choice = posmod(choice + direction, count)
 	return choice
+
+## Applies the recovered per-direction transition. Returns whether a direction
+## was supported by this menu; navigation can legitimately leave choice fixed.
+func navigate(direction: int) -> bool:
+	if menu == Menu.NONE or direction < Direction.UP or direction > Direction.RIGHT:
+		return false
+	var menu_key := "context" if menu == Menu.CONTEXT else "monster_action"
+	var direction_names := ["up", "down", "left", "right"]
+	var menu_tables: Variant = navigation.get(menu_key, {})
+	var table: Variant = menu_tables.get(direction_names[direction], []) if menu_tables is Dictionary else []
+	if not table is Array or choice < 0 or choice >= table.size():
+		return false
+	choice = int(table[choice])
+	return true
 
 func confirm() -> Dictionary:
 	if menu == Menu.MONSTER_ACTION:
