@@ -107,6 +107,13 @@ func run_opponent_turn(state: SacredDuelState, acting_side: int, random_service:
 			break
 	if not stopped_early:
 		report.stop_reason = "action_limit"
+	# ai_turn.c waits one frame 30 times after the final candidate/action. Keep
+	# this cadence in Godot so the opponent turn does not transition early.
+	var scene_tree := Engine.get_main_loop() as SceneTree
+	if scene_tree != null:
+		report["tail_frames"] = 30
+		for _frame in range(30):
+			await scene_tree.process_frame
 	report.completed = true
 	turn_completed.emit(report)
 	return report
