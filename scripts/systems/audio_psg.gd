@@ -181,11 +181,15 @@ func _sync_channel_gain(channel: PsgChannelState) -> void:
 		var level := clampi(channel.current_envelope_level, 0, wave_volumes.size() - 1)
 		channel.gain = float(wave_volumes[level]) / 128.0
 	else:
-		channel.gain = clampf(float(channel.current_envelope_level) / 31.0, 0.0, 1.0)
+		# TickPsgSound writes c[9] into the high nibble of the native envelope
+		# register; the byte store wraps its effective level to four bits.
+		channel.output_volume_level = channel.current_envelope_level & 0x0F
+		channel.gain = float(channel.output_volume_level) / 15.0
 
 func _stop_channel(channel: PsgChannelState) -> void:
 	channel.status_flags = 0
 	channel.current_envelope_level = 0
+	channel.output_volume_level = 0
 	channel.gain = 0.0
 	channel.active = false
 

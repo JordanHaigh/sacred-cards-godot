@@ -23,6 +23,7 @@ var rate_countdown := 0
 var release_countdown := 0
 var envelope_volume := 0
 var current_envelope_level := 0
+var output_volume_level := 0
 var sustain_volume := 0
 var stereo_mask := 0xFF
 var channel_mask := 0xFF
