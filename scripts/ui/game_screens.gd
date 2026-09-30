@@ -1018,7 +1018,6 @@ func _advance_recovered_duel_to_player() -> Dictionary:
 		_ai_turn_running = true
 		var ai_report: Dictionary = await run_opponent_turn(active_duel_state, acting_side, duel_random)
 		current_save.random_state = duel_random.state
-		await _wait_scene_frames(30)
 		if not bool(ai_report.get("completed", false)):
 			show_duel_state(active_duel_state)
 			_ai_turn_running = false
