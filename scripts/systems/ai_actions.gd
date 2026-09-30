@@ -142,7 +142,7 @@ func _attack(state: SacredDuelState, active: int, operands: Array[int], monster_
 		setup = battle_setup.prepare_direct_attack(state, attacker_column)
 	if setup.is_empty(): return {"resolved": false, "reason": "battle_setup_failed"}
 	battle_state.resolve_setup(state, setup)
-	if monster_target: _apply_battle_destruction(state, setup, battle_state.last_result_flags)
+	_apply_battle_destruction(state, setup, battle_state.last_result_flags)
 	result["battle"] = {"code": battle_state.last_result_code, "flags": battle_state.last_result_flags}
 	result["battle_setup"] = setup
 	var combat_owners: Array[int] = [int(setup.side_a.get("owner", 0)), int(setup.side_b.get("owner", 1))]
