@@ -355,7 +355,8 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		_build_screen()
 		get_viewport().set_input_as_handled()
 		return
-	if event is InputEventKey and event.pressed and not event.echo:
+	var pre_duel_direction_repeat := event is InputEventKey and event.echo and screen == "pre_duel" and event.keycode in [KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT]
+	if event is InputEventKey and event.pressed and (not event.echo or pre_duel_direction_repeat):
 		if screen == "duel" and battle_animation_player != null and battle_animation_player.is_presenting:
 			get_viewport().set_input_as_handled()
 			return
