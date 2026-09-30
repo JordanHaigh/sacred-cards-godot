@@ -1,8 +1,16 @@
 {
-  "source": "decompiled/src/duel_flow.c: TransformGrowingMonsters; IDs resolved against resources/card_database.json",
+  "source": {
+    "title": "Yu-Gi-Oh! The Sacred Cards (USA)",
+    "game_code": "AY7E",
+    "revision": 0,
+    "rom_sha256": "093f986a92d73c48e11de0a83c6678c3620f8def6173f5e69133815301b40d8f",
+    "input_table_address": "0x08D419CC",
+    "output_table_address": "0x08D419D4",
+    "extraction": "four little-endian uint16 card IDs from each ROM table"
+  },
   "source_table": "four input/output pairs referenced by TransformGrowingMonsters; pair payload values were not exported",
-  "status": "inferred_from_card_line",
-  "note": "The four-pair Petit Moth evolution chain is inferred from the recovered card identities and the documented turn-start evolution behavior. Keep provenance explicit until the original table bytes are extracted.",
+  "status": "recovered_from_matching_rom",
+  "note": "Both table arrays were read from the matching AY7EA4 USA Rev. 00 ROM. The GDScript transform preserves the native four-entry order.",
   "pairs": [
     {
       "from_card_id": 278,
