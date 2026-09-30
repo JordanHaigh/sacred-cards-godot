@@ -363,7 +363,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 			return
 		if screen == "duel" and _duel_hand_visible:
-			if event.keycode in [KEY_ENTER, KEY_SPACE, KEY_ESCAPE]:
+			if event.keycode in [KEY_ENTER, KEY_SPACE, KEY_ESCAPE, KEY_W]:
 				_duel_hand_visible = false
 				_build_screen()
 			get_viewport().set_input_as_handled()
@@ -634,7 +634,6 @@ func process_player_duel_code(code: int, duel_state: SacredDuelState) -> Diction
 			duel_menus.set_inspect_stats_held(true)
 			return {"accepted": true, "action": "show_stats", "cursor": player_duel_controller.cursor}
 		PlayerDuelController.InputCode.OPPONENT_HAND:
-			duel_state.side(1 - side_id).hand_revealed = true
 			_duel_hand_visible = true
 			duel_menus.begin_opponent_hand(duel_state.side(1 - side_id).hand)
 			return {"accepted": true, "action": "show_opponent_hand", "cards": duel_menus.opponent_hand_cards()}
