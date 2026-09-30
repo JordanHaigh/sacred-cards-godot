@@ -52,8 +52,6 @@ func begin_card_placement(duel: SacredDuelState, acting_side: int, card_id: int,
 		return {"accepted": false, "reason": "unsupported_card_type"}
 	var slots: Array[DuelCardSlot] = _row(duel.side(acting_side), target_row)
 	var target_column := _first_empty(slots)
-	if target_column < 0:
-		return {"accepted": false, "reason": "row_full"}
 	saved_cursor = cursor
 	selected_hand_card_id = card_id
 	mode = Mode.PLACE_CARD
@@ -194,7 +192,8 @@ func _row(side: DuelSideState, row_index: int) -> Array[DuelCardSlot]:
 func _first_empty(slots: Array[DuelCardSlot]) -> int:
 	for index in range(slots.size()):
 		if slots[index].is_empty(): return index
-	return -1
+	# Native FirstEmpty returns column zero when all five cells are occupied.
+	return 0
 
 func _last_monster(slots: Array[DuelCardSlot]) -> int:
 	for index in range(slots.size() - 1, -1, -1):
