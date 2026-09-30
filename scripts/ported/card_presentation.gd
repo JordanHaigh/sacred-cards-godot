@@ -4,6 +4,7 @@ extends Control
 ## The original card face is retained as an indexed PNG; UI and paging are native.
 
 const PIXEL_TEXT_SCRIPT := preload("res://scripts/ui/pixel_text.gd")
+const LOCKED_DESCRIPTION_PATH := "res://resources/card_locked_description.json"
 const GOLD := Color("ffdc77")
 const PAPER := Color("f5e6c3")
 const PANEL := Color("171817")
@@ -21,7 +22,7 @@ func present(card: CardDefinition, art_renderer: CardArt = null, duelist_level: 
 	definition = card
 	card_art = art_renderer
 	description_locked = duelist_level >= 0 and duelist_level < card.cost
-	pages = [] if description_locked else _parse_description_pages(card.description)
+	pages = [_load_locked_description()] if description_locked else _parse_description_pages(card.description)
 	page_index = 0
 	_build_view()
 
@@ -96,7 +97,7 @@ func _update_page() -> void:
 	page_lines.clear()
 	var info := get_child(2) as Panel
 	var text_value := pages[page_index] if not pages.is_empty() else "No description available."
-	var wrapped := _wrap_description(text_value, 32)
+	var wrapped := _wrap_locked_description(text_value) if description_locked else _wrap_description(text_value, 32)
 	for line_index in range(wrapped.size()):
 		var line: PixelText = PIXEL_TEXT_SCRIPT.new()
 		line.position = Vector2(5, 49 + line_index * 6)
@@ -106,7 +107,24 @@ func _update_page() -> void:
 		line.text = wrapped[line_index]
 		info.add_child(line)
 		page_lines.append(line)
-	page_counter.text = "PAGE %d / %d" % [page_index + 1, maxi(pages.size(), 1)]
+	page_counter.text = "" if description_locked else "PAGE %d / %d" % [page_index + 1, maxi(pages.size(), 1)]
+
+func _load_locked_description() -> String:
+	var file := FileAccess.open(LOCKED_DESCRIPTION_PATH, FileAccess.READ)
+	if file == null:
+		push_warning("Recovered locked-card description is unavailable: %s" % LOCKED_DESCRIPTION_PATH)
+		return ""
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary or not parsed.get("english", null) is String:
+		push_warning("Recovered locked-card description has an invalid structure.")
+		return ""
+	return str(parsed.english)
+
+func _wrap_locked_description(source: String) -> Array[String]:
+	var lines: Array[String] = []
+	for offset in range(0, source.length(), 12):
+		lines.append(source.substr(offset, 12))
+	return lines
 
 func _wrap_description(source: String, line_width: int) -> Array[String]:
 	var lines: Array[String] = []
