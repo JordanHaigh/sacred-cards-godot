@@ -1162,15 +1162,14 @@ func process_pre_duel_code(code: int, opponent_id: int) -> Dictionary:
 			if audio_dispatch != null: audio_dispatch.play_game_audio(56)
 			return {"accepted": true, "action": "popup_closed"}
 		if code in [64, 128, 32, 16]:
-			var direction := -1 if code in [64, 32] else 1
-			pre_duel_menu.navigate_popup(direction)
-			if audio_dispatch != null: audio_dispatch.play_game_audio(54)
-			return {"accepted": true, "action": "popup_moved", "choice": pre_duel_menu.choice}
+			if pre_duel_menu.navigate_popup(code):
+				if audio_dispatch != null: audio_dispatch.play_game_audio(54)
+				return {"accepted": true, "action": "popup_moved", "choice": pre_duel_menu.choice}
 		if code == 1:
 			var popup_result := pre_duel_menu.confirm()
 			if bool(popup_result.get("apply_sort", false)): pre_duel_menu.apply_sort(card_sorter)
 			return _handle_pre_duel_result(popup_result, opponent_id)
-		return {"accepted": false, "reason": "unsupported_popup_input"}
+		return {"accepted": false}
 	match code:
 		64: pre_duel_menu.move(-1)
 		128: pre_duel_menu.move(1)

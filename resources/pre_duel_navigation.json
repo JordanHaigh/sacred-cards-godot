@@ -1,0 +1,96 @@
+{
+  "source": {
+    "title": "Yu-Gi-Oh! The Sacred Cards (USA)",
+    "game_code": "AY7E",
+    "revision": 0,
+    "rom_sha256": "093f986a92d73c48e11de0a83c6678c3620f8def6173f5e69133815301b40d8f",
+    "table_addresses": {
+      "action_up": "0x08D34930",
+      "action_down": "0x08D34933",
+      "special_up": "0x08D3493C",
+      "special_down": "0x08D3493E",
+      "no_wager_up": "0x08D34944",
+      "no_wager_down": "0x08D34946",
+      "sort_up": "0x08D3494C",
+      "sort_down": "0x08D34956",
+      "sort_left": "0x08D34960",
+      "sort_right": "0x08D3496A"
+    }
+  },
+  "tables": {
+    "action_up": [
+      0,
+      0,
+      1
+    ],
+    "action_down": [
+      1,
+      2,
+      2
+    ],
+    "special_up": [
+      0,
+      0
+    ],
+    "special_down": [
+      1,
+      1
+    ],
+    "no_wager_up": [
+      0,
+      0
+    ],
+    "no_wager_down": [
+      1,
+      1
+    ],
+    "sort_up": [
+      0,
+      1,
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      8
+    ],
+    "sort_down": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      9,
+      9
+    ],
+    "sort_left": [
+      0,
+      0,
+      2,
+      2,
+      4,
+      4,
+      6,
+      6,
+      8,
+      9
+    ],
+    "sort_right": [
+      1,
+      1,
+      3,
+      3,
+      5,
+      5,
+      7,
+      7,
+      8,
+      9
+    ]
+  }
+}

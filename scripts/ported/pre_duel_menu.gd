@@ -9,6 +9,13 @@ enum Action { NONE, INSPECT, WAGER, CANCEL, START_WITHOUT_WAGER, START_WITH_WAGE
 const CARD_COUNT := 900
 const SORT_METHOD_BASE := 45
 const PAGE_STEP := 50
+const POPUP_NAVIGATION_PATH := "res://resources/pre_duel_navigation.json"
+const POPUP_NAVIGATION_TABLE_SIZES := {
+	"action_up": 3, "action_down": 3,
+	"special_up": 2, "special_down": 2,
+	"no_wager_up": 2, "no_wager_down": 2,
+	"sort_up": 10, "sort_down": 10, "sort_left": 10, "sort_right": 10,
+}
 
 var sorted_card_ids: Array[int] = []
 var collection_counts: Dictionary[int, int] = {}
@@ -21,6 +28,10 @@ var view_mode := 1
 var popup: PopupKind = PopupKind.NONE
 var choice := 0
 var wagered_card_id := 0
+var popup_navigation: Dictionary[StringName, Array] = {}
+
+func _init() -> void:
+	_load_popup_navigation()
 
 func initialize(collection: Dictionary, deck: Array[int], wagerable_ids: Array[int], special_ids: Array[int]) -> void:
 	collection_counts.clear()
@@ -83,10 +94,58 @@ func open_sort() -> void:
 	popup = PopupKind.SORT
 	choice = sort_mode
 
-func navigate_popup(direction: int) -> int:
-	var count := 3 if popup == PopupKind.ACTION else 10 if popup == PopupKind.SORT else 2
-	choice = posmod(choice + direction, count)
-	return choice
+func navigate_popup(key_code: int) -> bool:
+	var table_name := _popup_navigation_table(key_code)
+	var table: Array = popup_navigation.get(table_name, [])
+	if table_name == &"" or choice < 0 or choice >= table.size():
+		return false
+	choice = int(table[choice])
+	return true
+
+func _popup_navigation_table(key_code: int) -> StringName:
+	match popup:
+		PopupKind.ACTION:
+			if key_code == 64: return &"action_up"
+			if key_code == 128: return &"action_down"
+		PopupKind.SPECIAL_WAGER:
+			if key_code == 64: return &"special_up"
+			if key_code == 128: return &"special_down"
+		PopupKind.NO_WAGER:
+			if key_code == 64: return &"no_wager_up"
+			if key_code == 128: return &"no_wager_down"
+		PopupKind.SORT:
+			if key_code == 64: return &"sort_up"
+			if key_code == 128: return &"sort_down"
+			if key_code == 32: return &"sort_left"
+			if key_code == 16: return &"sort_right"
+	return &""
+
+func _load_popup_navigation() -> bool:
+	var file := FileAccess.open(POPUP_NAVIGATION_PATH, FileAccess.READ)
+	if file == null:
+		push_warning("Recovered pre-duel popup navigation is unavailable: %s" % POPUP_NAVIGATION_PATH)
+		return false
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary or not parsed.get("tables", {}) is Dictionary:
+		push_warning("Recovered pre-duel popup navigation has an invalid structure.")
+		return false
+	var recovered_tables: Dictionary = parsed.tables
+	for raw_name: Variant in POPUP_NAVIGATION_TABLE_SIZES:
+		var table_name := str(raw_name)
+		var expected_size := int(POPUP_NAVIGATION_TABLE_SIZES[raw_name])
+		var raw_table: Variant = recovered_tables.get(table_name, null)
+		if not raw_table is Array or raw_table.size() != expected_size:
+			push_warning("Recovered pre-duel navigation table %s has the wrong size." % table_name)
+			return false
+		var table: Array[int] = []
+		for raw_choice: Variant in raw_table:
+			var next_choice := int(raw_choice)
+			if next_choice < 0 or next_choice >= expected_size:
+				push_warning("Recovered pre-duel navigation table %s has an invalid choice." % table_name)
+				return false
+			table.append(next_choice)
+		popup_navigation[StringName(table_name)] = table
+	return true
 
 func confirm() -> Dictionary:
 	match popup:
