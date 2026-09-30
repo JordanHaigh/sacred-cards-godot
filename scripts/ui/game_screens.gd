@@ -1431,7 +1431,10 @@ func _run_scene_follow_motion(descriptor: Dictionary, paths: Dictionary) -> void
 			await scene_actor_runtime.position_actor(actor_id, _signed_scene_word(actor.position.x + int(x_steps[index])), _signed_scene_word(actor.position.y + int(y_steps[index])))
 		else:
 			await _wait_scene_frames(1)
-		await _wait_scene_frames(1)
+		if bool(descriptor.get("update_each_step", false)) and scene_actor_runtime != null:
+			await scene_actor_runtime.update_scene_actor_frame()
+		else:
+			await _wait_scene_frames(1)
 
 func _signed_scene_word(value: int) -> int:
 	var word := value & 0xFFFF
