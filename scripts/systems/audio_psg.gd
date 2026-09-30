@@ -38,6 +38,23 @@ func midi_key_frequency(channel: int, key: int, fine: int) -> int:
 func psg_noise_frequency(key: int) -> int:
 	return midi_key_frequency(4, key, 0)
 
+## Decodes the four little-endian words copied to the native 16-byte wave RAM.
+## Each byte contains two unsigned four-bit samples, low nibble first.
+func unpack_wave_words(words: Array[int]) -> PackedFloat32Array:
+	if words.size() != 4:
+		return PackedFloat32Array()
+	var samples := PackedFloat32Array()
+	samples.resize(32)
+	var sample_index := 0
+	for word in words:
+		var packed_word := word & 0xffffffff
+		for byte_index in range(4):
+			var packed_byte := (packed_word >> (byte_index * 8)) & 0xff
+			samples[sample_index] = (float(packed_byte & 0x0f) - 7.5) / 7.5
+			samples[sample_index + 1] = (float((packed_byte >> 4) & 0x0f) - 7.5) / 7.5
+			sample_index += 2
+	return samples
+
 ## Value-state equivalent of StopPsgOscillator. The native code silences the
 ## channel through GBA registers; Godot stops its generated voice directly.
 func stop_channel(channel: PsgChannelState) -> void:

@@ -83,6 +83,14 @@ func play_psg_note(channel_id: int, key: int, fine: int = 0, volume: float = 1.0
 		resolved_waveform = &"wave"
 	return play_psg_voice(channel_id, frequency_hz, level, level, resolved_waveform, wave_samples)
 
+## Starts a wave-channel note from the same four packed words the GBA routine
+## copied to wave RAM, decoded into Godot-owned sample values.
+func play_psg_wave_note(key: int, wave_words: Array[int], fine: int = 0, volume: float = 1.0) -> bool:
+	if psg_pitch_rules == null or wave_words.size() != 4:
+		return false
+	var samples := psg_pitch_rules.unpack_wave_words(wave_words)
+	return play_psg_note(3, key, fine, volume, &"wave", samples)
+
 func stop_psg_voice(channel_id: int) -> void:
 	if channel_id < 1 or channel_id > psg_channels.size():
 		return
