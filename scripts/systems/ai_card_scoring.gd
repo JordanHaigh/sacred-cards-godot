@@ -329,8 +329,10 @@ func _score_terrain_six_case(state: SacredDuelState, own_monsters: Array) -> int
 
 func _score_input_column_damage(state: SacredDuelState, active: int, candidate: Dictionary) -> int:
 	var operands: Array = candidate.get("operands", [])
-	if operands.size() < 2: return LOW
-	var input_column := int(operands[1]) & 15
+	if operands.is_empty(): return LOW
+	# The native handler reads gMonsterInput.column, which is loaded from
+	# operand 0 for the matching monster-effect candidate.
+	var input_column := int(operands[0]) & 15
 	var own := state.side(active).monster_zones
 	var available := false
 	for index in range(own.size()):
