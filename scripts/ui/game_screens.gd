@@ -80,6 +80,7 @@ var shop_selected := 0
 var editing_deck := false
 var deck_hub_return_screen := "title"
 var in_deck_hub_flow := false
+var deck_hub_invalid_message := ""
 var credits := 1240
 var player_lp := 8000
 var rival_lp := 8000
@@ -379,6 +380,11 @@ func _input(event: InputEvent) -> void:
 	get_viewport().set_input_as_handled()
 
 func _unhandled_key_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo and screen == "deck_hub" and not deck_hub_invalid_message.is_empty():
+		deck_hub_invalid_message = ""
+		_build_screen()
+		get_viewport().set_input_as_handled()
+		return
 	if event is InputEventKey and screen == "pre_duel" and event.keycode in [KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT]:
 		get_viewport().set_input_as_handled()
 		return
@@ -1805,6 +1811,10 @@ func _draw_deck_hub() -> void:
 		_text(("> " if index == deck_management.choice else "  ") + entries[index], Vector2(54, 56 + index * 21), 8, color)
 	_text("DECK %02d / 40   COST %05d / %05d" % [deck.size(), deck_rules.deck_cost(card_database), progression.capacity], Vector2(31, 119), 6, PAPER)
 	_text("ENTER SELECT   SPACE CHECK DECK", Vector2(34, 131), 6, PAPER)
+	if not deck_hub_invalid_message.is_empty():
+		_overlay_rect(Rect2(35, 68, 170, 38), Color(0.08, 0.025, 0.025, 0.98), Color("e4b46b"))
+		_text(deck_hub_invalid_message, Vector2(43, 77), 7, PAPER)
+		_text("PRESS ANY KEY", Vector2(78, 91), 7, GOLD)
 
 func _draw_player_status() -> void:
 	var status := deck_management.player_status(current_save)
@@ -2061,8 +2071,12 @@ func _handle_deck_hub_buttons(buttons: int) -> void:
 			_sort_deck_view(true, deck_builder_menu.deck_sort, false)
 			_show("deck")
 		DeckManagement.Action.EXIT: _leave_deck_hub()
-		DeckManagement.Action.INVALID_DECK_SIZE: _toast("Your deck must contain exactly 40 cards.")
-		DeckManagement.Action.INVALID_DECK_CAPACITY: _toast("Your deck cost exceeds your capacity.")
+		DeckManagement.Action.INVALID_DECK_SIZE:
+			deck_hub_invalid_message = "DECK MUST CONTAIN 40 CARDS"
+			_build_screen()
+		DeckManagement.Action.INVALID_DECK_CAPACITY:
+			deck_hub_invalid_message = "DECK EXCEEDS YOUR CAPACITY"
+			_build_screen()
 		DeckManagement.Action.EMPTY_DECK: _toast("Add cards to your deck before editing it.")
 		_: _build_screen()
 
