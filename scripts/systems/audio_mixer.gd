@@ -86,10 +86,7 @@ func play_psg_note(channel_id: int, key: int, fine: int = 0, volume: float = 1.0
 func stop_psg_voice(channel_id: int) -> void:
 	if channel_id < 1 or channel_id > psg_channels.size():
 		return
-	var channel := psg_channels[channel_id - 1]
-	channel.active = false
-	channel.status_flags = 0
-	channel.gain = 0.0
+	psg_pitch_rules.stop_channel(psg_channels[channel_id - 1])
 
 func release_psg_voice(channel_id: int) -> void:
 	if channel_id < 1 or channel_id > psg_channels.size():

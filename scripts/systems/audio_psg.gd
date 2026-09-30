@@ -38,6 +38,13 @@ func midi_key_frequency(channel: int, key: int, fine: int) -> int:
 func psg_noise_frequency(key: int) -> int:
 	return midi_key_frequency(4, key, 0)
 
+## Value-state equivalent of StopPsgOscillator. The native code silences the
+## channel through GBA registers; Godot stops its generated voice directly.
+func stop_channel(channel: PsgChannelState) -> void:
+	if channel == null:
+		return
+	_stop_channel(channel)
+
 ## Port of CalculatePsgEnvelopeVolume. It updates the envelope and routing
 ## values on typed voice state instead of writing mixer bytes/registers.
 func calculate_envelope_volume(channel: PsgChannelState) -> void:
