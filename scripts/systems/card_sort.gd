@@ -3,6 +3,7 @@ class_name CardSortSystem
 
 ## Hardware independent port of the 54 key builders in card_sort.c.
 ## Input and output are card IDs; inventory counts remain in model dictionaries.
+const FIXED_OUTPUT_ORDERS_PATH := "res://resources/card_sort_orders.json"
 const KEY_NAMES := ["copy", "number", "name", "attack", "defense", "type", "attribute", "cost", "quantity", "buy_price", "sell_price", "level"]
 const INVENTORIES := ["none", "collection", "buy_stock", "sell_collection", "total"]
 const METHOD_TABLE := [
@@ -20,20 +21,45 @@ var deck: Array[int] = []
 var language := 0
 var name_ranks: Array = []
 ## Native card_sort.c replaces records with five ROM-backed output orders for
-## methods 1 and 3-6. Store those orders as ordinary Godot arrays when the
-## exact table data is available; keys are sort method IDs and values are card
-## IDs in source table order.
+## methods 1 and 3-6. The USA Rev. 00 tables load as ordinary Godot arrays;
+## keys are sort method IDs and values are card IDs in source table order.
 var fixed_output_lists: Dictionary = {}
 
 func _init(card_database: CardDatabase = null, shop_system: ShopSystem = null) -> void:
 	database = card_database
 	shop = shop_system
 	_load_name_ranks()
+	_load_fixed_output_lists()
 
 func _load_name_ranks() -> void:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://resources/card_name_ranks.json")) if FileAccess.file_exists("res://resources/card_name_ranks.json") else null
 	if parsed is Dictionary:
 		name_ranks = parsed.get("languages", [])
+
+func _load_fixed_output_lists() -> bool:
+	var file := FileAccess.open(FIXED_OUTPUT_ORDERS_PATH, FileAccess.READ)
+	if file == null:
+		push_warning("Recovered card sort output orders are unavailable: %s" % FIXED_OUTPUT_ORDERS_PATH)
+		return false
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary or not parsed.get("orders", {}) is Dictionary:
+		push_warning("Recovered card sort output orders have an invalid structure.")
+		return false
+	var raw_orders: Dictionary = parsed.orders
+	for method in [1, 3, 4, 5, 6]:
+		var key := str(method)
+		if not raw_orders.has(key) or not raw_orders[key] is Array or raw_orders[key].size() != 900:
+			push_warning("Recovered card sort method %d must contain 900 card IDs." % method)
+			return false
+		var seen: Dictionary[int, bool] = {}
+		for raw_card_id: Variant in raw_orders[key]:
+			var card_id := int(raw_card_id)
+			if card_id < 1 or card_id > 900 or seen.has(card_id):
+				push_warning("Recovered card sort method %d is not a card-ID permutation." % method)
+				return false
+			seen[card_id] = true
+	set_fixed_output_lists(raw_orders)
+	return true
 
 func sort_cards(card_ids: Array[int], method: int, collection: Dictionary = {}, buy_stock: Dictionary = {}, sell_collection: Dictionary = {}, totals: Dictionary = {}) -> Array[int]:
 	if method < 0 or method >= METHOD_TABLE.size():
