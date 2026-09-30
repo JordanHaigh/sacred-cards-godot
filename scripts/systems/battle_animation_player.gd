@@ -56,6 +56,7 @@ func play_duel_result(result_code: int, card_ids: Array[int], owners: Array[int]
 	_sprite_layer = Node2D.new()
 	_sprite_layer.z_index = 5
 	_presentation_root.add_child(_sprite_layer)
+	var flags := animation_flags(result_code)
 	card_nodes.clear()
 	life_point_labels.clear()
 	var combat_old: Array[int] = []
@@ -65,7 +66,7 @@ func play_duel_result(result_code: int, card_ids: Array[int], owners: Array[int]
 		combat_old.append(old_life_points[owner])
 		combat_new.append(new_life_points[owner])
 		var card_node: TextureRect = null
-		var card := database.get_card(card_ids[combat_side]) if card_ids[combat_side] > 0 else null
+		var card := database.get_card(card_ids[combat_side]) if card_ids[combat_side] > 0 and (flags[combat_side] & 1) != 0 else null
 		if card != null:
 			card_node = TextureRect.new()
 			card_node.position = Vector2(24 + combat_side * 112, 32)
@@ -85,7 +86,6 @@ func play_duel_result(result_code: int, card_ids: Array[int], owners: Array[int]
 		label.text = "%s  %04d" % ["YOU" if owner == 0 else "RIVAL", combat_old[combat_side]]
 		_presentation_root.add_child(label)
 		life_point_labels.append(label)
-	var flags := animation_flags(result_code)
 	if flags[0] == 0 and flags[1] == 0:
 		_presentation_root.queue_free()
 		return
