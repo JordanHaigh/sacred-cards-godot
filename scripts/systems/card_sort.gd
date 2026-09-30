@@ -40,10 +40,12 @@ func sort_cards(card_ids: Array[int], method: int, collection: Dictionary = {}, 
 		return card_ids.duplicate()
 	var rows: Array[Dictionary] = []
 	var fixed_order: Array = fixed_output_lists.get(method, [])
+	var fixed_zero_key_order := method >= 3 and method <= 6 and fixed_order.size() >= card_ids.size()
 	for index in range(card_ids.size()):
 		var card_id := card_ids[index]
 		var output_id := int(fixed_order[index]) if index < fixed_order.size() else card_id
-		rows.append({"id": output_id, "key": _key(card_id, method, collection, buy_stock, sell_collection, totals)})
+		var sort_key := 0 if fixed_zero_key_order else _key(card_id, method, collection, buy_stock, sell_collection, totals)
+		rows.append({"id": output_id, "key": sort_key})
 	_sort_records_descending(rows)
 	var result: Array[int] = []
 	for row in rows:
