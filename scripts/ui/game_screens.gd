@@ -1942,7 +1942,7 @@ func _visible_shop_cards() -> Array[int]:
 
 func _handle_shop_direction(direction: Vector2i) -> void:
 	if shop_menu.popup != ShopMenuState.PopupKind.NONE:
-		shop_menu.navigate_popup(direction)
+		if not shop_menu.navigate_popup(direction): return
 		if audio_dispatch != null: audio_dispatch.play_game_audio(54)
 	else:
 		var count := _visible_shop_cards().size()

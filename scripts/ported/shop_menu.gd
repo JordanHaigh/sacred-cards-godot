@@ -7,6 +7,11 @@ enum Action { NONE, BUY_OR_SELL, CARD_INFO, CANCEL, SORT_SELECTED, SORT_CLOSED }
 
 const SORT_METHODS_BUY_PATH := "res://decompiled/build/assets/player-menus/shop.buy-sort-methods.bin"
 const SORT_METHODS_SELL_PATH := "res://decompiled/build/assets/player-menus/shop.sell-sort-methods.bin"
+const POPUP_NAVIGATION_PATH := "res://resources/shop_navigation.json"
+const POPUP_NAVIGATION_TABLE_SIZES := {
+	"action_up": 3, "action_down": 3,
+	"sort_up": 10, "sort_down": 10, "sort_left": 10, "sort_right": 10,
+}
 
 var popup: PopupKind = PopupKind.NONE
 var choice := 0
@@ -15,10 +20,12 @@ var selected_index := 0
 var selling := false
 var sort_methods_buy := PackedByteArray()
 var sort_methods_sell := PackedByteArray()
+var popup_navigation: Dictionary[StringName, Array] = {}
 
 func _init() -> void:
 	sort_methods_buy = FileAccess.get_file_as_bytes(SORT_METHODS_BUY_PATH)
 	sort_methods_sell = FileAccess.get_file_as_bytes(SORT_METHODS_SELL_PATH)
+	_load_popup_navigation()
 
 func begin(is_selling: bool, selection: int = 0) -> void:
 	selling = is_selling
@@ -57,19 +64,52 @@ func close_popup() -> void:
 	popup = PopupKind.NONE
 	choice = 0
 
-func navigate_popup(direction: Vector2i) -> void:
+func navigate_popup(direction: Vector2i) -> bool:
+	var key_code := 64 if direction.y < 0 else 128 if direction.y > 0 else 32 if direction.x < 0 else 16 if direction.x > 0 else 0
+	var table_name := _popup_navigation_table(key_code)
+	var table: Array = popup_navigation.get(table_name, [])
+	if table_name == &"" or choice < 0 or choice >= table.size():
+		return false
+	choice = int(table[choice])
+	return true
+
+func _popup_navigation_table(key_code: int) -> StringName:
 	if popup == PopupKind.ACTION:
-		choice = posmod(choice + direction.y, 3)
+		if key_code == 64: return &"action_up"
+		if key_code == 128: return &"action_down"
 	elif popup == PopupKind.SORT:
-		var next := choice
-		if direction.x < 0: next -= 1
-		elif direction.x > 0: next += 1
-		elif direction.y < 0: next -= 2
-		elif direction.y > 0: next += 2
-		# The recovered sort cursor is a 2-column, 5-row grid and uses
-		# per-direction transition tables. This bounded cursor keeps the
-		# Godot menu usable until those table values are recovered.
-		choice = clampi(next, 0, 9)
+		if key_code == 64: return &"sort_up"
+		if key_code == 128: return &"sort_down"
+		if key_code == 32: return &"sort_left"
+		if key_code == 16: return &"sort_right"
+	return &""
+
+func _load_popup_navigation() -> bool:
+	var file := FileAccess.open(POPUP_NAVIGATION_PATH, FileAccess.READ)
+	if file == null:
+		push_warning("Recovered shop popup navigation is unavailable: %s" % POPUP_NAVIGATION_PATH)
+		return false
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary or not parsed.get("tables", {}) is Dictionary:
+		push_warning("Recovered shop popup navigation has an invalid structure.")
+		return false
+	var recovered_tables: Dictionary = parsed.tables
+	for raw_name: Variant in POPUP_NAVIGATION_TABLE_SIZES:
+		var table_name := str(raw_name)
+		var expected_size := int(POPUP_NAVIGATION_TABLE_SIZES[raw_name])
+		var raw_table: Variant = recovered_tables.get(table_name, null)
+		if not raw_table is Array or raw_table.size() != expected_size:
+			push_warning("Recovered shop navigation table %s has the wrong size." % table_name)
+			return false
+		var table: Array[int] = []
+		for raw_choice: Variant in raw_table:
+			var next_choice := int(raw_choice)
+			if next_choice < 0 or next_choice >= expected_size:
+				push_warning("Recovered shop navigation table %s has an invalid choice." % table_name)
+				return false
+			table.append(next_choice)
+		popup_navigation[StringName(table_name)] = table
+	return true
 
 func cycle_sort() -> void:
 	sort_mode = posmod(sort_mode + 1, 9)
