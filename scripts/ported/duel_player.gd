@@ -61,7 +61,7 @@ func begin_card_placement(duel: SacredDuelState, acting_side: int, card_id: int,
 	cursor = Vector2i(target_column, target_row)
 	return {"accepted": true, "card_id": card_id, "target_row": target_row, "target_column": target_column}
 
-func begin_spell_target(card_id: int, target_class: int) -> Dictionary:
+func begin_spell_target(card_id: int, target_class: int, duel: SacredDuelState = null, acting_side: int = -1, summon_rules: SummonRules = null, database: CardDatabase = null) -> Dictionary:
 	if target_class == 0:
 		return {"accepted": true, "mode": "immediate_spell", "card_id": card_id}
 	if target_class == 2:
@@ -75,8 +75,17 @@ func begin_spell_target(card_id: int, target_class: int) -> Dictionary:
 	mode = Mode.SPELL_TARGET
 	view_row = cursor.y
 	cursor.y = 2
-	cursor.x = 0
+	cursor.x = _first_monster_column(duel, acting_side, summon_rules, database)
 	return {"accepted": true, "mode": "target_monster", "card_id": card_id}
+
+func _first_monster_column(duel: SacredDuelState, acting_side: int, summon_rules: SummonRules, database: CardDatabase) -> int:
+	if duel == null or acting_side < 0 or acting_side >= duel.sides.size() or summon_rules == null:
+		return 0
+	var monsters: Array[DuelCardSlot] = duel.side(acting_side).monster_zones
+	for column in range(monsters.size()):
+		if summon_rules.classify_card(monsters[column].card_id, database) == 1:
+			return column
+	return 0
 
 func begin_attack_target(duel: SacredDuelState, opposing_side: int) -> Dictionary:
 	if not _valid_side(duel, opposing_side):

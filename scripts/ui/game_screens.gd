@@ -744,7 +744,7 @@ func _confirm_player_field_selection(duel_state: SacredDuelState, side_id: int) 
 		var definition := card_database.get_card(card_id)
 		if definition == null: return {"accepted": false, "reason": "card_metadata_missing"}
 		var target_class := int(_spell_target_classes[definition.metadata_1a]) if definition.metadata_1a >= 0 and definition.metadata_1a < _spell_target_classes.size() else 0
-		var started := player_duel_controller.begin_spell_target(card_id, target_class)
+		var started := player_duel_controller.begin_spell_target(card_id, target_class, duel_state, side_id, duel_summon_rules, card_database)
 		if not bool(started.get("accepted", false)): return started
 		if target_class == 1 and audio_dispatch != null: audio_dispatch.play_game_audio(55)
 		if target_class == 2 and audio_dispatch != null: audio_dispatch.play_game_audio(57)
