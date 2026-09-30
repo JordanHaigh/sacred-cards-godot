@@ -227,11 +227,15 @@ func _animate_card_destruction(side_id: int, random_service: SacredRandom) -> vo
 	if random_service != null:
 		await _animate_destruction_particles(side_id, card, random_service)
 	else:
+		var original_modulate := card.modulate
 		await get_tree().create_timer(FRAME_TIME).timeout
 		sound_requested.emit(70)
-		var tween := create_tween()
-		tween.tween_property(card, "modulate:a", 0.0, 52 * FRAME_TIME)
-		await tween.finished
+		for step in range(1, 18):
+			if is_instance_valid(card):
+				var darkening := float(step * 2) / 31.0
+				card.modulate = Color(maxf(0.0, original_modulate.r - darkening), maxf(0.0, original_modulate.g - darkening), maxf(0.0, original_modulate.b - darkening), original_modulate.a)
+			await get_tree().create_timer(3 * FRAME_TIME).timeout
+		await get_tree().create_timer(FRAME_TIME).timeout
 	phase_finished.emit(side_id, &"destruction")
 
 func _animate_destruction_particles(side_id: int, card: CanvasItem, random_service: SacredRandom) -> void:
@@ -303,7 +307,7 @@ func _animate_destruction_particles(side_id: int, card: CanvasItem, random_servi
 		await get_tree().create_timer(3 * FRAME_TIME).timeout
 	await get_tree().create_timer(FRAME_TIME).timeout
 	if is_instance_valid(card):
-		card.modulate = Color(original_modulate.r, original_modulate.g, original_modulate.b, 0.0)
+		card.modulate = Color(0.0, 0.0, 0.0, original_modulate.a)
 
 func _destruction_sprite_sheet() -> Texture2D:
 	if _destruction_sheet == null:
