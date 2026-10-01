@@ -10,7 +10,7 @@ const OPPONENT_MONSTERS := 1
 const OPPONENT_BACK_ROW := 0
 const LOCK_FLAG := 0x01
 const USED_METADATA_INDICES := [0, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 59, 60, 61, 62, 63, 64, 65, 66, 67, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84]
-const UNREFERENCED_HANDLERS := ["MonsterUnusedBlueEyesFusion", "MonsterUnusedGateGuardianFusion", "MonsterUnusedMixedFusion", "MonsterUnusedNoEffect"]
+const UNREFERENCED_HANDLERS := ["MonsterUnusedBlueEyesFusion", "MonsterUnusedGateGuardianFusion", "MonsterUnusedMixedFusion", "MonsterUnusedNoEffect", "MonsterSharedSlot68"]
 
 var card_database: CardDatabase
 var stat_rules: CardStatRules
@@ -164,6 +164,8 @@ func resolve_unreferenced(handler_name: String, state: SacredDuelState, acting_s
 			return _shown_pair(1, 380, 83, presentation_suppressed)
 		"MonsterUnusedNoEffect":
 			return {"resolved": true, "kind": "no_effect", "presentation": []}
+		"MonsterSharedSlot68":
+			return _shown(862, 59, presentation_suppressed)
 	return {"resolved": false, "reason": "unknown_unreferenced_handler"}
 
 func _reaper(state: SacredDuelState, active: int, suppressed: bool) -> Dictionary:
