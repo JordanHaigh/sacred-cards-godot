@@ -1562,7 +1562,6 @@ func _run_scene_name_entry() -> void:
 	_save_current_state()
 	if screen != "scene":
 		_show("scene")
-	_set_scene_dialogue_visible(true)
 
 func _run_scene_password_entry() -> void:
 	scene_password_entry_active = true
@@ -1570,7 +1569,6 @@ func _run_scene_password_entry() -> void:
 	await scene_password_entry_finished
 	if screen != "scene":
 		_show("scene")
-	_set_scene_dialogue_visible(true)
 
 func _restore_scene_display() -> void:
 	show_scene(current_scene_id, current_scene_variant, current_scene_configuration, current_scene_grid)
