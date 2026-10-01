@@ -37,9 +37,10 @@ func _load_viewport_offsets() -> bool:
 
 ## Port of SetDuelViewportOffset(uint8_t): returns the ROM value for any byte view.
 func viewport_offset(view: int) -> Dictionary:
-	if view < 0 or view > 255 or viewport_offsets.size() != 256:
-		return {"ok": false, "error": "viewport index out of byte range", "offset": 0}
-	return {"ok": true, "view": view, "offset": viewport_offsets[view]}
+	if viewport_offsets.size() != 256:
+		return {"ok": false, "error": "viewport offset table must contain 256 entries", "offset": 0}
+	var byte_view := view & 0xFF
+	return {"ok": true, "view": byte_view, "offset": viewport_offsets[byte_view]}
 
 func select(terrain: int, view: int) -> Dictionary:
 	if terrain < 0 or terrain >= TERRAIN_COUNT:
