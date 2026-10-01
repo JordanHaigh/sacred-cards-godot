@@ -78,6 +78,9 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		KEY_ESCAPE:
 			canceled.emit()
 		_: return
+	# ReadPasswordKey resets its shared timer for any new key, including digit
+	# selection and confirm/cancel inputs, before considering held-key repeats.
+	_password_repeat_timer = 10
 	get_viewport().set_input_as_handled()
 	_refresh()
 
