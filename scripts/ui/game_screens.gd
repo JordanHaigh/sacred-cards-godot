@@ -1909,7 +1909,7 @@ func _draw_shop() -> void:
 	shop_display.size = SCREEN_SIZE
 	shop_display.card_selected.connect(_select_shop_index)
 	screen_root.add_child(shop_display)
-	shop_display.present(visible_cards, shop_selected, selling, card_database, shop_panel, shop_rules, wallet, deck, int(shop_menu.popup), shop_menu.choice)
+	shop_display.present(visible_cards, shop_selected, selling, card_database, shop_panel, shop_rules, wallet, deck, int(shop_menu.popup), shop_menu.choice, language_id)
 
 func _draw_deck() -> void:
 	var backdrop := TextureRect.new()

@@ -13,6 +13,14 @@ const SCROLLBAR_THUMB_PATH := "res://art/ui/shop/scrollbar-thumb.png"
 const POPUP_CURSOR_PATH := "res://art/ui/shop/action-cursor.png"
 const GOLD := Color("ffdc77")
 const PAPER := Color("f5e6c3")
+# Source labels from DrawShopBuyLabels/SellLabels/SortLabels at 080CB7E4,
+# 080CB89C and 080CB954 respectively. Languages 0–4 share English text.
+const ACTION_LABELS_EN := ["Buy", "Details", "Cancel"]
+const ACTION_LABELS_JP := ["買う", "ディテール", "やめる"]
+const SELL_LABELS_EN := ["Sell", "Details", "Cancel"]
+const SELL_LABELS_JP := ["売る", "ディテール", "やめる"]
+const SORT_LABELS_EN := ["No.", "Name", "ATK", "DEF", "Type", "Summon", "Price", "Cost", "Stars", "Exit"]
+const SORT_LABELS_JP := ["番号", "名前", "こうげき", "守備", "種族", "しょうかん", "ねだん", "コスト", "星", "やめる"]
 
 enum PopupMode { NONE, ACTION, SORT }
 
@@ -32,8 +40,9 @@ var popup_mode := PopupMode.NONE
 var popup_choice_index := 0
 var revision := 0
 var graphics_model: ShopGraphics
+var language_id := 0
 
-func present(cards: Array[int], selection: int, is_selling: bool, database: CardDatabase, panel: ShopPanel, shop: ShopSystem, player_wallet: PlayerWallet, deck: Array[int], popup: int = PopupMode.NONE, popup_choice: int = 0) -> void:
+func present(cards: Array[int], selection: int, is_selling: bool, database: CardDatabase, panel: ShopPanel, shop: ShopSystem, player_wallet: PlayerWallet, deck: Array[int], popup: int = PopupMode.NONE, popup_choice: int = 0, selected_language: int = 0) -> void:
 	visible_cards = cards.duplicate()
 	selected_index = clampi(selection, 0, maxi(visible_cards.size() - 1, 0))
 	selling = is_selling
@@ -44,6 +53,7 @@ func present(cards: Array[int], selection: int, is_selling: bool, database: Card
 	deck_cards = deck.duplicate()
 	popup_mode = popup
 	popup_choice_index = popup_choice
+	language_id = clampi(selected_language, 0, 5)
 	graphics_model = SHOP_GRAPHICS_SCRIPT.new(card_database, SUMMON_RULES_SCRIPT.new())
 	_render()
 	_refresh(&"all_rows")
@@ -259,9 +269,9 @@ func _add_shop_type_icon(type_id: int, at: Vector2) -> void:
 func _draw_popup() -> void:
 	if popup_mode == PopupMode.NONE:
 		return
-	var labels: Array[String] = ["BUY CARD" if not selling else "SELL CARD", "CARD INFO", "CANCEL"]
+	var labels: Array[String] = SELL_LABELS_JP if selling and language_id == 5 else SELL_LABELS_EN if selling else ACTION_LABELS_JP if language_id == 5 else ACTION_LABELS_EN
 	if popup_mode == PopupMode.SORT:
-		labels = ["NUMBER", "NAME", "ATTACK", "DEFENSE", "TYPE", "ATTRIBUTE", "COST", "PRICE", "QUANTITY", "CLOSE"]
+		labels = SORT_LABELS_JP if language_id == 5 else SORT_LABELS_EN
 	for index in range(labels.size()):
 		var at := graphics_model.popup_cursor_origin(popup_mode == PopupMode.SORT, index)
 		_add_text(labels[index], at + Vector2(16, 4), GOLD if index == popup_choice_index else PAPER, 7)
