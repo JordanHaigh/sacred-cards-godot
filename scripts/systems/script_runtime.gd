@@ -127,16 +127,18 @@ func _physics_process(_delta: float) -> void:
 		_fail("Script branch references missing node %s" % String(node_id))
 		return
 	if node.terminal or token_index >= node.tokens.size():
-		_finish()
+		await _finish()
 		return
 	var token: Dictionary = node.tokens[token_index]
 	token_index += 1
 	var kind := StringName(token.get("kind", ""))
 	match kind:
 		&"end":
-			_follow_branch(node)
+			await _follow_branch(node)
+			if not running: return
 		&"terminal_node":
-			_finish()
+			await _finish()
+			return
 		&"text":
 			state.plain_text = String(token.get("text", ""))
 			state.plain_text_index = 0
@@ -212,7 +214,7 @@ func _write_next_plain_character() -> void:
 func _follow_branch(node: SceneScriptNode) -> void:
 	var selected := node.next_if_zero if int(state.branch_flags) == 0 else node.next_if_nonzero
 	if selected == &"" or database.get_node(selected) == null:
-		_finish()
+		await _finish()
 		return
 	node_id = selected
 	token_index = 0
@@ -255,8 +257,14 @@ func _update_portrait() -> void:
 		else:
 			state.mouth_index = 0
 			state.mouth_ticks = 1
-
 func _finish() -> void:
+	if not running: return
+	var generation := execution_generation
+	var exit_handler: Callable = context.get("exit_dialogue", Callable())
+	if exit_handler.is_valid():
+		blocking_service_waiting = true
+		await exit_handler.call(int(state.get("portrait", 0)), self)
+		if generation != execution_generation: return
 	stop()
 	script_finished.emit()
 

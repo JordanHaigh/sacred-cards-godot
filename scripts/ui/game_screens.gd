@@ -1390,6 +1390,7 @@ func start_scene_script(scene_id: int, variant: int, role: StringName = &"scene_
 		return false
 	scene_script_events.scene_id = scene_id
 	scene_script_events.scene_variant = variant
+	scene_script_events.scene_flags &= 0xFD
 	audio_dispatch.play_scene_music(scene_id, variant)
 	var scene_configuration: SceneConfiguration
 	var scene_configuration_data: Variant = initial_context.get("scene_configuration")
@@ -1411,6 +1412,7 @@ func start_scene_script(scene_id: int, variant: int, role: StringName = &"scene_
 	context["condition"] = func(condition_id: int, _runtime: SceneScriptRuntime) -> Variant:
 		return scene_script_events.evaluate_condition(condition_id, progression.duelist_level)
 	context["dialogue_visibility"] = func(visible: bool) -> void: _set_scene_dialogue_visible(visible)
+	context["exit_dialogue"] = Callable(self, "_exit_scene_dialogue")
 	context["dialogue"] = func(operation: StringName, data: Dictionary, _runtime: SceneScriptRuntime) -> void:
 		_handle_scene_dialogue(operation, data)
 		scene_script_service_requested.emit(&"dialogue", {"operation": operation, "data": data})
@@ -1681,6 +1683,19 @@ func _restore_scene_display() -> void:
 	show_scene(current_scene_id, current_scene_variant, current_scene_configuration, current_scene_grid)
 	await _wait_scene_frames(1)
 	_set_scene_dialogue_visible(true)
+
+func _exit_scene_dialogue(portrait_id: int, _runtime: SceneScriptRuntime) -> void:
+	if scene_script_events != null and (scene_script_events.scene_flags & 2) != 0:
+		return
+	if audio_dispatch != null:
+		audio_dispatch.play_scene_music(current_scene_id, current_scene_variant)
+	if portrait_id > 0:
+		if is_instance_valid(current_scene_portrait_layer):
+			current_scene_portrait_layer.free()
+		current_scene_portrait_layer = null
+		if scene_actor_runtime != null:
+			await scene_actor_runtime.update_scene_actor_frame()
+	_set_scene_dialogue_visible(false)
 
 func _handle_scene_dialogue(operation: StringName, data: Dictionary) -> void:
 	if operation != &"portrait" or screen != "scene" or screen_root == null:
