@@ -53,7 +53,7 @@ func password() -> String:
 	return result
 
 func tick() -> void:
-	blink_counter = (blink_counter + 1) % 30
+	blink_counter = 0 if blink_counter >= 30 else blink_counter + 1
 	if press_counter > 0:
 		press_counter -= 1
 
