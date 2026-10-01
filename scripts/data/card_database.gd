@@ -3,6 +3,7 @@ class_name CardDatabase
 
 const DATA_PATH := "res://resources/card_database.json"
 const DETAIL_TERMS_PATH := "res://resources/card_detail_terms.json"
+const GAME_TABLES_PATH := "res://resources/game_tables.json"
 const CARD_NAME_PATH := "res://decompiled/build/assets/cards/%04d.name.bin"
 const FONT_MAPPING_PATH := "res://decompiled/build/assets/ui/font-mapping.json"
 
@@ -21,6 +22,14 @@ func load_recovered_data() -> Error:
 	var terms: Variant = JSON.parse_string(FileAccess.get_file_as_string(DETAIL_TERMS_PATH))
 	if not terms is Dictionary or not terms.get("types", null) is Dictionary or not terms.get("summons", null) is Dictionary:
 		return ERR_PARSE_ERROR
+	if not FileAccess.file_exists(GAME_TABLES_PATH):
+		return ERR_FILE_NOT_FOUND
+	var game_tables: Variant = JSON.parse_string(FileAccess.get_file_as_string(GAME_TABLES_PATH))
+	if not game_tables is Dictionary or not game_tables.get("gMetadata1DBySpellIndex", null) is Array:
+		return ERR_PARSE_ERROR
+	var metadata_1d_by_spell_index: Array = game_tables.gMetadata1DBySpellIndex
+	if metadata_1d_by_spell_index.size() != 132:
+		return ERR_INVALID_DATA
 	var type_names: Dictionary = terms.types
 	var summon_names: Dictionary = terms.summons
 	_localized_name_bytes.clear()
@@ -30,6 +39,11 @@ func load_recovered_data() -> Error:
 		if not row is Dictionary:
 			continue
 		var definition := CardDefinition.from_dictionary(row)
+		var spell_index := definition.metadata_1a & 0xFF
+		if spell_index >= metadata_1d_by_spell_index.size():
+			return ERR_INVALID_DATA
+		definition.metadata_1a = spell_index
+		definition.metadata_1d = int(metadata_1d_by_spell_index[spell_index]) & 0xFF
 		definition.type_name = str(type_names.get(str(definition.card_type), ""))
 		definition.summon_name = str(summon_names.get(str(definition.attribute), ""))
 		if definition.id > 0:
