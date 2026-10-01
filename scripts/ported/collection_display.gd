@@ -79,8 +79,6 @@ func _source_stage_for_control_stage(stage: int) -> int:
 func _render_rows() -> void:
 	for child in get_children():
 		child.queue_free()
-	var heading := _pixel_text("%s  %02d" % ["DECK" if deck_view else "COLLECTION", card_ids.size()], Vector2(7, 24), GOLD, 7)
-	add_child(heading)
 	for row in range(5):
 		var item_index := selected_index + row - 2
 		if deck_view:
@@ -94,15 +92,11 @@ func _render_rows() -> void:
 		var definition := card_database.get_card(card_id) if card_database != null else null
 		var row_y := 34 + row * 24
 		var picked := item_index == selected_index
-		var row_panel := Panel.new()
-		row_panel.position = Vector2(4, row_y)
-		row_panel.size = Vector2(232, 22)
-		var style := StyleBoxFlat.new()
-		style.bg_color = Color("293126", 0.92) if picked else Color("101714", 0.72)
-		style.border_color = GOLD if picked else Color("756849")
-		style.set_border_width_all(1 if picked else 0)
-		row_panel.add_theme_stylebox_override("panel", style)
-		add_child(row_panel)
+		var row_content := Control.new()
+		row_content.position = Vector2(4, row_y)
+		row_content.size = Vector2(232, 22)
+		row_content.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(row_content)
 		if definition != null and ResourceLoader.exists(definition.miniature_path):
 			var icon := TextureRect.new()
 			icon.texture = load(definition.miniature_path) as Texture2D
@@ -111,18 +105,18 @@ func _render_rows() -> void:
 			icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 			icon.stretch_mode = TextureRect.STRETCH_SCALE
 			icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			row_panel.add_child(icon)
+			row_content.add_child(icon)
 		var localized_name := card_database.get_localized_card_name(card_id, language_id) if definition != null and card_database != null else "UNKNOWN CARD"
 		var name_glyph_limit := 22 if deck_view else 18
 		var title := localized_name.left(name_glyph_limit)
-		row_panel.add_child(_pixel_text("%04d  %s" % [card_id, title], Vector2(29, 6), GOLD if picked else PAPER, 6))
+		row_content.add_child(_pixel_text("%04d  %s" % [card_id, title], Vector2(29, 6), GOLD if picked else PAPER, 6))
 		if detail_mode == DeckBuilderGraphics.DETAIL_DEFAULT_ART:
-			_add_default_detail_art(row_panel, row)
+			_add_default_detail_art(row_content, row)
 		elif definition != null:
 			if detail_mode == DeckBuilderGraphics.DETAIL_ATTRIBUTE_TYPE:
-				_add_attribute_type_icons(row_panel, definition)
+				_add_attribute_type_icons(row_content, definition)
 			else:
-				row_panel.add_child(_pixel_text(_detail_for_card(definition), Vector2(29, 14), Color("c4b68e"), 5))
+				row_content.add_child(_pixel_text(_detail_for_card(definition), Vector2(29, 14), Color("c4b68e"), 5))
 		var pick := Button.new()
 		pick.position = Vector2(4, row_y)
 		pick.size = Vector2(232, 22)

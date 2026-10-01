@@ -1911,6 +1911,19 @@ func _draw_shop() -> void:
 	shop_display.present(visible_cards, shop_selected, selling, card_database, shop_panel, shop_rules, wallet, deck, int(shop_menu.popup), shop_menu.choice)
 
 func _draw_deck() -> void:
+	var backdrop := TextureRect.new()
+	var backdrop_path := "res://decompiled/build/assets/deck-builder/deck-backdrop.png" if editing_deck else "res://decompiled/build/assets/deck-builder/collection-backdrop.png"
+	if ResourceLoader.exists(backdrop_path):
+		backdrop.texture = load(backdrop_path) as Texture2D
+		backdrop.position = Vector2.ZERO
+		backdrop.size = SCREEN_SIZE
+		backdrop.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		backdrop.stretch_mode = TextureRect.STRETCH_SCALE
+		backdrop.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		screen_root.add_child(backdrop)
+	else:
+		push_warning("Missing recovered deck/collection backdrop: %s" % backdrop_path)
 	_text("%05d" % (progression.capacity if not editing_deck else deck_rules.deck_cost(card_database)), Vector2(78, 8), 8, PAPER)
 	_text("%02d" % deck.size(), Vector2(184, 8), 8, PAPER)
 	collection_display = COLLECTION_DISPLAY_SCRIPT.new()
