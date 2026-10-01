@@ -3,6 +3,9 @@ extends Control
 ## Godot-owned duel HUD and card-grid view replacing the tile buffers and OAM
 ## setup in duel_ui.c. Board state is read from value-owned duel slots.
 
+const PIXEL_TEXT_SCRIPT := preload("res://scripts/ui/pixel_text.gd")
+const SMALL_FONT_ATLAS: Texture2D = preload("res://art/ui/font-small.png")
+const FONT_MAPPING_PATH := "res://decompiled/build/assets/ui/font-mapping.json"
 const SLOT_SIZE := Vector2(24, 24)
 const GRID_ORIGIN := Vector2(4, 24)
 const COLUMN_STEP := 28.0
@@ -34,6 +37,22 @@ var opponent_hand_visibility: Array[int] = []
 var opponent_hand_overlay_visible := false
 var effect_card_overlay: Array[int] = []
 var effect_overlay_until_msec := 0
+var ascii_glyphs: Dictionary = {}
+var unicode_glyphs: Dictionary = {}
+
+func _ready() -> void:
+	ascii_glyphs = PIXEL_TEXT_SCRIPT.load_ascii_glyphs()
+	if not FileAccess.file_exists(FONT_MAPPING_PATH):
+		return
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(FONT_MAPPING_PATH))
+	if not parsed is Array:
+		return
+	for entry: Variant in parsed:
+		if not entry is Dictionary:
+			continue
+		var candidate := str(entry.get("unicode_candidate", ""))
+		if candidate.length() == 1:
+			unicode_glyphs[candidate.unicode_at(0)] = int(entry.get("glyph_index", 31))
 
 func present(state: SacredDuelState, database: CardDatabase, selected_cell: Vector2i) -> void:
 	duel_state = state
@@ -270,7 +289,15 @@ func _draw_details() -> void:
 	_draw_text("DECK %d" % duel_state.side(duel_state.active_side).deck_remaining_count, Vector2(153, 111), 5, PAPER)
 
 func _draw_text(value: String, at: Vector2, font_size: int, color: Color) -> void:
-	draw_string(ThemeDB.fallback_font, at, value, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, color)
+	var glyph_size := float(font_size)
+	var fallback := int(ascii_glyphs.get(63, 31))
+	for index in range(value.length()):
+		var codepoint := value.unicode_at(index)
+		var glyph := int(ascii_glyphs.get(codepoint, unicode_glyphs.get(codepoint, fallback)))
+		var source := Rect2(Vector2((glyph % 32) * 8, (glyph / 32) * 8), Vector2(8, 8))
+		var target := Rect2(at + Vector2(index * glyph_size, 0), Vector2(glyph_size, glyph_size))
+		draw_texture_rect_region(SMALL_FONT_ATLAS, Rect2(target.position + Vector2(glyph_size / 8.0, glyph_size / 8.0), target.size), source, Color(0.04, 0.04, 0.04, 0.9))
+		draw_texture_rect_region(SMALL_FONT_ATLAS, target, source, color)
 
 func _cell_rect(row: int, column: int) -> Rect2:
 	return Rect2(GRID_ORIGIN + Vector2(column * COLUMN_STEP, row * ROW_STEP), SLOT_SIZE)
