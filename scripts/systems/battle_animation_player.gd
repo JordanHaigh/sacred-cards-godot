@@ -118,7 +118,7 @@ func present_result(result_code: int, old_life_points: Array[int], new_life_poin
 		return
 	for side_id in [1, 0]:
 		var side_flags := flags[side_id]
-		if (side_flags & 6) != 0:
+		if (side_flags & 2) != 0:
 			await _animate_card_impact(side_id, (side_flags & 128) != 0)
 			await get_tree().create_timer(6 * FRAME_TIME).timeout
 		if (side_flags & 4) != 0:
