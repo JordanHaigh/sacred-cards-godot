@@ -15,15 +15,18 @@ const PAPER := Color("f5e6c3")
 var definition: CardDefinition
 var card_art: CardArt
 var language_id := 0
+var localized_title := ""
 var pages: Array[String] = []
 var page_index := 0
 var description_locked := false
 var card_texture: Texture2D
 var page_lines: Array[PixelText] = []
 
-func present(card: CardDefinition, art_renderer: CardArt = null, duelist_level: int = -1) -> void:
+func present(card: CardDefinition, art_renderer: CardArt = null, duelist_level: int = -1, selected_language: int = 0, card_name: String = "") -> void:
 	definition = card
 	card_art = art_renderer
+	language_id = clampi(selected_language, 0, 5)
+	localized_title = card_name if not card_name.is_empty() else card.name
 	description_locked = duelist_level >= 0 and duelist_level < card.cost
 	pages = [_load_locked_description()] if description_locked else _parse_description_pages(card.description)
 	page_index = 0
@@ -135,7 +138,7 @@ func _load_locked_description() -> String:
 func _full_card_title() -> String:
 	if definition == null:
 		return ""
-	var source_name := definition.name
+	var source_name := localized_title if not localized_title.is_empty() else definition.name
 	if language_id == 0 and definition.id in [364, 670]:
 		# Native DrawFullCardName emits blank glyph 0x4481 at slot 1, then
 		# advances four English source bytes before resuming at slot 2.
