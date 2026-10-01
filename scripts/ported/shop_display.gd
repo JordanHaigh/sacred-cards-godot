@@ -98,6 +98,8 @@ func _render() -> void:
 		_add_text("NO CARDS AVAILABLE", Vector2(54, 74), GOLD, 8)
 		return
 	var first_visible := clampi(selected_index - 17, 0, maxi(visible_cards.size() - 35, 0))
+	var selected_grid_row := -1
+	var selected_grid_column := -1
 	for row in range(5):
 		for column in range(7):
 			var inventory_index := first_visible + row * 7 + column
@@ -127,8 +129,8 @@ func _render() -> void:
 				add_child(miniature)
 				_draw_miniature_overlays(card_id, at)
 			if inventory_index == selected_index:
-				_draw_selection_shadow(graphics_model.selection_shadow_rect(row, column))
-				_draw_selection_cursor(graphics_model.selection_origin(row, column))
+				selected_grid_row = row
+				selected_grid_column = column
 			var pick := Button.new()
 			pick.position = at - Vector2(4, 4)
 			pick.size = Vector2(32, 32)
@@ -136,6 +138,9 @@ func _render() -> void:
 			pick.modulate = Color(1, 1, 1, 0)
 			pick.pressed.connect(_emit_card_selected.bind(inventory_index))
 			add_child(pick)
+	if selected_grid_row >= 0:
+		_draw_selection_shadow(graphics_model.selection_shadow_rect(selected_grid_row, selected_grid_column))
+		_draw_selection_cursor(graphics_model.selection_origin(selected_grid_row, selected_grid_column))
 	_draw_selected_summary()
 	_draw_scrollbar()
 	_draw_popup()
