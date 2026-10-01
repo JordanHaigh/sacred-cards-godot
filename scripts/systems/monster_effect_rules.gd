@@ -513,25 +513,25 @@ func _parasite_paracide(state: SacredDuelState, active: int, selected: DuelCardS
 
 func _pinch_hopper(state: SacredDuelState, active: int, selected: DuelCardSlot, suppressed: bool) -> Dictionary:
 	_discard_slot(state, active, selected, ACTIVE_MONSTERS, true)
-	var opponent := state.side(1 - active)
+	var hand_owner := state.side(active)
 	var candidates: Array[int] = []
-	for index in range(opponent.hand.size()):
-		if opponent.hand[index] == 0: continue
-		var card := _card(opponent.hand[index])
+	for index in range(hand_owner.hand.size()):
+		if hand_owner.hand[index] == 0: continue
+		var card := _card(hand_owner.hand[index])
 		if card != null and card.card_type == 10: candidates.append(index)
 	if not candidates.is_empty():
 		var best_attack := -1
 		var best_index := candidates[0]
 		for hand_index in candidates:
-			var hand_card_id: int = opponent.hand[hand_index]
+			var hand_card_id: int = hand_owner.hand[hand_index]
 			var card := _card(hand_card_id)
 			var attack := 0 if card == null else int(stat_rules.apply_card_modifiers(card.attack, card.defense, card.metadata_1a, card.card_type, state.terrain, 0).attack)
 			if attack >= best_attack:
 				best_attack = attack
 				best_index = hand_index
-		var card_id: int = opponent.hand[best_index]
-		var hand_flags := opponent.hand_flags[best_index] if best_index < opponent.hand_flags.size() else 0
-		opponent.remove_hand_at(best_index)
+		var card_id: int = hand_owner.hand[best_index]
+		var hand_flags := hand_owner.hand_flags[best_index] if best_index < hand_owner.hand_flags.size() else 0
+		hand_owner.remove_hand_at(best_index)
 		selected.card_id = card_id
 		selected.controller = active
 		selected.persistent_flags = (selected.persistent_flags & 0xC0) | (hand_flags & 0x3F)
