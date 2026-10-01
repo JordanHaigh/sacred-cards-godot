@@ -80,10 +80,12 @@ func finish_turn(duel: SacredDuelState) -> void:
 	if outgoing_side.attack_restriction_turns & 3:
 		outgoing_side.attack_restriction_turns = (outgoing_side.attack_restriction_turns - 1) & 3
 	for slot in outgoing_side.monster_zones:
-		slot.persistent_flags &= 0xFE
-		slot.has_attacked = false
+		if slot.card_id != 0:
+			slot.persistent_flags &= 0xFE
+			slot.has_attacked = false
 	for hand_index in range(outgoing_side.hand_flags.size()):
-		outgoing_side.hand_flags[hand_index] &= 0xFE
+		if outgoing_side.hand[hand_index] != 0:
+			outgoing_side.hand_flags[hand_index] &= 0xFE
 	var next_side := duel.sides[duel.active_side]
 	next_side.duel_flags &= 0xF7
 
