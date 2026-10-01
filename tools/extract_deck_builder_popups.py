@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render recovered collection action and sort popup tile maps for Godot."""
+"""Render recovered collection/deck action and sort popup maps for Godot."""
 
 from __future__ import annotations
 
@@ -105,9 +105,11 @@ def render(map_file: Path, output: Path, kind: str) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--action-output", type=Path, default=ROOT / "art/ui/deck-builder/collection-action-popup.png")
+    parser.add_argument("--deck-action-output", type=Path, default=ROOT / "art/ui/deck-builder/deck-action-popup.png")
     parser.add_argument("--sort-output", type=Path, default=ROOT / "art/ui/deck-builder/collection-sort-popup.png")
     args = parser.parse_args()
     render(ASSET_DIR / "collection-actions.map.u16", args.action_output, "action")
+    render(ASSET_DIR / "deck-actions.map.u16", args.deck_action_output, "action")
     render(ASSET_DIR / "collection-sort.map.u16", args.sort_output, "sort")
 
 

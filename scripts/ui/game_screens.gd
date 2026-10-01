@@ -54,6 +54,7 @@ const SCENE_DIALOGUE_DISPLAY_SCRIPT = preload("res://scripts/ui/scene_dialogue_d
 const PRE_DUEL_MENU_SCRIPT = preload("res://scripts/ported/pre_duel_menu.gd")
 const PRE_DUEL_DISPLAY_SCRIPT = preload("res://scripts/ported/pre_duel_display.gd")
 const COLLECTION_ACTION_POPUP_BACKGROUND = preload("res://art/ui/deck-builder/collection-action-popup.png")
+const DECK_ACTION_POPUP_BACKGROUND = preload("res://art/ui/deck-builder/deck-action-popup.png")
 const COLLECTION_SORT_POPUP_BACKGROUND = preload("res://art/ui/deck-builder/collection-sort-popup.png")
 const FRAME_INPUT_SCRIPT = preload("res://scripts/systems/frame_input.gd")
 const SUMMON_RULES_SCRIPT = preload("res://scripts/systems/summon_rules.gd")
@@ -1943,6 +1944,8 @@ func _draw_deck_builder_popup() -> void:
 	if deck_builder_menu.popup == DeckBuilderMenu.PopupKind.NONE: return
 	if deck_builder_menu.popup == DeckBuilderMenu.PopupKind.COLLECTION_ACTION:
 		_screen_texture(COLLECTION_ACTION_POPUP_BACKGROUND, Vector2.ZERO, SCREEN_SIZE)
+	elif deck_builder_menu.popup == DeckBuilderMenu.PopupKind.DECK_ACTION:
+		_screen_texture(DECK_ACTION_POPUP_BACKGROUND, Vector2.ZERO, SCREEN_SIZE)
 	elif deck_builder_menu.popup in [DeckBuilderMenu.PopupKind.COLLECTION_SORT, DeckBuilderMenu.PopupKind.DECK_SORT]:
 		_screen_texture(COLLECTION_SORT_POPUP_BACKGROUND, Vector2.ZERO, SCREEN_SIZE)
 	else:
