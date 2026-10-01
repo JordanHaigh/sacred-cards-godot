@@ -24,11 +24,13 @@ func move_key(direction: int) -> void:
 
 func move_digit(right: bool) -> void:
 	digit_index = (digit_index + (1 if right else 7)) % 8
+	blink_counter = 15
 
 func press_selected_key() -> bool:
 	if finished:
 		return true
 	press_counter = 8
+	blink_counter = 0
 	if key_index == 10:
 		finished = true
 		return true
