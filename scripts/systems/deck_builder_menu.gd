@@ -29,6 +29,14 @@ func _init() -> void:
 	collection_sort_navigation = FileAccess.get_file_as_bytes(COLLECTION_SORT_NAVIGATION_PATH)
 	deck_sort_navigation = FileAccess.get_file_as_bytes(DECK_SORT_NAVIGATION_PATH)
 
+func begin_hub_session() -> void:
+	popup = PopupKind.NONE
+	choice = 0
+	collection_sort = 0
+	deck_sort = 0
+	collection_filter = 1
+	deck_filter = 1
+
 func handle_key(key: int, deck_view: bool) -> Dictionary:
 	var popup_active := popup != PopupKind.NONE
 	if popup_active:

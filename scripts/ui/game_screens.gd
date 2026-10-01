@@ -1920,7 +1920,7 @@ func _draw_deck() -> void:
 	collection_display.size = SCREEN_SIZE
 	collection_display.card_selected.connect(_select_deck_card)
 	screen_root.add_child(collection_display)
-	collection_display.present(deck if editing_deck else collection, selected, card_database, editing_deck, deck_builder_menu.deck_filter if editing_deck else 0)
+	collection_display.present(deck if editing_deck else collection, selected, card_database, editing_deck, deck_builder_menu.deck_filter if editing_deck else deck_builder_menu.collection_filter)
 	_draw_deck_builder_popup()
 
 func _draw_deck_builder_popup() -> void:
@@ -2321,6 +2321,8 @@ func _enter_deck_hub() -> void:
 	deck_hub_return_screen = screen
 	in_deck_hub_flow = true
 	deck_management.choice = 0
+	deck_builder_menu.begin_hub_session()
+	selected = 0
 	if audio_dispatch != null:
 		audio_dispatch.fade_game_music(1)
 		audio_dispatch.play_game_audio(47)
