@@ -118,9 +118,8 @@ func _render_rows() -> void:
 		if definition != null:
 			if detail_mode == DeckBuilderGraphics.DETAIL_ATTRIBUTE_TYPE:
 				_add_attribute_type_icons(row_panel, definition)
-			else:
-				var detail_size := 8 if detail_mode == DeckBuilderGraphics.DETAIL_STARS else 5
-				row_panel.add_child(_pixel_text(_detail_for_card(definition), Vector2(29, 14), Color("c4b68e"), detail_size))
+			elif detail_mode != DeckBuilderGraphics.DETAIL_DEFAULT_ART:
+				row_panel.add_child(_pixel_text(_detail_for_card(definition), Vector2(29, 14), Color("c4b68e"), 5))
 		var pick := Button.new()
 		pick.position = Vector2(4, row_y)
 		pick.size = Vector2(232, 22)
