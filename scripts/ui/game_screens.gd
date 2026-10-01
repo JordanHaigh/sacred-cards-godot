@@ -197,6 +197,7 @@ signal scene_script_motion_requested(event_id: int, actor_ids: Array, choreograp
 signal scene_script_motion_path(event_id: int, descriptor: Dictionary, x_steps: Array[int], y_steps: Array[int])
 signal scene_script_actor_state(actor_id: int, changes: Dictionary)
 signal duel_text_changed(value: String, glyph_position: int, wait_state: bool)
+signal duel_text_glyph_requested(glyph_index: int, glyph_position: int, character: String, substitution: bool)
 signal duel_text_finished
 signal pre_duel_requested(opponent_id: int, wagered_card_id: int)
 signal scene_graphics_changed(scene_id: int, variant: int, graphics: Dictionary)
@@ -292,6 +293,7 @@ func _ready() -> void:
 	duel_menus = DUEL_MENUS_SCRIPT.new()
 	duel_text_presenter = DUEL_TEXT_SCRIPT.new(card_database)
 	duel_text_presenter.text_changed.connect(func(value: String, glyph_position: int, wait_state: bool): duel_text_changed.emit(value, glyph_position, wait_state))
+	duel_text_presenter.glyph_requested.connect(func(glyph_index: int, glyph_position: int, character: String, substitution: bool): duel_text_glyph_requested.emit(glyph_index, glyph_position, character, substitution))
 	duel_text_presenter.text_finished.connect(func(): duel_text_finished.emit())
 	duel_message_catalog = DUEL_MESSAGE_CATALOG_SCRIPT.new()
 	if not duel_message_catalog.load_default():
