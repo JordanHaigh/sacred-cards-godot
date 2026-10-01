@@ -144,6 +144,14 @@ func _handle_scene_change(event_id: int, door_timing_handled: bool = false) -> v
 func is_door_event(event_id: int) -> bool:
 	return event_id in DOOR_EVENTS
 
+## Ports DispatchScriptCondition's two native branches. Returning null for an
+## unknown condition preserves the caller's existing branch flag, as C does.
+func evaluate_condition(condition_id: int, duelist_level: int) -> Variant:
+	match condition_id:
+		0: return 1 if duelist_level < 80 else 0
+		1: return 1 if (progress_rank & 0x3F) == 0x3F else 0
+		_: return null
+
 func _resolve_variant(target_scene: int, target_variant: int) -> int:
 	var result := target_variant
 	for rule in variant_rules:

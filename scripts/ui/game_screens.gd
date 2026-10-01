@@ -1408,10 +1408,8 @@ func start_scene_script(scene_id: int, variant: int, role: StringName = &"scene_
 		context["scene_grid"] = scene_grid
 	context["event"] = func(event_id: int, _runtime: SceneScriptRuntime) -> void:
 		await _execute_scene_script_event(event_id, _runtime.state)
-	context["condition"] = func(condition_id: int, _runtime: SceneScriptRuntime) -> int:
-		if condition_id == 0: return 1 if progression.duelist_level < 80 else 0
-		if condition_id == 1: return 1 if _bit_count(scene_script_events.progress_rank & 0x3F) == 6 else 0
-		return 0
+	context["condition"] = func(condition_id: int, _runtime: SceneScriptRuntime) -> Variant:
+		return scene_script_events.evaluate_condition(condition_id, progression.duelist_level)
 	context["dialogue_visibility"] = func(visible: bool) -> void: _set_scene_dialogue_visible(visible)
 	context["dialogue"] = func(operation: StringName, data: Dictionary, _runtime: SceneScriptRuntime) -> void:
 		_handle_scene_dialogue(operation, data)
@@ -1467,14 +1465,6 @@ func _finish_name_entry(value: String) -> void:
 func _cancel_name_entry() -> void:
 	_show(name_entry_return_screen)
 	scene_name_entry_finished.emit()
-
-func _bit_count(value: int) -> int:
-	var bits := value
-	var total := 0
-	while bits != 0:
-		total += bits & 1
-		bits >>= 1
-	return total
 
 func _show(next: String) -> void:
 	if screen != next and next == "deck":
