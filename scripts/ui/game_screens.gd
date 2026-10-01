@@ -755,8 +755,13 @@ func process_player_duel_code(code: int, duel_state: SacredDuelState) -> Diction
 			if player_duel_controller.mode == PlayerDuelController.Mode.SPELL_TARGET:
 				var target_result := player_duel_controller.validate_spell_target(duel_state, side_id, 1)
 				if not bool(target_result.get("accepted", false)): return target_result
-				var effect_result: Variant = dispatch_duel_effect(int(target_result.card_id), duel_state, int(target_result.target_row), int(target_result.target_column), int(target_result.source_row), int(target_result.source_column))
-				if bool(effect_result.get("resolved", false)): player_duel_controller.finish_spell_target_action()
+				var effect_result: Variant = null
+				var target_is_monster := duel_summon_rules.classify_card(int(target_result.target_card_id), card_database) == 1
+				if target_is_monster:
+					effect_result = dispatch_duel_effect(int(target_result.card_id), duel_state, int(target_result.target_row), int(target_result.target_column), int(target_result.source_row), int(target_result.source_column))
+				player_duel_controller.finish_spell_target_action()
+				if not target_is_monster:
+					return {"accepted": true, "action": "spell_target_ignored_non_monster", "target_card_id": int(target_result.target_card_id)}
 				return effect_result if effect_result is Dictionary else {"resolved": true, "result": effect_result}
 			if player_duel_controller.mode == PlayerDuelController.Mode.ATTACK_TARGET:
 				var opponent_slot := duel_state.relative_board_slot(side_id, 1, player_duel_controller.cursor.x)
