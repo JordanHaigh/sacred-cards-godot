@@ -29,6 +29,7 @@ var display_stage: int = DisplayStage.IDLE
 var _transition_running := false
 var _transition_stages: Array[int] = []
 var _transition_index := 0
+var _ascii_glyphs: Dictionary = {}
 
 func present(cards: Array[int], selected: int, database: CardDatabase, editing_deck: bool, mode: int = 0, selected_language: int = 0, screen_entry: bool = true) -> void:
 	card_ids = cards.duplicate()
@@ -38,6 +39,7 @@ func present(cards: Array[int], selected: int, database: CardDatabase, editing_d
 	detail_mode = mode
 	language_id = clampi(selected_language, 0, 5)
 	deck_graphics = DECK_GRAPHICS_SCRIPT.new()
+	_ascii_glyphs = PIXEL_TEXT_SCRIPT.load_ascii_glyphs()
 	_render_rows()
 	if not screen_entry:
 		display_stage = DisplayStage.ACTIVE
@@ -108,10 +110,14 @@ func _render_rows() -> void:
 			icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 			icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			row_content.add_child(icon)
-		var localized_name := card_database.get_localized_card_name(card_id, language_id) if definition != null and card_database != null else "UNKNOWN CARD"
+		var title_record := card_database.get_localized_card_name_record(card_id, language_id) if definition != null and card_database != null else {}
+		var localized_name := str(title_record.get("text", "UNKNOWN CARD"))
 		var name_glyph_limit := 22 if deck_view else 18
 		var title := localized_name.left(name_glyph_limit)
-		row_content.add_child(_pixel_text("%04d  %s" % [card_id, title], Vector2(29, 6), GOLD if picked else PAPER, 6))
+		var title_glyphs: PackedInt32Array = title_record.get("glyph_indices", PackedInt32Array())
+		var row_text := "%04d  %s" % [card_id, title]
+		var row_glyphs := _row_title_glyph_indices(card_id, title_glyphs, title.length())
+		row_content.add_child(_pixel_text(row_text, Vector2(29, 6), GOLD if picked else PAPER, 6, row_glyphs))
 		if detail_mode == DeckBuilderGraphics.DETAIL_DEFAULT_ART:
 			_add_default_detail_art(row_content, row)
 		elif definition != null:
@@ -171,10 +177,20 @@ func _add_detail_icon(parent: Control, texture_path: String, right_edge: float) 
 	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	parent.add_child(icon)
 
-func _pixel_text(value: String, at: Vector2, color: Color, nominal_size: int) -> PixelText:
+func _row_title_glyph_indices(card_id: int, title_glyphs: PackedInt32Array, title_length: int) -> PackedInt32Array:
+	if title_glyphs.size() < title_length:
+		return PackedInt32Array()
+	var result := PackedInt32Array()
+	for character in ("%04d  " % card_id):
+		result.append(int(_ascii_glyphs.get(character.unicode_at(0), -1)))
+	result.append_array(title_glyphs.slice(0, title_length))
+	return result
+
+func _pixel_text(value: String, at: Vector2, color: Color, nominal_size: int, glyph_indices: PackedInt32Array = PackedInt32Array()) -> PixelText:
 	var label: PixelText = PIXEL_TEXT_SCRIPT.new()
 	label.position = at
 	label.text = value
+	if not glyph_indices.is_empty(): label.set_glyph_indices(glyph_indices)
 	label.font_color = color
 	var pixel_scale := float(nominal_size) / 8.0
 	label.scale = Vector2(pixel_scale, pixel_scale)
