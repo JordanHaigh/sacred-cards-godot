@@ -133,7 +133,7 @@ func _score_discard(state: SacredDuelState, active: int, slot: DuelCardSlot, sou
 	if card.metadata_1a != 2: return 0x7EE4F2AF
 	match _remaining_tributes(slot.card_id, state):
 		0:
-			var same_count := _forward_hand_match_count(state.side(active).hand, source_column, slot.card_id)
+			var same_count := _discard_window_match_count(state, active, source_column, slot.card_id)
 			var base := 0x7EE2CFCF if slot.card_id not in EXODIA_IDS or same_count > 1 else 0x7EE0ACEE
 			return _u32(base - _attack(slot, state.terrain) + 0x1FFFC - _defense(slot, state.terrain))
 		1: return 0x7EE4F2B4
@@ -141,12 +141,22 @@ func _score_discard(state: SacredDuelState, active: int, slot: DuelCardSlot, sou
 		3: return 0x7EE0ACEF if slot.card_id >= 832 and slot.card_id <= 834 else 0x7EE93874
 		_: return LOW_PRIORITY
 
-## AiScoreDiscardBefore starts its five-pointer count at the selected row-4
-## cell, so only this slot and later hand slots have portable value targets.
-func _forward_hand_match_count(hand: Array[int], source_column: int, card_id: int) -> int:
+## The C pointer table places its 5-cell hand row immediately before the
+## player-view cell table. AiScoreDiscardBefore reads five cells from the
+## selected hand pointer, so columns near the row's end continue into visible
+## row 0. Resolve those adjacent pointer targets through typed card values.
+func _discard_window_match_count(state: SacredDuelState, active: int, source_column: int, card_id: int) -> int:
+	var hand := state.side(active).hand
 	var matches := 0
-	for column in range(clampi(source_column, 0, hand.size()), mini(source_column + 5, hand.size())):
+	var start := clampi(source_column, 0, hand.size())
+	var end := mini(source_column + 5, hand.size())
+	for column in range(start, end):
 		if hand[column] == card_id:
+			matches += 1
+	var visible_row := state.relative_board_row(0, 0)
+	var adjacent_cells := maxi(0, source_column + 5 - hand.size())
+	for column in range(mini(adjacent_cells, visible_row.size())):
+		if visible_row[column].card_id == card_id:
 			matches += 1
 	return matches
 
