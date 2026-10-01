@@ -288,6 +288,7 @@ func _ready() -> void:
 		push_error("Could not load recovered duel messages: %s" % duel_message_catalog.load_error)
 	duel_flow.card_transformed.connect(_on_duel_card_transformed)
 	duel_flow.duel_message_requested.connect(_on_duel_flow_message_requested)
+	duel_flow.duel_audio_requested.connect(_on_duel_flow_audio_requested)
 	duel_special_wins.special_win.connect(_on_duel_special_win)
 	duel_text_presenter.text_finished.connect(_on_duel_message_finished)
 	duel_summon_rules = SUMMON_RULES_SCRIPT.new()
@@ -639,6 +640,10 @@ func _on_duel_flow_message_requested(message_id: int, number: int) -> void:
 	var card_id := number if message_id == 5 else 0
 	_enqueue_duel_message(message_id, number, card_id, 0)
 
+func _on_duel_flow_audio_requested(audio_id: int) -> void:
+	_pending_duel_messages.append({"kind": "audio", "audio_id": audio_id})
+	_present_next_duel_message()
+
 func _on_duel_special_win(_side_id: int, message_id: int) -> void:
 	if audio_dispatch != null:
 		audio_dispatch.fade_game_music(4)
@@ -658,6 +663,11 @@ func _present_next_duel_message() -> void:
 	if _duel_message_active or _pending_duel_messages.is_empty():
 		return
 	var message: Dictionary = _pending_duel_messages.pop_front()
+	if message.get("kind", "") == "audio":
+		if audio_dispatch != null:
+			audio_dispatch.play_game_audio(int(message.get("audio_id", 0)))
+		call_deferred("_present_next_duel_message")
+		return
 	_duel_message_active = true
 	present_duel_text(String(message.text), int(message.card_id), int(message.other_card_id), int(message.number), 0, 0, current_save.player_name)
 
