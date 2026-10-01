@@ -15,7 +15,7 @@ const PAPER := Color("f5e6c3")
 const GOLD := Color("ffdc77")
 const LARGE_FONT := preload("res://art/ui/font-large.png")
 const DEFAULT_DETAIL_ATLAS := preload("res://art/ui/deck-builder/pre-duel-detail-mode-0.png")
-const SORT_POPUP_BACKGROUND := preload("res://art/ui/pre-duel/sort-popup.png")
+const SORT_POPUP_BACKGROUND := preload("res://art/ui/deck-builder/collection-sort-popup.png")
 
 signal row_selected(row: int)
 signal popup_selected(choice: int)

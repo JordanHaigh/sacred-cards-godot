@@ -53,6 +53,8 @@ const ACTOR_ANIMATION_DATABASE_SCRIPT = preload("res://scripts/data/actor_animat
 const SCENE_DIALOGUE_DISPLAY_SCRIPT = preload("res://scripts/ui/scene_dialogue_display.gd")
 const PRE_DUEL_MENU_SCRIPT = preload("res://scripts/ported/pre_duel_menu.gd")
 const PRE_DUEL_DISPLAY_SCRIPT = preload("res://scripts/ported/pre_duel_display.gd")
+const COLLECTION_ACTION_POPUP_BACKGROUND = preload("res://art/ui/deck-builder/collection-action-popup.png")
+const COLLECTION_SORT_POPUP_BACKGROUND = preload("res://art/ui/deck-builder/collection-sort-popup.png")
 const FRAME_INPUT_SCRIPT = preload("res://scripts/systems/frame_input.gd")
 const SUMMON_RULES_SCRIPT = preload("res://scripts/systems/summon_rules.gd")
 const BATTLE_SETUP_SCRIPT = preload("res://scripts/systems/battle_setup.gd")
@@ -1939,7 +1941,12 @@ func _on_collection_display_stage_changed(stage: int) -> void:
 
 func _draw_deck_builder_popup() -> void:
 	if deck_builder_menu.popup == DeckBuilderMenu.PopupKind.NONE: return
-	_overlay_rect(Rect2(54, 43, 132, 76), Color(0.04, 0.06, 0.06, 0.96), Color("d0b46f"))
+	if deck_builder_menu.popup == DeckBuilderMenu.PopupKind.COLLECTION_ACTION:
+		_screen_texture(COLLECTION_ACTION_POPUP_BACKGROUND, Vector2.ZERO, SCREEN_SIZE)
+	elif deck_builder_menu.popup in [DeckBuilderMenu.PopupKind.COLLECTION_SORT, DeckBuilderMenu.PopupKind.DECK_SORT]:
+		_screen_texture(COLLECTION_SORT_POPUP_BACKGROUND, Vector2.ZERO, SCREEN_SIZE)
+	else:
+		_overlay_rect(Rect2(54, 43, 132, 76), Color(0.04, 0.06, 0.06, 0.96), Color("d0b46f"))
 	var labels: Array[String] = []
 	if deck_builder_menu.popup == DeckBuilderMenu.PopupKind.COLLECTION_ACTION:
 		labels = ["CARD INFO", "ADD TO DECK", "REMOVE FROM DECK"]
@@ -1952,11 +1959,21 @@ func _draw_deck_builder_popup() -> void:
 			labels = ["COPY", "NUMBER", "NAME", "ATTACK", "DEFENSE", "TYPE", "ATTRIBUTE", "COST", "QUANTITY", "CANCEL"]
 		if deck_builder_menu.popup == DeckBuilderMenu.PopupKind.DECK_SORT:
 			labels = ["NUMBER", "NAME", "ATTACK", "DEFENSE", "TYPE", "ATTRIBUTE", "DECK COUNT", "COST", "LEVEL", "CANCEL"]
-	var first := maxi(deck_builder_menu.choice - 2, 0)
-	for index in range(first, mini(first + 5, labels.size())):
-		var line := index - first
-		var color := GOLD if index == deck_builder_menu.choice else PAPER
-		_text(("> " if index == deck_builder_menu.choice else "  ") + labels[index], Vector2(66, 49 + line * 12), 7, color)
+	if deck_builder_menu.popup == DeckBuilderMenu.PopupKind.COLLECTION_ACTION:
+		for index in range(labels.size()):
+			var color := GOLD if index == deck_builder_menu.choice else PAPER
+			_text(("> " if index == deck_builder_menu.choice else "  ") + labels[index], Vector2(86, 96 + index * 8), 6, color)
+	elif deck_builder_menu.popup in [DeckBuilderMenu.PopupKind.COLLECTION_SORT, DeckBuilderMenu.PopupKind.DECK_SORT]:
+		for index in range(labels.size()):
+			var cursor_position := deck_builder_menu.sort_popup_cursor_position(index, deck_builder_menu.popup == DeckBuilderMenu.PopupKind.DECK_SORT)
+			var color := GOLD if index == deck_builder_menu.choice else PAPER
+			_text(labels[index], Vector2(cursor_position.x + 16, cursor_position.y), 5, color)
+	else:
+		var first := maxi(deck_builder_menu.choice - 2, 0)
+		for index in range(first, mini(first + 5, labels.size())):
+			var line := index - first
+			var color := GOLD if index == deck_builder_menu.choice else PAPER
+			_text(("> " if index == deck_builder_menu.choice else "  ") + labels[index], Vector2(66, 49 + line * 12), 7, color)
 
 func _draw_deck_hub() -> void:
 	_overlay_rect(Rect2(30, 23, 180, 116), Color(0.05, 0.07, 0.07, 0.94), Color("c5aa6d"))
@@ -2006,6 +2023,17 @@ func _overlay_rect(rect: Rect2, color: Color, border := Color.TRANSPARENT) -> vo
 	style.set_border_width_all(1 if border.a > 0.0 else 0)
 	panel.add_theme_stylebox_override("panel", style)
 	screen_root.add_child(panel)
+
+func _screen_texture(texture: Texture2D, at: Vector2, dimensions: Vector2) -> void:
+	var display := TextureRect.new()
+	display.texture = texture
+	display.position = at
+	display.size = dimensions
+	display.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	display.stretch_mode = TextureRect.STRETCH_SCALE
+	display.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	display.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	screen_root.add_child(display)
 
 func _text(value: String, at: Vector2, size: int, color: Color) -> void:
 	var label = PIXEL_TEXT_SCRIPT.new()

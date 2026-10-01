@@ -11,6 +11,8 @@ const COLLECTION_ACTION_NAVIGATION_PATH := "res://decompiled/build/assets/deck-b
 const DECK_ACTION_NAVIGATION_PATH := "res://decompiled/build/assets/deck-builder/deck-action-navigation.bin"
 const COLLECTION_SORT_NAVIGATION_PATH := "res://decompiled/build/assets/deck-builder/collection-sort-navigation.bin"
 const DECK_SORT_NAVIGATION_PATH := "res://decompiled/build/assets/deck-builder/deck-sort-navigation.bin"
+const SORT_COORDINATE_Y_OFFSET := 40
+const SORT_COORDINATE_X_OFFSET := 50
 
 var popup: PopupKind = PopupKind.NONE
 var choice: int = 0
@@ -36,6 +38,13 @@ func begin_hub_session() -> void:
 	deck_sort = 0
 	collection_filter = 1
 	deck_filter = 1
+
+func sort_popup_cursor_position(choice_index: int, deck_view: bool = false) -> Vector2i:
+	var table := deck_sort_navigation if deck_view else collection_sort_navigation
+	var index := clampi(choice_index, 0, 9)
+	if table.size() < SORT_COORDINATE_X_OFFSET + 10:
+		return Vector2i.ZERO
+	return Vector2i(table[SORT_COORDINATE_X_OFFSET + index], table[SORT_COORDINATE_Y_OFFSET + index])
 
 func handle_key(key: int, deck_view: bool) -> Dictionary:
 	var popup_active := popup != PopupKind.NONE
