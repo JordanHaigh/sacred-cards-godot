@@ -63,10 +63,7 @@ func _draw() -> void:
 	if opponent_hand_overlay_visible:
 		if ResourceLoader.exists(terrain_background_path):
 			draw_texture_rect(load(terrain_background_path) as Texture2D, Rect2(Vector2.ZERO, size), false)
-		else:
-			draw_rect(Rect2(Vector2.ZERO, size), Color("10171b"), true)
 	else:
-		draw_rect(Rect2(Vector2.ZERO, size), Color("10171b"), true)
 		_draw_hud()
 		_draw_grid()
 		_draw_details()
