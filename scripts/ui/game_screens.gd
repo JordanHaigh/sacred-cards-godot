@@ -1949,9 +1949,9 @@ func _draw_deck_builder_popup() -> void:
 		_overlay_rect(Rect2(54, 43, 132, 76), Color(0.04, 0.06, 0.06, 0.96), Color("d0b46f"))
 	var labels: Array[String] = []
 	if deck_builder_menu.popup == DeckBuilderMenu.PopupKind.COLLECTION_ACTION:
-		labels = ["CARD INFO", "ADD TO DECK", "REMOVE FROM DECK"]
+		labels = deck_builder_menu.action_popup_labels(language_id)
 	elif deck_builder_menu.popup == DeckBuilderMenu.PopupKind.DECK_ACTION:
-		labels = ["CARD INFO", "REMOVE CARD"]
+		labels = deck_builder_menu.action_popup_labels(language_id, true)
 	else:
 		var modes := ["NUMBER", "NAME", "ATTACK", "DEFENSE", "TYPE", "ATTRIBUTE", "COST", "LEVEL", "QUANTITY", "CANCEL"]
 		labels = modes

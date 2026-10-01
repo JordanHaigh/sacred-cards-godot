@@ -9,6 +9,7 @@ enum Action { NONE, OPENED, CLOSED, EXIT, DESCRIBE, ADD_TO_DECK, REMOVE_FROM_DEC
 
 const COLLECTION_ACTION_NAVIGATION_PATH := "res://decompiled/build/assets/deck-builder/collection-action-navigation.bin"
 const DECK_ACTION_NAVIGATION_PATH := "res://decompiled/build/assets/deck-builder/deck-action-navigation.bin"
+const ACTION_TEXT_RECORDS_PATH := "res://decompiled/build/assets/deck-builder/strings.json"
 const COLLECTION_SORT_NAVIGATION_PATH := "res://decompiled/build/assets/deck-builder/collection-sort-navigation.bin"
 const DECK_SORT_NAVIGATION_PATH := "res://decompiled/build/assets/deck-builder/deck-sort-navigation.bin"
 const SORT_COORDINATE_Y_OFFSET := 40
@@ -28,12 +29,14 @@ var collection_action_navigation := PackedByteArray()
 var deck_action_navigation := PackedByteArray()
 var collection_sort_navigation := PackedByteArray()
 var deck_sort_navigation := PackedByteArray()
+var action_text_records: Dictionary = {}
 
 func _init() -> void:
 	collection_action_navigation = FileAccess.get_file_as_bytes(COLLECTION_ACTION_NAVIGATION_PATH)
 	deck_action_navigation = FileAccess.get_file_as_bytes(DECK_ACTION_NAVIGATION_PATH)
 	collection_sort_navigation = FileAccess.get_file_as_bytes(COLLECTION_SORT_NAVIGATION_PATH)
 	deck_sort_navigation = FileAccess.get_file_as_bytes(DECK_SORT_NAVIGATION_PATH)
+	_load_action_text_records()
 
 func begin_hub_session() -> void:
 	popup = PopupKind.NONE
@@ -59,6 +62,47 @@ func action_popup_cursor_position(choice_index: int, deck_view: bool = false) ->
 	if table.size() < x_offset + choice_count:
 		return Vector2i.ZERO
 	return Vector2i(table[x_offset + index], table[y_offset + index])
+
+func action_popup_labels(language_id: int, deck_view: bool = false) -> Array[String]:
+	var record_address := "0x080B46E0" if deck_view else "0x08086AC4"
+	var record: Dictionary = action_text_records.get(record_address, {})
+	var languages: Dictionary = record.get("languages", {})
+	var source_text := str(languages.get(str(clampi(language_id, 0, 5)), languages.get("0", "")))
+	var labels: Array[String] = []
+	var current := ""
+	var whitespace_run := 0
+	for index in range(source_text.length()):
+		var character := source_text.substr(index, 1)
+		var codepoint := source_text.unicode_at(index)
+		if codepoint == 32 or codepoint == 0x3000:
+			whitespace_run += 1
+			continue
+		if whitespace_run >= 3:
+			if not current.strip_edges().is_empty():
+				labels.append(current.strip_edges())
+			current = ""
+		elif whitespace_run > 0:
+			current += " ".repeat(whitespace_run)
+		whitespace_run = 0
+		current += character
+	if not current.strip_edges().is_empty():
+		labels.append(current.strip_edges())
+	return labels
+
+func _load_action_text_records() -> void:
+	if not FileAccess.file_exists(ACTION_TEXT_RECORDS_PATH):
+		push_error("Missing recovered action popup text records: %s" % ACTION_TEXT_RECORDS_PATH)
+		return
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(ACTION_TEXT_RECORDS_PATH))
+	if not parsed is Array:
+		push_error("Recovered action popup text catalog is not an array.")
+		return
+	for value: Variant in parsed:
+		if not value is Dictionary:
+			continue
+		var address := str(value.get("address", ""))
+		if address in ["0x08086AC4", "0x080B46E0"]:
+			action_text_records[address] = value
 
 func handle_key(key: int, deck_view: bool) -> Dictionary:
 	var popup_active := popup != PopupKind.NONE
