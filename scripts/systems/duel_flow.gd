@@ -10,6 +10,7 @@ const GROWING_MONSTER_TABLE_PATH := "res://resources/growing_monster_pairs.json"
 signal card_transformed(side_id: int, column: int, previous_card_id: int, new_card_id: int)
 signal duel_message_requested(message_id: int, number: int)
 signal duel_audio_requested(audio_id: int)
+signal duel_music_fade_requested(step_interval: int)
 var growing_monster_pairs: Array[Vector2i] = []
 
 func _init() -> void:
@@ -150,6 +151,8 @@ func resolve_outcome(duel: SacredDuelState, save_data: PlayerSaveData, opponent_
 			_push_message(report, 3, 0)
 	for item: Dictionary in report.messages:
 		var message_id := int(item.message_id)
+		if message_id in [19, 20, 21, 22]:
+			duel_music_fade_requested.emit(4)
 		# The native result cue follows any LP/deck-out text and precedes the
 		# result message. The UI queues this audio event alongside the messages.
 		if show_results and message_id == (2 if player_won else 3):

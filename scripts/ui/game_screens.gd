@@ -196,6 +196,7 @@ signal scene_name_entry_finished
 signal scene_password_entry_finished
 signal recovered_duel_start_resolved
 signal recovered_duel_finished
+signal duel_message_queue_drained
 
 var scene_shop_active := false
 var scene_shop_return_screen := "scene"
@@ -289,6 +290,7 @@ func _ready() -> void:
 	duel_flow.card_transformed.connect(_on_duel_card_transformed)
 	duel_flow.duel_message_requested.connect(_on_duel_flow_message_requested)
 	duel_flow.duel_audio_requested.connect(_on_duel_flow_audio_requested)
+	duel_flow.duel_music_fade_requested.connect(_on_duel_flow_music_fade_requested)
 	duel_special_wins.special_win.connect(_on_duel_special_win)
 	duel_text_presenter.text_finished.connect(_on_duel_message_finished)
 	duel_summon_rules = SUMMON_RULES_SCRIPT.new()
@@ -641,7 +643,11 @@ func _on_duel_flow_message_requested(message_id: int, number: int) -> void:
 	_enqueue_duel_message(message_id, number, card_id, 0)
 
 func _on_duel_flow_audio_requested(audio_id: int) -> void:
-	_pending_duel_messages.append({"kind": "audio", "audio_id": audio_id})
+	_pending_duel_messages.append({"kind": "play_audio", "audio_id": audio_id})
+	_present_next_duel_message()
+
+func _on_duel_flow_music_fade_requested(step_interval: int) -> void:
+	_pending_duel_messages.append({"kind": "fade_music", "step_interval": step_interval})
 	_present_next_duel_message()
 
 func _on_duel_special_win(_side_id: int, message_id: int) -> void:
@@ -660,12 +666,21 @@ func _enqueue_duel_message(message_id: int, number: int, card_id: int, other_car
 	_present_next_duel_message()
 
 func _present_next_duel_message() -> void:
-	if _duel_message_active or _pending_duel_messages.is_empty():
+	if _duel_message_active:
+		return
+	if _pending_duel_messages.is_empty():
+		duel_message_queue_drained.emit()
 		return
 	var message: Dictionary = _pending_duel_messages.pop_front()
-	if message.get("kind", "") == "audio":
+	var event_kind := StringName(message.get("kind", ""))
+	if event_kind == &"play_audio":
 		if audio_dispatch != null:
 			audio_dispatch.play_game_audio(int(message.get("audio_id", 0)))
+		call_deferred("_present_next_duel_message")
+		return
+	if event_kind == &"fade_music":
+		if audio_dispatch != null:
+			audio_dispatch.fade_game_music(int(message.get("step_interval", 0)))
 		call_deferred("_present_next_duel_message")
 		return
 	_duel_message_active = true
@@ -676,6 +691,11 @@ func _on_duel_message_finished() -> void:
 		return
 	_duel_message_active = false
 	call_deferred("_present_next_duel_message")
+
+func _wait_for_duel_message_queue() -> void:
+	if not _duel_message_active and _pending_duel_messages.is_empty():
+		return
+	await duel_message_queue_drained
 
 func advance_duel_text(max_steps: int = 1) -> Dictionary:
 	return duel_text_presenter.run_to_next_pause(max_steps) if duel_text_presenter != null else {"finished": true}
@@ -1085,7 +1105,7 @@ func _advance_recovered_duel_to_player() -> Dictionary:
 	_ai_turn_running = true
 	for _turn_guard in range(3):
 		if active_duel_state.status != SacredDuelState.Status.ACTIVE or active_duel_state.has_ended():
-			var outcome := _resolve_recovered_duel_outcome()
+			var outcome := await _resolve_recovered_duel_outcome()
 			show_duel_state(active_duel_state)
 			_ai_turn_running = false
 			return {"accepted": true, "action": "duel_finished", "outcome": outcome}
@@ -1138,8 +1158,24 @@ func _resolve_recovered_duel_outcome() -> Dictionary:
 	current_save.random_state = duel_random.state
 	_apply_save_data(current_save)
 	_save_current_state()
+	await _wait_for_duel_message_queue()
+	if audio_dispatch != null:
+		audio_dispatch.fade_game_music(2)
+	await _fade_duel_screen_to_black()
 	recovered_duel_finished.emit()
 	return {"resolved": true, "report": report}
+
+func _fade_duel_screen_to_black() -> void:
+	var overlay := ColorRect.new()
+	overlay.color = Color(0, 0, 0, 0)
+	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var fade_parent: Control = screen_root if is_instance_valid(screen_root) else self
+	fade_parent.add_child(overlay)
+	for level in range(1, 33):
+		overlay.color.a = float(level) / 32.0
+		await get_tree().process_frame
+	overlay.queue_free()
 
 func _run_builtin_scene_duel(opponent_id: int) -> int:
 	var wagerable_ids: Array[int] = []
