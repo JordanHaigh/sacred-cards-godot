@@ -485,18 +485,19 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			KEY_F5: _request_password_entry()
 			KEY_LEFT:
 				if screen == "title": pass
-				elif screen == "card_detail": _card_detail_page(-1)
+				elif screen == "card_detail": pass
 				elif screen == "shop": _handle_shop_direction(Vector2i(-1, 0))
 				elif screen == "deck" and deck_builder_menu.popup in [DeckBuilderMenu.PopupKind.COLLECTION_SORT, DeckBuilderMenu.PopupKind.DECK_SORT]: _handle_deck_builder_key(64)
 				else: _step_selection(-1)
 			KEY_RIGHT:
 				if screen == "title": pass
-				elif screen == "card_detail": _card_detail_page(1)
+				elif screen == "card_detail": pass
 				elif screen == "shop": _handle_shop_direction(Vector2i(1, 0))
 				elif screen == "deck" and deck_builder_menu.popup in [DeckBuilderMenu.PopupKind.COLLECTION_SORT, DeckBuilderMenu.PopupKind.DECK_SORT]: _handle_deck_builder_key(128)
 				else: _step_selection(1)
 			KEY_UP:
 				if screen == "title": pass
+				elif screen == "card_detail": _card_detail_page(-1)
 				elif screen == "shop": _handle_shop_direction(Vector2i(0, -1))
 				elif screen == "deck_hub": _handle_deck_hub_buttons(DeckManagement.BUTTON_UP)
 				elif screen == "deck" and deck_builder_menu.popup != DeckBuilderMenu.PopupKind.NONE: _handle_deck_builder_key(64)
@@ -504,6 +505,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 				else: _step_selection(-1)
 			KEY_DOWN:
 				if screen == "title": pass
+				elif screen == "card_detail": _card_detail_page(1)
 				elif screen == "shop": _handle_shop_direction(Vector2i(0, 1))
 				elif screen == "deck_hub": _handle_deck_hub_buttons(DeckManagement.BUTTON_DOWN)
 				elif screen == "deck" and deck_builder_menu.popup != DeckBuilderMenu.PopupKind.NONE: _handle_deck_builder_key(128)
@@ -1426,6 +1428,11 @@ func _show(next: String) -> void:
 func _build_screen() -> void:
 	var persistent_children: Array = [scene_script_runtime, audio_dispatch, battle_animation_player]
 	screen_root = menu_graphics.begin_screen(self, screen_root, persistent_children, _background_for_screen())
+	if screen == "card_detail" and screen_root.get_child_count() > 0:
+		var card_detail_backdrop := screen_root.get_child(0) as TextureRect
+		if card_detail_backdrop != null:
+			card_detail_backdrop.region_enabled = true
+			card_detail_backdrop.region_rect = Rect2(Vector2(4, 0), SCREEN_SIZE)
 	match screen:
 		"title": _draw_title()
 		"duel": _draw_duel()
@@ -1662,6 +1669,7 @@ func _background_for_screen() -> String:
 		"deck_hub", "player_status": return ART + "deck-backdrop.png"
 		"name_entry": return ART + "name-entry-background.png"
 		"pre_duel": return ART + "wager-backdrop.png"
+		"card_detail": return "res://decompiled/build/assets/ui/card-detail.png"
 	return ART + "title-background.png"
 
 func _draw_pre_duel() -> void:
@@ -2233,8 +2241,11 @@ func _draw_card_detail() -> void:
 func _card_detail_page(direction: int) -> void:
 	for child in screen_root.get_children():
 		if child is CardPresentation:
+			var previous_page := child.page_index
 			if direction < 0: child.previous_page()
 			else: child.next_page()
+			if child.page_index != previous_page and audio_dispatch != null:
+				audio_dispatch.play_game_audio(54)
 			return
 
 func _enter_deck_hub() -> void:
@@ -2325,6 +2336,8 @@ func _submit_password(password: String, entry_view: PasswordEntryView) -> void:
 				_toast("Bonus password recorded.")
 
 func _close_card_detail() -> void:
+	if audio_dispatch != null:
+		audio_dispatch.play_game_audio(56)
 	_show(card_detail_return_screen)
 	if pending_password_card_reward_id > 0:
 		password_system.add_card_password_reward(pending_password_card_reward_id, current_save)
