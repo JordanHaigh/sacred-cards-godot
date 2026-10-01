@@ -13,6 +13,8 @@ ASSET_DIR = ROOT / "decompiled/build/assets/deck-builder"
 TILE_FILE = ASSET_DIR / "collection-deck.tiles4.bin"
 PALETTE_FILE = ASSET_DIR / "list-enabled.pal"
 FRAME_TILE_INDICES_FILE = ASSET_DIR / "glyph-tile-indices.bin"
+CURSOR_TILE_FILE = ASSET_DIR / "list-cursor.tiles4.bin"
+CURSOR_PALETTE_FILE = ASSET_DIR / "list-cursor.pal"
 WIDTH_TILES, HEIGHT_TILES = 30, 20
 
 
@@ -102,15 +104,41 @@ def render(map_file: Path, output: Path, kind: str) -> None:
     output.write_bytes(png)
 
 
+def render_cursor(output: Path) -> None:
+    tiles = CURSOR_TILE_FILE.read_bytes()
+    palette_data = CURSOR_PALETTE_FILE.read_bytes()
+    if len(tiles) < 32 or len(palette_data) < 32:
+        raise ValueError("Recovered deck-builder cursor tile or palette is truncated")
+    rows: list[bytes] = []
+    for y in range(8):
+        row = bytearray([0])
+        for x in range(8):
+            packed = tiles[y * 4 + x // 2]
+            index = (packed >> 4) & 0xF if x & 1 else packed & 0xF
+            color = _bgr555(struct.unpack_from("<H", palette_data, index * 2)[0])
+            row.extend((*color[:3], 0 if index == 0 else 255))
+        rows.append(bytes(row))
+    png = (
+        b"\x89PNG\r\n\x1a\n"
+        + _chunk(b"IHDR", struct.pack(">IIBBBBB", 8, 8, 8, 6, 0, 0, 0))
+        + _chunk(b"IDAT", zlib.compress(b"".join(rows), 9))
+        + _chunk(b"IEND", b"")
+    )
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_bytes(png)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--action-output", type=Path, default=ROOT / "art/ui/deck-builder/collection-action-popup.png")
     parser.add_argument("--deck-action-output", type=Path, default=ROOT / "art/ui/deck-builder/deck-action-popup.png")
     parser.add_argument("--sort-output", type=Path, default=ROOT / "art/ui/deck-builder/collection-sort-popup.png")
+    parser.add_argument("--cursor-output", type=Path, default=ROOT / "art/ui/deck-builder/action-cursor.png")
     args = parser.parse_args()
     render(ASSET_DIR / "collection-actions.map.u16", args.action_output, "action")
     render(ASSET_DIR / "deck-actions.map.u16", args.deck_action_output, "action")
     render(ASSET_DIR / "collection-sort.map.u16", args.sort_output, "sort")
+    render_cursor(args.cursor_output)
 
 
 if __name__ == "__main__":

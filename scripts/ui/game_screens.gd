@@ -56,6 +56,7 @@ const PRE_DUEL_DISPLAY_SCRIPT = preload("res://scripts/ported/pre_duel_display.g
 const COLLECTION_ACTION_POPUP_BACKGROUND = preload("res://art/ui/deck-builder/collection-action-popup.png")
 const DECK_ACTION_POPUP_BACKGROUND = preload("res://art/ui/deck-builder/deck-action-popup.png")
 const COLLECTION_SORT_POPUP_BACKGROUND = preload("res://art/ui/deck-builder/collection-sort-popup.png")
+const DECK_BUILDER_ACTION_CURSOR = preload("res://art/ui/deck-builder/action-cursor.png")
 const FRAME_INPUT_SCRIPT = preload("res://scripts/systems/frame_input.gd")
 const SUMMON_RULES_SCRIPT = preload("res://scripts/systems/summon_rules.gd")
 const BATTLE_SETUP_SCRIPT = preload("res://scripts/systems/battle_setup.gd")
@@ -1962,20 +1963,33 @@ func _draw_deck_builder_popup() -> void:
 			var cursor_position := deck_builder_menu.action_popup_cursor_position(index)
 			var color := GOLD if index == deck_builder_menu.choice else PAPER
 			if index == deck_builder_menu.choice:
-				_text(">", Vector2(cursor_position), 6, GOLD)
+				_draw_deck_builder_action_cursor(cursor_position)
 			_text(labels[index], Vector2(cursor_position.x + 16, cursor_position.y), 6, color)
 	elif deck_builder_menu.popup in [DeckBuilderMenu.PopupKind.COLLECTION_SORT, DeckBuilderMenu.PopupKind.DECK_SORT]:
 		for index in range(labels.size()):
 			var cursor_position := deck_builder_menu.sort_popup_cursor_position(index, deck_builder_menu.popup == DeckBuilderMenu.PopupKind.DECK_SORT)
 			var color := GOLD if index == deck_builder_menu.choice else PAPER
+			if index == deck_builder_menu.choice:
+				_draw_deck_builder_action_cursor(cursor_position)
 			_text(labels[index], Vector2(cursor_position.x + 16, cursor_position.y), 5, color)
 	else:
 		for index in range(labels.size()):
 			var cursor_position := deck_builder_menu.action_popup_cursor_position(index, true)
 			var color := GOLD if index == deck_builder_menu.choice else PAPER
 			if index == deck_builder_menu.choice:
-				_text(">", Vector2(cursor_position), 6, GOLD)
+				_draw_deck_builder_action_cursor(cursor_position)
 			_text(labels[index], Vector2(cursor_position.x + 16, cursor_position.y), 6, color)
+
+func _draw_deck_builder_action_cursor(at: Vector2i) -> void:
+	var cursor := TextureRect.new()
+	cursor.texture = DECK_BUILDER_ACTION_CURSOR
+	cursor.position = Vector2(at)
+	cursor.size = Vector2(8, 8)
+	cursor.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	cursor.stretch_mode = TextureRect.STRETCH_SCALE
+	cursor.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	cursor.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	screen_root.add_child(cursor)
 
 func _draw_deck_hub() -> void:
 	_overlay_rect(Rect2(30, 23, 180, 116), Color(0.05, 0.07, 0.07, 0.94), Color("c5aa6d"))
