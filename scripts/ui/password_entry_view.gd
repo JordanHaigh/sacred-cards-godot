@@ -34,10 +34,12 @@ func _ready() -> void:
 
 func _process(_delta: float) -> void:
 	_frame_input.poll_actions([&"ui_up", &"ui_down", &"ui_left", &"ui_right"])
-	if _frame_input.was_repeated(&"ui_up"): state.move_key(0)
+	# ReadPasswordKey scans the repeated mask from low to high bit and keeps
+	# the last direction found: down, up, left, then right priority.
 	if _frame_input.was_repeated(&"ui_down"): state.move_key(1)
-	if _frame_input.was_repeated(&"ui_left"): state.move_key(2)
-	if _frame_input.was_repeated(&"ui_right"): state.move_key(3)
+	elif _frame_input.was_repeated(&"ui_up"): state.move_key(0)
+	elif _frame_input.was_repeated(&"ui_left"): state.move_key(2)
+	elif _frame_input.was_repeated(&"ui_right"): state.move_key(3)
 	state.tick()
 	_refresh()
 
