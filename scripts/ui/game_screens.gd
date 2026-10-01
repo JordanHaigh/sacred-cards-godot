@@ -1105,7 +1105,7 @@ func _advance_recovered_duel_to_player() -> Dictionary:
 		_ai_turn_running = false
 		return {"accepted": false, "reason": "duel_not_initialized"}
 	_ai_turn_running = true
-	for _turn_guard in range(3):
+	while true:
 		if active_duel_state.status != SacredDuelState.Status.ACTIVE or active_duel_state.has_ended():
 			var outcome := await _resolve_recovered_duel_outcome()
 			show_duel_state(active_duel_state)
@@ -1138,8 +1138,6 @@ func _advance_recovered_duel_to_player() -> Dictionary:
 		if active_duel_state.has_ended():
 			continue
 		duel_flow.finish_turn(active_duel_state)
-	_ai_turn_running = false
-	return {"accepted": false, "reason": "duel_turn_guard_exceeded"}
 
 func _prepare_recovered_side_turn(side_id: int) -> void:
 	if side_id < 0 or side_id >= active_duel_state.sides.size():
