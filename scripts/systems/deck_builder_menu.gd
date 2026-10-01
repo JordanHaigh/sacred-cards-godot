@@ -13,6 +13,10 @@ const COLLECTION_SORT_NAVIGATION_PATH := "res://decompiled/build/assets/deck-bui
 const DECK_SORT_NAVIGATION_PATH := "res://decompiled/build/assets/deck-builder/deck-sort-navigation.bin"
 const SORT_COORDINATE_Y_OFFSET := 40
 const SORT_COORDINATE_X_OFFSET := 50
+const COLLECTION_ACTION_COORDINATE_Y_OFFSET := 6
+const COLLECTION_ACTION_COORDINATE_X_OFFSET := 9
+const DECK_ACTION_COORDINATE_Y_OFFSET := 4
+const DECK_ACTION_COORDINATE_X_OFFSET := 7
 
 var popup: PopupKind = PopupKind.NONE
 var choice: int = 0
@@ -45,6 +49,16 @@ func sort_popup_cursor_position(choice_index: int, deck_view: bool = false) -> V
 	if table.size() < SORT_COORDINATE_X_OFFSET + 10:
 		return Vector2i.ZERO
 	return Vector2i(table[SORT_COORDINATE_X_OFFSET + index], table[SORT_COORDINATE_Y_OFFSET + index])
+
+func action_popup_cursor_position(choice_index: int, deck_view: bool = false) -> Vector2i:
+	var table := deck_action_navigation if deck_view else collection_action_navigation
+	var choice_count := 2 if deck_view else 3
+	var y_offset := DECK_ACTION_COORDINATE_Y_OFFSET if deck_view else COLLECTION_ACTION_COORDINATE_Y_OFFSET
+	var x_offset := DECK_ACTION_COORDINATE_X_OFFSET if deck_view else COLLECTION_ACTION_COORDINATE_X_OFFSET
+	var index := clampi(choice_index, 0, choice_count - 1)
+	if table.size() < x_offset + choice_count:
+		return Vector2i.ZERO
+	return Vector2i(table[x_offset + index], table[y_offset + index])
 
 func handle_key(key: int, deck_view: bool) -> Dictionary:
 	var popup_active := popup != PopupKind.NONE

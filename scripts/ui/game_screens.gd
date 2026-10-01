@@ -1961,19 +1961,23 @@ func _draw_deck_builder_popup() -> void:
 			labels = ["NUMBER", "NAME", "ATTACK", "DEFENSE", "TYPE", "ATTRIBUTE", "DECK COUNT", "COST", "LEVEL", "CANCEL"]
 	if deck_builder_menu.popup == DeckBuilderMenu.PopupKind.COLLECTION_ACTION:
 		for index in range(labels.size()):
+			var cursor_position := deck_builder_menu.action_popup_cursor_position(index)
 			var color := GOLD if index == deck_builder_menu.choice else PAPER
-			_text(("> " if index == deck_builder_menu.choice else "  ") + labels[index], Vector2(86, 96 + index * 8), 6, color)
+			if index == deck_builder_menu.choice:
+				_text(">", Vector2(cursor_position), 6, GOLD)
+			_text(labels[index], Vector2(cursor_position.x + 16, cursor_position.y), 6, color)
 	elif deck_builder_menu.popup in [DeckBuilderMenu.PopupKind.COLLECTION_SORT, DeckBuilderMenu.PopupKind.DECK_SORT]:
 		for index in range(labels.size()):
 			var cursor_position := deck_builder_menu.sort_popup_cursor_position(index, deck_builder_menu.popup == DeckBuilderMenu.PopupKind.DECK_SORT)
 			var color := GOLD if index == deck_builder_menu.choice else PAPER
 			_text(labels[index], Vector2(cursor_position.x + 16, cursor_position.y), 5, color)
 	else:
-		var first := maxi(deck_builder_menu.choice - 2, 0)
-		for index in range(first, mini(first + 5, labels.size())):
-			var line := index - first
+		for index in range(labels.size()):
+			var cursor_position := deck_builder_menu.action_popup_cursor_position(index, true)
 			var color := GOLD if index == deck_builder_menu.choice else PAPER
-			_text(("> " if index == deck_builder_menu.choice else "  ") + labels[index], Vector2(66, 49 + line * 12), 7, color)
+			if index == deck_builder_menu.choice:
+				_text(">", Vector2(cursor_position), 6, GOLD)
+			_text(labels[index], Vector2(cursor_position.x + 16, cursor_position.y), 6, color)
 
 func _draw_deck_hub() -> void:
 	_overlay_rect(Rect2(30, 23, 180, 116), Color(0.05, 0.07, 0.07, 0.94), Color("c5aa6d"))
