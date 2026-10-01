@@ -2,7 +2,6 @@ extends Control
 class_name PasswordEntryView
 
 signal submitted(password: String)
-signal canceled
 
 const SPRITES_PATH := "res://resources/password_sprites.json"
 const ENTRY_STATE_SCRIPT = preload("res://scripts/state/password_entry_state.gd")
@@ -125,13 +124,6 @@ func _build_view(background_path: String) -> void:
 		var click := _make_click_area(normal, _click_key.bind(key_index))
 		add_child(click)
 		_key_buttons.append(click)
-	var close := Button.new()
-	close.text = "×"
-	close.position = Vector2(220, 0)
-	close.size = Vector2(20, 20)
-	close.pressed.connect(func(): canceled.emit())
-	add_child(close)
-
 func _make_visual(sprite: Dictionary, position_override: Vector2 = Vector2(-1, -1)) -> TextureRect:
 	var visual := TextureRect.new()
 	visual.texture = load(str(sprite.path))

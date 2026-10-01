@@ -2435,14 +2435,7 @@ func _complete_title_exit() -> void:
 func _request_password_entry() -> void:
 	var entry_view: PasswordEntryView = PASSWORD_ENTRY_VIEW_SCRIPT.new()
 	entry_view.submitted.connect(_submit_password.bind(entry_view))
-	entry_view.canceled.connect(_cancel_password_entry.bind(entry_view))
 	add_child(entry_view)
-
-func _cancel_password_entry(entry_view: PasswordEntryView) -> void:
-	entry_view.queue_free()
-	if scene_password_entry_active:
-		scene_password_entry_active = false
-		scene_password_entry_finished.emit()
 
 func _submit_password(password: String, entry_view: PasswordEntryView) -> void:
 	var result: Dictionary = password_system.apply_password(password, current_save, progression)
