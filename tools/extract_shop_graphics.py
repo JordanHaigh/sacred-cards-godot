@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Extract the shop's 4bpp selector and scrollbar sprites as transparent PNGs."""
+"""Extract the shop's recovered 4bpp sprites as transparent PNGs."""
 
 from __future__ import annotations
 
@@ -14,6 +14,8 @@ TILE_FILE = ASSET_DIR / "shop-selection.tiles4.bin"
 PALETTE_FILE = ASSET_DIR / "shop-selection.pal"
 SCROLLBAR_TILE_FILE = ASSET_DIR / "shop-scrollbar.tiles4.bin"
 SCROLLBAR_PALETTE_FILE = ASSET_DIR / "shop-scrollbar.pal"
+ACTION_CURSOR_TILE_FILE = ASSET_DIR / "shop-action-cursor.tiles4.bin"
+ACTION_CURSOR_PALETTE_FILE = ASSET_DIR / "shop-action-cursor.pal"
 
 
 def _png_chunk(kind: bytes, payload: bytes) -> bytes:
@@ -77,6 +79,12 @@ if __name__ == "__main__":
 		type=Path,
 		default=ROOT / "art/ui/shop/scrollbar-thumb.png",
 	)
+	parser.add_argument(
+		"--action-cursor-output",
+		type=Path,
+		default=ROOT / "art/ui/shop/action-cursor.png",
+	)
 	args = parser.parse_args()
 	extract(args.output, TILE_FILE, PALETTE_FILE, 32, 32)
 	extract(args.scrollbar_output, SCROLLBAR_TILE_FILE, SCROLLBAR_PALETTE_FILE, 8, 16)
+	extract(args.action_cursor_output, ACTION_CURSOR_TILE_FILE, ACTION_CURSOR_PALETTE_FILE, 16, 16)

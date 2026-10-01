@@ -8,6 +8,10 @@ const SELECTOR_X_COORDINATES := [505, 537, 569, 601, 633, 665, 697]
 const SELECTOR_Y_COORDINATES := [241, 273, 305, 337, 369]
 const SHADOW_X_COORDINATES := [8, 40, 72, 104, 136, 168, 200]
 const SHADOW_Y_COORDINATES := [0, 32, 64, 96, 128]
+const ACTION_CURSOR_X_COORDINATES := [24, 24, 24]
+const ACTION_CURSOR_Y_COORDINATES := [48, 64, 80]
+const SORT_CURSOR_X_COORDINATES := [8, 8, 80, 80, 144, 144, 80, 144, 8, 8]
+const SORT_CURSOR_Y_COORDINATES := [56, 72, 56, 72, 56, 72, 88, 88, 88, 112]
 const SELECTION_PIECE_SPACING := 30
 const SCROLLBAR_TRAVEL := 127
 
@@ -51,6 +55,12 @@ func selection_shadow_rect(row: int, column: int) -> Rect2:
 	var x := int(SHADOW_X_COORDINATES[clampi(column, 0, SHADOW_X_COORDINATES.size() - 1)])
 	var y := int(SHADOW_Y_COORDINATES[clampi(row, 0, SHADOW_Y_COORDINATES.size() - 1)])
 	return Rect2(Vector2(x, y), Vector2(8, 8))
+
+func popup_cursor_origin(is_sort_popup: bool, choice: int) -> Vector2:
+	var x_table: Array = SORT_CURSOR_X_COORDINATES if is_sort_popup else ACTION_CURSOR_X_COORDINATES
+	var y_table: Array = SORT_CURSOR_Y_COORDINATES if is_sort_popup else ACTION_CURSOR_Y_COORDINATES
+	var index := clampi(choice, 0, mini(x_table.size(), y_table.size()) - 1)
+	return Vector2(int(x_table[index]) & 0x1FF, int(y_table[index]) & 0xFF)
 
 func selection_pieces(at: Vector2) -> Array[Dictionary]:
 	var pieces: Array[Dictionary] = []

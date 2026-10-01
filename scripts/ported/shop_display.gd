@@ -9,6 +9,7 @@ const SUMMON_RULES_SCRIPT := preload("res://scripts/systems/summon_rules.gd")
 const FRAMED_MINIATURE_PATH := "res://decompiled/build/assets/cards/%04d.framed.png"
 const SELECTION_CURSOR_PATH := "res://art/ui/shop/selection-cursor.png"
 const SCROLLBAR_THUMB_PATH := "res://art/ui/shop/scrollbar-thumb.png"
+const POPUP_CURSOR_PATH := "res://art/ui/shop/action-cursor.png"
 const GOLD := Color("ffdc77")
 const PAPER := Color("f5e6c3")
 
@@ -237,14 +238,24 @@ func _add_shop_type_icon(type_id: int, at: Vector2) -> void:
 func _draw_popup() -> void:
 	if popup_mode == PopupMode.NONE:
 		return
-	_add_panel(Rect2(58, 39, 124, 82), Color("101412", 0.97))
 	var labels: Array[String] = ["BUY CARD" if not selling else "SELL CARD", "CARD INFO", "CANCEL"]
 	if popup_mode == PopupMode.SORT:
 		labels = ["NUMBER", "NAME", "ATTACK", "DEFENSE", "TYPE", "ATTRIBUTE", "COST", "PRICE", "QUANTITY", "CLOSE"]
-	var first := maxi(popup_choice_index - 2, 0)
-	for row in range(mini(5, labels.size() - first)):
-		var index := first + row
-		_add_text(("> " if index == popup_choice_index else "  ") + labels[index], Vector2(67, 45 + row * 14), GOLD if index == popup_choice_index else PAPER, 7)
+	for index in range(labels.size()):
+		var at := graphics_model.popup_cursor_origin(popup_mode == PopupMode.SORT, index)
+		_add_text(labels[index], at + Vector2(16, 4), GOLD if index == popup_choice_index else PAPER, 7)
+	_draw_popup_cursor(graphics_model.popup_cursor_origin(popup_mode == PopupMode.SORT, popup_choice_index))
+
+func _draw_popup_cursor(at: Vector2) -> void:
+	if not ResourceLoader.exists(POPUP_CURSOR_PATH):
+		push_warning("Missing recovered shop popup cursor: %s" % POPUP_CURSOR_PATH)
+		return
+	var sprite := Sprite2D.new()
+	sprite.texture = load(POPUP_CURSOR_PATH) as Texture2D
+	sprite.centered = false
+	sprite.position = at
+	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	add_child(sprite)
 
 func _emit_card_selected(index: int) -> void:
 	card_selected.emit(index)
