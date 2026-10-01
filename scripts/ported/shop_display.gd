@@ -103,6 +103,13 @@ func _render() -> void:
 			var card_id := visible_cards[inventory_index]
 			var definition := card_database.get_card(card_id) if card_database != null else null
 			var at := Vector2(8 + column * 32, row * 32)
+			if card_id == 0:
+				var empty_slot := ColorRect.new()
+				empty_slot.position = at
+				empty_slot.size = Vector2(32, 32)
+				empty_slot.color = Color.BLACK
+				empty_slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				add_child(empty_slot)
 			if definition != null and ResourceLoader.exists(definition.miniature_path):
 				var miniature := TextureRect.new()
 				var framed_path := FRAMED_MINIATURE_PATH % card_id
