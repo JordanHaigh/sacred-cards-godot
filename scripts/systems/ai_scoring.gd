@@ -95,13 +95,14 @@ func score_after(simulated_state: SacredDuelState, acting_side: int, candidate: 
 				var target := _slot(simulated_state, acting_side, operands[1])
 				var attacker := _slot(simulated_state, acting_side, operands[0])
 				if target != null and target.is_empty():
-					if attacker != null and not attacker.is_empty(): score = _u32(score - _attack(attacker, simulated_state.terrain) + 0x7EF0A11E)
-				elif attacker == null or attacker.is_empty():
-					var own_count := _occupied(_row(simulated_state, acting_side, 2))
-					var enemy_count := _occupied(_row(simulated_state, acting_side, 1))
-					if own_count > enemy_count: score = _u32(score + 0x7EEE8FB0)
-					else: score = LOW_PRIORITY
-				else: score = LOW_PRIORITY
+					if attacker != null and not attacker.is_empty():
+						score = _u32(score - _attack(attacker, simulated_state.terrain) + 0x7EF0A11E)
+					else:
+						var own_count := _occupied(_row(simulated_state, acting_side, 2))
+						var enemy_count := _occupied(_row(simulated_state, acting_side, 1))
+						score = _u32(score + 0x7EEE8FB0) if own_count > enemy_count else LOW_PRIORITY
+				else:
+					score = LOW_PRIORITY
 		23:
 			if after_monster_score.is_valid(): return _invoke_effect_score(after_monster_score, simulated_state, acting_side, candidate, 1, score)
 			return {"resolved": false, "reason": "monster_score_table_missing", "metadata_index": _card(_operand_card_id(simulated_state, acting_side, operands[0])).metadata_1b if _card(_operand_card_id(simulated_state, acting_side, operands[0])) != null else -1}
