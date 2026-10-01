@@ -2539,6 +2539,9 @@ func _deck_transfer() -> void:
 			collection.remove_at(selected)
 	selected = clampi(selected, 0, maxi(_visible_cards().size() - 1, 0))
 	_save_current_state()
+	if editing_deck and deck.is_empty() and in_deck_hub_flow:
+		_show("deck_hub")
+		return
 	_build_screen()
 
 func _available_ids(counts: Array[int]) -> Array[int]:
