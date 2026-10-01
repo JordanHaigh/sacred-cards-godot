@@ -109,7 +109,7 @@ func _render_rows() -> void:
 			row_panel.add_child(icon)
 		var title := definition.name if definition != null else "UNKNOWN CARD"
 		row_panel.add_child(_pixel_text("%04d  %s" % [card_id, title.to_upper()], Vector2(29, 6), GOLD if picked else PAPER, 6))
-		if deck_view and definition != null:
+		if definition != null:
 			row_panel.add_child(_pixel_text(_detail_for_card(definition), Vector2(29, 14), Color("c4b68e"), 5))
 		var pick := Button.new()
 		pick.position = Vector2(4, row_y)
