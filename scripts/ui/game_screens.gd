@@ -108,6 +108,7 @@ var pre_duel_menu: PreDuelMenuState
 var pre_duel_display: PreDuelDisplay
 var pre_duel_opponent_id := 0
 var _pre_duel_frame_input = FRAME_INPUT_SCRIPT.new()
+var _deck_frame_input = FRAME_INPUT_SCRIPT.new()
 var opponent_database: OpponentDatabase
 var duel_flow: DuelFlow
 var duel_effect_presentation: DuelEffectPresentation
@@ -343,6 +344,8 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	if screen == "pre_duel" and pre_duel_menu != null:
 		_process_pre_duel_direction_repeat()
+	if screen == "deck" and deck_builder_menu != null:
+		_process_deck_builder_direction_repeat()
 	if screen != "title" or title_menu == null:
 		return
 	if _title_fade_transition_pending:
@@ -389,6 +392,9 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		return
 	if event is InputEventKey and screen == "pre_duel" and event.keycode in [KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT]:
+		get_viewport().set_input_as_handled()
+		return
+	if event is InputEventKey and screen == "deck" and event.keycode in [KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT]:
 		get_viewport().set_input_as_handled()
 		return
 	if event is InputEventKey and screen == "title" and title_menu != null and title_menu.overwrite_pending:
@@ -1242,6 +1248,23 @@ func _process_pre_duel_direction_repeat() -> void:
 func _pre_duel_direction_just_pressed() -> bool:
 	return Input.is_action_just_pressed(&"ui_up") or Input.is_action_just_pressed(&"ui_down") or Input.is_action_just_pressed(&"ui_left") or Input.is_action_just_pressed(&"ui_right")
 
+func _process_deck_builder_direction_repeat() -> void:
+	var popup_open := deck_builder_menu.popup != DeckBuilderMenu.PopupKind.NONE
+	_deck_frame_input.repeat_interval = FrameInput.REPEAT_INTERVAL if popup_open else 1
+	_deck_frame_input.poll_actions([&"ui_up", &"ui_down", &"ui_left", &"ui_right"])
+	var key := 0
+	if _deck_frame_input.was_repeated(&"ui_down"):
+		key = 0x180 if Input.is_key_pressed(KEY_R) else 128
+	elif _deck_frame_input.was_repeated(&"ui_up"):
+		key = 0x140 if Input.is_key_pressed(KEY_R) else 64
+	elif popup_open and deck_builder_menu.popup in [DeckBuilderMenu.PopupKind.COLLECTION_SORT, DeckBuilderMenu.PopupKind.DECK_SORT]:
+		if _deck_frame_input.was_repeated(&"ui_left"):
+			key = 32
+		elif _deck_frame_input.was_repeated(&"ui_right"):
+			key = 16
+	if key != 0:
+		_handle_deck_builder_key(key)
+
 func _pre_duel_code_for_key(keycode: int) -> int:
 	match keycode:
 		KEY_UP: return 64
@@ -1420,6 +1443,8 @@ func _bit_count(value: int) -> int:
 	return total
 
 func _show(next: String) -> void:
+	if screen != next and next == "deck":
+		_deck_frame_input.reset()
 	screen = next
 	selected = clampi(selected, 0, maxi(_visible_cards().size() - 1, 0))
 	_build_screen()
