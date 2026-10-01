@@ -8,6 +8,7 @@ const LOCKED_DESCRIPTION_PATH := "res://resources/card_locked_description.json"
 const FULL_CARD_FRAME_PATH := "res://decompiled/build/assets/ui/frame-%d.png"
 const FULL_CARD_TYPE_PATH := "res://decompiled/build/assets/ui/type-%02d.png"
 const FULL_CARD_SUMMON_PATH := "res://decompiled/build/assets/ui/summon-%02d.png"
+const LEVEL_STAR_TEXTURE := preload("res://decompiled/build/assets/duel/hud-level.png")
 const GOLD := Color("ffdc77")
 const PAPER := Color("f5e6c3")
 
@@ -80,18 +81,17 @@ func _build_view() -> void:
 
 func _add_level_stars() -> void:
 	# DrawFullCardLevel caps at twelve and overlays the rightmost N slots in
-	# the frame map's twelve-cell row. The source star bitmap is not exported.
+	# the frame map's twelve-cell row. Reuse the recovered 8x8 level-star tile.
 	var star_count := mini(maxi(definition.level, 0), 12)
 	for slot in range(12 - star_count, 12):
-		var points := PackedVector2Array()
-		for vertex in range(10):
-			var angle := -PI / 2.0 + vertex * PI / 5.0
-			var radius := 3.6 if vertex % 2 == 0 else 1.55
-			points.append(Vector2(4.0, 4.0) + Vector2(cos(angle), sin(angle)) * radius)
-		var star := Polygon2D.new()
+		var star := TextureRect.new()
+		star.texture = LEVEL_STAR_TEXTURE
 		star.position = Vector2(8 + slot * 8, 24)
-		star.polygon = points
-		star.color = Color("e6b429")
+		star.size = Vector2(8, 8)
+		star.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		star.stretch_mode = TextureRect.STRETCH_SCALE
+		star.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		star.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		add_child(star)
 
 func _add_full_card_icon(path: String, at: Vector2) -> void:
