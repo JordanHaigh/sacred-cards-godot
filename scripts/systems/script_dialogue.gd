@@ -20,6 +20,7 @@ var unicode_glyph_indices: Dictionary[int, int] = {}
 var choice_next_positions: PackedInt32Array = PackedInt32Array(GLYPH_NEXT)
 var dialogue_next_positions: PackedInt32Array = PackedInt32Array(GLYPH_NEXT)
 var card_name_provider: Callable
+var card_name_record_provider: Callable
 var player_name := ""
 var wait_counter := 0
 var selection := 0
@@ -86,9 +87,33 @@ func player_name_character_at_byte_offset(byte_offset: int) -> String:
 	return _character_at_byte_offset(player_name, byte_offset)
 
 func write_card_name(card_id: int, language: int = 0) -> bool:
+	if card_name_record_provider.is_valid():
+		var record: Variant = card_name_record_provider.call(card_id, language)
+		if record is Dictionary:
+			var record_text := str(record.get("text", ""))
+			var record_glyph_indices: Variant = record.get("glyph_indices", null)
+			if record_glyph_indices is PackedInt32Array and record_glyph_indices.size() == record_text.length():
+				return _write_embedded_glyph_record(record_text, record_glyph_indices, int(state.get("embedded_text_index", 0)))
 	if not card_name_provider.is_valid(): return false
 	var value: Variant = card_name_provider.call(card_id, language)
 	return _write_embedded_text(String(value), int(state.get("embedded_text_index", 0)), false)
+
+func _write_embedded_glyph_record(text: String, glyph_indices: PackedInt32Array, byte_offset: int) -> bool:
+	var current_offset := 0
+	for index in range(text.length()):
+		var character := text.substr(index, 1)
+		var codepoint := character.unicode_at(0)
+		if current_offset == byte_offset:
+			if index >= glyph_indices.size() or glyph_indices[index] < 0: return false
+			glyph_requested.emit(glyph_indices[index], int(state.get("glyph_position", 0)), false)
+			state.embedded_text_index = byte_offset + _native_character_byte_length(codepoint)
+			state.dirty = true
+			_advance_glyph()
+			if int(state.embedded_text_index) >= _native_string_byte_length(text): state.mode = &"text"
+			return true
+		current_offset += _native_character_byte_length(codepoint)
+	state.mode = &"text"
+	return false
 
 func _write_embedded_text(text: String, byte_offset: int, _is_player_name: bool) -> bool:
 	var character := _character_at_byte_offset(text, byte_offset)

@@ -45,6 +45,7 @@ func configure(script_database: SceneScriptDatabase, command_adapter: SceneScrip
 	dialogue = DIALOGUE_SCRIPT.new()
 	if card_database != null:
 		dialogue.card_name_provider = Callable(card_database, "get_localized_card_name")
+		dialogue.card_name_record_provider = Callable(card_database, "get_localized_card_name_record")
 	dialogue.glyph_requested.connect(func(code: int, position: int, highlighted: bool) -> void: dialogue_glyph_requested.emit(code, position, highlighted))
 	dialogue.text_clear_requested.connect(func() -> void: dialogue_clear_requested.emit())
 	dialogue.audio_requested.connect(_on_audio_requested)
