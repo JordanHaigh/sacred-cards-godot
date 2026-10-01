@@ -6,6 +6,7 @@ extends Control
 const PIXEL_TEXT_SCRIPT := preload("res://scripts/ui/pixel_text.gd")
 const SHOP_GRAPHICS_SCRIPT := preload("res://scripts/ported/shop_graphics.gd")
 const SUMMON_RULES_SCRIPT := preload("res://scripts/systems/summon_rules.gd")
+const FRAMED_MINIATURE_PATH := "res://decompiled/build/assets/cards/%04d.framed.png"
 const GOLD := Color("ffdc77")
 const PAPER := Color("f5e6c3")
 
@@ -101,12 +102,15 @@ func _render() -> void:
 				continue
 			var card_id := visible_cards[inventory_index]
 			var definition := card_database.get_card(card_id) if card_database != null else null
-			var at := Vector2(8 + column * 32, row * 32 + 4)
+			var at := Vector2(8 + column * 32, row * 32)
 			if definition != null and ResourceLoader.exists(definition.miniature_path):
 				var miniature := TextureRect.new()
-				miniature.texture = load(definition.miniature_path) as Texture2D
+				var framed_path := FRAMED_MINIATURE_PATH % card_id
+				miniature.texture = load(framed_path if ResourceLoader.exists(framed_path) else definition.miniature_path) as Texture2D
 				miniature.position = at
-				miniature.size = Vector2(24, 24)
+				miniature.size = Vector2(32, 32) if miniature.texture.get_size() == Vector2i(32, 32) else Vector2(24, 24)
+				if miniature.texture.get_size() == Vector2i(24, 24):
+					miniature.position += Vector2(4, 4)
 				miniature.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 				miniature.stretch_mode = TextureRect.STRETCH_SCALE
 				miniature.mouse_filter = Control.MOUSE_FILTER_IGNORE
