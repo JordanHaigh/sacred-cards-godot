@@ -7,8 +7,6 @@ const SLOT_SIZE := Vector2(24, 24)
 const GRID_ORIGIN := Vector2(4, 24)
 const COLUMN_STEP := 28.0
 const ROW_STEP := 21.0
-const ATTRIBUTE_ICON_PATH := "res://art/ui/shop/attribute-%02d.png"
-const REQUIREMENT_ICON_PATH := "res://art/ui/shop/requirement-%d.png"
 const MINIATURE_BACK_PATH := "res://decompiled/build/assets/duel/miniature-back.png"
 const MINIATURE_ATTRIBUTE_PATH := "res://decompiled/build/assets/duel/miniature-attribute-%d.png"
 const MINIATURE_REQUIREMENT_PATH := "res://decompiled/build/assets/duel/miniature-requirement-%d.png"
@@ -182,25 +180,26 @@ func _draw_grid() -> void:
 			var card_id := int(cell.get("card_id", 0))
 			var flags := int(cell.get("flags", 0))
 			if card_id > 0:
-				var face_hidden := (flags & 16) == 0
-				if row < 2 and face_hidden:
-					_draw_card_back(rect)
+				var visibility_hidden := (flags & 16) == 0
+				if row < 2 and visibility_hidden:
+					if ResourceLoader.exists(MINIATURE_BACK_PATH):
+						draw_texture_rect(load(MINIATURE_BACK_PATH) as Texture2D, Rect2(rect.position - Vector2(4, 4), Vector2(32, 32)), false)
 				else:
-					_draw_card_miniature(card_id, rect, row, flags, int(cell.get("stage", 0)), face_hidden)
-			if (row == 1 or row == 2 or row == 4) and (flags & 1) != 0:
-					_draw_text("USED", rect.position + Vector2(1, 7), 4, Color("ff8a74"))
+					_draw_card_miniature(card_id, rect, row, flags, int(cell.get("stage", 0)))
 			if cursor == Vector2i(column, row):
 				draw_rect(rect.grow(2), GOLD, false, 2.0)
 
-func _draw_card_miniature(card_id: int, rect: Rect2, row: int, flags: int, stage: int, masked: bool) -> void:
+func _draw_card_miniature(card_id: int, rect: Rect2, row: int, flags: int, stage: int) -> void:
 	var card := card_database.get_card(card_id)
 	if card == null: return
-	var color := Color(0.58, 0.58, 0.58, 1.0) if masked else Color.WHITE
-	if ResourceLoader.exists(card.miniature_path):
-		var texture := load(card.miniature_path) as Texture2D
-		draw_texture_rect(texture, rect, false, color)
+	var framed_path := FRAMED_CARD_PATH % card_id
+	var framed_rect := Rect2(rect.position - Vector2(4, 4), Vector2(32, 32))
+	if ResourceLoader.exists(framed_path):
+		draw_texture_rect(load(framed_path) as Texture2D, framed_rect, false)
+	elif ResourceLoader.exists(card.miniature_path):
+		draw_texture_rect(load(card.miniature_path) as Texture2D, Rect2(framed_rect.position + Vector2(4, 2), Vector2(24, 24)), false)
 	else:
-		draw_rect(rect, Color("26323a"), true)
+		draw_rect(framed_rect, Color("26323a"), true)
 	if row == 1 or row == 2:
 		_draw_text(("+" if stage > 0 else "") + str(stage), rect.position + Vector2(1, 6), 5, GOLD)
 	if card.metadata_1a == 2 and (row == 1 or row == 2 or row == 4):
@@ -208,32 +207,13 @@ func _draw_card_miniature(card_id: int, rect: Rect2, row: int, flags: int, stage
 		_draw_text("%02d" % mini(int(stats.attack) / 100, 99), rect.position + Vector2(0, 21), 5, PAPER)
 		_draw_text("%02d" % mini(int(stats.defense) / 100, 99), rect.position + Vector2(13, 21), 5, PAPER)
 	if row == 1 or row == 4 or row == 2:
-		_draw_attribute(card.attribute, rect.position + Vector2(16, 0))
+		_draw_duel_miniature_attribute(card.attribute, framed_rect.position + Vector2(24, 0))
 	if row == 3:
-		_draw_requirement(summon_rules.card_category_requirement(card_id, card_database), rect.position)
+		_draw_duel_miniature_requirement(summon_rules.card_category_requirement(card_id, card_database), framed_rect.position)
 	elif row == 4:
-		_draw_requirement(summon_rules.card_tribute_requirement(card_id, card_database), rect.position)
+		_draw_duel_miniature_requirement(summon_rules.card_tribute_requirement(card_id, card_database), framed_rect.position)
 	elif row == 1 or row == 2:
-		_draw_requirement(summon_rules.card_tribute_requirement(card_id, card_database), rect.position)
-	if masked:
-		draw_rect(rect, Color(0.04, 0.05, 0.06, 0.48), true)
-
-func _draw_attribute(attribute: int, at: Vector2) -> void:
-	if attribute <= 0 or attribute > 11: return
-	var path := ATTRIBUTE_ICON_PATH % attribute
-	if ResourceLoader.exists(path):
-		draw_texture_rect(load(path) as Texture2D, Rect2(at, Vector2(8, 8)), false)
-
-func _draw_requirement(requirement: int, at: Vector2) -> void:
-	if requirement <= 0 or requirement > 3: return
-	var path := REQUIREMENT_ICON_PATH % requirement
-	if ResourceLoader.exists(path):
-		draw_texture_rect(load(path) as Texture2D, Rect2(at, Vector2(8, 8)), false)
-
-func _draw_card_back(rect: Rect2) -> void:
-	draw_rect(rect, Color("293d4b"), true)
-	draw_rect(rect.grow(-2), Color("758596"), false)
-	_draw_text("SC", rect.position + Vector2(6, 14), 7, PAPER)
+		_draw_duel_miniature_requirement(summon_rules.card_tribute_requirement(card_id, card_database), framed_rect.position)
 
 func _draw_details() -> void:
 	var panel_rect := Rect2(148, 23, 88, 110)
