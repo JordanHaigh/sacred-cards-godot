@@ -1900,8 +1900,6 @@ func _draw_duel_context_panel() -> void:
 			_draw_miniature(int(row.grave_card_id), Vector2(194, y - 2))
 
 func _draw_shop() -> void:
-	_text("SELL" if selling else "BUY", Vector2(8, 4), 8, GOLD)
-	_text("%d" % credits, Vector2(184, 4), 8, PAPER)
 	var visible_cards := _visible_shop_cards()
 	if visible_cards.is_empty():
 		return

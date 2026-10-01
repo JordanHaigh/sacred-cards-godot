@@ -6,6 +6,7 @@ extends Control
 const PIXEL_TEXT_SCRIPT := preload("res://scripts/ui/pixel_text.gd")
 const SHOP_GRAPHICS_SCRIPT := preload("res://scripts/ported/shop_graphics.gd")
 const SUMMON_RULES_SCRIPT := preload("res://scripts/systems/summon_rules.gd")
+const SHOP_BACKDROP_PATH := "res://decompiled/build/assets/player-menus/shop-backdrop.png"
 const FRAMED_MINIATURE_PATH := "res://decompiled/build/assets/cards/%04d.framed.png"
 const SELECTION_CURSOR_PATH := "res://art/ui/shop/selection-cursor.png"
 const SCROLLBAR_THUMB_PATH := "res://art/ui/shop/scrollbar-thumb.png"
@@ -94,6 +95,7 @@ func _refresh(scope: StringName) -> void:
 func _render() -> void:
 	for child in get_children():
 		child.queue_free()
+	_draw_backdrop()
 	if visible_cards.is_empty():
 		_add_text("NO CARDS AVAILABLE", Vector2(54, 74), GOLD, 8)
 		return
@@ -144,6 +146,20 @@ func _render() -> void:
 	_draw_selected_summary()
 	_draw_scrollbar()
 	_draw_popup()
+
+func _draw_backdrop() -> void:
+	if not ResourceLoader.exists(SHOP_BACKDROP_PATH):
+		push_warning("Missing recovered shop backdrop: %s" % SHOP_BACKDROP_PATH)
+		return
+	var backdrop := TextureRect.new()
+	backdrop.texture = load(SHOP_BACKDROP_PATH) as Texture2D
+	backdrop.position = Vector2.ZERO
+	backdrop.size = Vector2(240, 160)
+	backdrop.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	backdrop.stretch_mode = TextureRect.STRETCH_SCALE
+	backdrop.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(backdrop)
 
 func _draw_miniature_overlays(card_id: int, at: Vector2) -> void:
 	var layers: Dictionary = graphics_model.miniature_layers(card_id)
