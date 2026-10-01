@@ -31,10 +31,10 @@ func _init(database: CardDatabase = null) -> void:
 
 func begin(text: String, card: int = 0, other: int = 0, value: int = 0, other_value: int = 0, selected_language: int = 0, owner_name: String = "") -> void:
 	raw_text = select_language_segment(text, selected_language)
-	card_id = card
-	other_card_id = other
-	number = value
-	other_number = other_value
+	card_id = card & 0xFFFF
+	other_card_id = other & 0xFFFF
+	number = value & 0xFFFF
+	other_number = other_value & 0xFFFF
 	player_name = owner_name
 	language = selected_language
 	cursor = 0
@@ -125,8 +125,8 @@ func _next_language_segment_length(text: String, at: int, selected_language: int
 	return text.length() - at
 
 func _begin_name(id: int) -> void:
-	var definition := card_database.get_card(id) if card_database != null else null
-	_begin_substitution(State.CARD_NAME, _wrap_card_name(definition.name if definition != null else ""))
+	var localized_name := card_database.get_localized_card_name(id, language) if card_database != null else ""
+	_begin_substitution(State.CARD_NAME, _wrap_card_name(localized_name))
 
 func _wrap_card_name(card_name: String) -> String:
 	if card_name.length() < 26: return card_name
