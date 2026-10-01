@@ -560,6 +560,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 func dispatch_duel_effect(card_id: int, duel_state: SacredDuelState, row: int, column: int, source_row: int = -1, source_column: int = -1, monster_effect: bool = false, presentation_suppressed: bool = false, random_service: SacredRandom = null) -> Variant:
 	if duel_effect_dispatcher == null:
 		return {"resolved": false, "reason": "effect_dispatcher_unavailable"}
+	var effective_random := random_service if random_service != null else duel_random
 	var context := {
 		"duel_state": duel_state,
 		"acting_side": duel_state.active_side if duel_state != null else 0,
@@ -568,7 +569,7 @@ func dispatch_duel_effect(card_id: int, duel_state: SacredDuelState, row: int, c
 		"source_row": source_row,
 		"source_column": source_column,
 		"presentation_suppressed": presentation_suppressed,
-		"random_service": random_service,
+		"random_service": effective_random,
 	}
 	var result: Variant = duel_effect_dispatcher.dispatch_metadata_1b(card_id, context) if monster_effect else duel_effect_dispatcher.dispatch_metadata_1a(card_id, context)
 	if not presentation_suppressed:
@@ -1064,14 +1065,14 @@ func best_ai_candidate(duel_state: SacredDuelState, acting_side: int) -> Diction
 func execute_ai_action(duel_state: SacredDuelState, acting_side: int, candidate: Dictionary, simulate: bool = false, random_service: SacredRandom = null) -> Dictionary:
 	if ai_actions == null:
 		return {"resolved": false, "reason": "ai_actions_unavailable"}
-	ai_actions.set_random_service(random_service)
+	ai_actions.set_random_service(random_service if random_service != null else duel_random)
 	return ai_actions.execute(duel_state, acting_side, candidate, simulate)
 
 ## Runs a full opponent decision loop using independent candidate state copies.
 func run_opponent_turn(duel_state: SacredDuelState, acting_side: int, random_service: SacredRandom = null, max_actions: int = -1) -> Dictionary:
 	if ai_turn == null:
 		return {"completed": false, "reason": "ai_turn_unavailable", "actions": []}
-	return await ai_turn.run_opponent_turn(duel_state, acting_side, random_service, max_actions, active_opponent_id)
+	return await ai_turn.run_opponent_turn(duel_state, acting_side, random_service if random_service != null else duel_random, max_actions, active_opponent_id)
 
 ## Connects a game-owned duel state to the playable Godot battlefield view.
 func show_duel_state(duel_state: SacredDuelState) -> void:
