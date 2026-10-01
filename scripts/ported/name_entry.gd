@@ -22,8 +22,10 @@ signal cancelled
 var player_name := ""
 var keyboard_page := 0
 var selected_key := Vector2i.ZERO
+var confirmation_page_active := false
 var name_field: LineEdit
 var page_button: Button
+var accept_button: Button
 var key_buttons: Array[Button] = []
 var unicode_to_encoded: Dictionary = {}
 var encoded_to_unicode: Dictionary = {}
@@ -40,6 +42,8 @@ func begin(initial_name: String = "") -> void:
 	if is_node_ready() and name_field != null:
 		name_field.text = initial_name
 		name_field.caret_column = name_field.text.length()
+	confirmation_page_active = false
+	if is_node_ready(): _refresh_keyboard()
 
 func accept_name() -> bool:
 	var value := _compose_voice_marks(name_field.text if name_field != null else player_name)
@@ -68,8 +72,16 @@ func handle_key(keycode: int) -> bool:
 				if caret > 0:
 					name_field.delete_text(caret - 1, caret)
 					name_field.caret_column = caret - 1
-		KEY_ENTER, KEY_KP_ENTER: return accept_name()
+		KEY_ENTER, KEY_KP_ENTER:
+			if confirmation_page_active:
+				return accept_name()
+			_insert_key(selected_key.y * 11 + selected_key.x)
+			return true
 		KEY_ESCAPE:
+			if confirmation_page_active:
+				confirmation_page_active = false
+				_refresh_keyboard()
+				return true
 			cancelled.emit()
 			return true
 		_: return false
@@ -128,7 +140,7 @@ func _build() -> void:
 	cancel_button.add_theme_font_size_override("font_size", 6)
 	cancel_button.pressed.connect(func(): cancelled.emit())
 	add_child(cancel_button)
-	var accept_button := Button.new()
+	accept_button = Button.new()
 	accept_button.text = "OK"
 	accept_button.position = Vector2(181, 130)
 	accept_button.size = Vector2(38, 14)
@@ -143,11 +155,13 @@ func _refresh_keyboard() -> void:
 	for index in range(key_buttons.size()):
 		var key := page_text.substr(index, 1) if index < page_text.length() else ""
 		key_buttons[index].text = "SPACE" if key == " " else key
-		key_buttons[index].disabled = key.is_empty()
-	if page_button != null: page_button.text = PAGE_LABELS[keyboard_page]
+		key_buttons[index].disabled = key.is_empty() or confirmation_page_active
+	if page_button != null: page_button.text = "BACK" if confirmation_page_active else PAGE_LABELS[keyboard_page]
 	_focus_selected_key()
 
 func _insert_key(index: int) -> void:
+	if confirmation_page_active:
+		return
 	var page_text: String = PAGE_KEYS[keyboard_page]
 	if index >= page_text.length() or name_field == null: return
 	var insertion := page_text.substr(index, 1)
@@ -156,7 +170,8 @@ func _insert_key(index: int) -> void:
 	if _glyph_count(candidate) > MAX_NAME_GLYPHS: return
 	name_field.text = candidate
 	name_field.caret_column = mini(name_field.caret_column + insertion.length(), candidate.length())
-	name_field.grab_focus()
+	if confirmation_page_active: _focus_selected_key()
+	else: name_field.grab_focus()
 
 func _delete_character() -> void:
 	if name_field == null: return
@@ -167,10 +182,17 @@ func _delete_character() -> void:
 		name_field.grab_focus()
 
 func _next_page() -> void:
+	if confirmation_page_active:
+		confirmation_page_active = false
+		_refresh_keyboard()
+		return
 	keyboard_page = posmod(keyboard_page + 1, PAGE_KEYS.size())
 	_refresh_keyboard()
 
 func _focus_selected_key() -> void:
+	if confirmation_page_active:
+		if accept_button != null and is_node_ready(): accept_button.grab_focus()
+		return
 	var index := selected_key.y * 11 + selected_key.x
 	if index >= 0 and index < key_buttons.size() and is_node_ready():
 		key_buttons[index].grab_focus()
@@ -189,6 +211,10 @@ func _on_name_changed(value: String) -> void:
 		name_field.caret_column = mini(caret, normalized.length())
 		_normalizing_input = false
 	player_name = normalized
+	var should_confirm := _glyph_count(normalized) == MAX_NAME_GLYPHS
+	if should_confirm != confirmation_page_active:
+		confirmation_page_active = should_confirm
+		if is_node_ready(): _refresh_keyboard()
 	queue_redraw()
 
 func _glyph_count(value: String) -> int:
