@@ -80,7 +80,9 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			if state.press_selected_key():
 				submitted.emit(state.password())
 		KEY_ESCAPE:
-			canceled.emit()
+			# Native B (key mask 2) moves the selected digit left; it does not
+			# leave the password screen.
+			state.move_digit(false)
 		_: return
 	# ReadPasswordKey resets its shared timer for any new key, including digit
 	# selection and confirm/cancel inputs, before considering held-key repeats.
