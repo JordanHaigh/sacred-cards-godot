@@ -10,6 +10,7 @@ const FRAME_INPUT_SCRIPT = preload("res://scripts/systems/frame_input.gd")
 
 var state: PasswordEntryState = ENTRY_STATE_SCRIPT.new()
 var _frame_input: FrameInput = FRAME_INPUT_SCRIPT.new()
+var _password_repeat_timer: int = 0
 var _digits: Array = []
 var _keys: Array = []
 var _pressed: Array = []
@@ -34,14 +35,35 @@ func _ready() -> void:
 
 func _process(_delta: float) -> void:
 	_frame_input.poll_actions([&"ui_up", &"ui_down", &"ui_left", &"ui_right"])
-	# ReadPasswordKey scans the repeated mask from low to high bit and keeps
-	# the last direction found: down, up, left, then right priority.
-	if _frame_input.was_repeated(&"ui_down"): state.move_key(1)
-	elif _frame_input.was_repeated(&"ui_up"): state.move_key(0)
-	elif _frame_input.was_repeated(&"ui_left"): state.move_key(2)
-	elif _frame_input.was_repeated(&"ui_right"): state.move_key(3)
+	var direction := _pressed_password_direction()
+	if direction >= 0:
+		_password_repeat_timer = 10
+	else:
+		if _password_repeat_timer == 0:
+			direction = _held_password_direction()
+			_password_repeat_timer = 3
+		else:
+			_password_repeat_timer -= 1
+	if direction >= 0:
+		state.move_key(direction)
 	state.tick()
 	_refresh()
+
+func _pressed_password_direction() -> int:
+	# ReadPasswordKey starts with gKeysPressed, then scans low-to-high bits.
+	if bool(_frame_input.pressed.get(&"ui_down", false)): return 1
+	if bool(_frame_input.pressed.get(&"ui_up", false)): return 0
+	if bool(_frame_input.pressed.get(&"ui_left", false)): return 2
+	if bool(_frame_input.pressed.get(&"ui_right", false)): return 3
+	return -1
+
+func _held_password_direction() -> int:
+	# The held-key repeat mask uses the same highest-bit priority.
+	if bool(_frame_input.held.get(&"ui_down", false)): return 1
+	if bool(_frame_input.held.get(&"ui_up", false)): return 0
+	if bool(_frame_input.held.get(&"ui_left", false)): return 2
+	if bool(_frame_input.held.get(&"ui_right", false)): return 3
+	return -1
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not event is InputEventKey or not event.pressed or event.echo:
