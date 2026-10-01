@@ -5,6 +5,8 @@ extends RefCounted
 
 enum State { TEXT, WAIT_FOR_INPUT, CARD_NAME, PLAYER_NAME, NUMBER }
 
+const NATIVE_ASCII_WHITELIST := "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz !\"%',-.:;?"
+
 signal text_changed(value: String, glyph_position: int, wait_state: bool)
 signal text_finished
 
@@ -79,6 +81,13 @@ func step() -> Dictionary:
 			"7": _begin_substitution(State.NUMBER, str(other_number))
 		text_changed.emit(output, glyph_position, state == State.WAIT_FOR_INPUT)
 		return {"waiting": state == State.WAIT_FOR_INPUT, "directive": directive}
+	var codepoint := character.unicode_at(0)
+	if codepoint < 0x80 and not NATIVE_ASCII_WHITELIST.contains(character):
+		# StepDuelText draws blank glyph zero for unsupported ASCII and leaves
+		# the source cursor untouched; the next VM step observes the same byte.
+		glyph_position += 1
+		text_changed.emit(output, glyph_position, false)
+		return {"waiting": false, "unsupported_ascii": true, "glyph_position": glyph_position}
 	output += character
 	cursor += 1
 	glyph_position += 1
