@@ -22,8 +22,8 @@ func miniature_layers(card_id: int) -> Dictionary:
 		"card_id": card_id,
 		"attribute_path": ATTRIBUTE_ICON_PATH % card.attribute if card.attribute > 0 and card.attribute <= 11 else "",
 		"requirement_path": REQUIREMENT_ICON_PATH % tribute_requirement if tribute_requirement > 0 and tribute_requirement <= 3 else "",
-		"attack_value": mini(floori(float(card.attack) / 100.0), 99) if card.metadata_1c == 2 else -1,
-		"defense_value": mini(floori(float(card.defense) / 100.0), 99) if card.metadata_1c == 2 else -1,
+		"attack_value": mini(floori(float(card.attack) / 100.0), 99) if card.metadata_1a == 2 else -1,
+		"defense_value": mini(floori(float(card.defense) / 100.0), 99) if card.metadata_1a == 2 else -1,
 	}
 
 func scrollbar_y(selected_index: int, card_count: int) -> int:
