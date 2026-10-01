@@ -9,12 +9,14 @@ signal audio_requested(audio_id: int)
 signal dialogue_finished
 
 const PIXEL_TEXT_SCRIPT := preload("res://scripts/ui/pixel_text.gd")
+const FONT_MAPPING_PATH := "res://decompiled/build/assets/ui/font-mapping.json"
 const ADVANCE_MASK := 0x103
 const NATIVE_ASCII_WHITELIST := "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz !\"%',-.:;?"
 const GLYPH_NEXT := [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 55]
 const CHOICE_LINE_POSITIONS := [28, 28, 0, 0]
 
 var glyph_codes: Dictionary[int, int] = {}
+var unicode_glyph_indices: Dictionary[int, int] = {}
 var choice_next_positions: PackedInt32Array = PackedInt32Array(GLYPH_NEXT)
 var dialogue_next_positions: PackedInt32Array = PackedInt32Array(GLYPH_NEXT)
 var card_name_provider: Callable
@@ -27,6 +29,14 @@ func _init() -> void:
 	var ascii_glyphs: Dictionary = PIXEL_TEXT_SCRIPT.load_ascii_glyphs()
 	for codepoint: Variant in ascii_glyphs:
 		glyph_codes[int(codepoint)] = int(ascii_glyphs[codepoint])
+	var encoded_glyphs: Variant = JSON.parse_string(FileAccess.get_file_as_string(FONT_MAPPING_PATH)) if FileAccess.file_exists(FONT_MAPPING_PATH) else null
+	if encoded_glyphs is Array:
+		for entry: Variant in encoded_glyphs:
+			if not entry is Dictionary:
+				continue
+			var candidate := str(entry.get("unicode_candidate", ""))
+			if candidate.length() == 1:
+				unicode_glyph_indices[candidate.unicode_at(0)] = int(entry.get("glyph_index", -1))
 
 func configure(glyph_mapping: Dictionary, choice_positions: PackedInt32Array, dialogue_positions: PackedInt32Array, card_provider: Callable = Callable()) -> void:
 	glyph_codes.clear()
@@ -73,24 +83,47 @@ func write_plain_token(token: Dictionary) -> bool:
 func write_player_name() -> bool:
 	return _write_embedded_text(player_name, int(state.get("embedded_text_index", 0)), true)
 
+func player_name_character_at_byte_offset(byte_offset: int) -> String:
+	return _character_at_byte_offset(player_name, byte_offset)
+
 func write_card_name(card_id: int, language: int = 0) -> bool:
 	if not card_name_provider.is_valid(): return false
 	var value: Variant = card_name_provider.call(card_id, language)
 	return _write_embedded_text(String(value), int(state.get("embedded_text_index", 0)), false)
 
-func _write_embedded_text(text: String, index: int, _is_player_name: bool) -> bool:
-	if index < 0 or index >= text.length():
+func _write_embedded_text(text: String, byte_offset: int, _is_player_name: bool) -> bool:
+	var character := _character_at_byte_offset(text, byte_offset)
+	if character.is_empty():
 		state.mode = &"text"
 		return false
-	var codepoint := text.unicode_at(index)
-	var glyph := int(glyph_codes.get(codepoint, codepoint if codepoint >= 0x80 else -1))
+	var codepoint := character.unicode_at(0)
+	var glyph := int(glyph_codes.get(codepoint, unicode_glyph_indices.get(codepoint, -1)))
 	if glyph < 0: return false
 	glyph_requested.emit(glyph, int(state.get("glyph_position", 0)), false)
-	state.embedded_text_index = index + 1
+	state.embedded_text_index = byte_offset + _native_character_byte_length(codepoint)
 	state.dirty = true
 	_advance_glyph()
-	if int(state.embedded_text_index) >= text.length(): state.mode = &"text"
+	if int(state.embedded_text_index) >= _native_string_byte_length(text): state.mode = &"text"
 	return true
+
+func _character_at_byte_offset(text: String, byte_offset: int) -> String:
+	if byte_offset < 0:
+		return ""
+	var current_offset := 0
+	for character in text:
+		if current_offset == byte_offset:
+			return character
+		current_offset += _native_character_byte_length(character.unicode_at(0))
+	return ""
+
+func _native_string_byte_length(text: String) -> int:
+	var total := 0
+	for character in text:
+		total += _native_character_byte_length(character.unicode_at(0))
+	return total
+
+func _native_character_byte_length(codepoint: int) -> int:
+	return 1 if codepoint < 0x80 else 2
 
 func _wait_for_advance(pressed_mask: int) -> void:
 	if (pressed_mask & ADVANCE_MASK) == 0: return

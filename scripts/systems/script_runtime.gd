@@ -100,10 +100,10 @@ func _physics_process(_delta: float) -> void:
 		_update_portrait()
 		return
 	if state.mode == &"player_name":
-		var name := String(dialogue.player_name)
 		var name_index := int(state.embedded_text_index)
-		if name_index >= 0 and name_index < name.length():
-			text_requested.emit(name.substr(name_index, 1), int(context.language_segment), int(state.glyph_position))
+		var character := dialogue.player_name_character_at_byte_offset(name_index)
+		if not character.is_empty():
+			text_requested.emit(character, int(context.language_segment), int(state.glyph_position))
 		dialogue.write_player_name()
 		return
 	var node := database.get_node(node_id)
