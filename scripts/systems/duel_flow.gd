@@ -87,6 +87,12 @@ func finish_turn(duel: SacredDuelState) -> void:
 	var next_side := duel.sides[duel.active_side]
 	next_side.duel_flags &= 0xF7
 
+## Emits the recovered player-facing turn line; opponent speech uses a
+## separate opponent-indexed ROM pointer table that is not yet extracted.
+func request_turn_opening_message(side_id: int) -> void:
+	if side_id == 0:
+		duel_message_requested.emit(0, 0)
+
 ## Applies the four recovered-ID pairs to the active side before it acts.
 ## Pair IDs are isolated in a Godot resource because their ROM data table was
 ## not included in the extracted payloads; see that resource's provenance.

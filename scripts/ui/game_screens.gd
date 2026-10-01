@@ -1110,6 +1110,9 @@ func _advance_recovered_duel_to_player() -> Dictionary:
 			_ai_turn_running = false
 			return {"accepted": true, "action": "duel_finished", "outcome": outcome}
 		var acting_side := active_duel_state.active_side
+		duel_flow.request_turn_opening_message(acting_side)
+		if acting_side == 0:
+			await _wait_for_duel_message_queue()
 		_prepare_recovered_side_turn(acting_side)
 		if active_duel_state.has_ended():
 			continue
@@ -1140,7 +1143,9 @@ func _prepare_recovered_side_turn(side_id: int) -> void:
 	if side_id < 0 or side_id >= active_duel_state.sides.size():
 		return
 	var side := active_duel_state.sides[side_id]
-	DUEL_DECK_SCRIPT.draw_card(side, active_duel_state)
+	var drawn_card_id := DUEL_DECK_SCRIPT.draw_card(side, active_duel_state)
+	if drawn_card_id > 0 and audio_dispatch != null:
+		audio_dispatch.play_game_audio(59)
 	if side.deck_out:
 		active_duel_state.auxiliary_flags[side_id] = 2
 		active_duel_state.status = SacredDuelState.Status.PLAYER_TWO_WON if side_id == 0 else SacredDuelState.Status.PLAYER_ONE_WON
