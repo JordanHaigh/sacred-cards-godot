@@ -7,6 +7,7 @@ const PIXEL_TEXT_SCRIPT := preload("res://scripts/ui/pixel_text.gd")
 const DECK_GRAPHICS_SCRIPT := preload("res://scripts/ported/deck_builder_graphics.gd")
 const ATTRIBUTE_ICON_PATH := "res://decompiled/build/assets/duel/hud-attribute-%d.png"
 const TYPE_ICON_PATH := "res://decompiled/build/assets/duel/hud-type-%d.png"
+const FRAMED_MINIATURE_PATH := "res://decompiled/build/assets/cards/%04d.framed.png"
 const DEFAULT_DETAIL_ATLAS := preload("res://art/ui/deck-builder/detail-mode-0.png")
 const GOLD := Color("ffdc77")
 const PAPER := Color("f5e6c3")
@@ -94,13 +95,17 @@ func _render_rows() -> void:
 		row_content.size = Vector2(232, 22)
 		row_content.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		add_child(row_content)
-		if definition != null and ResourceLoader.exists(definition.miniature_path):
+		var framed_path := FRAMED_MINIATURE_PATH % card_id
+		if card_id > 0 and ResourceLoader.exists(framed_path):
 			var icon := TextureRect.new()
-			icon.texture = load(definition.miniature_path) as Texture2D
-			icon.position = Vector2(3, -1)
-			icon.size = Vector2(22, 22)
+			icon.texture = load(framed_path) as Texture2D
+			# deck_builder_graphics.c writes five 32x32 OBJ records at x=210,
+			# y=12+32*row; the last record is naturally clipped by the screen.
+			icon.position = Vector2(206, 12 + row * 32 - row_y)
+			icon.size = Vector2(32, 32)
 			icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 			icon.stretch_mode = TextureRect.STRETCH_SCALE
+			icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 			icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			row_content.add_child(icon)
 		var localized_name := card_database.get_localized_card_name(card_id, language_id) if definition != null and card_database != null else "UNKNOWN CARD"
