@@ -68,7 +68,7 @@ func finish_turn(duel: SacredDuelState) -> void:
 	_return_borrowed_monsters(duel)
 	var outgoing_side := duel.sides[duel.active_side]
 	for side_index in range(duel.auxiliary_flags.size()):
-		if duel.auxiliary_flags[side_index] != 2:
+		if duel.auxiliary_flags[side_index] == 0:
 			duel.auxiliary_flags[side_index] = 1
 	for slot in outgoing_side.monster_zones:
 		if slot.card_id != 0 and (slot.persistent_flags & 2) == 0:
