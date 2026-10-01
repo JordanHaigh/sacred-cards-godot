@@ -159,6 +159,9 @@ var password_system: SacredPasswordSystem
 var save_storage: SaveStorage
 var current_save: PlayerSaveData
 var collection: Array[int] = []
+## Native gCollectionSortedCards contains every card ID, even when unowned.
+## Inventory counts decide whether a transfer is allowed; they do not filter rows.
+var deckbuilder_collection_order: Array[int] = []
 var deck: Array[int] = []
 var stock: Array[int] = []
 var screen_root: Control
@@ -1941,7 +1944,7 @@ func _draw_deck() -> void:
 	collection_display.card_selected.connect(_select_deck_card)
 	collection_display.stage_changed.connect(_on_collection_display_stage_changed)
 	screen_root.add_child(collection_display)
-	collection_display.present(deck if editing_deck else collection, selected, card_database, editing_deck, deck_builder_menu.deck_filter if editing_deck else deck_builder_menu.collection_filter, language_id, _deck_display_entry_pending)
+	collection_display.present(deck if editing_deck else deckbuilder_collection_order, selected, card_database, editing_deck, deck_builder_menu.deck_filter if editing_deck else deck_builder_menu.collection_filter, language_id, _deck_display_entry_pending)
 	_draw_deck_builder_popup()
 
 func _on_collection_display_stage_changed(stage: int) -> void:
@@ -2138,7 +2141,9 @@ func _short_name(card_id: int) -> String:
 	return name.left(7).to_upper()
 
 func _visible_cards() -> Array:
-	return deck if screen == "deck" and editing_deck else collection
+	if screen == "deck":
+		return deck if editing_deck else deckbuilder_collection_order
+	return collection
 
 func _set_deck_view(show_deck: bool) -> void:
 	if editing_deck != show_deck:
@@ -2337,15 +2342,15 @@ func _sort_deck_view(deck_view: bool, method: int, reset_selection: bool) -> voi
 		deck = card_sorter.sort_cards(deck, 36 + method, shop_rules.collection, shop_rules.stock, {}, shop_rules.collection)
 		deck_rules.deck = deck.duplicate()
 	else:
-		collection = card_sorter.sort_cards(collection, method, shop_rules.collection, shop_rules.stock, {}, shop_rules.collection)
+		deckbuilder_collection_order = card_sorter.sort_cards(deckbuilder_collection_order, method, shop_rules.collection, shop_rules.stock, {}, shop_rules.collection)
 	if reset_selection: selected = 0
 	else: selected = clampi(selected, 0, maxi(_visible_cards().size() - 1, 0))
 	_save_current_state()
 	_build_screen()
 
 func _remove_collection_selected_from_deck() -> void:
-	if collection.is_empty(): return
-	var card_id := collection[posmod(selected, collection.size())]
+	if deckbuilder_collection_order.is_empty(): return
+	var card_id := deckbuilder_collection_order[posmod(selected, deckbuilder_collection_order.size())]
 	_sync_deck_collection()
 	if not deck_rules.remove_from_collection_view(card_id):
 		if audio_dispatch != null: audio_dispatch.play_game_audio(57)
@@ -2390,6 +2395,7 @@ func _enter_deck_hub() -> void:
 	in_deck_hub_flow = true
 	deck_management.choice = 0
 	deck_builder_menu.begin_hub_session()
+	_reset_deckbuilder_collection_order()
 	selected = 0
 	if audio_dispatch != null:
 		audio_dispatch.fade_game_music(1)
@@ -2573,7 +2579,7 @@ func _sell(card_id: int) -> void:
 	_build_screen()
 
 func _deck_transfer() -> void:
-	var source := deck if editing_deck else collection
+	var source := _visible_cards()
 	if source.is_empty(): return
 	selected = clampi(selected, 0, source.size() - 1)
 	var card_id: int = source[selected]
@@ -2586,8 +2592,6 @@ func _deck_transfer() -> void:
 			return
 		if audio_dispatch != null: audio_dispatch.play_game_audio(55)
 		deck = deck_rules.deck.duplicate()
-		if not collection.has(card_id):
-			collection.append(card_id)
 	else:
 		var definition := card_database.get_card(card_id)
 		if definition == null or not deck_rules.add_selected(card_id, definition.cost, progression.duelist_level):
@@ -2596,8 +2600,6 @@ func _deck_transfer() -> void:
 			return
 		if audio_dispatch != null: audio_dispatch.play_game_audio(55)
 		deck = deck_rules.deck.duplicate()
-		if int(deck_rules.collection.get(card_id, 0)) == 0:
-			collection.remove_at(selected)
 	selected = clampi(selected, 0, maxi(_visible_cards().size() - 1, 0))
 	_save_current_state()
 	if editing_deck and deck.is_empty() and in_deck_hub_flow:
@@ -2639,6 +2641,7 @@ func _sync_shop_inventories() -> void:
 
 func _apply_save_data(save_data: PlayerSaveData) -> void:
 	collection = _available_ids(save_data.collection_counts)
+	_reset_deckbuilder_collection_order()
 	deck = _nonzero_cards(save_data.deck)
 	stock = _available_ids(save_data.shop_stock)
 	credits = save_data.money
@@ -2654,6 +2657,11 @@ func _apply_save_data(save_data: PlayerSaveData) -> void:
 	_sync_deck_collection()
 	player_lp = 8000
 	rival_lp = 8000
+
+func _reset_deckbuilder_collection_order() -> void:
+	deckbuilder_collection_order.clear()
+	for card_id in range(1, PreDuelMenuState.CARD_COUNT + 1):
+		deckbuilder_collection_order.append(card_id)
 
 func _save_current_state() -> void:
 	if current_save == null:
