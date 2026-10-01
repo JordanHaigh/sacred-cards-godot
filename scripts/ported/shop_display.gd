@@ -165,10 +165,13 @@ func _draw_selected_summary() -> void:
 	var card_id := visible_cards[selected_index]
 	var info := panel_model.describe(card_id, selling, wallet, deck_cards)
 	var shortfall := int(info.get("shortfall", 0))
-	_add_panel(Rect2(3, 150, 234, 9), Color(0.04, 0.06, 0.06, 0.96))
-	var balance := "SHORT %d" % shortfall if shortfall > 0 else "AFTER %d" % int(info.get("balance_after", wallet.gold))
+	_add_panel(Rect2(3, 140, 234, 20), Color(0.04, 0.06, 0.06, 0.97))
+	var identity := "%s A%d D%d L%d C%d" % [str(info.get("name", "CARD")).left(8).to_upper(), int(info.get("attack", 0)), int(info.get("defense", 0)), int(info.get("level", 0)), int(info.get("cost", 0))]
+	_add_text(identity, Vector2(5, 141), PAPER, 4)
 	var price_key := "sell_price" if selling else "buy_price"
-	_add_text("%s $%d  OWN %d  DECK %d  %s" % [str(info.get("name", "CARD")).left(10).to_upper(), int(info.get(price_key, 0)), int(info.get("owned", 0)), int(info.get("deck_copies", 0)), balance], Vector2(5, 151), GOLD if shortfall > 0 else PAPER, 5)
+	var balance := "SHORT %d" % shortfall if shortfall > 0 else "AFTER %d" % int(info.get("balance_after", wallet.gold))
+	var transaction := "%s$%d STK%d OWN%d DK%d %s" % ["S" if selling else "B", int(info.get(price_key, 0)), int(info.get("stock", 0)), int(info.get("owned", 0)), int(info.get("deck_copies", 0)), balance]
+	_add_text(transaction, Vector2(5, 150), GOLD if shortfall > 0 else PAPER, 4)
 
 func _draw_popup() -> void:
 	if popup_mode == PopupMode.NONE:
