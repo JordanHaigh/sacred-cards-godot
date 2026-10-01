@@ -13,6 +13,7 @@ const SORT_LABELS := ["NUMBER", "NAME", "ATTACK", "DEFENSE", "TYPE", "ATTRIBUTE"
 const PAPER := Color("f5e6c3")
 const GOLD := Color("ffdc77")
 const LARGE_FONT := preload("res://art/ui/font-large.png")
+const DEFAULT_DETAIL_ATLAS := preload("res://art/ui/deck-builder/pre-duel-detail-mode-0.png")
 
 signal row_selected(row: int)
 signal popup_selected(choice: int)
@@ -33,6 +34,7 @@ func present(menu: PreDuelMenuState, card_database: CardDatabase, player_deck: A
 	deck_cost = current_cost
 	language_id = clampi(selected_language, 0, 5)
 	graphics = GRAPHICS_SCRIPT.new(database)
+	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	queue_redraw()
 
 func _draw() -> void:
@@ -60,7 +62,10 @@ func _draw_list() -> void:
 		_draw_text("%03d" % int(row.card_id), Vector2(9, y + 8), 6, color)
 		_draw_native_name(row.get("name_glyphs", []), Vector2(25, y + 1), color)
 		var details: Dictionary = row.detail
-		if menu_state.view_mode == 1:
+		if menu_state.view_mode == 0:
+			var tile_region := Rect2(row_index * 48, 0, 48, 16)
+			draw_texture_rect_region(DEFAULT_DETAIL_ATLAS, Rect2(128, y, 48, 16), tile_region)
+		elif menu_state.view_mode == 1:
 			_draw_text("%s %04d  %s %04d" % [str(details.left_label), int(details.left_value), str(details.right_label), int(details.right_value)], Vector2(112, y + 8), 5, color)
 		elif menu_state.view_mode == 2:
 			_draw_text("%s %02d %s %02d" % [str(details.left_label), int(details.left_value), str(details.right_label), int(details.right_value)], Vector2(134, y + 8), 5, color)

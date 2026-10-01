@@ -27,7 +27,7 @@ def _png_chunk(kind: bytes, payload: bytes) -> bytes:
 	)
 
 
-def extract(output: Path) -> None:
+def extract(output: Path, base_tile: int, row_stride: int) -> None:
 	tiles = TILE_FILE.read_bytes()
 	palette_data = PALETTE_FILE.read_bytes()
 	if len(palette_data) < 32:
@@ -53,9 +53,7 @@ def extract(output: Path) -> None:
 			column = local_x // 8
 			within_x = local_x % 8
 			within_y = pixel_y % 8
-			tile_id = 0xF4 + row * 48 + (column // 2) * 4 + column % 2
-			if pixel_y >= 8:
-				tile_id += 2
+			tile_id = base_tile + row * row_stride + (column // 2) * 4 + column % 2 + (2 if pixel_y >= 8 else 0)
 			byte_offset = tile_id * 32 + within_y * 4 + within_x // 2
 			if byte_offset >= len(tiles):
 				raise ValueError(f"Tile {tile_id:#x} exceeds {TILE_FILE}")
@@ -82,8 +80,14 @@ def main() -> None:
 		type=Path,
 		default=ROOT / "art/ui/deck-builder/detail-mode-0.png",
 	)
+	parser.add_argument(
+		"--pre-duel-output",
+		type=Path,
+		default=ROOT / "art/ui/deck-builder/pre-duel-detail-mode-0.png",
+	)
 	args = parser.parse_args()
-	extract(args.output)
+	extract(args.output, base_tile=0xF4, row_stride=48)
+	extract(args.pre_duel_output, base_tile=0x114, row_stride=40)
 
 
 if __name__ == "__main__":
