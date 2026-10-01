@@ -7,6 +7,7 @@ const VISIBLE_ROWS := 5
 const CENTER_ROW := 2
 const ROW_Y := [37, 53, 70, 93, 109]
 const SCROLLBAR_TRAVEL := 124
+const CARD_NAME_PATH := "res://decompiled/build/assets/cards/%04d.name.bin"
 
 var database: CardDatabase
 
@@ -27,7 +28,7 @@ func build_rows(menu: PreDuelMenuState, deck: Array[int]) -> Array[Dictionary]:
 		rows.append({
 			"row": row_index,
 			"card_id": card_id,
-			"name": card.name,
+			"name": _wager_name_prefix(card),
 			"miniature_path": card.miniature_path,
 			"attribute": card.attribute,
 			"level": card.level,
@@ -39,6 +40,31 @@ func build_rows(menu: PreDuelMenuState, deck: Array[int]) -> Array[Dictionary]:
 			"y": ROW_Y[row_index],
 		})
 	return rows
+
+func _wager_name_prefix(card: CardDefinition) -> String:
+	# DrawPreDuelGraphics copies exactly twenty bytes from the raw name record
+	# before RenderBitmapString selects a language segment. Keep that byte limit
+	# separate from Unicode character count so multibyte names follow the C path.
+	var path := CARD_NAME_PATH % card.id
+	if not FileAccess.file_exists(path):
+		return card.name.left(20)
+	var raw_name := FileAccess.get_file_as_bytes(path)
+	var prefix := raw_name.slice(0, mini(raw_name.size(), 20))
+	var selected := SacredTextRules.select_language_segment(prefix, 0)
+	var selected_bytes: PackedByteArray = selected.bytes
+	var result := ""
+	var index := 0
+	while index < selected_bytes.size() and selected_bytes[index] != 0 and selected_bytes[index] != 36:
+		var value := int(selected_bytes[index])
+		if value < 0x80:
+			result += char(value)
+			index += 1
+		else:
+			# PixelText's atlas has the native glyph, but this CanvasItem uses
+			# Godot's fallback font. Preserve its two-byte boundary as one glyph.
+			result += "?"
+			index += 2 if index + 1 < selected_bytes.size() else 1
+	return result
 
 func _detail_for(card: CardDefinition, view_mode: int) -> Dictionary:
 	match view_mode:

@@ -54,7 +54,7 @@ func _draw_list() -> void:
 		var color := GOLD if bool(row.selected) else PAPER
 		var owned := int(row.owned_count)
 		if owned == 0: color = Color("9a9384") if not bool(row.selected) else Color("c9ad69")
-		var label := "%03d %s" % [int(row.card_id), str(row.name).left(18)]
+		var label := "%03d %s" % [int(row.card_id), str(row.name)]
 		_draw_text(label, Vector2(9, y + 8), 6, color)
 		var details: Dictionary = row.detail
 		if menu_state.view_mode == 1:
