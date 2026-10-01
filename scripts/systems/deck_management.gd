@@ -21,7 +21,9 @@ const TEXT_FILE_BY_KEY := {
 	"status_name": "text/0807EEC0.bin",
 	"status_level": "text/0807EEF8.bin",
 	"status_capacity": "text/0807EF7C.bin",
+	"status_locator_card": "text/0807F000.bin",
 	"status_money": "text/0807F098.bin",
+	"status_domino": "text/0807F0E0.bin",
 }
 
 var choice: int = 0
@@ -63,9 +65,6 @@ func player_status(save: PlayerSaveData) -> Dictionary:
 	if save == null: return {}
 	var rank_count := 0
 	for bit in range(6): rank_count += (int(save.extensions.get("progress_rank", 0)) >> bit) & 1
-	var deck_count := 0
-	for card_id in save.deck:
-		if card_id != 0: deck_count += 1
 	return {
 		"name": save.player_name,
 		"duelist_level": save.duelist_level & 0xFFFF,
@@ -75,7 +74,6 @@ func player_status(save: PlayerSaveData) -> Dictionary:
 		"rank_marks": rank_count,
 		"money": save.money,
 		"money_digits": _native_digits(save.money, 13, true),
-		"deck_count": deck_count,
 	}
 
 func localized_text(key: String, language_id: int = 0) -> String:

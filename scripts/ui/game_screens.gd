@@ -1965,9 +1965,8 @@ func _draw_player_status() -> void:
 	_text("%s %s" % [deck_management.localized_text("status_name", language_id), str(status.get("name", ""))], Vector2(32, 43), 7, PAPER)
 	_text("%s %s" % [deck_management.localized_text("status_level", language_id), DeckManagement.native_digit_text(status.get("duelist_level_digits", []))], Vector2(32, 61), 7, PAPER)
 	_text("%s %s" % [deck_management.localized_text("status_capacity", language_id), DeckManagement.native_digit_text(status.get("deck_capacity_digits", []))], Vector2(32, 77), 7, PAPER)
-	_text("RANK MARKS  %d" % int(status.get("rank_marks", 0)), Vector2(32, 93), 7, PAPER)
-	_text("%s %s" % [deck_management.localized_text("status_money", language_id), DeckManagement.native_digit_text(status.get("money_digits", []))], Vector2(32, 109), 7, PAPER)
-	_text("DECK CARDS  %02d / 40" % int(status.get("deck_count", 0)), Vector2(32, 125), 7, PAPER)
+	_text("%s %d/6" % [deck_management.localized_text("status_locator_card", language_id), int(status.get("rank_marks", 0))], Vector2(32, 93), 7, PAPER)
+	_text("%s %s %s" % [deck_management.localized_text("status_money", language_id), DeckManagement.native_digit_text(status.get("money_digits", [])), deck_management.localized_text("status_domino", language_id)], Vector2(32, 109), 7, PAPER)
 	_text("SPACE RETURN", Vector2(88, 137), 6, GOLD)
 
 func _draw_miniature(card_id: int, at: Vector2) -> void:
