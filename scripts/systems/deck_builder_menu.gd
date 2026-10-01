@@ -18,6 +18,8 @@ const COLLECTION_ACTION_COORDINATE_Y_OFFSET := 6
 const COLLECTION_ACTION_COORDINATE_X_OFFSET := 9
 const DECK_ACTION_COORDINATE_Y_OFFSET := 4
 const DECK_ACTION_COORDINATE_X_OFFSET := 7
+const SORT_LABELS_EN := ["No.", "Name", "ATK", "DEF", "Type", "Summon", "Qty.", "Cost", "Stars", "Exit"]
+const SORT_LABELS_JP := ["番号", "名前", "こうげき力", "守備力", "種族", "しょうかん", "まい数", "コスト", "星", "やめる"]
 
 var popup: PopupKind = PopupKind.NONE
 var choice: int = 0
@@ -87,6 +89,15 @@ func action_popup_labels(language_id: int, deck_view: bool = false) -> Array[Str
 		current += character
 	if not current.strip_edges().is_empty():
 		labels.append(current.strip_edges())
+	return labels
+
+func sort_popup_labels(language_id: int) -> Array[String]:
+	# Choices 0–8 are sort methods and choice 9 exits, matching both recovered
+	# text records at 08086C00 and 080B4820.
+	var source: Array = SORT_LABELS_JP if clampi(language_id, 0, 5) == 5 else SORT_LABELS_EN
+	var labels: Array[String] = []
+	for value: Variant in source:
+		labels.append(str(value))
 	return labels
 
 func _load_action_text_records() -> void:

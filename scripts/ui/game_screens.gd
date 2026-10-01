@@ -1956,12 +1956,7 @@ func _draw_deck_builder_popup() -> void:
 	elif deck_builder_menu.popup == DeckBuilderMenu.PopupKind.DECK_ACTION:
 		labels = deck_builder_menu.action_popup_labels(language_id, true)
 	else:
-		var modes := ["NUMBER", "NAME", "ATTACK", "DEFENSE", "TYPE", "ATTRIBUTE", "COST", "LEVEL", "QUANTITY", "CANCEL"]
-		labels = modes
-		if deck_builder_menu.popup == DeckBuilderMenu.PopupKind.COLLECTION_SORT:
-			labels = ["COPY", "NUMBER", "NAME", "ATTACK", "DEFENSE", "TYPE", "ATTRIBUTE", "COST", "QUANTITY", "CANCEL"]
-		if deck_builder_menu.popup == DeckBuilderMenu.PopupKind.DECK_SORT:
-			labels = ["NUMBER", "NAME", "ATTACK", "DEFENSE", "TYPE", "ATTRIBUTE", "DECK COUNT", "COST", "LEVEL", "CANCEL"]
+		labels = deck_builder_menu.sort_popup_labels(language_id)
 	if deck_builder_menu.popup == DeckBuilderMenu.PopupKind.COLLECTION_ACTION:
 		for index in range(labels.size()):
 			var cursor_position := deck_builder_menu.action_popup_cursor_position(index)
