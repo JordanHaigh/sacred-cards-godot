@@ -430,6 +430,11 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		if screen == "pre_duel" and pre_duel_menu != null:
 			var pre_duel_code := _pre_duel_code_for_key(event.keycode)
 			if pre_duel_code != 0:
+				if pre_duel_code not in [16, 32, 64, 128] and _pre_duel_direction_just_pressed():
+					# ReadCollectionMenuInput lets a newly repeated direction override
+					# another simultaneous key in the same frame.
+					get_viewport().set_input_as_handled()
+					return
 				# Direction presses are emitted once by FrameInput's immediate-repeat
 				# edge; dispatching this event too would move twice on the first frame.
 				if pre_duel_code in [16, 32, 64, 128]:
@@ -1181,6 +1186,9 @@ func _process_pre_duel_direction_repeat() -> void:
 	var result := process_pre_duel_code(code, pre_duel_opponent_id)
 	if result.has("reason"): _toast(str(result.reason))
 	_build_screen()
+
+func _pre_duel_direction_just_pressed() -> bool:
+	return Input.is_action_just_pressed(&"ui_up") or Input.is_action_just_pressed(&"ui_down") or Input.is_action_just_pressed(&"ui_left") or Input.is_action_just_pressed(&"ui_right")
 
 func _pre_duel_code_for_key(keycode: int) -> int:
 	match keycode:
