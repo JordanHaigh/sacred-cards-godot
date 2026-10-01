@@ -23,13 +23,15 @@ var deck: Array[int] = []
 var graphics: PreDuelGraphics
 var deck_capacity := 0
 var deck_cost := 0
+var language_id := 0
 
-func present(menu: PreDuelMenuState, card_database: CardDatabase, player_deck: Array[int], capacity: int = 0, current_cost: int = 0) -> void:
+func present(menu: PreDuelMenuState, card_database: CardDatabase, player_deck: Array[int], capacity: int = 0, current_cost: int = 0, selected_language: int = 0) -> void:
 	menu_state = menu
 	database = card_database
 	deck = player_deck.duplicate()
 	deck_capacity = capacity
 	deck_cost = current_cost
+	language_id = clampi(selected_language, 0, 5)
 	graphics = GRAPHICS_SCRIPT.new(database)
 	queue_redraw()
 
@@ -49,7 +51,7 @@ func _draw_header() -> void:
 		_draw_text("%05d" % deck_cost, Vector2(157, 15), 5, PAPER)
 
 func _draw_list() -> void:
-	for row: Dictionary in graphics.build_rows(menu_state, deck):
+	for row: Dictionary in graphics.build_rows(menu_state, deck, language_id):
 		var row_index := int(row.row)
 		var y := int(row.y)
 		var color := GOLD if bool(row.selected) else PAPER

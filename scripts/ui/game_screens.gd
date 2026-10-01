@@ -83,6 +83,7 @@ var deck_hub_return_screen := "title"
 var in_deck_hub_flow := false
 var deck_hub_invalid_message := ""
 var credits := 1240
+@export_range(0, 5) var language_id := 0
 var player_lp := 8000
 var rival_lp := 8000
 var title_has_save := false
@@ -1747,7 +1748,7 @@ func _draw_pre_duel() -> void:
 	pre_duel_display.row_selected.connect(_on_pre_duel_row_selected)
 	pre_duel_display.popup_selected.connect(_on_pre_duel_popup_selected)
 	screen_root.add_child(pre_duel_display)
-	pre_duel_display.present(pre_duel_menu, card_database, deck, progression.capacity, deck_rules.deck_cost(card_database))
+	pre_duel_display.present(pre_duel_menu, card_database, deck, progression.capacity, deck_rules.deck_cost(card_database), language_id)
 
 func _on_pre_duel_row_selected(row: int) -> void:
 	if pre_duel_menu == null or pre_duel_menu.popup != PreDuelMenuState.PopupKind.NONE: return

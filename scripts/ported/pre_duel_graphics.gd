@@ -17,7 +17,7 @@ func _init(card_database: CardDatabase = null) -> void:
 	database = card_database
 	_load_ascii_glyph_indices()
 
-func build_rows(menu: PreDuelMenuState, deck: Array[int]) -> Array[Dictionary]:
+func build_rows(menu: PreDuelMenuState, deck: Array[int], language_id: int = 0) -> Array[Dictionary]:
 	var rows: Array[Dictionary] = []
 	if menu == null: return rows
 	var deck_counts: Dictionary[int, int] = {}
@@ -31,7 +31,7 @@ func build_rows(menu: PreDuelMenuState, deck: Array[int]) -> Array[Dictionary]:
 		rows.append({
 			"row": row_index,
 			"card_id": card_id,
-			"name_glyphs": _wager_name_glyphs(card),
+			"name_glyphs": _wager_name_glyphs(card, language_id),
 			"miniature_path": card.miniature_path,
 			"attribute": card.attribute,
 			"level": card.level,
@@ -44,7 +44,7 @@ func build_rows(menu: PreDuelMenuState, deck: Array[int]) -> Array[Dictionary]:
 		})
 	return rows
 
-func _wager_name_glyphs(card: CardDefinition) -> Array[int]:
+func _wager_name_glyphs(card: CardDefinition, language_id: int = 0) -> Array[int]:
 	# DrawPreDuelGraphics copies exactly twenty bytes from the raw name record
 	# before RenderBitmapString selects a language segment. Keep that byte limit
 	# separate from Unicode character count so multibyte names keep their glyphs.
@@ -53,7 +53,7 @@ func _wager_name_glyphs(card: CardDefinition) -> Array[int]:
 		return _ascii_glyphs_from_string(card.name.left(20))
 	var raw_name := FileAccess.get_file_as_bytes(path)
 	var prefix := raw_name.slice(0, mini(raw_name.size(), 20))
-	var selected := SacredTextRules.select_language_segment(prefix, 0)
+	var selected := SacredTextRules.select_language_segment(prefix, clampi(language_id, 0, 5))
 	var selected_bytes: PackedByteArray = selected.bytes
 	var glyphs: Array[int] = []
 	var index := 0
