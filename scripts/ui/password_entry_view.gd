@@ -11,6 +11,7 @@ const FRAME_INPUT_SCRIPT = preload("res://scripts/systems/frame_input.gd")
 var state: PasswordEntryState = ENTRY_STATE_SCRIPT.new()
 var _frame_input: FrameInput = FRAME_INPUT_SCRIPT.new()
 var _password_repeat_timer: int = 0
+var _password_input_edge := false
 var _digits: Array = []
 var _keys: Array = []
 var _pressed: Array = []
@@ -38,6 +39,8 @@ func _process(_delta: float) -> void:
 	var direction := _pressed_password_direction()
 	if direction >= 0:
 		_password_repeat_timer = 10
+	elif _password_input_edge:
+		_password_repeat_timer = 10
 	else:
 		if _password_repeat_timer == 0:
 			direction = _held_password_direction()
@@ -46,6 +49,7 @@ func _process(_delta: float) -> void:
 			_password_repeat_timer -= 1
 	if direction >= 0:
 		state.move_key(direction)
+	_password_input_edge = false
 	state.tick()
 	_refresh()
 
@@ -81,6 +85,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	# ReadPasswordKey resets its shared timer for any new key, including digit
 	# selection and confirm/cancel inputs, before considering held-key repeats.
 	_password_repeat_timer = 10
+	_password_input_edge = true
 	get_viewport().set_input_as_handled()
 	_refresh()
 
