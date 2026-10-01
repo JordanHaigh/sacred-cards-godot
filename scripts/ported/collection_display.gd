@@ -19,18 +19,20 @@ var card_ids: Array[int] = []
 var selected_index := 0
 var deck_view := false
 var detail_mode := 0
+var language_id := 0
 var deck_graphics: DeckBuilderGraphics
 var display_stage: int = DisplayStage.IDLE
 var _transition_running := false
 var _transition_stages: Array[int] = []
 var _transition_index := 0
 
-func present(cards: Array[int], selected: int, database: CardDatabase, editing_deck: bool, mode: int = 0) -> void:
+func present(cards: Array[int], selected: int, database: CardDatabase, editing_deck: bool, mode: int = 0, selected_language: int = 0) -> void:
 	card_ids = cards.duplicate()
 	selected_index = selected
 	card_database = database
 	deck_view = editing_deck
 	detail_mode = mode
+	language_id = clampi(selected_language, 0, 5)
 	deck_graphics = DECK_GRAPHICS_SCRIPT.new()
 	_render_rows()
 	if not _transition_running:
@@ -107,7 +109,9 @@ func _render_rows() -> void:
 			icon.stretch_mode = TextureRect.STRETCH_SCALE
 			icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			row_panel.add_child(icon)
-		var title := definition.name if definition != null else "UNKNOWN CARD"
+		var localized_name := card_database.get_localized_card_name(card_id, language_id) if definition != null and card_database != null else "UNKNOWN CARD"
+		var name_glyph_limit := 22 if deck_view else 18
+		var title := localized_name.left(name_glyph_limit)
 		row_panel.add_child(_pixel_text("%04d  %s" % [card_id, title.to_upper()], Vector2(29, 6), GOLD if picked else PAPER, 6))
 		if definition != null:
 			var detail_size := 8 if detail_mode == DeckBuilderGraphics.DETAIL_STARS else 5

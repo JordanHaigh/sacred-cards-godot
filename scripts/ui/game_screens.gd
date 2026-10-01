@@ -1920,7 +1920,7 @@ func _draw_deck() -> void:
 	collection_display.size = SCREEN_SIZE
 	collection_display.card_selected.connect(_select_deck_card)
 	screen_root.add_child(collection_display)
-	collection_display.present(deck if editing_deck else collection, selected, card_database, editing_deck, deck_builder_menu.deck_filter if editing_deck else deck_builder_menu.collection_filter)
+	collection_display.present(deck if editing_deck else collection, selected, card_database, editing_deck, deck_builder_menu.deck_filter if editing_deck else deck_builder_menu.collection_filter, language_id)
 	_draw_deck_builder_popup()
 
 func _draw_deck_builder_popup() -> void:
