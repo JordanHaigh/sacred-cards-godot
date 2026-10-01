@@ -4,6 +4,8 @@ extends RefCounted
 
 const ATTRIBUTE_ICON_PATH := "res://art/ui/shop/attribute-%02d.png"
 const REQUIREMENT_ICON_PATH := "res://art/ui/shop/requirement-%d.png"
+const SELECTOR_X_COORDINATES := [505, 537, 569, 601, 633, 665, 697]
+const SELECTOR_Y_COORDINATES := [241, 273, 305, 337, 369]
 const SELECTION_PIECE_SPACING := 30
 const SCROLLBAR_TRAVEL := 127
 
@@ -32,11 +34,14 @@ func scrollbar_y(selected_index: int, card_count: int) -> int:
 	var selected_row := clampi(selected_index / 7, 0, row_count - 1)
 	return floori(float(selected_row * SCROLLBAR_TRAVEL) / float(row_count)) + 1
 
-func selection_rect(selected_index: int, visible_start: int, view_width: int = 7) -> Rect2:
-	var slot := selected_index - visible_start
-	var column := posmod(slot, view_width)
-	var row := floori(float(slot) / float(view_width))
-	return Rect2(Vector2(6 + column * 32, 2 + row * 32), Vector2(28, 28))
+func selection_origin(row: int, column: int) -> Vector2:
+	var x := int(SELECTOR_X_COORDINATES[clampi(column, 0, SELECTOR_X_COORDINATES.size() - 1)]) & 0x1FF
+	var y := int(SELECTOR_Y_COORDINATES[clampi(row, 0, SELECTOR_Y_COORDINATES.size() - 1)]) & 0xFF
+	if x >= 256:
+		x -= 512
+	if y >= 128:
+		y -= 256
+	return Vector2(x, y)
 
 func selection_pieces(at: Vector2) -> Array[Dictionary]:
 	var pieces: Array[Dictionary] = []

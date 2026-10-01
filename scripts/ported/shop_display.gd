@@ -125,7 +125,7 @@ func _render() -> void:
 				add_child(miniature)
 				_draw_miniature_overlays(card_id, at)
 			if inventory_index == selected_index:
-				_draw_selection_cursor(at)
+				_draw_selection_cursor(graphics_model.selection_origin(row, column))
 			var pick := Button.new()
 			pick.position = at - Vector2(4, 4)
 			pick.size = Vector2(32, 32)
