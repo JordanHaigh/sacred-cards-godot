@@ -139,7 +139,7 @@ func _dragon_capture_jar(state: SacredDuelState, active: int, target: DuelCardSl
 
 func _reveal_spell(state: SacredDuelState, active: int, target: DuelCardSlot, card_id: int, restrict_attack: bool, suppressed: bool) -> Dictionary:
 	if restrict_attack:
-		state.side(1 - active).attack_restriction_turns |= 3
+		state.side(1 - active).duel_flags |= 3
 	for slot in _row(state, active, 1):
 		if not slot.is_empty():
 			slot.face_down = false

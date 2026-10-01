@@ -135,7 +135,6 @@ func duplicate_state() -> SacredDuelState:
 		destination.deck = source.deck.duplicate()
 		destination.deck_remaining_count = source.deck_remaining_count
 		destination.deck_out = source.deck_out
-		destination.attack_restriction_turns = source.attack_restriction_turns
 		destination.defeated = source.defeated
 		destination.duel_flags = source.duel_flags
 		for column in range(source.monster_zones.size()):

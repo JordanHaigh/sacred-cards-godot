@@ -29,7 +29,6 @@ func initialize_duel(duel: SacredDuelState, player_deck: Array[int], opponent_de
 		# InitializeDuelBoard clears native side-state bits 0..2 while
 		# preserving the higher persistent bits in the packed flag byte.
 		side.duel_flags &= 0xF8
-		side.attack_restriction_turns = 0
 		side.deck.clear()
 		side.deck_remaining_count = 0
 		side.clear_hand()
@@ -81,8 +80,8 @@ func finish_turn(duel: SacredDuelState) -> void:
 	# The native board still has the outgoing side oriented at side index 0 here.
 	# FinishDuelTurn clears its defense-restriction bit, attack countdown, and used bits.
 	outgoing_side.duel_flags &= 0xFB
-	if outgoing_side.attack_restriction_turns & 3:
-		outgoing_side.attack_restriction_turns = (outgoing_side.attack_restriction_turns - 1) & 3
+	if outgoing_side.duel_flags & 3:
+		outgoing_side.duel_flags = (outgoing_side.duel_flags & 0xFC) | ((outgoing_side.duel_flags - 1) & 3)
 	for slot in outgoing_side.monster_zones:
 		if slot.card_id != 0:
 			slot.persistent_flags &= 0xFE

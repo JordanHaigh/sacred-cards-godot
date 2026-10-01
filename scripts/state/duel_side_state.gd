@@ -15,7 +15,6 @@ var deck: Array[int] = []
 ## Shuffling can move zero-filled slots, so array length is not the draw count.
 var deck_remaining_count: int = 0
 var deck_out: bool = false
-var attack_restriction_turns: int = 0
 var defeated: bool = false
 var duel_flags: int = 0
 

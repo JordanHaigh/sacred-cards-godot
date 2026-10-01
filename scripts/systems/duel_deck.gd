@@ -25,4 +25,4 @@ static func draw_card(side: DuelSideState, duel_state: SacredDuelState = null) -
 	return card_id
 
 static func set_attack_restriction(side: DuelSideState) -> void:
-	side.attack_restriction_turns |= 3
+	side.duel_flags |= 3

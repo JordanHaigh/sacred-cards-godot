@@ -1001,9 +1001,9 @@ func _on_monster_action_selected(action_id: int, duel_state: SacredDuelState) ->
 	_build_screen()
 
 func _player_attack_is_restricted(duel_state: SacredDuelState, acting_side: int) -> bool:
-	if duel_state == null or acting_side < 0 or acting_side >= duel_state.auxiliary_flags.size():
+	if duel_state == null or acting_side < 0 or acting_side >= duel_state.auxiliary_flags.size() or acting_side >= duel_state.sides.size():
 		return true
-	var turn_restrictions := int(duel_state.sides[0].duel_flags) & 0x03 if not duel_state.sides.is_empty() else 0
+	var turn_restrictions := int(duel_state.sides[acting_side].duel_flags) & 0x03
 	return duel_state.auxiliary_flags[acting_side] == 0 or turn_restrictions != 0
 
 func _lock_hand_monsters(duel_state: SacredDuelState, side_id: int) -> void:
