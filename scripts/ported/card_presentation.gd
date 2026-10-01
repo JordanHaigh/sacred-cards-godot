@@ -22,13 +22,14 @@ var description_locked := false
 var card_texture: Texture2D
 var page_lines: Array[PixelText] = []
 
-func present(card: CardDefinition, art_renderer: CardArt = null, duelist_level: int = -1, selected_language: int = 0, card_name: String = "") -> void:
+func present(card: CardDefinition, art_renderer: CardArt = null, duelist_level: int = -1, selected_language: int = 0, card_name: String = "", card_description: String = "") -> void:
 	definition = card
 	card_art = art_renderer
 	language_id = clampi(selected_language, 0, 5)
 	localized_title = card_name if not card_name.is_empty() else card.name
 	description_locked = duelist_level >= 0 and duelist_level < card.cost
-	pages = [_load_locked_description()] if description_locked else _parse_description_pages(card.description)
+	var selected_description := card_description if not card_description.is_empty() else card.description
+	pages = [_load_locked_description()] if description_locked else _parse_description_pages(selected_description)
 	page_index = 0
 	_build_view()
 

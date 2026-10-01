@@ -5,10 +5,12 @@ const DATA_PATH := "res://resources/card_database.json"
 const DETAIL_TERMS_PATH := "res://resources/card_detail_terms.json"
 const GAME_TABLES_PATH := "res://resources/game_tables.json"
 const CARD_NAME_PATH := "res://decompiled/build/assets/cards/%04d.name.bin"
+const CARD_DESCRIPTION_PATH := "res://decompiled/build/assets/cards/%04d.description.bin"
 const FONT_MAPPING_PATH := "res://decompiled/build/assets/ui/font-mapping.json"
 
 var _cards: Dictionary[int, CardDefinition] = {}
 var _localized_name_bytes: Dictionary[int, PackedByteArray] = {}
+var _localized_description_bytes: Dictionary[int, PackedByteArray] = {}
 var _unicode_by_encoded_glyph: Dictionary[int, String] = {}
 
 func load_recovered_data() -> Error:
@@ -33,6 +35,7 @@ func load_recovered_data() -> Error:
 	var type_names: Dictionary = terms.types
 	var summon_names: Dictionary = terms.summons
 	_localized_name_bytes.clear()
+	_localized_description_bytes.clear()
 	_load_encoded_glyph_names()
 	_cards.clear()
 	for row: Variant in parsed.cards:
@@ -94,6 +97,46 @@ func get_localized_card_name(card_id: int, language: int = 0) -> String:
 		decoded += glyph
 		index += 2
 	return decoded if not decoded.is_empty() else definition.name
+
+## Returns the selected native description segment as an owned Unicode String.
+## The two-byte prefix is skipped exactly as ShowCardDescription does before
+## calling GetLanguageSegmentPointer.
+func get_localized_card_description(card_id: int, language: int = 0) -> String:
+	var native_card_id := card_id & 0xFFFF
+	var definition := get_card(native_card_id)
+	if definition == null:
+		return ""
+	var bytes: PackedByteArray = _localized_description_bytes.get(native_card_id, PackedByteArray())
+	if bytes.is_empty():
+		var path := CARD_DESCRIPTION_PATH % native_card_id
+		if not FileAccess.file_exists(path):
+			return definition.description
+		bytes = FileAccess.get_file_as_bytes(path)
+		_localized_description_bytes[native_card_id] = bytes
+	if bytes.size() <= 2:
+		return definition.description
+	var source := bytes.slice(2)
+	var segment := SacredTextRules.select_language_segment(source, clampi(language, 0, 5))
+	var selected: PackedByteArray = segment.bytes
+	var decoded := ""
+	var index := 0
+	while index < selected.size():
+		var first := int(selected[index])
+		if first == 0 or first == 36:
+			break
+		if (first & 0x80) == 0:
+			decoded += String.chr(first)
+			index += 1
+			continue
+		if index + 1 >= selected.size():
+			return definition.description
+		var encoded := (first << 8) | int(selected[index + 1])
+		var glyph: String = _unicode_by_encoded_glyph.get(encoded, "")
+		if glyph.is_empty():
+			return definition.description
+		decoded += glyph
+		index += 2
+	return decoded if not decoded.is_empty() else definition.description
 
 func _load_encoded_glyph_names() -> void:
 	_unicode_by_encoded_glyph.clear()
