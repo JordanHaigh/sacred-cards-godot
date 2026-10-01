@@ -8,11 +8,14 @@ const CENTER_ROW := 2
 const ROW_Y := [37, 53, 70, 93, 109]
 const SCROLLBAR_TRAVEL := 124
 const CARD_NAME_PATH := "res://decompiled/build/assets/cards/%04d.name.bin"
+const ASCII_GLYPH_CODES_PATH := "res://resources/ascii_glyph_codes.json"
 
 var database: CardDatabase
+var _ascii_glyph_indices: Array[int] = []
 
 func _init(card_database: CardDatabase = null) -> void:
 	database = card_database
+	_load_ascii_glyph_indices()
 
 func build_rows(menu: PreDuelMenuState, deck: Array[int]) -> Array[Dictionary]:
 	var rows: Array[Dictionary] = []
@@ -28,7 +31,7 @@ func build_rows(menu: PreDuelMenuState, deck: Array[int]) -> Array[Dictionary]:
 		rows.append({
 			"row": row_index,
 			"card_id": card_id,
-			"name": _wager_name_prefix(card),
+			"name_glyphs": _wager_name_glyphs(card),
 			"miniature_path": card.miniature_path,
 			"attribute": card.attribute,
 			"level": card.level,
@@ -41,29 +44,50 @@ func build_rows(menu: PreDuelMenuState, deck: Array[int]) -> Array[Dictionary]:
 		})
 	return rows
 
-func _wager_name_prefix(card: CardDefinition) -> String:
+func _wager_name_glyphs(card: CardDefinition) -> Array[int]:
 	# DrawPreDuelGraphics copies exactly twenty bytes from the raw name record
 	# before RenderBitmapString selects a language segment. Keep that byte limit
-	# separate from Unicode character count so multibyte names follow the C path.
+	# separate from Unicode character count so multibyte names keep their glyphs.
 	var path := CARD_NAME_PATH % card.id
 	if not FileAccess.file_exists(path):
-		return card.name.left(20)
+		return _ascii_glyphs_from_string(card.name.left(20))
 	var raw_name := FileAccess.get_file_as_bytes(path)
 	var prefix := raw_name.slice(0, mini(raw_name.size(), 20))
 	var selected := SacredTextRules.select_language_segment(prefix, 0)
 	var selected_bytes: PackedByteArray = selected.bytes
-	var result := ""
+	var glyphs: Array[int] = []
 	var index := 0
 	while index < selected_bytes.size() and selected_bytes[index] != 0 and selected_bytes[index] != 36:
 		var value := int(selected_bytes[index])
 		if value < 0x80:
-			result += char(value)
+			var ascii_index := value - 32
+			glyphs.append(_ascii_glyph_indices[ascii_index] if ascii_index >= 0 and ascii_index < _ascii_glyph_indices.size() else 31)
 			index += 1
 		else:
-			# PixelText's atlas has the native glyph, but this CanvasItem uses
-			# Godot's fallback font. Preserve its two-byte boundary as one glyph.
-			result += "?"
+			var code := value << 8
+			if index + 1 < selected_bytes.size():
+				code |= int(selected_bytes[index + 1])
+			glyphs.append(SacredTextRules.bitmap_glyph_index(code))
 			index += 2 if index + 1 < selected_bytes.size() else 1
+	return glyphs
+
+func _load_ascii_glyph_indices() -> void:
+	_ascii_glyph_indices.clear()
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(ASCII_GLYPH_CODES_PATH)) if FileAccess.file_exists(ASCII_GLYPH_CODES_PATH) else null
+	if not parsed is Dictionary or not parsed.get("encoded_codes", []) is Array:
+		return
+	for encoded: Variant in parsed.encoded_codes:
+		if encoded == null:
+			_ascii_glyph_indices.append(31)
+		else:
+			var value := int(encoded) & 0xffff
+			_ascii_glyph_indices.append(SacredTextRules.bitmap_glyph_index(((value << 8) | (value >> 8)) & 0xffff))
+
+func _ascii_glyphs_from_string(value: String) -> Array[int]:
+	var result: Array[int] = []
+	for index in range(value.length()):
+		var ascii_index := value.unicode_at(index) - 32
+		result.append(_ascii_glyph_indices[ascii_index] if ascii_index >= 0 and ascii_index < _ascii_glyph_indices.size() else 31)
 	return result
 
 func _detail_for(card: CardDefinition, view_mode: int) -> Dictionary:

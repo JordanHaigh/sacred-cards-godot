@@ -12,6 +12,7 @@ const NO_WAGER_LABELS := ["RETURN TO LIST", "DUEL WITHOUT WAGER"]
 const SORT_LABELS := ["NUMBER", "NAME", "ATTACK", "DEFENSE", "TYPE", "ATTRIBUTE", "OWNED", "COST", "LEVEL", "CANCEL"]
 const PAPER := Color("f5e6c3")
 const GOLD := Color("ffdc77")
+const LARGE_FONT := preload("res://art/ui/font-large.png")
 
 signal row_selected(row: int)
 signal popup_selected(choice: int)
@@ -54,8 +55,8 @@ func _draw_list() -> void:
 		var color := GOLD if bool(row.selected) else PAPER
 		var owned := int(row.owned_count)
 		if owned == 0: color = Color("9a9384") if not bool(row.selected) else Color("c9ad69")
-		var label := "%03d %s" % [int(row.card_id), str(row.name)]
-		_draw_text(label, Vector2(9, y + 8), 6, color)
+		_draw_text("%03d" % int(row.card_id), Vector2(9, y + 8), 6, color)
+		_draw_native_name(row.get("name_glyphs", []), Vector2(25, y + 1), color)
 		var details: Dictionary = row.detail
 		if menu_state.view_mode == 1:
 			_draw_text("%s %04d  %s %04d" % [str(details.left_label), int(details.left_value), str(details.right_label), int(details.right_value)], Vector2(112, y + 8), 5, color)
@@ -99,6 +100,13 @@ func _draw_popup() -> void:
 
 func _draw_text(value: String, at: Vector2, font_size: int, color: Color) -> void:
 	draw_string(ThemeDB.fallback_font, at, value, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, color)
+
+func _draw_native_name(glyphs: Array, at: Vector2, color: Color) -> void:
+	for index in range(glyphs.size()):
+		var glyph := int(glyphs[index])
+		var source := Rect2((glyph % 32) * 8, floori(float(glyph) / 32.0) * 16, 8, 16)
+		var target := Rect2(at + Vector2(index * 8, 0), Vector2(8, 16))
+		draw_texture_rect_region(LARGE_FONT, target, source, color)
 
 func _gui_input(event: InputEvent) -> void:
 	if not (event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT): return
