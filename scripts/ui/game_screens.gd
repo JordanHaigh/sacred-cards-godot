@@ -864,6 +864,10 @@ func _confirm_player_field_selection(duel_state: SacredDuelState, side_id: int) 
 		if target_class == 2 and audio_dispatch != null: audio_dispatch.play_game_audio(57)
 		if target_class == 0:
 			var effect_result: Variant = dispatch_duel_effect(card_id, duel_state, cell.y, cell.x)
+			if (duel_state.sides[side_id].duel_flags & 8) != 0:
+				_lock_hand_monsters(duel_state, side_id)
+			duel_special_wins.check_exodia(duel_state, side_id)
+			_finish_duel_if_ended()
 			return effect_result if effect_result is Dictionary else {"resolved": true, "result": effect_result}
 		return started
 	if cell.y == 4:
@@ -982,6 +986,8 @@ func _on_monster_action_selected(action_id: int, duel_state: SacredDuelState) ->
 			if audio_dispatch != null: audio_dispatch.play_game_audio(64)
 			slot.persistent_flags = (slot.persistent_flags & 0xFD) | 0x11
 			monster_effect_rules.resolve(duel_state, side_id, definition.metadata_1b, cell.x, false, duel_random)
+			if (duel_state.sides[side_id].duel_flags & 8) != 0:
+				_lock_hand_monsters(duel_state, side_id)
 			duel_special_wins.check_exodia(duel_state, side_id)
 			duel_special_wins.check_destiny_board(duel_state, side_id)
 			duel_menus.close()
@@ -999,6 +1005,13 @@ func _player_attack_is_restricted(duel_state: SacredDuelState, acting_side: int)
 		return true
 	var turn_restrictions := int(duel_state.sides[0].duel_flags) & 0x03 if not duel_state.sides.is_empty() else 0
 	return duel_state.auxiliary_flags[acting_side] == 0 or turn_restrictions != 0
+
+func _lock_hand_monsters(duel_state: SacredDuelState, side_id: int) -> void:
+	var side: DuelSideState = duel_state.sides[side_id]
+	for hand_index in range(side.hand.size()):
+		var card_id := int(side.hand[hand_index])
+		if card_id != 0 and duel_summon_rules.classify_card(card_id, card_database) == 1:
+			side.hand_flags[hand_index] |= 1
 
 func _finish_duel_if_ended() -> void:
 	if active_duel_state != null and (active_duel_state.has_ended() or active_duel_state.status != SacredDuelState.Status.ACTIVE):
