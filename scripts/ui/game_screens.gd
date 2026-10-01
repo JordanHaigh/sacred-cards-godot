@@ -1944,7 +1944,7 @@ func _draw_deck() -> void:
 	collection_display.card_selected.connect(_select_deck_card)
 	collection_display.stage_changed.connect(_on_collection_display_stage_changed)
 	screen_root.add_child(collection_display)
-	collection_display.present(deck if editing_deck else deckbuilder_collection_order, selected, card_database, editing_deck, deck_builder_menu.deck_filter if editing_deck else deck_builder_menu.collection_filter, language_id, _deck_display_entry_pending)
+	collection_display.present(deck if editing_deck else deckbuilder_collection_order, selected, card_database, editing_deck, deck_builder_menu.deck_filter if editing_deck else deck_builder_menu.collection_filter, language_id, _deck_display_entry_pending, shop_rules.collection, _deck_card_counts())
 	_draw_deck_builder_popup()
 
 func _on_collection_display_stage_changed(stage: int) -> void:
@@ -2620,6 +2620,12 @@ func _nonzero_cards(cards: Array[int]) -> Array[int]:
 		if card_id > 0:
 			result.append(card_id)
 	return result
+
+func _deck_card_counts() -> Dictionary[int, int]:
+	var counts: Dictionary[int, int] = {}
+	for card_id in deck:
+		counts[card_id] = int(counts.get(card_id, 0)) + 1
+	return counts
 
 func _sync_deck_collection() -> void:
 	if deck_rules == null:

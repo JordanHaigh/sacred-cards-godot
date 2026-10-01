@@ -9,6 +9,7 @@ const ATTRIBUTE_ICON_PATH := "res://decompiled/build/assets/duel/hud-attribute-%
 const TYPE_ICON_PATH := "res://decompiled/build/assets/duel/hud-type-%d.png"
 const FRAMED_MINIATURE_PATH := "res://decompiled/build/assets/cards/%04d.framed.png"
 const DEFAULT_DETAIL_ATLAS := preload("res://art/ui/deck-builder/detail-mode-0.png")
+const COLLECTION_DETAIL_ATLAS := preload("res://art/ui/deck-builder/pre-duel-detail-mode-0.png")
 const GOLD := Color("ffdc77")
 const PAPER := Color("f5e6c3")
 
@@ -20,6 +21,8 @@ signal graphics_operations_requested(operations: Array[StringName])
 
 var card_database: CardDatabase
 var card_ids: Array[int] = []
+var collection_counts: Dictionary[int, int] = {}
+var deck_counts: Dictionary[int, int] = {}
 var selected_index := 0
 var deck_view := false
 var detail_mode := 0
@@ -31,8 +34,10 @@ var _transition_stages: Array[int] = []
 var _transition_index := 0
 var _ascii_glyphs: Dictionary = {}
 
-func present(cards: Array[int], selected: int, database: CardDatabase, editing_deck: bool, mode: int = 0, selected_language: int = 0, screen_entry: bool = true) -> void:
+func present(cards: Array[int], selected: int, database: CardDatabase, editing_deck: bool, mode: int = 0, selected_language: int = 0, screen_entry: bool = true, owned_counts: Dictionary[int, int] = {}, current_deck_counts: Dictionary[int, int] = {}) -> void:
 	card_ids = cards.duplicate()
+	collection_counts = owned_counts
+	deck_counts = current_deck_counts
 	selected_index = selected
 	card_database = database
 	deck_view = editing_deck
@@ -119,12 +124,18 @@ func _render_rows() -> void:
 		var row_glyphs := _row_title_glyph_indices(card_id, title_glyphs, title.length())
 		row_content.add_child(_pixel_text(row_text, Vector2(29, 6), GOLD if picked else PAPER, 6, row_glyphs))
 		if detail_mode == DeckBuilderGraphics.DETAIL_DEFAULT_ART:
-			_add_default_detail_art(row_content, row)
+			_add_default_detail_art(row_content, row, deck_view)
 		elif definition != null:
 			if detail_mode == DeckBuilderGraphics.DETAIL_ATTRIBUTE_TYPE:
 				_add_attribute_type_icons(row_content, definition)
 			else:
 				row_content.add_child(_pixel_text(_detail_for_card(definition), Vector2(29, 14), Color("c4b68e"), 5))
+		if not deck_view:
+			var owned := int(collection_counts.get(card_id, 0))
+			var in_deck := int(deck_counts.get(card_id, 0))
+			var count_color := GOLD if owned > 0 else Color("9a9384")
+			if picked and owned == 0: count_color = Color("c9ad69")
+			row_content.add_child(_pixel_text("%03d/%03d" % [owned, in_deck], Vector2(177, 6), count_color, 4))
 		var pick := Button.new()
 		pick.position = Vector2(4, row_y)
 		pick.size = Vector2(232, 22)
@@ -152,12 +163,12 @@ func _add_attribute_type_icons(parent: Control, card: CardDefinition) -> void:
 	_add_detail_icon(parent, type_path, 212.0)
 	_add_detail_icon(parent, attribute_path, 232.0)
 
-func _add_default_detail_art(parent: Control, visible_row: int) -> void:
+func _add_default_detail_art(parent: Control, visible_row: int, editing_deck: bool) -> void:
 	var art := TextureRect.new()
-	art.texture = DEFAULT_DETAIL_ATLAS
+	art.texture = DEFAULT_DETAIL_ATLAS if editing_deck else COLLECTION_DETAIL_ATLAS
 	art.region_enabled = true
 	art.region_rect = Rect2(visible_row * 48, 0, 48, 16)
-	art.position = Vector2(156, 3)
+	art.position = Vector2(156 if editing_deck else 124, 3)
 	art.size = Vector2(48, 16)
 	art.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	art.mouse_filter = Control.MOUSE_FILTER_IGNORE
