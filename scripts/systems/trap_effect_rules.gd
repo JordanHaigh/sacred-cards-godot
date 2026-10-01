@@ -55,26 +55,27 @@ func can_activate(trap_card_id: int, trigger_card_id: int, trigger_slot: DuelCar
 	var matched := trigger.metadata_1a in accepted
 	return {"can_activate": matched, "kind": kind if matched else 0}
 
-## Finds the first eligible trap from left to right, matching the native priority.
-## trap_side and trigger coordinates are explicit because Godot state has no global board pointer.
+## Scans relative opponent row 0 from left to right, preserving native trap
+## priority while converting mirrored columns to Godot-owned side storage.
+## Side and trigger coordinates are explicit; no global board pointer is used.
 func find_activating_trap(state: SacredDuelState, trap_side: int, trigger_side: int, trigger_row: int, trigger_column: int) -> Dictionary:
-	var trigger_slot := _slot(state, trigger_side, trigger_row, trigger_column)
+	var trigger_slot := _relative_slot(state, trigger_side, trigger_row, trigger_column)
 	if trigger_slot == null or trigger_slot.is_empty():
 		return {"found": false, "slot": 4, "kind": 0}
 	for slot_index in range(5):
-		var trap_slot := _slot(state, trap_side, 3, slot_index)
+		var trap_slot := state.relative_board_slot(trigger_side, 0, slot_index)
 		if trap_slot == null or trap_slot.is_empty():
 			continue
 		var outcome := can_activate(trap_slot.card_id, trigger_slot.card_id, trigger_slot, state.terrain)
-		if outcome.can_activate:
+		if bool(outcome.can_activate):
 			return {"found": true, "slot": slot_index, "kind": int(outcome.kind), "trap_card_id": trap_slot.card_id}
 	return {"found": false, "slot": 4, "kind": 0}
 
 ## Value-state portion of trap activation. The caller can connect presentation and
 ## battle-number services through the returned result without changing rule behavior.
 func activate(state: SacredDuelState, trap_side: int, trap_column: int, trigger_side: int, trigger_row: int, trigger_column: int, kind: int, amount: int = 0) -> Dictionary:
-	var trap_slot := _slot(state, trap_side, 3, trap_column)
-	var trigger_slot := _slot(state, trigger_side, trigger_row, trigger_column)
+	var trap_slot := state.relative_board_slot(trigger_side, 0, trap_column)
+	var trigger_slot := _relative_slot(state, trigger_side, trigger_row, trigger_column)
 	if trap_slot == null or trigger_slot == null or trap_slot.is_empty():
 		return {"activated": false}
 	var trap_id := trap_slot.card_id
@@ -82,44 +83,44 @@ func activate(state: SacredDuelState, trap_side: int, trap_column: int, trigger_
 	var result := {"activated": true, "trap_card_id": trap_id, "trigger_card_id": trigger_id, "kind": kind, "presentation": []}
 	match kind:
 		1, 2, 3, 4, 5, 6:
-			_discard(state, trap_side, 3, trap_column)
+			_discard_relative(state, trigger_side, 0, trap_column)
 			if not state.is_effect_immune(trigger_id):
-				_discard(state, trigger_side, trigger_row, trigger_column, true)
+				_discard_relative(state, trigger_side, trigger_row, trigger_column, true)
 				result.presentation = [trap_id, trigger_id, 76]
 			else:
-				trigger_slot.persistent_flags |= IMMUNE_FLAG
+				_set_relative_flags(state, trigger_side, trigger_row, trigger_column, trigger_slot.persistent_flags | IMMUNE_FLAG)
 				result.presentation = [trap_id, trigger_id, "immune"]
 		7, 8:
 			var acting := state.active_side
 			result["battle"] = _reflect_life_points(state, acting, amount)
-			_discard(state, trap_side, 3, trap_column)
-			_discard(state, trigger_side, trigger_row, trigger_column)
+			_discard_relative(state, trigger_side, 0, trap_column)
+			_discard_relative(state, trigger_side, trigger_row, trigger_column)
 			result.presentation = [trap_id, trigger_id, 77]
 		9:
-			_discard(state, trap_side, 3, trap_column)
-			_discard(state, trigger_side, trigger_row, trigger_column)
+			_discard_relative(state, trigger_side, 0, trap_column)
+			_discard_relative(state, trigger_side, trigger_row, trigger_column)
 			result.presentation = [trap_id, trigger_id, 74]
 		11:
 			_destroy_row(state, state.active_side, 2)
-			_discard(state, trap_side, 3, trap_column)
-			_discard(state, trigger_side, trigger_row, trigger_column)
+			_discard_relative(state, trigger_side, 0, trap_column)
+			_discard_relative(state, trigger_side, trigger_row, trigger_column)
 			result.presentation = [782, 75]
 		12:
-			var fixed_target := _slot(state, trigger_side, 2, trigger_column)
+			var fixed_target := _relative_slot(state, trigger_side, 2, trigger_column)
 			if fixed_target != null:
 				fixed_target.persistent_flags |= LOCK_FLAG | PRESENTATION_FLAG
-			_discard(state, trap_side, 3, trap_column)
+			_discard_relative(state, trigger_side, 0, trap_column)
 			result.presentation = [899, fixed_target.card_id if fixed_target != null else 0, 80]
 		13:
 			_destroy_row(state, state.active_side, 2)
-			_discard(state, trap_side, 3, trap_column)
+			_discard_relative(state, trigger_side, 0, trap_column)
 			result.presentation = [897, 75]
 		14:
-			var fixed_target := _slot(state, trigger_side, 2, trigger_column)
+			var fixed_target := _relative_slot(state, trigger_side, 2, trigger_column)
 			if fixed_target != null:
 				fixed_target.stage = maxi(-128, fixed_target.stage - 1)
 				fixed_target.persistent_flags |= LOCK_FLAG | PRESENTATION_FLAG
-			_discard(state, trap_side, 3, trap_column)
+			_discard_relative(state, trigger_side, 0, trap_column)
 			result.presentation = [870, trigger_id, 74]
 		_:
 			result.activated = false
@@ -144,18 +145,37 @@ func _destroy_row(state: SacredDuelState, side_id: int, row: int) -> void:
 		if not slots[index].is_empty() and not state.is_effect_immune(slots[index].card_id):
 			state.discard_slot(side_id, row, index, true)
 
-func _discard(state: SacredDuelState, side_id: int, row: int, column: int, is_monster: bool = false) -> void:
-	state.discard_slot(side_id, row, column, is_monster)
+func _relative_slot(state: SacredDuelState, active: int, row: int, column: int) -> DuelCardSlot:
+	if row == 4:
+		var side := state.side(active)
+		if side == null or column < 0 or column >= side.hand.size(): return null
+		var hand_slot := DuelCardSlot.new()
+		hand_slot.card_id = side.hand[column]
+		hand_slot.controller = active
+		hand_slot.persistent_flags = side.hand_flags[column] if column < side.hand_flags.size() else 0
+		return hand_slot
+	return state.relative_board_slot(active, row, column)
 
-func _slot(state: SacredDuelState, side_id: int, row: int, column: int) -> DuelCardSlot:
-	var side := state.side(side_id)
-	if side == null or column < 0 or column >= 5:
-		return null
-	if row == 2:
-		return side.monster_zones[column]
-	if row == 3:
-		return side.back_row_zones[column]
-	return null
+func _set_relative_flags(state: SacredDuelState, active: int, row: int, column: int, flags: int) -> void:
+	if row == 4:
+		var side := state.side(active)
+		if side != null and column >= 0 and column < side.hand_flags.size(): side.hand_flags[column] = flags & 0xFF
+		return
+	var slot := state.relative_board_slot(active, row, column)
+	if slot != null: slot.persistent_flags = flags & 0xFF
+
+func _discard_relative(state: SacredDuelState, active: int, row: int, column: int, is_monster: bool = false) -> void:
+	if row == 4:
+		var side := state.side(active)
+		if side == null or column < 0 or column >= side.hand.size(): return
+		var card_id := side.remove_hand_at(column)
+		if is_monster: state.remember_grave_card(active, card_id, true)
+		return
+	if row < 0 or row > 3: return
+	var owner := active if row >= 2 else 1 - active
+	var actual_row := 2 if row in [1, 2] else 3
+	var actual_column := state.absolute_board_column(row, column)
+	state.discard_slot(owner, actual_row, actual_column, is_monster)
 
 func _card(card_id: int) -> CardDefinition:
 	return card_database.get_card(card_id) if card_database != null else null
