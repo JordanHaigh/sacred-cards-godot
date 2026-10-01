@@ -969,18 +969,17 @@ func _on_monster_action_selected(action_id: int, duel_state: SacredDuelState) ->
 			if audio_dispatch != null: audio_dispatch.play_game_audio(61)
 		"effect":
 			var definition := card_database.get_card(slot.card_id)
-			if definition == null or definition.metadata_1b == 0:
-				_toast("This monster has no activated effect.")
-			else:
-				slot.persistent_flags = (slot.persistent_flags & 0xFD) | 0x11
-				var effect_result := monster_effect_rules.resolve(duel_state, side_id, definition.metadata_1b, cell.x, false, duel_random)
-				if not bool(effect_result.get("resolved", false)):
-					_toast(str(effect_result.get("reason", "Monster effect failed.")))
-				else:
-					duel_special_wins.check_exodia(duel_state, side_id)
-					duel_special_wins.check_destiny_board(duel_state, side_id)
-			duel_menus.close()
+			if definition == null or definition.metadata_1b == 0 or (slot.persistent_flags & 0x10) != 0:
+				duel_menus.close()
+				if audio_dispatch != null: audio_dispatch.play_game_audio(57)
+				_build_screen()
+				return
 			if audio_dispatch != null: audio_dispatch.play_game_audio(64)
+			slot.persistent_flags = (slot.persistent_flags & 0xFD) | 0x11
+			monster_effect_rules.resolve(duel_state, side_id, definition.metadata_1b, cell.x, false, duel_random)
+			duel_special_wins.check_exodia(duel_state, side_id)
+			duel_special_wins.check_destiny_board(duel_state, side_id)
+			duel_menus.close()
 		"cancel":
 			if (slot.persistent_flags & 2) != 0 and (duel_state.sides[side_id].duel_flags & 4) != 0:
 				slot.persistent_flags &= 0xFD
