@@ -31,7 +31,7 @@ func load_copy_limits(path: String = "res://resources/copy_limits.json") -> Erro
 
 func can_add(card_id: int, card_cost: int, duelist_level: int) -> bool:
 	return card_id > 0 \
-		and int(collection.get(card_id, 0)) > 0 \
+		and (int(collection.get(card_id, 0)) & 0xff) > 0 \
 		and deck.size() < DECK_LIMIT \
 		and count_in_deck(card_id) < copy_limit(card_id) \
 		and card_cost <= duelist_level
@@ -39,7 +39,7 @@ func can_add(card_id: int, card_cost: int, duelist_level: int) -> bool:
 func add_selected(card_id: int, card_cost: int, duelist_level: int) -> bool:
 	if not can_add(card_id, card_cost, duelist_level):
 		return false
-	collection[card_id] = int(collection[card_id]) - 1
+	collection[card_id] = (int(collection[card_id]) - 1) & 0xff
 	deck.append(card_id)
 	selected_deck_index = deck.size() - 1
 	return true
@@ -49,7 +49,9 @@ func remove_from_collection_view(card_id: int) -> bool:
 	if index < 0:
 		return false
 	deck.remove_at(index)
-	collection[card_id] = int(collection.get(card_id, 0)) + 1
+	# Native gCardCollection is a byte here and this collection-view path
+	# deliberately increments without the deck-view 250-card saturation.
+	collection[card_id] = (int(collection.get(card_id, 0)) + 1) & 0xff
 	selected_deck_index = clampi(selected_deck_index, 0, maxi(deck.size() - 1, 0))
 	return true
 
@@ -58,7 +60,7 @@ func remove_selected_deck_card() -> int:
 		return 0
 	selected_deck_index = clampi(selected_deck_index, 0, deck.size() - 1)
 	var card_id: int = deck.pop_at(selected_deck_index)
-	collection[card_id] = mini(COLLECTION_LIMIT, int(collection.get(card_id, 0)) + 1)
+	collection[card_id] = mini(COLLECTION_LIMIT, (int(collection.get(card_id, 0)) & 0xff) + 1)
 	selected_deck_index = clampi(selected_deck_index, 0, maxi(deck.size() - 1, 0))
 	return card_id
 
