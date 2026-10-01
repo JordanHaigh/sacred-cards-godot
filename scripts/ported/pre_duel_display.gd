@@ -4,6 +4,7 @@ extends Control
 ## The recovered wager backdrop is supplied by the owning screen layer.
 
 const GRAPHICS_SCRIPT = preload("res://scripts/ported/pre_duel_graphics.gd")
+const PIXEL_TEXT_SCRIPT = preload("res://scripts/ui/pixel_text.gd")
 const ROW_HEIGHTS := [14, 14, 20, 14, 14]
 const ROW_Y := [37, 53, 70, 93, 109]
 const ACTION_LABELS := ["CARD INFO", "WAGER CARD", "CANCEL"]
@@ -25,6 +26,7 @@ var graphics: PreDuelGraphics
 var deck_capacity := 0
 var deck_cost := 0
 var language_id := 0
+var _ascii_glyphs: Dictionary = {}
 
 func present(menu: PreDuelMenuState, card_database: CardDatabase, player_deck: Array[int], capacity: int = 0, current_cost: int = 0, selected_language: int = 0) -> void:
 	menu_state = menu
@@ -33,6 +35,7 @@ func present(menu: PreDuelMenuState, card_database: CardDatabase, player_deck: A
 	deck_capacity = capacity
 	deck_cost = current_cost
 	language_id = clampi(selected_language, 0, 5)
+	_ascii_glyphs = PIXEL_TEXT_SCRIPT.load_ascii_glyphs()
 	graphics = GRAPHICS_SCRIPT.new(database)
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	queue_redraw()
@@ -106,7 +109,15 @@ func _draw_popup() -> void:
 			_draw_text(("> " if index == menu_state.choice else "  ") + str(labels[index]), at, 7, GOLD if index == menu_state.choice else PAPER)
 
 func _draw_text(value: String, at: Vector2, font_size: int, color: Color) -> void:
-	draw_string(ThemeDB.fallback_font, at, value, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, color)
+	var pixel_scale := float(font_size) / 8.0
+	var top := at - Vector2(0, font_size)
+	for index in range(value.length()):
+		var codepoint := value.unicode_at(index)
+		var glyph := int(_ascii_glyphs.get(codepoint, _ascii_glyphs.get(63, 31)))
+		var source := Rect2((glyph % 32) * 8, floori(float(glyph) / 32.0) * 8, 8, 8)
+		var target := Rect2(top + Vector2(index * 8 * pixel_scale, 0), Vector2(8, 8) * pixel_scale)
+		draw_texture_rect_region(PIXEL_TEXT_SCRIPT.SMALL_ATLAS, Rect2(target.position + Vector2(1, 1), target.size), source, Color(0.04, 0.04, 0.04, 0.9))
+		draw_texture_rect_region(PIXEL_TEXT_SCRIPT.SMALL_ATLAS, target, source, color)
 
 func _draw_native_name(glyphs: Array, at: Vector2, color: Color) -> void:
 	for index in range(glyphs.size()):
