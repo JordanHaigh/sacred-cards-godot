@@ -137,8 +137,7 @@ func _attack(state: SacredDuelState, active: int, operands: Array[int], monster_
 		if target == null or target.is_empty(): return {"resolved": false, "reason": "target_missing"}
 		target.persistent_flags |= 0x10
 		target.face_down = false
-		var target_column := state.absolute_board_column((operands[1] >> 4) & 15, operands[1] & 15)
-		setup = battle_setup.prepare_monster_attack(state, attacker_column, target_column)
+		setup = battle_setup.prepare_monster_attack(state, attacker_column, operands[1] & 15)
 	else:
 		setup = battle_setup.prepare_direct_attack(state, attacker_column)
 	if setup.is_empty(): return {"resolved": false, "reason": "battle_setup_failed"}

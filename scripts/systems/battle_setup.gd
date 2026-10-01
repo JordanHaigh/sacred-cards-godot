@@ -11,7 +11,8 @@ func _init(database: CardDatabase = null, rules: CardStatRules = null) -> void:
 	card_database = database
 	stat_rules = rules if rules != null else STAT_RULES_SCRIPT.new()
 
-## Returns calculator side dictionaries plus native-independent source/target locators.
+## Returns calculator side dictionaries plus storage locators. Target columns
+## use the native visible opponent-row coordinate from battle_setup.c.
 func prepare_direct_attack(duel: SacredDuelState, attacker_column: int) -> Dictionary:
 	if not _valid_duel_and_column(duel, attacker_column):
 		return {}
@@ -33,12 +34,13 @@ func prepare_monster_attack(duel: SacredDuelState, attacker_column: int, target_
 		return {}
 	var attacker_side := duel.active_side
 	var target_side := 1 - attacker_side
-	var target_slot := duel.sides[target_side].monster_zones[target_column]
-	if target_slot.is_empty():
+	var target_storage_column := duel.absolute_board_column(1, target_column)
+	var target_slot := duel.relative_board_slot(attacker_side, 1, target_column)
+	if target_slot == null or target_slot.is_empty():
 		return {}
 	var target_defends := target_slot.defense_position
 	var attacker := _combatant(duel, attacker_side, 2, attacker_column, true)
-	var target := _combatant(duel, target_side, 1, target_column, true)
+	var target := _combatant(duel, target_side, 1, target_storage_column, true)
 	# battle_setup.c's 080066D0 branch assigns reversed defeat-mask owners
 	# only for side 0 attacking an attack-position target. Preserve that native
 	# result-flag quirk without changing which duel side owns either LP value.
@@ -61,7 +63,7 @@ func prepare_monster_attack(duel: SacredDuelState, attacker_column: int, target_
 		"side_a": side_a,
 		"side_b": side_b,
 		"attacker": {"side": attacker_side, "row": 2, "column": attacker_column},
-		"target": {"side": target_side, "row": 1, "column": target_column},
+		"target": {"side": target_side, "row": 1, "column": target_storage_column, "relative_column": target_column},
 	}
 
 func _valid_duel_and_column(duel: SacredDuelState, column: int) -> bool:

@@ -710,18 +710,19 @@ func process_player_duel_code(code: int, duel_state: SacredDuelState) -> Diction
 			if player_duel_controller.mode == PlayerDuelController.Mode.ATTACK_TARGET:
 				var opponent_slot := duel_state.relative_board_slot(side_id, 1, player_duel_controller.cursor.x)
 				if opponent_slot.is_empty(): return {"accepted": false, "reason": "empty_attack_target"}
-				var target_column := duel_state.absolute_board_column(1, player_duel_controller.cursor.x)
-				var attack_result := resolve_player_attack(duel_state, player_duel_controller.saved_cursor.x, target_column)
+				var attack_result := resolve_player_attack(duel_state, player_duel_controller.saved_cursor.x, player_duel_controller.cursor.x)
 				if bool(attack_result.get("accepted", false)): player_duel_controller.finish_attack_target_action()
 				return attack_result
 			return _confirm_player_field_selection(duel_state, side_id)
 	return {"accepted": true, "action": "cursor_moved", "cursor": player_duel_controller.cursor, "view_row": player_duel_controller.view_row}
 
-## Resolves a player-side direct or monster attack with the recovered combat
-## setup/calculator and writes typed board, life-point and victory state back.
+## Resolves a player-side direct or monster attack. A monster target column is
+## in the native visible opponent-row coordinate system.
 func resolve_player_attack(duel_state: SacredDuelState, attacker_column: int, target_column: int = -1) -> Dictionary:
 	if duel_state == null or duel_battle_setup == null or duel_state.active_side < 0 or duel_state.active_side >= duel_state.sides.size():
 		return {"accepted": false, "reason": "battle_setup_unavailable"}
+	if target_column < -1 or target_column >= 5:
+		return {"accepted": false, "reason": "invalid_target"}
 	var acting_side := duel_state.active_side
 	if attacker_column < 0 or attacker_column >= duel_state.sides[acting_side].monster_zones.size():
 		return {"accepted": false, "reason": "invalid_attacker"}
@@ -742,9 +743,8 @@ func resolve_player_attack(duel_state: SacredDuelState, attacker_column: int, ta
 			return {"accepted": false, "reason": "opposing_monsters_remain"}
 		setup = duel_battle_setup.prepare_direct_attack(duel_state, attacker_column)
 	else:
-		if target_column >= duel_state.sides[1 - acting_side].monster_zones.size():
-			return {"accepted": false, "reason": "invalid_target"}
-		var target: DuelCardSlot = duel_state.sides[1 - acting_side].monster_zones[target_column]
+		var target_storage_column_for_check := duel_state.absolute_board_column(1, target_column)
+		var target: DuelCardSlot = duel_state.sides[1 - acting_side].monster_zones[target_storage_column_for_check]
 		if target.is_empty():
 			return {"accepted": false, "reason": "empty_attack_target"}
 		setup = duel_battle_setup.prepare_monster_attack(duel_state, attacker_column, target_column)
@@ -752,14 +752,15 @@ func resolve_player_attack(duel_state: SacredDuelState, attacker_column: int, ta
 		return {"accepted": false, "reason": "battle_setup_failed"}
 	var old_life_points: Array[int] = [duel_state.sides[0].life_points, duel_state.sides[1].life_points]
 	var attacker_card_id := attacker.card_id
-	var target_card_id := duel_state.sides[1 - acting_side].monster_zones[target_column].card_id if target_column >= 0 else 0
+	var target_storage_column := duel_state.absolute_board_column(1, target_column) if target_column >= 0 else -1
+	var target_card_id := duel_state.sides[1 - acting_side].monster_zones[target_storage_column].card_id if target_storage_column >= 0 else 0
 	var combat_owners: Array[int] = [int(setup.side_a.get("owner", 0)), int(setup.side_b.get("owner", 1))]
 	var combat_cards: Array[int] = [0, 0]
 	for combat_side in range(2):
 		combat_cards[combat_side] = attacker_card_id if combat_owners[combat_side] == acting_side else target_card_id
 	attacker.persistent_flags = (attacker.persistent_flags & 0xFD) | 0x11
 	if target_column >= 0:
-		var target: DuelCardSlot = duel_state.sides[1 - acting_side].monster_zones[target_column]
+		var target: DuelCardSlot = duel_state.sides[1 - acting_side].monster_zones[target_storage_column]
 		target.persistent_flags |= 0x10
 		target.face_down = false
 	var battle: SacredBattleState = BATTLE_STATE_SCRIPT.new()
