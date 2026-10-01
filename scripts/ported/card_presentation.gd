@@ -6,6 +6,8 @@ extends Control
 const PIXEL_TEXT_SCRIPT := preload("res://scripts/ui/pixel_text.gd")
 const LOCKED_DESCRIPTION_PATH := "res://resources/card_locked_description.json"
 const FULL_CARD_FRAME_PATH := "res://decompiled/build/assets/ui/frame-%d.png"
+const FULL_CARD_TYPE_PATH := "res://decompiled/build/assets/ui/type-%02d.png"
+const FULL_CARD_SUMMON_PATH := "res://decompiled/build/assets/ui/summon-%02d.png"
 const GOLD := Color("ffdc77")
 const PAPER := Color("f5e6c3")
 
@@ -64,14 +66,45 @@ func _build_view() -> void:
 		image.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		add_child(image)
 	if definition != null:
+		_add_level_stars()
+		_add_full_card_icon(FULL_CARD_TYPE_PATH % definition.card_type, Vector2(16, 128))
+		_add_full_card_icon(FULL_CARD_SUMMON_PATH % definition.attribute, Vector2(32, 128))
 		add_child(_text_label(_full_card_title(), Vector2(8, 7), Vector2(96, 9), 8, GOLD))
-		add_child(_text_label("%05d" % definition.attack, Vector2(7, 136), Vector2(42, 8), 8, PAPER))
-		add_child(_text_label("%05d" % definition.defense, Vector2(61, 136), Vector2(42, 8), 8, PAPER))
+		add_child(_text_label("%05d" % definition.attack, Vector2(56, 128), Vector2(40, 8), 8, PAPER))
+		add_child(_text_label("%05d" % definition.defense, Vector2(56, 136), Vector2(40, 8), 8, PAPER))
 		add_child(_text_label(definition.type_name, Vector2(165, 24), Vector2(74, 8), 6, PAPER))
 		add_child(_text_label(definition.summon_name, Vector2(165, 42), Vector2(74, 8), 6, PAPER))
 		add_child(_text_label("%05d" % definition.cost, Vector2(165, 59), Vector2(74, 8), 6, PAPER))
 	page_lines.clear()
 	_update_page()
+
+func _add_level_stars() -> void:
+	# DrawFullCardLevel caps at twelve and overlays the rightmost N slots in
+	# the frame map's twelve-cell row. The source star bitmap is not exported.
+	var star_count := mini(maxi(definition.level, 0), 12)
+	for slot in range(12 - star_count, 12):
+		var points := PackedVector2Array()
+		for vertex in range(10):
+			var angle := -PI / 2.0 + vertex * PI / 5.0
+			var radius := 3.6 if vertex % 2 == 0 else 1.55
+			points.append(Vector2(4.0, 4.0) + Vector2(cos(angle), sin(angle)) * radius)
+		var star := Polygon2D.new()
+		star.position = Vector2(8 + slot * 8, 24)
+		star.polygon = points
+		star.color = Color("e6b429")
+		add_child(star)
+
+func _add_full_card_icon(path: String, at: Vector2) -> void:
+	if not ResourceLoader.exists(path):
+		return
+	var icon := TextureRect.new()
+	icon.texture = load(path) as Texture2D
+	icon.position = at
+	icon.size = icon.texture.get_size()
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon.stretch_mode = TextureRect.STRETCH_SCALE
+	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(icon)
 
 func _update_page() -> void:
 	for line in page_lines:
