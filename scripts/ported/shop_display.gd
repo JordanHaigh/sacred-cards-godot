@@ -255,6 +255,13 @@ func _draw_popup_cursor(at: Vector2) -> void:
 	sprite.centered = false
 	sprite.position = at
 	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	var shadow := Sprite2D.new()
+	shadow.texture = sprite.texture
+	shadow.centered = false
+	shadow.position = at
+	shadow.modulate = Color(0, 0, 0, 0.5)
+	shadow.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	add_child(shadow)
 	add_child(sprite)
 
 func _emit_card_selected(index: int) -> void:
