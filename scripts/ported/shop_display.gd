@@ -172,7 +172,15 @@ func _draw_selected_summary() -> void:
 	var attribute_path := "res://art/ui/shop/attribute-%02d.png" % int(info.get("attribute", 0))
 	if ResourceLoader.exists(attribute_path):
 		_add_icon(attribute_path, Vector2(163, 148))
-	var stats := "ATK%d DEF%d COST%d" % [int(info.get("attack", 0)), int(info.get("defense", 0)), int(info.get("cost", 0))]
+	var stat_fields: Array[String] = []
+	var attack := int(info.get("attack", 0))
+	var defense := int(info.get("defense", 0))
+	if attack != 65535:
+		stat_fields.append("ATK%d" % attack)
+	if defense != 65535:
+		stat_fields.append("DEF%d" % defense)
+	stat_fields.append("COST%d" % int(info.get("cost", 0)))
+	var stats := " ".join(stat_fields)
 	_add_text(stats, Vector2(5, 146), PAPER, 4)
 	var price_key := "sell_price" if selling else "buy_price"
 	var balance := "SHORT %d" % shortfall if shortfall > 0 else "AFTER %d" % int(info.get("balance_after", wallet.gold))
