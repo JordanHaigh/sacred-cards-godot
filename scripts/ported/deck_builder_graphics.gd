@@ -3,7 +3,7 @@ extends RefCounted
 ## Display model recovered from deck_builder_graphics.c.
 ## Tile IDs, OAM entries and VRAM pointers become card records and UI values.
 
-const DETAIL_LEVEL := 0
+const DETAIL_STARS := 0
 const DETAIL_ATTACK_DEFENSE := 1
 const DETAIL_ATTRIBUTE_TYPE := 2
 const DETAIL_COST := 3
@@ -19,8 +19,10 @@ func detail_text(card: CardDefinition, mode: int) -> String:
 			return "ATTRIBUTE %02d  TYPE %02d" % [card.attribute, card.card_type]
 		DETAIL_COST:
 			return "COST %05d" % card.cost
+		DETAIL_STARS:
+			return "★".repeat(clampi(card.level, 0, 12))
 		_:
-			return "LEVEL %02d" % card.level
+			return "★".repeat(clampi(card.level, 0, 12))
 
 func scrollbar_offset(position: int, card_count: int) -> int:
 	var limit := maxi(card_count - 1, 0)
