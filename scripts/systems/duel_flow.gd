@@ -212,17 +212,16 @@ func _count_deck(cards: Array[int]) -> int:
 
 func _return_borrowed_monsters(duel: SacredDuelState) -> void:
 	var source_side := duel.sides[duel.active_side]
-	var destination_side := duel.sides[1 - duel.active_side]
+	var relative_opponent_monsters := duel.relative_board_row(duel.active_side, 1)
 	for source in source_side.monster_zones:
 		if source.card_id == 0 or (source.persistent_flags & 0x20) == 0:
 			continue
-		var destination_index := -1
-		for index in range(destination_side.monster_zones.size() - 1, -1, -1):
-			if destination_side.monster_zones[index].is_empty():
-				destination_index = index
+		var destination: DuelCardSlot
+		for relative_column in range(relative_opponent_monsters.size() - 1, -1, -1):
+			if relative_opponent_monsters[relative_column].is_empty():
+				destination = relative_opponent_monsters[relative_column]
 				break
-		if destination_index >= 0:
-			var destination := destination_side.monster_zones[destination_index]
+		if destination != null:
 			destination.card_id = source.card_id
 			destination.persistent_flags = ((destination.persistent_flags | 16) & 0xD8) | (source.persistent_flags & 4)
 			destination.zone_mode = 2
