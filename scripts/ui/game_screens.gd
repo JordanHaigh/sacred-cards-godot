@@ -79,6 +79,7 @@ var screen := "title"
 var selected := 0
 var shop_selected := 0
 var editing_deck := false
+var _deck_display_entry_pending := true
 var deck_hub_return_screen := "title"
 var in_deck_hub_flow := false
 var deck_hub_invalid_message := ""
@@ -1478,6 +1479,7 @@ func _bit_count(value: int) -> int:
 func _show(next: String) -> void:
 	if screen != next and next == "deck":
 		_deck_frame_input.reset()
+		_deck_display_entry_pending = true
 	screen = next
 	selected = clampi(selected, 0, maxi(_visible_cards().size() - 1, 0))
 	_build_screen()
@@ -1930,9 +1932,14 @@ func _draw_deck() -> void:
 	collection_display.position = Vector2.ZERO
 	collection_display.size = SCREEN_SIZE
 	collection_display.card_selected.connect(_select_deck_card)
+	collection_display.stage_changed.connect(_on_collection_display_stage_changed)
 	screen_root.add_child(collection_display)
-	collection_display.present(deck if editing_deck else collection, selected, card_database, editing_deck, deck_builder_menu.deck_filter if editing_deck else deck_builder_menu.collection_filter, language_id)
+	collection_display.present(deck if editing_deck else collection, selected, card_database, editing_deck, deck_builder_menu.deck_filter if editing_deck else deck_builder_menu.collection_filter, language_id, _deck_display_entry_pending)
 	_draw_deck_builder_popup()
+
+func _on_collection_display_stage_changed(stage: int) -> void:
+	if stage == CollectionDisplay.DisplayStage.ACTIVE:
+		_deck_display_entry_pending = false
 
 func _draw_deck_builder_popup() -> void:
 	if deck_builder_menu.popup == DeckBuilderMenu.PopupKind.NONE: return
@@ -2087,6 +2094,8 @@ func _visible_cards() -> Array:
 	return deck if screen == "deck" and editing_deck else collection
 
 func _set_deck_view(show_deck: bool) -> void:
+	if editing_deck != show_deck:
+		_deck_display_entry_pending = true
 	editing_deck = show_deck
 	selected = clampi(selected, 0, maxi(_visible_cards().size() - 1, 0))
 	_build_screen()

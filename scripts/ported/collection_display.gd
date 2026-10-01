@@ -11,7 +11,7 @@ const DEFAULT_DETAIL_ATLAS := preload("res://art/ui/deck-builder/detail-mode-0.p
 const GOLD := Color("ffdc77")
 const PAPER := Color("f5e6c3")
 
-enum DisplayStage { IDLE, INITIALIZE, SHOW, RESTORE, RESTORE_PALETTES, ACTIVE }
+enum DisplayStage { IDLE, INITIALIZE, SHOW, ACTIVE }
 
 signal card_selected(index: int)
 signal stage_changed(stage: int)
@@ -29,7 +29,7 @@ var _transition_running := false
 var _transition_stages: Array[int] = []
 var _transition_index := 0
 
-func present(cards: Array[int], selected: int, database: CardDatabase, editing_deck: bool, mode: int = 0, selected_language: int = 0) -> void:
+func present(cards: Array[int], selected: int, database: CardDatabase, editing_deck: bool, mode: int = 0, selected_language: int = 0, screen_entry: bool = true) -> void:
 	card_ids = cards.duplicate()
 	selected_index = selected
 	card_database = database
@@ -38,12 +38,13 @@ func present(cards: Array[int], selected: int, database: CardDatabase, editing_d
 	language_id = clampi(selected_language, 0, 5)
 	deck_graphics = DECK_GRAPHICS_SCRIPT.new()
 	_render_rows()
+	if not screen_entry:
+		display_stage = DisplayStage.ACTIVE
+		stage_changed.emit(display_stage)
+		return
 	if not _transition_running:
 		_transition_running = true
-		_transition_stages = [DisplayStage.INITIALIZE, DisplayStage.SHOW, DisplayStage.RESTORE]
-		if deck_view:
-			_transition_stages.append(DisplayStage.RESTORE_PALETTES)
-		_transition_stages.append(DisplayStage.ACTIVE)
+		_transition_stages = [DisplayStage.INITIALIZE, DisplayStage.SHOW]
 		_transition_index = 0
 		_set_stage(_transition_stages[0])
 		get_tree().process_frame.connect(_advance_transition, CONNECT_ONE_SHOT)
@@ -52,6 +53,9 @@ func _advance_transition() -> void:
 	_transition_index += 1
 	if _transition_index >= _transition_stages.size():
 		_transition_running = false
+		display_stage = DisplayStage.ACTIVE
+		stage_changed.emit(display_stage)
+		queue_redraw()
 		return
 	_set_stage(_transition_stages[_transition_index])
 	get_tree().process_frame.connect(_advance_transition, CONNECT_ONE_SHOT)
@@ -59,22 +63,15 @@ func _advance_transition() -> void:
 func _set_stage(stage: int) -> void:
 	display_stage = stage
 	stage_changed.emit(stage)
-	if deck_view and deck_graphics != null:
-		var source_stage := _source_stage_for_control_stage(stage)
-		var operations := deck_graphics.stage_operations(source_stage)
-		graphics_operations_requested.emit(operations)
-		if operations.has(&"draw_cards") or operations.has(&"draw_details"):
-			_render_rows()
-	queue_redraw()
-
-func _source_stage_for_control_stage(stage: int) -> int:
+	var operations: Array[StringName] = []
 	match stage:
-		DisplayStage.INITIALIZE: return 0
-		DisplayStage.SHOW: return 2
-		DisplayStage.RESTORE: return 3
-		DisplayStage.RESTORE_PALETTES: return 7
-		DisplayStage.ACTIVE: return 5
-	return -1
+		DisplayStage.INITIALIZE:
+			operations = [&"initialize_windows", &"configure_background_layers", &"upload_background_offsets"]
+		DisplayStage.SHOW:
+			operations = [&"upload_oam", &"upload_palettes", &"show_display"]
+	if not operations.is_empty():
+		graphics_operations_requested.emit(operations)
+	queue_redraw()
 
 func _render_rows() -> void:
 	for child in get_children():
