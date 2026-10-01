@@ -237,8 +237,8 @@ func _cell_record(row: int, column: int) -> Dictionary:
 	var other_side := duel_state.side(1 - duel_state.active_side)
 	var slot: DuelCardSlot
 	match row:
-		0: slot = other_side.back_row_zones[column]
-		1: slot = other_side.monster_zones[column]
+		0: slot = other_side.back_row_zones[4 - column]
+		1: slot = other_side.monster_zones[4 - column]
 		2: slot = own_side.monster_zones[column]
 		3: slot = own_side.back_row_zones[column]
 		4:

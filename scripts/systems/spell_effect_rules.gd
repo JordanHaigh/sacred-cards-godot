@@ -425,17 +425,10 @@ func _clear_relative_row(state: SacredDuelState, active: int, relative_row: int,
 			_discard_relative(state, active, slot, relative_row, _is_monster(slot.card_id))
 
 func _relative_slot(state: SacredDuelState, active: int, relative_row: int, column: int) -> DuelCardSlot:
-	if column < 0 or column >= 5:
-		return null
-	var slots := _row(state, active, relative_row)
-	return slots[column] if column < slots.size() else null
+	return state.relative_board_slot(active, relative_row, column)
 
 func _row(state: SacredDuelState, active: int, relative_row: int) -> Array[DuelCardSlot]:
-	var owner := active if relative_row >= 2 else 1 - active
-	var side := state.side(owner)
-	if side == null:
-		return []
-	return side.monster_zones if relative_row in [1, 2] else side.back_row_zones if relative_row in [0, 3] else []
+	return state.relative_board_row(active, relative_row)
 
 func _relative_row_for_slot(state: SacredDuelState, active: int, slot: DuelCardSlot) -> int:
 	if slot == null:

@@ -632,12 +632,7 @@ func _discard_slot(state: SacredDuelState, active: int, slot: DuelCardSlot, row_
 			return
 
 func _row(state: SacredDuelState, active: int, row_id: int) -> Array[DuelCardSlot]:
-	var owner := active if row_id >= 2 else 1 - active
-	var side := state.side(owner)
-	if side == null: return []
-	if row_id in [1, 2]: return side.monster_zones
-	if row_id in [0, 3]: return side.back_row_zones
-	return []
+	return state.relative_board_row(active, row_id)
 
 func _find_card(row: Array[DuelCardSlot], card_id: int) -> int:
 	for index in range(row.size()):

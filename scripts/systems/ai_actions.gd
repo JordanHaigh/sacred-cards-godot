@@ -122,7 +122,7 @@ func _attack(state: SacredDuelState, active: int, operands: Array[int], monster_
 	if battle_setup == null: return {"resolved": false, "reason": "battle_setup_missing"}
 	battle_state.last_result_code = 0
 	battle_state.last_result_flags = 0
-	var attacker_column := operands[0] & 15
+	var attacker_column := state.absolute_board_column((operands[0] >> 4) & 15, operands[0] & 15)
 	var attacker_slot := _slot(state, active, operands[0])
 	var attacker_card_id := attacker_slot.card_id if attacker_slot != null else 0
 	var target_card_id := 0
@@ -137,7 +137,8 @@ func _attack(state: SacredDuelState, active: int, operands: Array[int], monster_
 		if target == null or target.is_empty(): return {"resolved": false, "reason": "target_missing"}
 		target.persistent_flags |= 0x10
 		target.face_down = false
-		setup = battle_setup.prepare_monster_attack(state, attacker_column, operands[1] & 15)
+		var target_column := state.absolute_board_column((operands[1] >> 4) & 15, operands[1] & 15)
+		setup = battle_setup.prepare_monster_attack(state, attacker_column, target_column)
 	else:
 		setup = battle_setup.prepare_direct_attack(state, attacker_column)
 	if setup.is_empty(): return {"resolved": false, "reason": "battle_setup_failed"}
@@ -250,7 +251,7 @@ func _discard_operand(state: SacredDuelState, active: int, packed: int) -> int:
 	var slot := _slot(state, active, packed)
 	if slot == null: return 0
 	var is_monster := row_id in [1, 2] and summon_rules.classify_card(slot.card_id, card_database) == 1
-	return state.discard_slot(owner, zone_row, column, is_monster)
+	return state.discard_slot(owner, zone_row, state.absolute_board_column(row_id, column), is_monster)
 
 func _lock_hand_monsters(side: DuelSideState) -> void:
 	for index in range(side.hand.size()):
@@ -284,11 +285,7 @@ func _slot(state: SacredDuelState, active: int, packed: int) -> DuelCardSlot:
 			slot.card_id = hand_side.hand[column]
 			if column < hand_side.hand_flags.size(): slot.persistent_flags = hand_side.hand_flags[column]
 		return slot
-	var owner := active if row_id >= 2 else 1 - active
-	var board_side := state.side(owner)
-	if row_id in [1, 2]: return board_side.monster_zones[column]
-	if row_id in [0, 3]: return board_side.back_row_zones[column]
-	return null
+	return state.relative_board_slot(active, row_id, column)
 
 func _operands(candidate: Dictionary) -> Array[int]:
 	var result: Array[int] = []

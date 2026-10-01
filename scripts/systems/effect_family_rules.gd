@@ -109,13 +109,4 @@ func _lower_stage_register_result(slot: DuelCardSlot) -> int:
 	return 0xFF80 if old_byte == 128 else (old_byte - 1) & 0xFFFF
 
 func _slot(state: SacredDuelState, side_id: int, row: int, column: int) -> DuelCardSlot:
-	if state == null or column < 0 or column >= 5:
-		return null
-	var side := state.side(side_id)
-	if side == null:
-		return null
-	if row == 2:
-		return side.monster_zones[column]
-	if row == 3:
-		return side.back_row_zones[column]
-	return null
+	return state.relative_board_slot(side_id, row, column) if state != null else null

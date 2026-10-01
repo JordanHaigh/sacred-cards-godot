@@ -63,10 +63,10 @@ func _score(table_name: String, state: SacredDuelState, active: int, candidate: 
 
 func _run_handler(id: int, state: SacredDuelState, active: int, candidate: Dictionary, initial_score: int) -> Dictionary:
 	var enemy := 1 - active
-	var own_monsters := state.side(active).monster_zones
-	var enemy_monsters := state.side(enemy).monster_zones
-	var enemy_back := state.side(enemy).back_row_zones
-	var own_back := state.side(active).back_row_zones
+	var own_monsters := state.relative_board_row(active, 2)
+	var enemy_monsters := state.relative_board_row(active, 1)
+	var enemy_back := state.relative_board_row(active, 0)
+	var own_back := state.relative_board_row(active, 3)
 	var score := initial_score & MASK
 	match id:
 		0: return {"score": _stat_sum(own_monsters, state.terrain)}
@@ -365,8 +365,8 @@ func _score_attack_damage(state: SacredDuelState, active: int, candidate: Dictio
 	return priority if _stats(source, state.terrain).x < state.side(1 - active).life_points else 0x7FFFFFFF
 
 func _score_handler_family(id: int, priority: int, state: SacredDuelState, active: int, candidate: Dictionary, score: int) -> int:
-	var own := state.side(active).monster_zones
-	var enemy := state.side(1 - active).monster_zones
+	var own := state.relative_board_row(active, 2)
+	var enemy := state.relative_board_row(active, 1)
 	match id:
 		77: return _choice(_count_card(own, 161) > 0, priority)
 		79: return _choice(_empty(enemy) != 5, priority)
@@ -387,7 +387,7 @@ func _score_handler_family(id: int, priority: int, state: SacredDuelState, activ
 	return LOW
 
 func _score_strongest_comparison(state: SacredDuelState, active: int, candidate: Dictionary) -> int:
-	var row := state.side(1 - active).monster_zones
+	var row := state.relative_board_row(active, 1)
 	if _count_empty_or_immune(row) == 5: return LOW
 	var strongest: DuelCardSlot = row[0]
 	var strongest_attack := -1
@@ -404,7 +404,7 @@ func _score_strongest_comparison(state: SacredDuelState, active: int, candidate:
 	return 0x7FF55179
 
 func _score_strongest_fatal(state: SacredDuelState, active: int) -> int:
-	var row := state.side(1 - active).monster_zones
+	var row := state.relative_board_row(active, 1)
 	if _count_empty_or_immune(row) == 5: return LOW
 	var best_attack := -1
 	for slot in row:
@@ -545,21 +545,17 @@ func _candidate_slot(state: SacredDuelState, active: int, candidate: Dictionary,
 	var row_id := (packed >> 4) & 15
 	var column := packed & 15
 	if column >= 5: return null
-	var side_id := active if row_id >= 2 else 1 - active
-	var side := state.side(side_id)
-	match row_id:
-		0, 3: return side.back_row_zones[column]
-		1, 2: return side.monster_zones[column]
-		4:
-			var hand_slot := DuelCardSlot.new()
-			if column < side.hand.size():
-				hand_slot.card_id = side.hand[column]
-				if column < side.hand_flags.size(): hand_slot.persistent_flags = side.hand_flags[column]
-			return hand_slot
-	return null
+	if row_id == 4:
+		var side := state.side(active)
+		var hand_slot := DuelCardSlot.new()
+		if column < side.hand.size():
+			hand_slot.card_id = side.hand[column]
+			if column < side.hand_flags.size(): hand_slot.persistent_flags = side.hand_flags[column]
+		return hand_slot
+	return state.relative_board_slot(active, row_id, column)
 
 func _strong_enemy_attack(state: SacredDuelState, active: int) -> int:
-	for slot in state.side(1 - active).monster_zones:
+	for slot in state.relative_board_row(active, 1):
 		if slot.is_empty() or (slot.persistent_flags & 1) != 0: continue
 		if _stats(slot, state.terrain).x >= 1500: return 0x7EED7E3D
 	return LOW

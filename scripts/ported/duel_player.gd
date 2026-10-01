@@ -196,6 +196,7 @@ func _first_empty(slots: Array[DuelCardSlot]) -> int:
 	return 0
 
 func _last_monster(slots: Array[DuelCardSlot], summon_rules: SummonRules = null, database: CardDatabase = null) -> int:
-	for index in range(slots.size() - 1, -1, -1):
-		if not slots[index].is_empty() and (summon_rules == null or summon_rules.classify_card(slots[index].card_id, database) == 1): return index
+	# Native LastMonster scans relative opponent row 1 from column 4 to 0.
+	for storage_column in range(slots.size()):
+		if not slots[storage_column].is_empty() and (summon_rules == null or summon_rules.classify_card(slots[storage_column].card_id, database) == 1): return 4 - storage_column
 	return 4

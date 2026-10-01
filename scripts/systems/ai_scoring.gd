@@ -225,18 +225,14 @@ func _slot(state: SacredDuelState, active: int, packed: int) -> DuelCardSlot:
 			hand_slot.card_id = state.side(active).hand[column]
 			if column < state.side(active).hand_flags.size(): hand_slot.persistent_flags = state.side(active).hand_flags[column]
 		return hand_slot
-	return _row(state, active, row_id)[column] if row_id in [0, 1, 2, 3] else null
+	return state.relative_board_slot(active, row_id, column)
 
 func _operand_card_id(state: SacredDuelState, active: int, packed: int) -> int:
 	var slot := _slot(state, active, packed)
 	return slot.card_id if slot != null else 0
 
 func _row(state: SacredDuelState, active: int, row_id: int) -> Array[DuelCardSlot]:
-	var owner := active if row_id >= 2 else 1 - active
-	var side := state.side(owner)
-	if row_id in [1, 2]: return side.monster_zones
-	if row_id in [0, 3]: return side.back_row_zones
-	return []
+	return state.relative_board_row(active, row_id)
 
 func _monster(slot: DuelCardSlot) -> bool:
 	return slot != null and not slot.is_empty() and summon_rules.classify_card(slot.card_id, card_database) == 1

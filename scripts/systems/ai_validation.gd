@@ -83,28 +83,17 @@ func _operand_slot(state: SacredDuelState, acting_side: int, packed: int) -> Due
 	var row_id := (packed >> 4) & 0xF
 	var column := packed & 0xF
 	if column >= 5: return null
-	var owner := acting_side
-	var row: Array[DuelCardSlot]
-	match row_id:
-		0: owner = 1 - acting_side; row = state.side(owner).back_row_zones
-		1: owner = 1 - acting_side; row = state.side(owner).monster_zones
-		2: owner = acting_side; row = state.side(owner).monster_zones
-		3: owner = acting_side; row = state.side(owner).back_row_zones
-		4: return _hand_slot(state.side(acting_side), column)
-		_: return null
-	return row[column]
+	if row_id == 4: return _hand_slot(state.side(acting_side), column)
+	return state.relative_board_slot(acting_side, row_id, column)
 
 func _operand_row(state: SacredDuelState, acting_side: int, packed: int) -> Array[DuelCardSlot]:
 	var row_id := (packed >> 4) & 0xF
-	var side := 1 - acting_side if row_id in [0, 1] else acting_side
 	if row_id == 4:
 		var hand_slots: Array[DuelCardSlot] = []
 		for column in range(5):
 			hand_slots.append(_hand_slot(state.side(acting_side), column))
 		return hand_slots
-	if row_id in [1, 2]: return state.side(side).monster_zones
-	if row_id in [0, 3]: return state.side(side).back_row_zones
-	return []
+	return state.relative_board_row(acting_side, row_id)
 
 func _hand_slot(side: DuelSideState, column: int) -> DuelCardSlot:
 	var slot := DuelCardSlot.new()
@@ -136,7 +125,7 @@ func _attack_valid(state: SacredDuelState, acting_side: int, operands: Array[int
 	if state.auxiliary_flags[acting_side] == 0 or (state.side(acting_side).duel_flags & 3) != 0: return false
 	var trap_found := _find_trap(state, acting_side, operands[0])
 	if bool(trap_found.found) != trapped or not _is_unlocked_monster(slots[0]): return false
-	if target_kind == 0: return _occupied(state.side(1 - acting_side).monster_zones) == 0
+	if target_kind == 0: return _occupied(state.relative_board_row(acting_side, 1)) == 0
 	if slots.size() < 2 or not _is_class(slots[1], 1): return false
 	var hidden := (slots[1].persistent_flags & 0x10) != 0
 	return hidden == (target_kind == 2)

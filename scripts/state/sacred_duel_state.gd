@@ -22,6 +22,33 @@ func side(side_id: int) -> DuelSideState:
 		return null
 	return sides[side_id]
 
+## Returns a visible duel row in the active player's native board orientation.
+## The two opponent rows are mirrored; own rows retain their storage order.
+func relative_board_row(acting_side: int, row_id: int) -> Array[DuelCardSlot]:
+	if acting_side < 0 or acting_side >= sides.size() or row_id < 0 or row_id > 3:
+		return []
+	var owner := acting_side if row_id >= 2 else 1 - acting_side
+	var source: Array[DuelCardSlot] = sides[owner].monster_zones if row_id in [1, 2] else sides[owner].back_row_zones
+	var result: Array[DuelCardSlot] = []
+	if row_id < 2:
+		for column in range(source.size() - 1, -1, -1):
+			result.append(source[column])
+	else:
+		result.assign(source)
+	return result
+
+func relative_board_slot(acting_side: int, row_id: int, column: int) -> DuelCardSlot:
+	if column < 0 or column >= 5:
+		return null
+	var row := relative_board_row(acting_side, row_id)
+	return row[column] if column < row.size() else null
+
+## Converts a visible row/column back to the side's left-to-right storage slot.
+func absolute_board_column(row_id: int, relative_column: int) -> int:
+	if relative_column < 0 or relative_column >= 5:
+		return -1
+	return 4 - relative_column if row_id in [0, 1] else relative_column
+
 func finish_turn() -> void:
 	if status != Status.ACTIVE:
 		return

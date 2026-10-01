@@ -708,9 +708,10 @@ func process_player_duel_code(code: int, duel_state: SacredDuelState) -> Diction
 				if bool(effect_result.get("resolved", false)): player_duel_controller.finish_spell_target_action()
 				return effect_result if effect_result is Dictionary else {"resolved": true, "result": effect_result}
 			if player_duel_controller.mode == PlayerDuelController.Mode.ATTACK_TARGET:
-				var opponent_slot := duel_state.side(1 - side_id).monster_zones[player_duel_controller.cursor.x]
+				var opponent_slot := duel_state.relative_board_slot(side_id, 1, player_duel_controller.cursor.x)
 				if opponent_slot.is_empty(): return {"accepted": false, "reason": "empty_attack_target"}
-				var attack_result := resolve_player_attack(duel_state, player_duel_controller.saved_cursor.x, player_duel_controller.cursor.x)
+				var target_column := duel_state.absolute_board_column(1, player_duel_controller.cursor.x)
+				var attack_result := resolve_player_attack(duel_state, player_duel_controller.saved_cursor.x, target_column)
 				if bool(attack_result.get("accepted", false)): player_duel_controller.finish_attack_target_action()
 				return attack_result
 			return _confirm_player_field_selection(duel_state, side_id)
@@ -862,10 +863,10 @@ func _duel_cell_card_id(duel_state: SacredDuelState, cell: Vector2i) -> int:
 	var opponent := duel_state.sides[1 - duel_state.active_side]
 	match cell.y:
 		0:
-			var opponent_back_row_slot: DuelCardSlot = opponent.back_row_zones[cell.x]
+			var opponent_back_row_slot: DuelCardSlot = opponent.back_row_zones[4 - cell.x]
 			return opponent_back_row_slot.card_id if not opponent_back_row_slot.face_down else 0
 		1:
-			var opponent_monster_slot: DuelCardSlot = opponent.monster_zones[cell.x]
+			var opponent_monster_slot: DuelCardSlot = opponent.monster_zones[4 - cell.x]
 			return opponent_monster_slot.card_id if not opponent_monster_slot.face_down else 0
 		2: return active.monster_zones[cell.x].card_id
 		3: return active.back_row_zones[cell.x].card_id
