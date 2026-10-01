@@ -31,8 +31,10 @@ func miniature_layers(card_id: int) -> Dictionary:
 
 func scrollbar_y(selected_index: int, card_count: int) -> int:
 	var row_count := maxi(ceili(float(card_count) / 7.0), 1)
-	var selected_row := clampi(selected_index / 7, 0, row_count - 1)
-	return floori(float(selected_row * SCROLLBAR_TRAVEL) / float(row_count)) + 1
+	var selected_view_row := floori(float(maxi(selected_index, 0)) / 7.0)
+	# The first displayed row is source row 128; selection index 7 is row 0.
+	var source_row := posmod(selected_view_row - 1, row_count)
+	return floori(float(source_row * SCROLLBAR_TRAVEL) / float(row_count)) + 1
 
 func selection_origin(row: int, column: int) -> Vector2:
 	var x := int(SELECTOR_X_COORDINATES[clampi(column, 0, SELECTOR_X_COORDINATES.size() - 1)]) & 0x1FF
