@@ -41,8 +41,7 @@ def extract(output: Path) -> None:
 		red = (value & 0x1F) * 255 // 31
 		green = ((value >> 5) & 0x1F) * 255 // 31
 		blue = ((value >> 10) & 0x1F) * 255 // 31
-		# GBA background color zero is the clear pixel in these icon tiles.
-		palette.append((red, green, blue, 0 if index == 0 else 255))
+		palette.append((red, green, blue, 255))
 
 	width = WIDTH * VISIBLE_ROWS
 	rows: list[bytes] = []	# PNG filter type 0 on each scanline.
