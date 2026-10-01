@@ -97,7 +97,7 @@ func _update_page() -> void:
 	page_lines.clear()
 	var info := get_child(2) as Panel
 	var text_value := pages[page_index] if not pages.is_empty() else "No description available."
-	var wrapped := _wrap_locked_description(text_value) if description_locked else _wrap_description(text_value, 32)
+	var wrapped := _wrap_locked_description(text_value) if description_locked else _wrap_description(text_value, 12)
 	for line_index in range(wrapped.size()):
 		var line: PixelText = PIXEL_TEXT_SCRIPT.new()
 		line.position = Vector2(5, 49 + line_index * 6)
@@ -128,30 +128,32 @@ func _wrap_locked_description(source: String) -> Array[String]:
 
 func _wrap_description(source: String, line_width: int) -> Array[String]:
 	var lines: Array[String] = []
-	var current := ""
-	for word in source.split(" ", false):
-		if current.is_empty():
-			current = word
-		elif current.length() + 1 + word.length() <= line_width:
-			current += " " + word
-		else:
-			lines.append(current)
-			current = word
-	if not current.is_empty():
-		lines.append(current)
+	if line_width <= 0:
+		return lines
+	for offset in range(0, source.length(), line_width):
+		lines.append(source.substr(offset, line_width))
+	if lines.is_empty():
+		lines.append("")
 	return lines
 
 func _parse_description_pages(source: String) -> Array[String]:
 	var result: Array[String] = []
-	var sections := source.split("^", false)
-	for section_value in sections:
-		var section := str(section_value)
-		if result.is_empty() and not section.is_empty() and section.substr(0, 1).is_valid_int():
-			section = section.substr(1)
-		section = section.replace("%", " ").strip_edges()
-		if section.is_empty():
-			continue
-		result.append(section)
+	if not source.begins_with("^"):
+		var plain_text := source.split("$", false)[0]
+		if not plain_text.is_empty(): result.append(plain_text)
+		return result
+	# ShowCardDescription consumes the two-byte '^N' page header. Values 2–9
+	# select that many pages; other values retain the native one-page fallback.
+	var page_count := 1
+	var page_start := 2
+	if source.length() > 1:
+		var count_character := source.unicode_at(1)
+		if count_character >= 50 and count_character <= 57:
+			page_count = count_character - 48
+	var page_source := source.substr(page_start).split("$", false)[0]
+	var sections := page_source.split("^", true)
+	for page_index_value in range(page_count):
+		result.append(str(sections[page_index_value]) if page_index_value < sections.size() else "")
 	return result
 
 func _text_label(value: String, at: Vector2, dimensions: Vector2, font_size: int, color: Color) -> PixelText:
