@@ -129,8 +129,8 @@ func _attack_valid(state: SacredDuelState, acting_side: int, operands: Array[int
 	if bool(trap_found.found) != trapped or not _is_unlocked_monster(slots[0]): return false
 	if target_kind == 0: return _occupied(state.relative_board_row(acting_side, 1)) == 0
 	if slots.size() < 2 or not _is_class(slots[1], 1): return false
-	var hidden := (slots[1].persistent_flags & 0x10) != 0
-	return hidden == (target_kind == 2)
+	var revealed := (slots[1].persistent_flags & 0x10) != 0
+	return revealed == (target_kind == 1)
 
 func _find_trap(state: SacredDuelState, acting_side: int, packed: int) -> Dictionary:
 	var row_id := (packed >> 4) & 0xF
