@@ -10,6 +10,9 @@ const ROW_STEP := 21.0
 const ATTRIBUTE_ICON_PATH := "res://art/ui/shop/attribute-%02d.png"
 const REQUIREMENT_ICON_PATH := "res://art/ui/shop/requirement-%d.png"
 const MINIATURE_BACK_PATH := "res://decompiled/build/assets/duel/miniature-back.png"
+const MINIATURE_ATTRIBUTE_PATH := "res://decompiled/build/assets/duel/miniature-attribute-%d.png"
+const MINIATURE_REQUIREMENT_PATH := "res://decompiled/build/assets/duel/miniature-requirement-%d.png"
+const FRAMED_CARD_PATH := "res://decompiled/build/assets/cards/%04d.framed.png"
 const GOLD := Color("ffdc77")
 const PAPER := Color("f5e6c3")
 const PANEL := Color("171c20")
@@ -111,18 +114,33 @@ func _draw_opponent_hand_overlay() -> void:
 				draw_texture_rect(load(MINIATURE_BACK_PATH) as Texture2D, rect, false)
 			continue
 		var card := card_database.get_card(card_id)
-		if card != null and ResourceLoader.exists(card.miniature_path):
-			draw_texture_rect(load(card.miniature_path) as Texture2D, rect, false)
+		var framed_path := FRAMED_CARD_PATH % card_id
+		if ResourceLoader.exists(framed_path):
+			draw_texture_rect(load(framed_path) as Texture2D, rect, false)
+		elif card != null and ResourceLoader.exists(card.miniature_path):
+			draw_texture_rect(load(card.miniature_path) as Texture2D, Rect2(rect.position + Vector2(4, 2), Vector2(24, 24)), false)
 		else:
 			draw_rect(rect, Color("293d4b"), true)
 			draw_rect(rect, Color("758596"), false)
 		if card != null:
-			_draw_attribute(card.attribute, rect.position)
-			_draw_requirement(summon_rules.card_tribute_requirement(card_id, card_database), rect.position + Vector2(24, 0))
+			_draw_duel_miniature_attribute(card.attribute, rect.position + Vector2(24, 0))
+			_draw_duel_miniature_requirement(summon_rules.card_tribute_requirement(card_id, card_database), rect.position)
 			if card.metadata_1a == 2:
 				var stats := stat_rules.apply_card_modifiers(card.attack, card.defense, card.metadata_1a, card.card_type, duel_state.terrain, 0)
 				_draw_text("%02d" % mini(int(stats.attack) / 100, 99), rect.position + Vector2(0, 31), 4, PAPER)
 				_draw_text("%02d" % mini(int(stats.defense) / 100, 99), rect.position + Vector2(16, 31), 4, PAPER)
+
+func _draw_duel_miniature_attribute(attribute: int, at: Vector2) -> void:
+	if attribute < 1 or attribute > 11: return
+	var path := MINIATURE_ATTRIBUTE_PATH % attribute
+	if ResourceLoader.exists(path):
+		draw_texture_rect(load(path) as Texture2D, Rect2(at, Vector2(8, 8)), false)
+
+func _draw_duel_miniature_requirement(requirement: int, at: Vector2) -> void:
+	if requirement < 1 or requirement > 3: return
+	var path := MINIATURE_REQUIREMENT_PATH % requirement
+	if ResourceLoader.exists(path):
+		draw_texture_rect(load(path) as Texture2D, Rect2(at, Vector2(8, 8)), false)
 
 func _draw_effect_cards_overlay() -> void:
 	var count := mini(effect_card_overlay.size(), 3)
