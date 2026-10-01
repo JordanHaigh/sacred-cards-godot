@@ -112,7 +112,7 @@ func _render_rows() -> void:
 		var localized_name := card_database.get_localized_card_name(card_id, language_id) if definition != null and card_database != null else "UNKNOWN CARD"
 		var name_glyph_limit := 22 if deck_view else 18
 		var title := localized_name.left(name_glyph_limit)
-		row_panel.add_child(_pixel_text("%04d  %s" % [card_id, title.to_upper()], Vector2(29, 6), GOLD if picked else PAPER, 6))
+		row_panel.add_child(_pixel_text("%04d  %s" % [card_id, title], Vector2(29, 6), GOLD if picked else PAPER, 6))
 		if definition != null:
 			var detail_size := 8 if detail_mode == DeckBuilderGraphics.DETAIL_STARS else 5
 			row_panel.add_child(_pixel_text(_detail_for_card(definition), Vector2(29, 14), Color("c4b68e"), detail_size))
