@@ -482,7 +482,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		match event.keycode:
 			KEY_ESCAPE:
 				if screen == "deck_hub": _handle_deck_hub_buttons(DeckManagement.BUTTON_B)
-				elif screen == "player_status": _show("deck_hub")
+				elif screen == "player_status": _leave_player_status()
 				elif screen == "card_detail": _close_card_detail()
 				elif screen == "shop": _handle_shop_escape()
 				elif screen == "deck": _handle_deck_builder_key(2)
@@ -561,7 +561,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 				if screen == "title":
 					if title_has_save: _return_to_continue_title()
 				elif screen == "deck_hub": _handle_deck_hub_buttons(DeckManagement.BUTTON_B)
-				elif screen == "player_status": _show("deck_hub")
+				elif screen == "player_status": _leave_player_status()
 				elif screen == "deck": _handle_deck_builder_key(2)
 				else: _confirm()
 
@@ -2330,6 +2330,11 @@ func _enter_deck_hub() -> void:
 func _leave_deck_hub() -> void:
 	in_deck_hub_flow = false
 	_show(deck_hub_return_screen)
+
+func _leave_player_status() -> void:
+	if audio_dispatch != null:
+		audio_dispatch.play_game_audio(56)
+	_show("deck_hub")
 
 func _confirm() -> void:
 	match screen:
