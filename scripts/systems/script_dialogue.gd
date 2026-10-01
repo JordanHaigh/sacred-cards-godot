@@ -10,6 +10,7 @@ signal dialogue_finished
 
 const PIXEL_TEXT_SCRIPT := preload("res://scripts/ui/pixel_text.gd")
 const ADVANCE_MASK := 0x103
+const NATIVE_ASCII_WHITELIST := "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz !\"%',-.:;?"
 const GLYPH_NEXT := [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 55]
 const CHOICE_LINE_POSITIONS := [28, 28, 0, 0]
 
@@ -55,18 +56,19 @@ func tick_wait_cursor() -> void:
 
 func write_plain_token(token: Dictionary) -> bool:
 	var text := String(token.get("text", ""))
-	var supported := true
 	for character in text:
 		var codepoint := character.unicode_at(0)
+		if codepoint < 0x80 and not NATIVE_ASCII_WHITELIST.contains(character):
+			# ScriptWriteGlyph delegates unsupported ASCII to a native helper and
+			# returns without advancing the source cursor. Stop this token here.
+			return false
 		var glyph := int(glyph_codes.get(codepoint, -1))
-		if glyph < 0:
-			supported = false
-			continue
+		if glyph < 0: return false
+		state.speaking = true
+		state.dirty = true
 		glyph_requested.emit(glyph, int(state.get("glyph_position", 0)), false)
 		_advance_glyph()
-	state.speaking = true
-	state.dirty = true
-	return supported
+	return true
 
 func write_player_name() -> bool:
 	return _write_embedded_text(player_name, int(state.get("embedded_text_index", 0)), true)
