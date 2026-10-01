@@ -4,6 +4,7 @@ extends RefCounted
 
 const ATTRIBUTE_ICON_PATH := "res://art/ui/shop/attribute-%02d.png"
 const REQUIREMENT_ICON_PATH := "res://art/ui/shop/requirement-%d.png"
+const SELECTION_PIECE_SPACING := 30
 const SCROLLBAR_TRAVEL := 127
 
 var card_database: CardDatabase
@@ -36,3 +37,13 @@ func selection_rect(selected_index: int, visible_start: int, view_width: int = 7
 	var column := posmod(slot, view_width)
 	var row := floori(float(slot) / float(view_width))
 	return Rect2(Vector2(6 + column * 32, 2 + row * 32), Vector2(28, 28))
+
+func selection_pieces(at: Vector2) -> Array[Dictionary]:
+	var pieces: Array[Dictionary] = []
+	for index in range(4):
+		pieces.append({
+			"position": at + Vector2((index % 2) * SELECTION_PIECE_SPACING, (index / 2) * SELECTION_PIECE_SPACING),
+			"flip_h": (index & 1) != 0,
+			"flip_v": (index & 2) != 0,
+		})
+	return pieces

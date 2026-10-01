@@ -7,6 +7,7 @@ const PIXEL_TEXT_SCRIPT := preload("res://scripts/ui/pixel_text.gd")
 const SHOP_GRAPHICS_SCRIPT := preload("res://scripts/ported/shop_graphics.gd")
 const SUMMON_RULES_SCRIPT := preload("res://scripts/systems/summon_rules.gd")
 const FRAMED_MINIATURE_PATH := "res://decompiled/build/assets/cards/%04d.framed.png"
+const SELECTION_CURSOR_PATH := "res://art/ui/shop/selection-cursor.png"
 const GOLD := Color("ffdc77")
 const PAPER := Color("f5e6c3")
 
@@ -124,7 +125,7 @@ func _render() -> void:
 				add_child(miniature)
 				_draw_miniature_overlays(card_id, at)
 			if inventory_index == selected_index:
-				_add_frame(Rect2(at - Vector2(2, 2), Vector2(28, 28)))
+				_draw_selection_cursor(at)
 			var pick := Button.new()
 			pick.position = at - Vector2(4, 4)
 			pick.size = Vector2(32, 32)
@@ -147,6 +148,21 @@ func _draw_miniature_overlays(card_id: int, at: Vector2) -> void:
 	if int(layers.get("attack_value", -1)) >= 0:
 		_add_text("%02d" % int(layers.attack_value), at + Vector2(0, 15), GOLD, 4)
 		_add_text("%02d" % int(layers.defense_value), at + Vector2(14, 15), GOLD, 4)
+
+func _draw_selection_cursor(at: Vector2) -> void:
+	if not ResourceLoader.exists(SELECTION_CURSOR_PATH):
+		push_warning("Missing recovered shop selector: %s" % SELECTION_CURSOR_PATH)
+		return
+	var texture := load(SELECTION_CURSOR_PATH) as Texture2D
+	for piece in graphics_model.selection_pieces(at):
+		var sprite := Sprite2D.new()
+		sprite.texture = texture
+		sprite.centered = false
+		sprite.position = piece.position
+		sprite.flip_h = piece.flip_h
+		sprite.flip_v = piece.flip_v
+		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		add_child(sprite)
 
 func _add_icon(path: String, at: Vector2) -> void:
 	var icon := TextureRect.new()
@@ -234,18 +250,6 @@ func _add_text(value: String, at: Vector2, color: Color, nominal_size: int) -> v
 	var factor := float(nominal_size) / 8.0
 	label.scale = Vector2(factor, factor)
 	add_child(label)
-
-func _add_frame(rect: Rect2) -> void:
-	var frame := Panel.new()
-	frame.position = rect.position
-	frame.size = rect.size
-	var style := StyleBoxFlat.new()
-	style.bg_color = Color.TRANSPARENT
-	style.border_color = GOLD
-	style.set_border_width_all(1)
-	frame.add_theme_stylebox_override("panel", style)
-	frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(frame)
 
 func _add_panel(rect: Rect2, color: Color) -> void:
 	var panel := Panel.new()
