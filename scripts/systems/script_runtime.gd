@@ -14,6 +14,7 @@ signal token_processed(node_id: StringName, token_index: int, token: Dictionary)
 
 const COMMANDS_SCRIPT := preload("res://scripts/systems/script_commands.gd")
 const DIALOGUE_SCRIPT := preload("res://scripts/systems/script_dialogue.gd")
+const TEXT_RULES_SCRIPT := preload("res://scripts/systems/text_rules.gd")
 const BLINK_DURATIONS := [50, 1, 1, 80, 1, 1, 2, 1, 1, 60, 1, 1, 70, 1, 1, 50, 1, 1, 50, 1, 1, 60, 1, 1, 70, 1, 1, 65, 1, 1]
 const BLINK_FRAMES := [0, 2, 1, 0, 2, 1, 0, 2, 1, 0, 2, 1, 0, 2, 1, 0, 2, 1, 0, 2, 1, 0, 2, 1, 0, 2, 1, 0, 2, 1]
 const MOUTH_DURATIONS := [2, 3, 2, 3]
@@ -142,6 +143,7 @@ func _physics_process(_delta: float) -> void:
 		&"text":
 			state.plain_text = String(token.get("text", ""))
 			state.plain_text_index = 0
+			state.plain_glyph_indices = _decode_plain_glyph_indices(token)
 			state.mode = &"plain_text"
 			_write_next_plain_character()
 		&"language":
@@ -193,16 +195,20 @@ func _write_next_plain_character() -> void:
 		state.mode = &"text"
 		state.plain_text = ""
 		state.plain_text_index = 0
+		state.plain_glyph_indices = PackedInt32Array()
 		return
 	var character := text.substr(character_index, 1)
 	var glyph_position := int(state.glyph_position)
-	if dialogue == null or not dialogue.write_plain_character(character):
+	var glyph_indices: PackedInt32Array = state.get("plain_glyph_indices", PackedInt32Array())
+	var native_glyph_index := int(glyph_indices[character_index]) if character_index < glyph_indices.size() else -1
+	if dialogue == null or not dialogue.write_plain_character(character, native_glyph_index):
 		# Keep the native unsupported-ASCII fallback explicit. The recovered
 		# helper's behavior is outside this decoder, so discard the rest of this
 		# decoded token instead of stalling the graph interpreter.
 		state.mode = &"text"
 		state.plain_text = ""
 		state.plain_text_index = 0
+		state.plain_glyph_indices = PackedInt32Array()
 		return
 	state.plain_text_index = character_index + 1
 	text_requested.emit(character, int(context.get("language_segment", 0)), glyph_position)
@@ -210,6 +216,29 @@ func _write_next_plain_character() -> void:
 		state.mode = &"text"
 		state.plain_text = ""
 		state.plain_text_index = 0
+		state.plain_glyph_indices = PackedInt32Array()
+
+func _decode_plain_glyph_indices(token: Dictionary) -> PackedInt32Array:
+	var text := String(token.get("text", ""))
+	var raw := PackedByteArray.hex_decode(String(token.get("raw", "")))
+	var result := PackedInt32Array()
+	var byte_index := 0
+	var character_index := 0
+	while byte_index < raw.size() and character_index < text.length():
+		if (int(raw[byte_index]) & 0x80) != 0:
+			if byte_index + 1 >= raw.size(): break
+			var encoded_code := (int(raw[byte_index]) << 8) | int(raw[byte_index + 1])
+			result.append(TEXT_RULES_SCRIPT.bitmap_glyph_index(encoded_code))
+			byte_index += 2
+		else:
+			var codepoint := text.substr(character_index, 1).unicode_at(0)
+			var ascii_glyph := -1 if dialogue == null else int(dialogue.glyph_codes.get(codepoint, -1))
+			result.append(ascii_glyph)
+			byte_index += 1
+		character_index += 1
+	if result.size() != text.length():
+		result.clear()
+	return result
 
 func _follow_branch(node: SceneScriptNode) -> void:
 	var selected := node.next_if_zero if int(state.branch_flags) == 0 else node.next_if_nonzero
