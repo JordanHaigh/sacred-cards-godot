@@ -2369,7 +2369,8 @@ func _draw_card_detail() -> void:
 		_text("CARD DATA UNAVAILABLE", Vector2(20, 70), 8, PAPER)
 		return
 	var presentation: CardPresentation = CARD_PRESENTATION_SCRIPT.new()
-	presentation.present(card, card_art, progression.duelist_level if progression != null else -1, language_id, card_database.get_localized_card_name(card.id, language_id), card_database.get_localized_card_description(card.id, language_id))
+	var title_record := card_database.get_localized_card_name_record(card.id, language_id)
+	presentation.present(card, card_art, progression.duelist_level if progression != null else -1, language_id, str(title_record.get("text", card.name)), card_database.get_localized_card_description(card.id, language_id), title_record.get("glyph_indices", PackedInt32Array()))
 	screen_root.add_child(presentation)
 
 func _card_detail_page(direction: int) -> void:

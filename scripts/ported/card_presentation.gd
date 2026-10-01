@@ -16,17 +16,19 @@ var definition: CardDefinition
 var card_art: CardArt
 var language_id := 0
 var localized_title := ""
+var localized_title_glyph_indices := PackedInt32Array()
 var pages: Array[String] = []
 var page_index := 0
 var description_locked := false
 var card_texture: Texture2D
 var page_lines: Array[PixelText] = []
 
-func present(card: CardDefinition, art_renderer: CardArt = null, duelist_level: int = -1, selected_language: int = 0, card_name: String = "", card_description: String = "") -> void:
+func present(card: CardDefinition, art_renderer: CardArt = null, duelist_level: int = -1, selected_language: int = 0, card_name: String = "", card_description: String = "", card_name_glyph_indices: PackedInt32Array = PackedInt32Array()) -> void:
 	definition = card
 	card_art = art_renderer
 	language_id = clampi(selected_language, 0, 5)
 	localized_title = card_name if not card_name.is_empty() else card.name
+	localized_title_glyph_indices = card_name_glyph_indices.duplicate()
 	description_locked = duelist_level >= 0 and duelist_level < card.cost
 	var selected_description := card_description if not card_description.is_empty() else card.description
 	pages = [_load_locked_description()] if description_locked else _parse_description_pages(selected_description)
@@ -74,7 +76,7 @@ func _build_view() -> void:
 		_add_level_stars()
 		_add_full_card_icon(FULL_CARD_TYPE_PATH % definition.card_type, Vector2(16, 128))
 		_add_full_card_icon(FULL_CARD_SUMMON_PATH % definition.attribute, Vector2(32, 128))
-		add_child(_text_label(_full_card_title(), Vector2(8, 7), Vector2(96, 9), 8, GOLD))
+		add_child(_text_label(_full_card_title(), Vector2(8, 7), Vector2(96, 9), 8, GOLD, _full_card_title_glyph_indices()))
 		add_child(_text_label("%05d" % definition.attack, Vector2(56, 128), Vector2(40, 8), 8, PAPER))
 		add_child(_text_label("%05d" % definition.defense, Vector2(56, 136), Vector2(40, 8), 8, PAPER))
 		add_child(_text_label(definition.type_name, Vector2(165, 24), Vector2(74, 8), 6, PAPER))
@@ -146,6 +148,11 @@ func _full_card_title() -> String:
 		return source_name.substr(0, 1) + " " + source_name.substr(5, 8)
 	return source_name.substr(0, 10)
 
+func _full_card_title_glyph_indices() -> PackedInt32Array:
+	if definition == null or (language_id == 0 and definition.id in [364, 670]):
+		return PackedInt32Array()
+	return localized_title_glyph_indices.slice(0, mini(10, localized_title_glyph_indices.size()))
+
 func _wrap_locked_description(source: String) -> Array[String]:
 	var lines: Array[String] = []
 	for offset in range(0, source.length(), 12):
@@ -182,11 +189,13 @@ func _parse_description_pages(source: String) -> Array[String]:
 		result.append(str(sections[page_index_value]) if page_index_value < sections.size() else "")
 	return result
 
-func _text_label(value: String, at: Vector2, dimensions: Vector2, font_size: int, color: Color) -> PixelText:
+func _text_label(value: String, at: Vector2, dimensions: Vector2, font_size: int, color: Color, glyph_indices: PackedInt32Array = PackedInt32Array()) -> PixelText:
 	var label: PixelText = PIXEL_TEXT_SCRIPT.new()
 	label.position = at
 	label.size = dimensions
 	label.text = value
+	if not glyph_indices.is_empty():
+		label.set_glyph_indices(glyph_indices)
 	label.font_color = color
 	var text_scale := float(font_size) / 8.0
 	label.scale = Vector2(text_scale, text_scale)
