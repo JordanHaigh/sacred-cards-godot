@@ -10,6 +10,10 @@ const ROW_STEP := 21.0
 const MINIATURE_BACK_PATH := "res://decompiled/build/assets/duel/miniature-back.png"
 const MINIATURE_ATTRIBUTE_PATH := "res://decompiled/build/assets/duel/miniature-attribute-%d.png"
 const MINIATURE_REQUIREMENT_PATH := "res://decompiled/build/assets/duel/miniature-requirement-%d.png"
+const MINIATURE_HIDDEN_PATH := "res://decompiled/build/assets/duel/miniature-hidden.png"
+const MINIATURE_USED_PATH := "res://decompiled/build/assets/duel/miniature-used.png"
+const MINIATURE_STAGE_PATH := "res://decompiled/build/assets/duel/stage-%d.png"
+const MINIATURE_STAGE_MINUS_PATH := "res://decompiled/build/assets/duel/stage-minus.png"
 const FRAMED_CARD_PATH := "res://decompiled/build/assets/cards/%04d.framed.png"
 const GOLD := Color("ffdc77")
 const PAPER := Color("f5e6c3")
@@ -181,12 +185,14 @@ func _draw_grid() -> void:
 				if row < 2 and visibility_hidden:
 					if ResourceLoader.exists(MINIATURE_BACK_PATH):
 						draw_texture_rect(load(MINIATURE_BACK_PATH) as Texture2D, Rect2(rect.position - Vector2(4, 4), Vector2(32, 32)), false)
+					if row == 1 and (flags & 1) != 0:
+						_draw_miniature_badge(MINIATURE_USED_PATH, rect.position + Vector2(20, 20))
 				else:
-					_draw_card_miniature(card_id, rect, row, int(cell.get("stage", 0)))
+					_draw_card_miniature(card_id, rect, row, int(cell.get("stage", 0)), flags)
 			if cursor == Vector2i(column, row):
 				draw_rect(rect.grow(2), GOLD, false, 2.0)
 
-func _draw_card_miniature(card_id: int, rect: Rect2, row: int, stage: int) -> void:
+func _draw_card_miniature(card_id: int, rect: Rect2, row: int, stage: int, flags: int) -> void:
 	var card := card_database.get_card(card_id)
 	if card == null: return
 	var framed_path := FRAMED_CARD_PATH % card_id
@@ -198,9 +204,7 @@ func _draw_card_miniature(card_id: int, rect: Rect2, row: int, stage: int) -> vo
 	else:
 		draw_rect(framed_rect, Color("26323a"), true)
 	if row == 1 or row == 2:
-		var stage_label := _stage_label(stage)
-		if not stage_label.is_empty():
-			_draw_text(stage_label, rect.position + Vector2(1, 6), 5, GOLD)
+		_draw_stage_badges(stage, framed_rect.position + Vector2(0, 24))
 	if card.metadata_1a == 2 and (row == 1 or row == 2 or row == 4):
 		var stats := stat_rules.apply_card_modifiers(card.attack, card.defense, card.metadata_1a, card.card_type, duel_state.terrain, stage)
 		_draw_text("%02d" % mini(int(stats.attack) / 100, 99), rect.position + Vector2(0, 21), 5, PAPER)
@@ -213,18 +217,33 @@ func _draw_card_miniature(card_id: int, rect: Rect2, row: int, stage: int) -> vo
 		_draw_duel_miniature_requirement(summon_rules.card_tribute_requirement(card_id, card_database), framed_rect.position)
 	elif row == 1 or row == 2:
 		_draw_duel_miniature_requirement(summon_rules.card_tribute_requirement(card_id, card_database), framed_rect.position)
+	if row == 2 and (flags & 1) != 0:
+		_draw_miniature_badge(MINIATURE_USED_PATH, framed_rect.position + Vector2(24, 24))
+	if (row == 1 or row == 4) and (flags & 1) != 0:
+		_draw_miniature_badge(MINIATURE_USED_PATH, framed_rect.position + Vector2(24, 24))
+	if row >= 2 and (flags & 16) == 0:
+		_draw_miniature_badge(MINIATURE_HIDDEN_PATH, framed_rect.position + Vector2(16, 24))
 
-func _stage_label(stage: int) -> String:
+func _draw_stage_badges(stage: int, at: Vector2) -> void:
+	# The 16-tile source row stride puts C offsets 0xC00..0xCC0 in
+	# the 32x32 sprite's bottom row at x=0, 8, 16 and 24.
 	var signed_stage := stage & 0xff
 	if signed_stage >= 128:
 		signed_stage -= 256
 	if signed_stage == 0:
-		return ""
-	if signed_stage == -128:
-		return "-"
+		return
+	var magnitude := abs(signed_stage)
 	if signed_stage < 0:
-		return "-%d" % mini(-signed_stage, 10)
-	return str(mini(signed_stage, 10))
+		_draw_miniature_badge(MINIATURE_STAGE_MINUS_PATH, at)
+		if magnitude == 128:
+			return
+		at.x += 8
+	var stage_path := MINIATURE_STAGE_PATH % mini(magnitude, 10)
+	_draw_miniature_badge(stage_path, at)
+
+func _draw_miniature_badge(path: String, at: Vector2) -> void:
+	if ResourceLoader.exists(path):
+		draw_texture_rect(load(path) as Texture2D, Rect2(at, Vector2(8, 8)), false)
 
 func _draw_details() -> void:
 	var panel_rect := Rect2(148, 23, 88, 110)
