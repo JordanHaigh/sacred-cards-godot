@@ -8,6 +8,7 @@ const FRAME_BYTES := 1024 # 4 x 4 tiles.
 const MINI_BYTES := 1024
 const PADDED_SURFACE_BYTES := 4096 # 16-tile row stride, four rows addressed.
 const CARD_ASSET_DIRECTORY := "res://decompiled/build/assets/cards"
+const FULL_CARD_PALETTE_DIRECTORY := "res://decompiled/build/assets/full-cards"
 
 var _texture_cache: Dictionary[int, Texture2D] = {}
 
@@ -21,12 +22,14 @@ func load_card_texture(card_id: int) -> Texture2D:
 		return null
 	var stem := "%04d" % card_id
 	var encoded_path := "%s/%s.delta.bin" % [CARD_ASSET_DIRECTORY, stem]
-	var palette_path := "%s/%s.pal" % [CARD_ASSET_DIRECTORY, stem]
+	# The full-card viewer composes art and frame palettes into a 256-entry
+	# palette. The compact palette in assets/cards cannot color every art index.
+	var palette_path := "%s/%s.pal" % [FULL_CARD_PALETTE_DIRECTORY, stem]
 	if not FileAccess.file_exists(encoded_path) or not FileAccess.file_exists(palette_path):
 		return null
 	var pixels := undo_row_deltas(FileAccess.get_file_as_bytes(encoded_path))
 	var palette := FileAccess.get_file_as_bytes(palette_path)
-	if pixels.size() != LARGE_ART_BYTES or palette.size() < 128:
+	if pixels.size() != LARGE_ART_BYTES or palette.size() != 512:
 		return null
 	var image := Image.create(80, 80, false, Image.FORMAT_RGBA8)
 	for y in range(80):
