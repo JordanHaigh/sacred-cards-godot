@@ -8,6 +8,7 @@ const SHOP_GRAPHICS_SCRIPT := preload("res://scripts/ported/shop_graphics.gd")
 const SUMMON_RULES_SCRIPT := preload("res://scripts/systems/summon_rules.gd")
 const FRAMED_MINIATURE_PATH := "res://decompiled/build/assets/cards/%04d.framed.png"
 const SELECTION_CURSOR_PATH := "res://art/ui/shop/selection-cursor.png"
+const SCROLLBAR_THUMB_PATH := "res://art/ui/shop/scrollbar-thumb.png"
 const GOLD := Color("ffdc77")
 const PAPER := Color("f5e6c3")
 
@@ -175,17 +176,14 @@ func _add_icon(path: String, at: Vector2) -> void:
 	add_child(icon)
 
 func _draw_scrollbar() -> void:
-	var track := ColorRect.new()
-	track.position = Vector2(234, 8)
-	track.size = Vector2(2, 128)
-	track.color = Color("51452f")
-	track.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(track)
-	var thumb := ColorRect.new()
-	thumb.position = Vector2(233, 8 + graphics_model.scrollbar_y(selected_index, visible_cards.size()))
-	thumb.size = Vector2(4, 8)
-	thumb.color = GOLD
-	thumb.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if not ResourceLoader.exists(SCROLLBAR_THUMB_PATH):
+		push_warning("Missing recovered shop scrollbar thumb: %s" % SCROLLBAR_THUMB_PATH)
+		return
+	var thumb := Sprite2D.new()
+	thumb.texture = load(SCROLLBAR_THUMB_PATH) as Texture2D
+	thumb.centered = false
+	thumb.position = Vector2(0, graphics_model.scrollbar_y(selected_index, visible_cards.size()))
+	thumb.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	add_child(thumb)
 
 func _draw_selected_summary() -> void:
