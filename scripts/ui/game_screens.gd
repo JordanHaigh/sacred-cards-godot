@@ -111,6 +111,7 @@ var pre_duel_menu: PreDuelMenuState
 var pre_duel_display: PreDuelDisplay
 var pre_duel_opponent_id := 0
 var _pre_duel_frame_input = FRAME_INPUT_SCRIPT.new()
+var _pre_duel_pending_codes: Array[int] = []
 var _deck_frame_input = FRAME_INPUT_SCRIPT.new()
 var opponent_database: OpponentDatabase
 var duel_flow: DuelFlow
@@ -444,19 +445,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		if screen == "pre_duel" and pre_duel_menu != null:
 			var pre_duel_code := _pre_duel_code_for_key(event.keycode)
 			if pre_duel_code != 0:
-				if pre_duel_code not in [16, 32, 64, 128] and _pre_duel_direction_just_pressed():
-					# ReadCollectionMenuInput lets a newly repeated direction override
-					# another simultaneous key in the same frame.
-					get_viewport().set_input_as_handled()
-					return
-				# Direction presses are emitted once by FrameInput's immediate-repeat
-				# edge; dispatching this event too would move twice on the first frame.
-				if pre_duel_code in [16, 32, 64, 128]:
-					get_viewport().set_input_as_handled()
-					return
-				var result := process_pre_duel_code(pre_duel_code, pre_duel_opponent_id)
-				if result.has("reason"): _toast(str(result.reason))
-				_build_screen()
+				_pre_duel_pending_codes.append(pre_duel_code)
 				get_viewport().set_input_as_handled()
 				return
 		if screen == "duel" and active_duel_state != null:
@@ -1262,6 +1251,7 @@ func initialize_pre_duel_menu(wagerable_ids: Array[int], special_wager_ids: Arra
 func show_pre_duel_menu(opponent_id: int, wagerable_ids: Array[int], special_wager_ids: Array[int]) -> void:
 	pre_duel_opponent_id = opponent_id
 	_pre_duel_frame_input.reset()
+	_pre_duel_pending_codes.clear()
 	initialize_pre_duel_menu(wagerable_ids, special_wager_ids)
 	_show("pre_duel")
 
@@ -1272,15 +1262,16 @@ func _process_pre_duel_direction_repeat() -> void:
 	var code := 0
 	if _pre_duel_frame_input.was_repeated(&"ui_down"): code = 128
 	elif _pre_duel_frame_input.was_repeated(&"ui_up"): code = 64
-	elif popup_open and _pre_duel_frame_input.was_repeated(&"ui_left"): code = 32
-	elif popup_open and _pre_duel_frame_input.was_repeated(&"ui_right"): code = 16
+	elif _pre_duel_frame_input.was_repeated(&"ui_left"): code = 32
+	elif _pre_duel_frame_input.was_repeated(&"ui_right"): code = 16
+	if code == 0 and not _pre_duel_pending_codes.is_empty():
+		for pending_code in _pre_duel_pending_codes:
+			code = maxi(code, pending_code)
+	_pre_duel_pending_codes.clear()
 	if code == 0: return
 	var result := process_pre_duel_code(code, pre_duel_opponent_id)
 	if result.has("reason"): _toast(str(result.reason))
 	_build_screen()
-
-func _pre_duel_direction_just_pressed() -> bool:
-	return Input.is_action_just_pressed(&"ui_up") or Input.is_action_just_pressed(&"ui_down") or Input.is_action_just_pressed(&"ui_left") or Input.is_action_just_pressed(&"ui_right")
 
 func _process_deck_builder_direction_repeat() -> void:
 	var popup_open := deck_builder_menu.popup != DeckBuilderMenu.PopupKind.NONE
@@ -1330,6 +1321,8 @@ func process_pre_duel_code(code: int, opponent_id: int) -> Dictionary:
 			var popup_result := pre_duel_menu.confirm()
 			if bool(popup_result.get("apply_sort", false)): pre_duel_menu.apply_sort(card_sorter)
 			return _handle_pre_duel_result(popup_result, opponent_id)
+		return {"accepted": false}
+	if code in [16, 32]:
 		return {"accepted": false}
 	match code:
 		64: pre_duel_menu.move(-1)
