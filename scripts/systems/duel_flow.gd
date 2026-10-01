@@ -26,6 +26,10 @@ func _init() -> void:
 
 func initialize_duel(duel: SacredDuelState, player_deck: Array[int], opponent_deck: Array[int], terrain: int, player_lp: int, opponent_lp: int, random: SacredRandom) -> void:
 	for side in duel.sides:
+		# InitializeDuelBoard clears native side-state bits 0..2 while
+		# preserving the higher persistent bits in the packed flag byte.
+		side.duel_flags &= 0xF8
+		side.attack_restriction_turns = 0
 		side.deck.clear()
 		side.deck_remaining_count = 0
 		side.clear_hand()
