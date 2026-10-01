@@ -387,7 +387,7 @@ func _obelisk(state: SacredDuelState, active: int, suppressed: bool) -> Dictiona
 	return _shown(832, 86, suppressed)
 
 func _slifer(state: SacredDuelState, active: int, selected: DuelCardSlot, suppressed: bool) -> Dictionary:
-	var hand_size := state.side(1 - active).hand_count()
+	var hand_size := state.side(active).hand_count()
 	for _card in range(hand_size):
 		for _stage in range(3): _raise(selected)
 	return _shown(833, 87, suppressed)
