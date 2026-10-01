@@ -64,20 +64,19 @@ func tick_wait_cursor() -> void:
 	elif wait_counter == 15: glyph_requested.emit(0x4081, int(state.get("glyph_position", 0)), false)
 	wait_counter = 0 if wait_counter == 29 else (wait_counter + 1) & 0xFFFF
 
-func write_plain_token(token: Dictionary) -> bool:
-	var text := String(token.get("text", ""))
-	for character in text:
-		var codepoint := character.unicode_at(0)
-		if codepoint < 0x80 and not NATIVE_ASCII_WHITELIST.contains(character):
-			# ScriptWriteGlyph delegates unsupported ASCII to a native helper and
-			# returns without advancing the source cursor. Stop this token here.
-			return false
-		var glyph := int(glyph_codes.get(codepoint, -1))
-		if glyph < 0: return false
-		state.speaking = true
-		state.dirty = true
-		glyph_requested.emit(glyph, int(state.get("glyph_position", 0)), false)
-		_advance_glyph()
+func write_plain_character(character: String) -> bool:
+	if character.is_empty(): return false
+	var codepoint := character.unicode_at(0)
+	if codepoint < 0x80 and not NATIVE_ASCII_WHITELIST.contains(character):
+		# ScriptWriteGlyph delegates unsupported ASCII to a native helper and
+		# returns without advancing the source cursor.
+		return false
+	var glyph := int(glyph_codes.get(codepoint, unicode_glyph_indices.get(codepoint, -1)))
+	if glyph < 0: return false
+	state.speaking = true
+	state.dirty = true
+	glyph_requested.emit(glyph, int(state.get("glyph_position", 0)), false)
+	_advance_glyph()
 	return true
 
 func write_player_name() -> bool:

@@ -104,6 +104,10 @@ func _physics_process(_delta: float) -> void:
 	if int(state.wait_frames) > 0:
 		state.wait_frames = int(state.wait_frames) - 1
 		return
+	if state.mode == &"plain_text":
+		_write_next_plain_character()
+		_update_portrait()
+		return
 	if state.mode in [&"wait_input", &"binary_choice", &"free_choice"]:
 		if state.mode == &"wait_input": dialogue.tick_wait_cursor()
 		_update_portrait()
@@ -134,11 +138,10 @@ func _physics_process(_delta: float) -> void:
 		&"terminal_node":
 			_finish()
 		&"text":
-			state.speaking = true
-			state.dirty = true
-			text_requested.emit(String(token.get("text", "")), int(context.language_segment), int(state.glyph_position))
-			if dialogue != null: dialogue.write_plain_token(token)
-			else: state.glyph_position += String(token.get("text", "")).length()
+			state.plain_text = String(token.get("text", ""))
+			state.plain_text_index = 0
+			state.mode = &"plain_text"
+			_write_next_plain_character()
 		&"language":
 			_skip_to_language_segment(node.tokens, int(token.get("marker", 6)))
 		&"command":
@@ -180,6 +183,31 @@ func _physics_process(_delta: float) -> void:
 		_: pass
 	token_processed.emit(node_id, token_index - 1, token)
 	_update_portrait()
+
+func _write_next_plain_character() -> void:
+	var text := String(state.get("plain_text", ""))
+	var character_index := int(state.get("plain_text_index", 0))
+	if character_index >= text.length():
+		state.mode = &"text"
+		state.plain_text = ""
+		state.plain_text_index = 0
+		return
+	var character := text.substr(character_index, 1)
+	var glyph_position := int(state.glyph_position)
+	if dialogue == null or not dialogue.write_plain_character(character):
+		# Keep the native unsupported-ASCII fallback explicit. The recovered
+		# helper's behavior is outside this decoder, so discard the rest of this
+		# decoded token instead of stalling the graph interpreter.
+		state.mode = &"text"
+		state.plain_text = ""
+		state.plain_text_index = 0
+		return
+	state.plain_text_index = character_index + 1
+	text_requested.emit(character, int(context.get("language_segment", 0)), glyph_position)
+	if int(state.plain_text_index) >= text.length():
+		state.mode = &"text"
+		state.plain_text = ""
+		state.plain_text_index = 0
 
 func _follow_branch(node: SceneScriptNode) -> void:
 	var selected := node.next_if_zero if int(state.branch_flags) == 0 else node.next_if_nonzero
