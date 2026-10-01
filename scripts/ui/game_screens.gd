@@ -1947,7 +1947,7 @@ func _draw_deck_builder_popup() -> void:
 func _draw_deck_hub() -> void:
 	_overlay_rect(Rect2(30, 23, 180, 116), Color(0.05, 0.07, 0.07, 0.94), Color("c5aa6d"))
 	_text("DECK MANAGEMENT", Vector2(56, 31), 8, GOLD)
-	var entries := ["PLAYER STATUS", "COLLECTION", "EDIT DECK"]
+	var entries := [deck_management.localized_text("hub_status", language_id), deck_management.localized_text("hub_trunk", language_id), deck_management.localized_text("hub_deck", language_id)]
 	for index in range(entries.size()):
 		var color := GOLD if index == deck_management.choice else PAPER
 		_text(("> " if index == deck_management.choice else "  ") + entries[index], Vector2(54, 56 + index * 21), 8, color)
@@ -1962,11 +1962,11 @@ func _draw_player_status() -> void:
 	var status := deck_management.player_status(current_save)
 	_overlay_rect(Rect2(18, 13, 204, 134), Color(0.05, 0.07, 0.07, 0.94), Color("c5aa6d"))
 	_text("PLAYER STATUS", Vector2(72, 21), 8, GOLD)
-	_text("NAME  %s" % str(status.get("name", "")), Vector2(32, 43), 7, PAPER)
-	_text("DUELIST LEVEL  %s" % DeckManagement.native_digit_text(status.get("duelist_level_digits", [])), Vector2(32, 61), 7, PAPER)
-	_text("DECK CAPACITY  %s" % DeckManagement.native_digit_text(status.get("deck_capacity_digits", [])), Vector2(32, 77), 7, PAPER)
+	_text("%s %s" % [deck_management.localized_text("status_name", language_id), str(status.get("name", ""))], Vector2(32, 43), 7, PAPER)
+	_text("%s %s" % [deck_management.localized_text("status_level", language_id), DeckManagement.native_digit_text(status.get("duelist_level_digits", []))], Vector2(32, 61), 7, PAPER)
+	_text("%s %s" % [deck_management.localized_text("status_capacity", language_id), DeckManagement.native_digit_text(status.get("deck_capacity_digits", []))], Vector2(32, 77), 7, PAPER)
 	_text("RANK MARKS  %d" % int(status.get("rank_marks", 0)), Vector2(32, 93), 7, PAPER)
-	_text("MONEY  %s" % DeckManagement.native_digit_text(status.get("money_digits", [])), Vector2(32, 109), 7, PAPER)
+	_text("%s %s" % [deck_management.localized_text("status_money", language_id), DeckManagement.native_digit_text(status.get("money_digits", []))], Vector2(32, 109), 7, PAPER)
 	_text("DECK CARDS  %02d / 40" % int(status.get("deck_count", 0)), Vector2(32, 125), 7, PAPER)
 	_text("SPACE RETURN", Vector2(88, 137), 6, GOLD)
 
@@ -2214,10 +2214,10 @@ func _handle_deck_hub_buttons(buttons: int) -> void:
 			_show("deck")
 		DeckManagement.Action.EXIT: _leave_deck_hub()
 		DeckManagement.Action.INVALID_DECK_SIZE:
-			deck_hub_invalid_message = "DECK MUST CONTAIN 40 CARDS"
+			deck_hub_invalid_message = deck_management.localized_text("count_error", language_id).strip_edges()
 			_build_screen()
 		DeckManagement.Action.INVALID_DECK_CAPACITY:
-			deck_hub_invalid_message = "DECK EXCEEDS YOUR CAPACITY"
+			deck_hub_invalid_message = deck_management.localized_text("capacity_error", language_id).strip_edges()
 			_build_screen()
 		DeckManagement.Action.EMPTY_DECK: _toast("Add cards to your deck before editing it.")
 		_: _build_screen()

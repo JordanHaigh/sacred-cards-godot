@@ -11,8 +11,21 @@ const BUTTON_A := 1
 const BUTTON_B := 2
 const BUTTON_UP := 64
 const BUTTON_DOWN := 128
+const TEXT_RECORDS_PATH := "res://decompiled/build/assets/deck-builder/strings.json"
+const TEXT_FILE_BY_KEY := {
+	"count_error": "text/080706B0.bin",
+	"capacity_error": "text/0807082C.bin",
+	"hub_status": "text/080709A8.bin",
+	"hub_trunk": "text/080709F4.bin",
+	"hub_deck": "text/08070A3C.bin",
+	"status_name": "text/0807EEC0.bin",
+	"status_level": "text/0807EEF8.bin",
+	"status_capacity": "text/0807EF7C.bin",
+	"status_money": "text/0807F098.bin",
+}
 
 var choice: int = 0
+var _localized_records: Dictionary = {}
 
 func handle_buttons(buttons: int, deck: Array[int], deck_cost: int, capacity: int) -> Dictionary:
 	var action := Action.NONE
@@ -64,6 +77,33 @@ func player_status(save: PlayerSaveData) -> Dictionary:
 		"money_digits": _native_digits(save.money, 13, true),
 		"deck_count": deck_count,
 	}
+
+func localized_text(key: String, language_id: int = 0) -> String:
+	if _localized_records.is_empty():
+		_load_localized_records()
+	if not _localized_records.has(key):
+		push_error("DeckManagement has no recovered text record for '%s'." % key)
+		return ""
+	var languages: Dictionary = _localized_records[key]
+	var selected := str(clampi(language_id, 0, 5))
+	return str(languages.get(selected, languages.get("0", "")))
+
+func _load_localized_records() -> void:
+	if not FileAccess.file_exists(TEXT_RECORDS_PATH):
+		push_error("Missing recovered deck-builder text data: %s" % TEXT_RECORDS_PATH)
+		return
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(TEXT_RECORDS_PATH))
+	if not parsed is Array:
+		push_error("Recovered deck-builder text data is not an array.")
+		return
+	for row: Variant in parsed:
+		if not row is Dictionary:
+			continue
+		for key: Variant in TEXT_FILE_BY_KEY:
+			if str(row.get("file", "")) == str(TEXT_FILE_BY_KEY[key]):
+				var languages: Variant = row.get("languages", {})
+				if languages is Dictionary:
+					_localized_records[str(key)] = languages
 
 func _native_digits(value: int, digit_count: int, zero_units_when_empty: bool = false) -> Array[int]:
 	# StatusNumber uses decimal divisors and replaces leading zero digits with
