@@ -5,6 +5,7 @@ const PIXEL_TEXT_SCRIPT := preload("res://scripts/ui/pixel_text.gd")
 const LINE_WIDTH := 28
 
 var _glyph_rows: Array = []
+var _glyph_indices: Array[PackedInt32Array] = []
 var _line_controls: Array[PixelText] = []
 
 func _ready() -> void:
@@ -17,6 +18,10 @@ func _ready() -> void:
 		var glyphs: Array[String] = []
 		for _index in range(LINE_WIDTH): glyphs.append(" ")
 		_glyph_rows.append(glyphs)
+		var indices := PackedInt32Array()
+		indices.resize(LINE_WIDTH)
+		indices.fill(-1)
+		_glyph_indices.append(indices)
 	var frame := ColorRect.new()
 	frame.position = Vector2(4, 0)
 	frame.size = Vector2(232, 56)
@@ -48,12 +53,31 @@ func present_text(value: String, glyph_position: int) -> void:
 		var row := 0 if position_index <= LINE_WIDTH else 1
 		var column := position_index - 1 if row == 0 else position_index - LINE_WIDTH - 1
 		_glyph_rows[row][column] = character
+		var indices: PackedInt32Array = _glyph_indices[row]
+		indices[column] = -1
+		_glyph_indices[row] = indices
 		position_index += 1
+	_render_lines()
+
+func present_glyph(glyph_index: int, glyph_position: int) -> void:
+	if glyph_position < 0 or glyph_position > 55:
+		return
+	visible = true
+	var row := 0 if glyph_position < LINE_WIDTH else 1
+	var column := glyph_position if row == 0 else glyph_position - LINE_WIDTH
+	_glyph_rows[row][column] = " "
+	var indices: PackedInt32Array = _glyph_indices[row]
+	indices[column] = glyph_index
+	_glyph_indices[row] = indices
 	_render_lines()
 
 func clear_text() -> void:
 	for row in range(2):
-		for column in range(LINE_WIDTH): _glyph_rows[row][column] = " "
+		var indices: PackedInt32Array = _glyph_indices[row]
+		for column in range(LINE_WIDTH):
+			_glyph_rows[row][column] = " "
+			indices[column] = -1
+		_glyph_indices[row] = indices
 	_render_lines()
 
 func set_window_visible(should_show: bool) -> void:
@@ -66,3 +90,4 @@ func _render_lines() -> void:
 		var value := ""
 		for character in _glyph_rows[row]: value += character
 		_line_controls[row].text = value
+		_line_controls[row].set_glyph_indices(_glyph_indices[row])

@@ -9,6 +9,7 @@ const ASCII_GLYPH_CODES_PATH := "res://resources/ascii_glyph_codes.json"
 
 var unicode_glyphs: Dictionary = {}
 var ascii_glyphs: Dictionary = {}
+var glyph_indices := PackedInt32Array()
 
 @export var text: String = "":
 	set(value):
@@ -23,6 +24,10 @@ var ascii_glyphs: Dictionary = {}
 		use_large_font = value
 		queue_redraw()
 @export var shadowed: bool = true
+
+func set_glyph_indices(indices: PackedInt32Array) -> void:
+	glyph_indices = indices.duplicate()
+	queue_redraw()
 
 func _ready() -> void:
 	ascii_glyphs = load_ascii_glyphs()
@@ -54,7 +59,7 @@ func _draw() -> void:
 	var fallback: int = ascii_glyphs.get(63, 31)
 	for index in range(text.length()):
 		var codepoint := text.unicode_at(index)
-		var glyph: int = ascii_glyphs.get(codepoint, unicode_glyphs.get(codepoint, fallback))
+		var glyph: int = glyph_indices[index] if index < glyph_indices.size() and glyph_indices[index] >= 0 else int(ascii_glyphs.get(codepoint, unicode_glyphs.get(codepoint, fallback)))
 		var source := Rect2((glyph % 32) * 8, (glyph / 32) * glyph_height, 8, glyph_height)
 		var target := Rect2(index * 8, 0, 8, glyph_height)
 		if shadowed:

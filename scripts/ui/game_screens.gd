@@ -11,6 +11,7 @@ const PROGRESSION_SCRIPT = preload("res://scripts/state/player_progression.gd")
 const NEW_GAME_SCRIPT = preload("res://scripts/systems/new_game_state.gd")
 const SAVE_STORAGE_SCRIPT = preload("res://scripts/systems/save_storage.gd")
 const PIXEL_TEXT_SCRIPT = preload("res://scripts/ui/pixel_text.gd")
+const TEXT_RULES_SCRIPT = preload("res://scripts/systems/text_rules.gd")
 const TITLE_MENU_SCRIPT = preload("res://scripts/systems/title_menu_state.gd")
 const PASSWORD_SYSTEM_SCRIPT = preload("res://scripts/systems/password_system.gd")
 const PASSWORD_ENTRY_VIEW_SCRIPT = preload("res://scripts/ui/password_entry_view.gd")
@@ -325,6 +326,7 @@ func _ready() -> void:
 	audio_dispatch.name = "GameAudioDispatch"
 	add_child(audio_dispatch)
 	scene_script_runtime.text_requested.connect(_on_scene_script_text_requested)
+	scene_script_runtime.dialogue_glyph_requested.connect(_on_scene_script_glyph_requested)
 	scene_script_runtime.dialogue_clear_requested.connect(_clear_scene_dialogue_text)
 	scene_script_events.scene_change_requested.connect(func(id: int, variant: int, spawn: int, _rules: bool) -> void:
 		scene_script_runtime.stop()
@@ -1700,8 +1702,20 @@ func _handle_scene_dialogue(operation: StringName, data: Dictionary) -> void:
 
 func _on_scene_script_text_requested(value: String, language: int, glyph_position: int) -> void:
 	scene_script_text.emit(value, language, glyph_position)
-	if screen == "scene" and is_instance_valid(scene_dialogue_view):
-		scene_dialogue_view.present_text(value, glyph_position)
+
+func _on_scene_script_glyph_requested(code: int, glyph_position: int, _highlighted: bool) -> void:
+	if screen != "scene" or not is_instance_valid(scene_dialogue_view):
+		return
+	var display_position := glyph_position
+	if code == 0x4081 or code == 0x7281:
+		var even_delta := glyph_position - 0x20
+		var odd_delta := glyph_position - 0x40
+		if even_delta >= 0 and even_delta % 0x80 == 0:
+			display_position = int(even_delta / 0x80) * 2
+		elif odd_delta >= 0 and odd_delta % 0x80 == 0:
+			display_position = int(odd_delta / 0x80) * 2 + 1
+	var glyph_index := code if code >= 0 and code < 0x1000 else TEXT_RULES_SCRIPT.bitmap_glyph_index(((code << 8) | (code >> 8)) & 0xFFFF)
+	scene_dialogue_view.present_glyph(glyph_index, display_position)
 
 func _clear_scene_dialogue_text() -> void:
 	if is_instance_valid(scene_dialogue_view):
