@@ -43,6 +43,9 @@ func initialize_duel(duel: SacredDuelState, player_deck: Array[int], opponent_de
 	_shuffle(duel.sides[0].deck, random)
 	_shuffle(duel.sides[1].deck, random)
 	duel.active_side = random.byte_inclusive(0, 1)
+	# RunDuel clears gDuelSideState[0] before the first OrientDuelBoard call;
+	# InitializeDuelBoard has left that alias pointed at absolute side zero.
+	duel.sides[0].duel_flags &= 0xF7
 	duel.turn_number = 1
 	duel.phase = SacredDuelState.Phase.DRAW
 	duel.status = SacredDuelState.Status.ACTIVE
@@ -89,8 +92,10 @@ func finish_turn(duel: SacredDuelState) -> void:
 	for hand_index in range(outgoing_side.hand_flags.size()):
 		if outgoing_side.hand[hand_index] != 0:
 			outgoing_side.hand_flags[hand_index] &= 0xFE
-	var next_side := duel.sides[duel.active_side]
-	next_side.duel_flags &= 0xF7
+	# FinishDuelTurn toggles active_side but keeps native row pointers in the
+	# outgoing orientation until the next loop's OrientDuelBoard call. Its
+	# gDuelSideState[0] bit-3 clear therefore belongs to the outgoing side.
+	outgoing_side.duel_flags &= 0xF7
 
 ## Emits the recovered player-facing turn line; opponent speech uses a
 ## separate opponent-indexed ROM pointer table that is not yet extracted.
