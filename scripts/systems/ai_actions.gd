@@ -61,7 +61,7 @@ func execute(state: SacredDuelState, acting_side: int, candidate: Dictionary, si
 			else: result = _trapped_attack(state, acting_side, operands, result)
 		14, 15, 18, 21, 24: result = _move_card(state, acting_side, operands[0], operands[1], result)
 		16, 17: result = _dispatch_spell(state, acting_side, operands[0], operands[1], true, simulate, result)
-		19, 20: result = _dispatch_spell(state, acting_side, operands[0], operands[0], false, simulate, result)
+		19, 20: result = _dispatch_spell(state, acting_side, operands[0], operands[0], false, simulate, result, kind == 19)
 		22: result = _ritual_action(state, acting_side, operands, simulate, result)
 		23: result = _dispatch_monster(state, acting_side, operands[0], simulate, result)
 	if not bool(result.get("resolved", false)):
@@ -184,7 +184,7 @@ func _trapped_attack(state: SacredDuelState, active: int, operands: Array[int], 
 	result["presentation"] = activated.get("presentation", [])
 	return result
 
-func _dispatch_spell(state: SacredDuelState, active: int, source_packed: int, target_packed: int, targeted: bool, simulate: bool, result: Dictionary) -> Dictionary:
+func _dispatch_spell(state: SacredDuelState, active: int, source_packed: int, target_packed: int, targeted: bool, simulate: bool, result: Dictionary, lock_hand_after_effect: bool = false) -> Dictionary:
 	if effect_dispatcher == null: return {"resolved": false, "reason": "effect_dispatcher_missing"}
 	var source := _slot(state, active, source_packed)
 	if source == null or source.is_empty(): return {"resolved": false, "reason": "spell_source_missing"}
@@ -195,6 +195,8 @@ func _dispatch_spell(state: SacredDuelState, active: int, source_packed: int, ta
 	if not dispatched is Dictionary or not bool(dispatched.get("resolved", false)):
 		return {"resolved": false, "reason": "spell_effect_not_resolved", "effect": dispatched}
 	result["effect"] = dispatched
+	if lock_hand_after_effect and (state.side(active).duel_flags & 8) != 0:
+		_lock_hand_monsters(state.side(active))
 	_clear_action_source(state, active, source_packed)
 	result["presentation"] = dispatched.get("presentation", []) if dispatched is Dictionary else []
 	return result
