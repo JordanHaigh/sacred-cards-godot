@@ -9,6 +9,7 @@ const COLUMN_STEP := 28.0
 const ROW_STEP := 21.0
 const ATTRIBUTE_ICON_PATH := "res://art/ui/shop/attribute-%02d.png"
 const REQUIREMENT_ICON_PATH := "res://art/ui/shop/requirement-%d.png"
+const MINIATURE_BACK_PATH := "res://decompiled/build/assets/duel/miniature-back.png"
 const GOLD := Color("ffdc77")
 const PAPER := Color("f5e6c3")
 const PANEL := Color("171c20")
@@ -23,6 +24,7 @@ var cursor := Vector2i.ZERO
 var detail_card_id := 0
 var stats_overlay_visible := false
 var opponent_hand_overlay: Array[int] = []
+var opponent_hand_visibility: Array[int] = []
 var opponent_hand_overlay_visible := false
 var effect_card_overlay: Array[int] = []
 var effect_overlay_until_msec := 0
@@ -34,9 +36,10 @@ func present(state: SacredDuelState, database: CardDatabase, selected_cell: Vect
 	detail_card_id = int(_cell_record(cursor.y, cursor.x).get("card_id", 0))
 	queue_redraw()
 
-func set_inspection_overlays(show_stats: bool, opponent_hand: Array[int], show_hand: bool = false) -> void:
+func set_inspection_overlays(show_stats: bool, opponent_hand: Array[int], show_hand: bool = false, hand_visibility: Array[int] = []) -> void:
 	stats_overlay_visible = show_stats
 	opponent_hand_overlay = opponent_hand.duplicate()
+	opponent_hand_visibility = hand_visibility.duplicate()
 	opponent_hand_overlay_visible = show_hand
 	queue_redraw()
 
@@ -90,23 +93,40 @@ func _draw_opponent_hand_overlay() -> void:
 	var panel := Rect2(3, 39, 234, 82)
 	draw_rect(panel, Color(0.035, 0.05, 0.055, 0.98), true)
 	draw_rect(panel, Color("d0b46f"), false)
-	_draw_text("RIVAL HAND (ENTER / ESC TO CLOSE)", Vector2(9, 50), 7, GOLD)
-	var count := mini(opponent_hand_overlay.size(), 5)
-	if count == 0:
+	_draw_text("RIVAL HAND", Vector2(9, 50), 7, GOLD)
+	var has_cards := false
+	for card_id in opponent_hand_overlay:
+		if card_id != 0:
+			has_cards = true
+			break
+	if not has_cards:
 		_draw_text("EMPTY", Vector2(9, 69), 7, PAPER)
 		return
-	var span := count * 42.0
+	var span := 5 * 42.0
 	var start_x := (size.x - span) * 0.5
-	for index in range(count):
-		var card_id := opponent_hand_overlay[index]
-		var rect := Rect2(Vector2(start_x + index * 42.0, 56), Vector2(38, 58))
+	for index in range(5):
+		var card_id := int(opponent_hand_overlay[index]) if index < opponent_hand_overlay.size() else 0
+		var rect := Rect2(Vector2(start_x + index * 42.0, 62), Vector2(32, 32))
+		if card_id == 0:
+			continue
+		var revealed := index < opponent_hand_visibility.size() and (int(opponent_hand_visibility[index]) & 0x10) != 0
+		if not revealed:
+			if ResourceLoader.exists(MINIATURE_BACK_PATH):
+				draw_texture_rect(load(MINIATURE_BACK_PATH) as Texture2D, rect, false)
+			continue
 		var card := card_database.get_card(card_id)
 		if card != null and ResourceLoader.exists(card.miniature_path):
 			draw_texture_rect(load(card.miniature_path) as Texture2D, rect, false)
 		else:
 			draw_rect(rect, Color("293d4b"), true)
 			draw_rect(rect, Color("758596"), false)
-		_draw_text(card.name.left(8).to_upper() if card != null else "CARD", rect.position + Vector2(1, 54), 5, PAPER)
+		if card != null:
+			_draw_attribute(card.attribute, rect.position)
+			_draw_requirement(summon_rules.card_tribute_requirement(card_id, card_database), rect.position + Vector2(24, 0))
+			if card.metadata_1a == 2:
+				var stats := stat_rules.apply_card_modifiers(card.attack, card.defense, card.metadata_1a, card.card_type, duel_state.terrain, 0)
+				_draw_text("%02d" % mini(int(stats.attack) / 100, 99), rect.position + Vector2(0, 31), 4, PAPER)
+				_draw_text("%02d" % mini(int(stats.defense) / 100, 99), rect.position + Vector2(16, 31), 4, PAPER)
 
 func _draw_effect_cards_overlay() -> void:
 	var count := mini(effect_card_overlay.size(), 3)

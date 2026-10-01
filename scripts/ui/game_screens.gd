@@ -733,7 +733,8 @@ func process_player_duel_code(code: int, duel_state: SacredDuelState) -> Diction
 			return {"accepted": true, "action": "show_stats", "cursor": player_duel_controller.cursor}
 		PlayerDuelController.InputCode.OPPONENT_HAND:
 			_duel_hand_visible = true
-			duel_menus.begin_opponent_hand(duel_state.side(1 - side_id).hand)
+			var opponent_hand_state := duel_state.side(1 - side_id)
+			duel_menus.begin_opponent_hand(opponent_hand_state.hand, opponent_hand_state.hand_flags)
 			return {"accepted": true, "action": "show_opponent_hand", "cards": duel_menus.opponent_hand_cards()}
 		PlayerDuelController.InputCode.CONFIRM:
 			if player_duel_controller.mode == PlayerDuelController.Mode.PLACE_CARD:
@@ -1766,7 +1767,7 @@ func _draw_duel() -> void:
 		duel_ui.cell_selected.connect(_duel_cell_selected)
 		screen_root.add_child(duel_ui)
 		duel_ui.present(active_duel_state, card_database, player_duel_controller.cursor)
-		duel_ui.set_inspection_overlays(_duel_stats_visible, duel_menus.opponent_hand_cards(), _duel_hand_visible)
+		duel_ui.set_inspection_overlays(_duel_stats_visible, duel_menus.opponent_hand_cards(), _duel_hand_visible, duel_menus.opponent_hand_visibility_flags())
 		var effect_overlay_remaining := _pending_duel_effect_until_msec - Time.get_ticks_msec()
 		if effect_overlay_remaining > 0 and not _pending_duel_effect_cards.is_empty():
 			duel_ui.present_effect_cards(_pending_duel_effect_cards, effect_overlay_remaining)

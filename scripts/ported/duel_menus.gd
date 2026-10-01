@@ -24,6 +24,7 @@ var life_points := [8000, 8000]
 var deck_counts := [40, 40]
 var grave_card_ids := [0, 0]
 var opponent_hand: Array[int] = []
+var opponent_hand_flags: Array[int] = []
 var inspect_stats_held := false
 
 func _init() -> void:
@@ -147,11 +148,17 @@ func set_inspect_stats_held(held: bool) -> bool:
 	inspect_stats_held = held
 	return inspect_stats_held
 
-func begin_opponent_hand(card_ids: Array[int]) -> void:
+func begin_opponent_hand(card_ids: Array[int], hand_flags: Array[int] = []) -> void:
 	opponent_hand = card_ids.slice(0, 5)
+	opponent_hand.resize(5)
+	opponent_hand_flags = hand_flags.slice(0, 5)
+	opponent_hand_flags.resize(5)
 
 func opponent_hand_cards() -> Array[int]:
 	return opponent_hand.duplicate()
+
+func opponent_hand_visibility_flags() -> Array[int]:
+	return opponent_hand_flags.duplicate()
 
 func close() -> void:
 	menu = Menu.NONE
