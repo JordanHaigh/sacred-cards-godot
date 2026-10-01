@@ -185,11 +185,11 @@ func _draw_grid() -> void:
 					if ResourceLoader.exists(MINIATURE_BACK_PATH):
 						draw_texture_rect(load(MINIATURE_BACK_PATH) as Texture2D, Rect2(rect.position - Vector2(4, 4), Vector2(32, 32)), false)
 				else:
-					_draw_card_miniature(card_id, rect, row, flags, int(cell.get("stage", 0)))
+					_draw_card_miniature(card_id, rect, row, int(cell.get("stage", 0)))
 			if cursor == Vector2i(column, row):
 				draw_rect(rect.grow(2), GOLD, false, 2.0)
 
-func _draw_card_miniature(card_id: int, rect: Rect2, row: int, flags: int, stage: int) -> void:
+func _draw_card_miniature(card_id: int, rect: Rect2, row: int, stage: int) -> void:
 	var card := card_database.get_card(card_id)
 	if card == null: return
 	var framed_path := FRAMED_CARD_PATH % card_id
@@ -201,7 +201,9 @@ func _draw_card_miniature(card_id: int, rect: Rect2, row: int, flags: int, stage
 	else:
 		draw_rect(framed_rect, Color("26323a"), true)
 	if row == 1 or row == 2:
-		_draw_text(("+" if stage > 0 else "") + str(stage), rect.position + Vector2(1, 6), 5, GOLD)
+		var stage_label := _stage_label(stage)
+		if not stage_label.is_empty():
+			_draw_text(stage_label, rect.position + Vector2(1, 6), 5, GOLD)
 	if card.metadata_1a == 2 and (row == 1 or row == 2 or row == 4):
 		var stats := stat_rules.apply_card_modifiers(card.attack, card.defense, card.metadata_1a, card.card_type, duel_state.terrain, stage)
 		_draw_text("%02d" % mini(int(stats.attack) / 100, 99), rect.position + Vector2(0, 21), 5, PAPER)
@@ -214,6 +216,18 @@ func _draw_card_miniature(card_id: int, rect: Rect2, row: int, flags: int, stage
 		_draw_duel_miniature_requirement(summon_rules.card_tribute_requirement(card_id, card_database), framed_rect.position)
 	elif row == 1 or row == 2:
 		_draw_duel_miniature_requirement(summon_rules.card_tribute_requirement(card_id, card_database), framed_rect.position)
+
+func _stage_label(stage: int) -> String:
+	var signed_stage := stage & 0xff
+	if signed_stage >= 128:
+		signed_stage -= 256
+	if signed_stage == 0:
+		return ""
+	if signed_stage == -128:
+		return "-"
+	if signed_stage < 0:
+		return "-%d" % mini(-signed_stage, 10)
+	return str(mini(signed_stage, 10))
 
 func _draw_details() -> void:
 	var panel_rect := Rect2(148, 23, 88, 110)
