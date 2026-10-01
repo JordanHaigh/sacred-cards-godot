@@ -430,6 +430,11 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		if screen == "pre_duel" and pre_duel_menu != null:
 			var pre_duel_code := _pre_duel_code_for_key(event.keycode)
 			if pre_duel_code != 0:
+				# Direction presses are emitted once by FrameInput's immediate-repeat
+				# edge; dispatching this event too would move twice on the first frame.
+				if pre_duel_code in [16, 32, 64, 128]:
+					get_viewport().set_input_as_handled()
+					return
 				var result := process_pre_duel_code(pre_duel_code, pre_duel_opponent_id)
 				if result.has("reason"): _toast(str(result.reason))
 				_build_screen()
