@@ -28,8 +28,10 @@ func handles(effect_card_id: int) -> bool:
 func resolve_equipment(state: SacredDuelState, acting_side: int, equipment_card_id: int, source_row: int, source_column: int, target_row: int, target_column: int, presentation_suppressed: bool = false) -> Dictionary:
 	var target := _slot(state, acting_side, target_row, target_column)
 	var source := _slot(state, acting_side, source_row, source_column)
-	if target == null or source == null or source.is_empty() or not equipment_accepts_card(equipment_card_id, target.card_id):
-		return {"resolved": false, "reason": "incompatible_target"}
+	if target == null or source == null or source.is_empty():
+		return {"resolved": false, "reason": "invalid_context"}
+	if not equipment_accepts_card(equipment_card_id, target.card_id):
+		return {"resolved": false, "reason": "incompatible_target", "presentation": [] if presentation_suppressed else [57]}
 	if traps != null:
 		var found := traps.find_activating_trap(state, 1 - acting_side, acting_side, source_row, source_column)
 		if bool(found.found) and not presentation_suppressed:
