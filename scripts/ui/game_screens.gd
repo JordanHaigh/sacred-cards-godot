@@ -1264,6 +1264,8 @@ func _process_pre_duel_direction_repeat() -> void:
 	elif _pre_duel_frame_input.was_repeated(&"ui_up"): code = 64
 	elif _pre_duel_frame_input.was_repeated(&"ui_left"): code = 32
 	elif _pre_duel_frame_input.was_repeated(&"ui_right"): code = 16
+	if code == 64 and Input.is_key_pressed(KEY_R): code = 0x140
+	elif code == 128 and Input.is_key_pressed(KEY_R): code = 0x180
 	if code == 0 and not _pre_duel_pending_codes.is_empty():
 		for pending_code in _pre_duel_pending_codes:
 			code = maxi(code, pending_code)
