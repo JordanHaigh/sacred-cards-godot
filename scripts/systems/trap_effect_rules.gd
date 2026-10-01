@@ -143,7 +143,8 @@ func _destroy_row(state: SacredDuelState, side_id: int, row: int) -> void:
 	var slots: Array[DuelCardSlot] = side.monster_zones if row == 2 else side.back_row_zones
 	for index in range(slots.size()):
 		if not slots[index].is_empty() and not state.is_effect_immune(slots[index].card_id):
-			state.discard_slot(side_id, row, index, true)
+			var is_monster := summon_rules.classify_card(slots[index].card_id, card_database) == 1
+			state.discard_slot(side_id, row, index, is_monster)
 
 func _relative_slot(state: SacredDuelState, active: int, row: int, column: int) -> DuelCardSlot:
 	if row == 4:
