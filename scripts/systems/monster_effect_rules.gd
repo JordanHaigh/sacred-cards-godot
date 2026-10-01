@@ -624,13 +624,16 @@ func _apply_life_operation(state: SacredDuelState, affected_side: int, amount: i
 	if (battle_state.last_result_flags & 4) != 0: state.auxiliary_flags[0] = 2
 	if (battle_state.last_result_flags & 16) != 0: state.auxiliary_flags[1] = 2
 
-func _discard_slot(state: SacredDuelState, active: int, slot: DuelCardSlot, row_id: int, is_monster: bool) -> void:
+func _discard_slot(state: SacredDuelState, active: int, slot: DuelCardSlot, row_id: int, _is_monster_hint: bool) -> void:
+	# Native DiscardDuelCell classifies the card itself before remembering it;
+	# row-level caller hints cannot override the card's recovered class.
 	var owner := active if row_id >= 2 else 1 - active
 	var zone_row := 2 if row_id in [1, 2] else 3
 	var side := state.side(owner)
 	var slots: Array[DuelCardSlot] = side.monster_zones if zone_row == 2 else side.back_row_zones
 	for index in range(slots.size()):
 		if slots[index] == slot:
+			var is_monster := summon_rules.classify_card(slot.card_id, card_database) == 1
 			state.discard_slot(owner, zone_row, index, is_monster)
 			return
 
