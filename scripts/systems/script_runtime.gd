@@ -27,7 +27,7 @@ var token_index := 0
 var state: Dictionary = {
 	"mode": &"text", "cursor": 0, "glyph_position": 1,	"choice_layout": 0,
 	"branch_flags": 0, "portrait": 0, "portrait_flags": 0, "dirty": false,
-	"speaking": false, "embedded_text_index": 0, "blink_index": 29,
+	"speaking": false, "embedded_text_index": 0, "card": 0, "blink_index": 29,
 	"blink_ticks": 0, "mouth_index": 3, "mouth_ticks": 0, "wait_frames": 0
 }
 var context: Dictionary = {}
@@ -38,10 +38,12 @@ var execution_generation := 0
 func _ready() -> void:
 	set_physics_process(false)
 
-func configure(script_database: SceneScriptDatabase, command_adapter: SceneScriptCommands = null) -> void:
+func configure(script_database: SceneScriptDatabase, command_adapter: SceneScriptCommands = null, card_database: CardDatabase = null) -> void:
 	database = script_database
 	commands = command_adapter if command_adapter != null else COMMANDS_SCRIPT.new()
 	dialogue = DIALOGUE_SCRIPT.new()
+	if card_database != null:
+		dialogue.card_name_provider = Callable(card_database, "get_localized_card_name")
 	dialogue.glyph_requested.connect(func(code: int, position: int, highlighted: bool) -> void: dialogue_glyph_requested.emit(code, position, highlighted))
 	dialogue.text_clear_requested.connect(func() -> void: dialogue_clear_requested.emit())
 	dialogue.audio_requested.connect(_on_audio_requested)
@@ -67,7 +69,7 @@ func start(root_id: StringName, initial_context: Dictionary = {}) -> bool:
 	state = {
 		"mode": &"text", "cursor": 0, "glyph_position": 1, "choice_layout": 0,
 		"branch_flags": 0, "portrait": 0, "portrait_flags": 0, "dirty": false,
-		"speaking": false, "embedded_text_index": 0, "blink_index": 29,
+		"speaking": false, "embedded_text_index": 0, "card": 0, "blink_index": 29,
 		"blink_ticks": 0, "mouth_index": 3, "mouth_ticks": 0, "wait_frames": 0
 	}
 	execution_generation += 1
@@ -90,6 +92,13 @@ func submit_dialogue_input(pressed_mask: int, horizontal: int = 0, vertical: int
 	if not running: return
 	dialogue.handle_input(pressed_mask, horizontal, vertical)
 
+func begin_card_name(card_id: int) -> void:
+	if not running:
+		return
+	state.card = card_id & 0xFFFF
+	state.embedded_text_index = 0
+	state.mode = &"card_name"
+
 func _physics_process(_delta: float) -> void:
 	if not running or blocking_service_waiting: return
 	if int(state.wait_frames) > 0:
@@ -105,6 +114,9 @@ func _physics_process(_delta: float) -> void:
 		if not character.is_empty():
 			text_requested.emit(character, int(context.language_segment), int(state.glyph_position))
 		dialogue.write_player_name()
+		return
+	if state.mode == &"card_name":
+		dialogue.write_card_name(int(state.get("card", 0)), int(context.get("language_segment", 0)))
 		return
 	var node := database.get_node(node_id)
 	if node == null:

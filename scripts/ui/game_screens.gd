@@ -320,7 +320,7 @@ func _ready() -> void:
 		push_error("Could not load scene script motion data: %s" % scene_script_events.load_error)
 	scene_script_runtime = SCENE_SCRIPT_RUNTIME_SCRIPT.new()
 	add_child(scene_script_runtime)
-	scene_script_runtime.configure(scene_script_database)
+	scene_script_runtime.configure(scene_script_database, null, card_database)
 	scene_script_runtime.commands.event_flags = scene_event_flags
 	audio_dispatch = AUDIO_DISPATCH_SCRIPT.new()
 	audio_dispatch.name = "GameAudioDispatch"
