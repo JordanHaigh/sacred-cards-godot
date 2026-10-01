@@ -101,6 +101,8 @@ func _hand_slot(side: DuelSideState, column: int) -> DuelCardSlot:
 		slot.card_id = side.hand[column]
 		slot.controller = side.side_id
 		if column < side.hand_flags.size(): slot.persistent_flags = side.hand_flags[column]
+		if column < side.hand_stages.size(): slot.stage = side.hand_stages[column]
+		if column < side.hand_zone_modes.size(): slot.zone_mode = side.hand_zone_modes[column]
 	return slot
 
 func _unlocked(slot: DuelCardSlot) -> bool:

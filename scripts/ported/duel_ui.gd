@@ -273,7 +273,8 @@ func _cell_record(row: int, column: int) -> Dictionary:
 			var hand_index := column
 			var card_id := int(own_side.hand[hand_index]) if hand_index < own_side.hand.size() else 0
 			var hand_flags := int(own_side.hand_flags[hand_index]) if hand_index < own_side.hand_flags.size() else 0
-			return {"card_id": card_id, "flags": hand_flags, "stage": 0}
+			var hand_stage := int(own_side.hand_stages[hand_index]) if hand_index < own_side.hand_stages.size() else 0
+			return {"card_id": card_id, "flags": hand_flags, "stage": hand_stage}
 	return {"card_id": slot.card_id, "flags": slot.persistent_flags, "stage": slot.stage}
 
 func _metadata_visible(row: int, column: int) -> bool:

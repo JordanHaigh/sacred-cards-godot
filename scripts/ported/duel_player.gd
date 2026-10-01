@@ -115,14 +115,16 @@ func confirm_placement(duel: SacredDuelState, acting_side: int, summon_rules: Su
 	var placed_column := cursor.x
 	var card_id := side.hand[hand_index]
 	var source_flags := side.hand_flags[hand_index] if hand_index < side.hand_flags.size() else 0
+	var source_stage := side.hand_stages[hand_index] if hand_index < side.hand_stages.size() else 0
+	var source_zone_mode := side.hand_zone_modes[hand_index] if hand_index < side.hand_zone_modes.size() else 0
 	side.remove_hand_at(hand_index)
 	destination.card_id = card_id
 	destination.controller = acting_side
 	# CommitPlacement copies the saved native cell, retaining the destination's
 	# high flag bits and copying the source cell's low flag bits.
 	destination.persistent_flags = (destination.persistent_flags & 0xC0) | (source_flags & 0x3F)
-	destination.stage = 0
-	destination.zone_mode = 0
+	destination.stage = source_stage
+	destination.zone_mode = source_zone_mode
 	destination.face_down = cursor.y == 3
 	destination.defense_position = false
 	destination.has_attacked = false

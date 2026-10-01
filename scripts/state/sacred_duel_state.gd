@@ -132,6 +132,8 @@ func duplicate_state() -> SacredDuelState:
 		destination.graveyard_monster_id = source.graveyard_monster_id
 		destination.hand = source.hand.duplicate()
 		destination.hand_flags = source.hand_flags.duplicate()
+		destination.hand_stages = source.hand_stages.duplicate()
+		destination.hand_zone_modes = source.hand_zone_modes.duplicate()
 		destination.deck = source.deck.duplicate()
 		destination.deck_remaining_count = source.deck_remaining_count
 		destination.deck_out = source.deck_out

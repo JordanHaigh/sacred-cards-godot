@@ -10,6 +10,9 @@ var back_row_zones: Array[DuelCardSlot] = []
 var hand: Array[int] = []
 ## Per-card hand flags mirror duel-cell flags without byte aliases.
 var hand_flags: Array[int] = []
+## Native hand cells also retain their stage and zone bytes.
+var hand_stages: Array[int] = []
+var hand_zone_modes: Array[int] = []
 var deck: Array[int] = []
 ## Native deck storage has forty slots and a separate remaining-count byte.
 ## Shuffling can move zero-filled slots, so array length is not the draw count.
@@ -25,6 +28,8 @@ func _init(owner_id: int = 0) -> void:
 		back_row_zones.append(DuelCardSlot.new())
 	hand.resize(5)
 	hand_flags.resize(5)
+	hand_stages.resize(5)
+	hand_zone_modes.resize(5)
 
 func hand_count() -> int:
 	var count := 0
@@ -41,6 +46,8 @@ func remove_hand_at(slot_index: int) -> int:
 	var card_id := hand[slot_index]
 	hand[slot_index] = 0
 	hand_flags[slot_index] &= 0xC0
+	hand_stages[slot_index] = 0
+	hand_zone_modes[slot_index] = 0
 	return card_id
 
 func clear_hand() -> void:

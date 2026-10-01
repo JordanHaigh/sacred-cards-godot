@@ -224,6 +224,8 @@ func _slot(state: SacredDuelState, active: int, packed: int) -> DuelCardSlot:
 		if column < state.side(active).hand.size():
 			hand_slot.card_id = state.side(active).hand[column]
 			if column < state.side(active).hand_flags.size(): hand_slot.persistent_flags = state.side(active).hand_flags[column]
+			if column < state.side(active).hand_stages.size(): hand_slot.stage = state.side(active).hand_stages[column]
+			if column < state.side(active).hand_zone_modes.size(): hand_slot.zone_mode = state.side(active).hand_zone_modes[column]
 		return hand_slot
 	return state.relative_board_slot(active, row_id, column)
 

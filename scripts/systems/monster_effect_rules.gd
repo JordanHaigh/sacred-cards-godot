@@ -525,17 +525,19 @@ func _pinch_hopper(state: SacredDuelState, active: int, selected: DuelCardSlot, 
 		for hand_index in candidates:
 			var hand_card_id: int = hand_owner.hand[hand_index]
 			var card := _card(hand_card_id)
-			var attack := 0 if card == null else int(stat_rules.apply_card_modifiers(card.attack, card.defense, card.metadata_1a, card.card_type, state.terrain, 0).attack)
+			var stage := hand_owner.hand_stages[hand_index] if hand_index < hand_owner.hand_stages.size() else 0
+			var attack := 0 if card == null else int(stat_rules.apply_card_modifiers(card.attack, card.defense, card.metadata_1a, card.card_type, state.terrain, stage).attack)
 			if attack >= best_attack:
 				best_attack = attack
 				best_index = hand_index
 		var card_id: int = hand_owner.hand[best_index]
 		var hand_flags := hand_owner.hand_flags[best_index] if best_index < hand_owner.hand_flags.size() else 0
+		var hand_stage := hand_owner.hand_stages[best_index] if best_index < hand_owner.hand_stages.size() else 0
 		hand_owner.remove_hand_at(best_index)
 		selected.card_id = card_id
 		selected.controller = active
 		selected.persistent_flags = (selected.persistent_flags & 0xC0) | (hand_flags & 0x3F)
-		selected.stage = 0
+		selected.stage = hand_stage
 		selected.zone_mode = 0
 		_ready(selected)
 	return _shown(766, 58, suppressed)

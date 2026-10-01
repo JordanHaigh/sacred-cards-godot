@@ -90,11 +90,15 @@ func _move_card(state: SacredDuelState, active: int, source_packed: int, destina
 	if destination == null: return {"resolved": false, "reason": "destination_missing"}
 	var card_id := 0
 	var source_flags := 0
+	var source_stage := 0
+	var source_zone_mode := 0
 	if source_row == 4:
 		var side := state.side(active)
 		if source_column >= side.hand.size(): return {"resolved": false, "reason": "source_empty"}
 		card_id = side.hand[source_column]
 		source_flags = side.hand_flags[source_column] if source_column < side.hand_flags.size() else 0
+		source_stage = side.hand_stages[source_column] if source_column < side.hand_stages.size() else 0
+		source_zone_mode = side.hand_zone_modes[source_column] if source_column < side.hand_zone_modes.size() else 0
 		side.remove_hand_at(source_column)
 	else:
 		var source := _slot(state, active, source_packed)
@@ -111,8 +115,8 @@ func _move_card(state: SacredDuelState, active: int, source_packed: int, destina
 	# CopyDuelCell replaces the low six destination flag bits from the source,
 	# while preserving destination-owned high bits. Placement pose is separate.
 	destination.persistent_flags = (destination.persistent_flags & 0xC0) | (source_flags & 0x3F)
-	destination.stage = 0
-	destination.zone_mode = 0
+	destination.stage = source_stage
+	destination.zone_mode = source_zone_mode
 	destination.face_down = set_in_back_row
 	destination.defense_position = false
 	destination.has_attacked = false
@@ -283,6 +287,8 @@ func _slot(state: SacredDuelState, active: int, packed: int) -> DuelCardSlot:
 		if column < hand_side.hand.size():
 			slot.card_id = hand_side.hand[column]
 			if column < hand_side.hand_flags.size(): slot.persistent_flags = hand_side.hand_flags[column]
+			if column < hand_side.hand_stages.size(): slot.stage = hand_side.hand_stages[column]
+			if column < hand_side.hand_zone_modes.size(): slot.zone_mode = hand_side.hand_zone_modes[column]
 		return slot
 	return state.relative_board_slot(active, row_id, column)
 

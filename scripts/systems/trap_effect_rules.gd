@@ -154,6 +154,8 @@ func _relative_slot(state: SacredDuelState, active: int, row: int, column: int) 
 		hand_slot.card_id = side.hand[column]
 		hand_slot.controller = active
 		hand_slot.persistent_flags = side.hand_flags[column] if column < side.hand_flags.size() else 0
+		hand_slot.stage = side.hand_stages[column] if column < side.hand_stages.size() else 0
+		hand_slot.zone_mode = side.hand_zone_modes[column] if column < side.hand_zone_modes.size() else 0
 		return hand_slot
 	return state.relative_board_slot(active, row, column)
 

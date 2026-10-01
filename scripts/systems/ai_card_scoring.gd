@@ -414,14 +414,16 @@ func _score_strongest_fatal(state: SacredDuelState, active: int) -> int:
 	return 0x7FFFFFF0
 
 func _score_strongest_selected(state: SacredDuelState, active: int, candidate: Dictionary) -> int:
-	var cards := state.side(1 - active).hand
+	var cards := state.side(active).hand
 	var strongest_id := 0
 	var best_attack := -1
-	for card_id in cards:
+	for card_index in range(cards.size()):
+		var card_id: int = cards[card_index]
 		var card := card_database.get_card(card_id)
 		if card == null or card.card_type != 10: continue
 		var slot := DuelCardSlot.new()
 		slot.card_id = card_id
+		if card_index >= 0 and card_index < state.side(active).hand_stages.size(): slot.stage = state.side(active).hand_stages[card_index]
 		var attack := int(_stats(slot, state.terrain).x)
 		if attack >= best_attack:
 			best_attack = attack
@@ -551,6 +553,8 @@ func _candidate_slot(state: SacredDuelState, active: int, candidate: Dictionary,
 		if column < side.hand.size():
 			hand_slot.card_id = side.hand[column]
 			if column < side.hand_flags.size(): hand_slot.persistent_flags = side.hand_flags[column]
+			if column < side.hand_stages.size(): hand_slot.stage = side.hand_stages[column]
+			if column < side.hand_zone_modes.size(): hand_slot.zone_mode = side.hand_zone_modes[column]
 		return hand_slot
 	return state.relative_board_slot(active, row_id, column)
 
