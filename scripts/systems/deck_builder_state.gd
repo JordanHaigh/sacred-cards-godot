@@ -41,7 +41,7 @@ func add_selected(card_id: int, card_cost: int, duelist_level: int) -> bool:
 		return false
 	collection[card_id] = (int(collection[card_id]) - 1) & 0xff
 	deck.append(card_id)
-	selected_deck_index = deck.size() - 1
+	# AddSelectedCollectionCardToDeck appends without changing gPlayerDeckState[4].
 	return true
 
 func remove_from_collection_view(card_id: int) -> bool:
