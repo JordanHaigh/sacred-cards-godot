@@ -1963,10 +1963,10 @@ func _draw_player_status() -> void:
 	_overlay_rect(Rect2(18, 13, 204, 134), Color(0.05, 0.07, 0.07, 0.94), Color("c5aa6d"))
 	_text("PLAYER STATUS", Vector2(72, 21), 8, GOLD)
 	_text("NAME  %s" % str(status.get("name", "")), Vector2(32, 43), 7, PAPER)
-	_text("DUELIST LEVEL  %04d" % int(status.get("duelist_level", 0)), Vector2(32, 61), 7, PAPER)
-	_text("DECK CAPACITY  %05d" % int(status.get("deck_capacity", 0)), Vector2(32, 77), 7, PAPER)
+	_text("DUELIST LEVEL  %s" % DeckManagement.native_digit_text(status.get("duelist_level_digits", [])), Vector2(32, 61), 7, PAPER)
+	_text("DECK CAPACITY  %s" % DeckManagement.native_digit_text(status.get("deck_capacity_digits", [])), Vector2(32, 77), 7, PAPER)
 	_text("RANK MARKS  %d" % int(status.get("rank_marks", 0)), Vector2(32, 93), 7, PAPER)
-	_text("MONEY  %d" % int(status.get("money", 0)), Vector2(32, 109), 7, PAPER)
+	_text("MONEY  %s" % DeckManagement.native_digit_text(status.get("money_digits", [])), Vector2(32, 109), 7, PAPER)
 	_text("DECK CARDS  %02d / 40" % int(status.get("deck_count", 0)), Vector2(32, 125), 7, PAPER)
 	_text("SPACE RETURN", Vector2(88, 137), 6, GOLD)
 

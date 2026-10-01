@@ -56,8 +56,39 @@ func player_status(save: PlayerSaveData) -> Dictionary:
 	return {
 		"name": save.player_name,
 		"duelist_level": save.duelist_level & 0xFFFF,
+		"duelist_level_digits": _native_digits(save.duelist_level & 0xFFFF, 4),
 		"deck_capacity": save.deck_capacity & 0xFFFF,
+		"deck_capacity_digits": _native_digits(save.deck_capacity & 0xFFFF, 5),
 		"rank_marks": rank_count,
 		"money": save.money,
+		"money_digits": _native_digits(save.money, 13, true),
 		"deck_count": deck_count,
 	}
+
+func _native_digits(value: int, digit_count: int, zero_units_when_empty: bool = false) -> Array[int]:
+	# StatusNumber uses decimal divisors and replaces leading zero digits with
+	# tile 10 (blank). The money loop keeps a zero in its final units tile.
+	var decimal := str(maxi(value, 0))
+	if decimal.length() > digit_count:
+		decimal = decimal.right(digit_count)
+	while decimal.length() < digit_count:
+		decimal = "0" + decimal
+	var digits: Array[int] = []
+	var seen_nonzero := false
+	for index in range(decimal.length()):
+		var digit := int(decimal.substr(index, 1))
+		if digit != 0:
+			seen_nonzero = true
+			digits.append(digit)
+		elif seen_nonzero or (zero_units_when_empty and index == decimal.length() - 1):
+			digits.append(0)
+		else:
+			digits.append(10)
+	return digits
+
+static func native_digit_text(digits: Array) -> String:
+	var result := ""
+	for value in digits:
+		var digit := int(value)
+		result += " " if digit == 10 else str(clampi(digit, 0, 9))
+	return result
