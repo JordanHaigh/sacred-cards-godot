@@ -32,11 +32,11 @@ func _init() -> void:
 func handle_key(key: int, deck_view: bool) -> Dictionary:
 	var popup_active := popup != PopupKind.NONE
 	if popup_active:
-		if key == 2 or key == 8:
+		var sort_popup := popup in [PopupKind.COLLECTION_SORT, PopupKind.DECK_SORT]
+		if key == 2 or (key == 8 and sort_popup):
 			popup = PopupKind.NONE
 			return {"action": Action.CLOSED, "sound": 56}
 		if key in [64, 128, 32, 16]:
-			var sort_popup := popup in [PopupKind.COLLECTION_SORT, PopupKind.DECK_SORT]
 			if not sort_popup and key in [32, 16]:
 				return {"action": Action.NONE, "sound": 0}
 			var direction_index := 0 if key == 64 else 1 if key == 128 else 2 if key == 32 else 3
