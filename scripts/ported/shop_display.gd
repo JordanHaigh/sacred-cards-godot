@@ -126,6 +126,7 @@ func _render() -> void:
 				add_child(miniature)
 				_draw_miniature_overlays(card_id, at)
 			if inventory_index == selected_index:
+				_draw_selection_shadow(graphics_model.selection_shadow_rect(row, column))
 				_draw_selection_cursor(graphics_model.selection_origin(row, column))
 			var pick := Button.new()
 			pick.position = at - Vector2(4, 4)
@@ -164,6 +165,14 @@ func _draw_selection_cursor(at: Vector2) -> void:
 		sprite.flip_v = piece.flip_v
 		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		add_child(sprite)
+
+func _draw_selection_shadow(rect: Rect2) -> void:
+	var shadow := ColorRect.new()
+	shadow.position = rect.position
+	shadow.size = rect.size
+	shadow.color = Color(0, 0, 0, 0.25)
+	shadow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(shadow)
 
 func _add_icon(path: String, at: Vector2) -> void:
 	var icon := TextureRect.new()

@@ -6,6 +6,8 @@ const ATTRIBUTE_ICON_PATH := "res://art/ui/shop/attribute-%02d.png"
 const REQUIREMENT_ICON_PATH := "res://art/ui/shop/requirement-%d.png"
 const SELECTOR_X_COORDINATES := [505, 537, 569, 601, 633, 665, 697]
 const SELECTOR_Y_COORDINATES := [241, 273, 305, 337, 369]
+const SHADOW_X_COORDINATES := [8, 40, 72, 104, 136, 168, 200]
+const SHADOW_Y_COORDINATES := [0, 32, 64, 96, 128]
 const SELECTION_PIECE_SPACING := 30
 const SCROLLBAR_TRAVEL := 127
 
@@ -44,6 +46,11 @@ func selection_origin(row: int, column: int) -> Vector2:
 	if y >= 128:
 		y -= 256
 	return Vector2(x, y)
+
+func selection_shadow_rect(row: int, column: int) -> Rect2:
+	var x := int(SHADOW_X_COORDINATES[clampi(column, 0, SHADOW_X_COORDINATES.size() - 1)])
+	var y := int(SHADOW_Y_COORDINATES[clampi(row, 0, SHADOW_Y_COORDINATES.size() - 1)])
+	return Rect2(Vector2(x, y), Vector2(8, 8))
 
 func selection_pieces(at: Vector2) -> Array[Dictionary]:
 	var pieces: Array[Dictionary] = []
