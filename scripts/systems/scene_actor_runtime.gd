@@ -61,9 +61,12 @@ func move_actor(actor_id: int, direction: int, step_count: int, keep_flag: int =
 	var actor := _actor(actor_id)
 	if actor == null or direction < 0 or direction >= 4:
 		return
+	await _move_actor_steps(actor_id, actor, direction, step_count & 0xFF, keep_flag)
+
+func _move_actor_steps(actor_id: int, actor: SceneActor, direction: int, step_count: int, keep_flag: int) -> void:
 	dialogue_hide_requested.emit()
 	actor.orientation = direction
-	for _step in range(step_count & 0xFF):
+	for _step in range(step_count):
 		actor.position = Vector2i(
 			(actor.position.x + DIRECTION_X[direction]) & 0xFFFF,
 			(actor.position.y + DIRECTION_Y[direction]) & 0xFFFF
@@ -181,14 +184,14 @@ func move_actor_to_x(actor_id: int, x: int) -> void:
 	if actor == null:
 		return
 	var delta := (x & 0xFF) - _signed_u16(actor.position.x)
-	await move_actor(actor_id, 3 if delta >= 0 else 1, absi(delta), 0)
+	await _move_actor_steps(actor_id, actor, 3 if delta >= 0 else 1, absi(delta), 0)
 
 func move_actor_to_y(actor_id: int, y: int) -> void:
 	var actor := _actor(actor_id)
 	if actor == null:
 		return
 	var delta := (y & 0xFF) - _signed_u16(actor.position.y)
-	await move_actor(actor_id, 0 if delta >= 0 else 2, absi(delta), 0)
+	await _move_actor_steps(actor_id, actor, 0 if delta >= 0 else 2, absi(delta), 0)
 
 func _signed_u16(value: int) -> int:
 	var word := value & 0xFFFF
