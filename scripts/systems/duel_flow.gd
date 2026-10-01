@@ -223,6 +223,10 @@ func _return_borrowed_monsters(duel: SacredDuelState) -> void:
 				break
 		if destination != null:
 			destination.card_id = source.card_id
+			destination.controller = 1 - duel.active_side
+			destination.face_down = false
+			destination.defense_position = (source.persistent_flags & 4) != 0
+			destination.has_attacked = false
 			destination.persistent_flags = ((destination.persistent_flags | 16) & 0xD8) | (source.persistent_flags & 4)
 			destination.zone_mode = 2
 			destination.stage = source.stage
