@@ -195,10 +195,7 @@ func _dispatch_spell(state: SacredDuelState, active: int, source_packed: int, ta
 	if not dispatched is Dictionary or not bool(dispatched.get("resolved", false)):
 		return {"resolved": false, "reason": "spell_effect_not_resolved", "effect": dispatched}
 	result["effect"] = dispatched
-	var source_row := (source_packed >> 4) & 15
-	if source_row in [2, 3]:
-		var source_slot := _slot(state, active, source_packed)
-		if source_slot != null: source_slot.clear()
+	_clear_action_source(state, active, source_packed)
 	result["presentation"] = dispatched.get("presentation", []) if dispatched is Dictionary else []
 	return result
 
@@ -255,6 +252,16 @@ func _discard_operand(state: SacredDuelState, active: int, packed: int) -> int:
 	if slot == null: return 0
 	var is_monster := row_id in [1, 2] and summon_rules.classify_card(slot.card_id, card_database) == 1
 	return state.discard_slot(owner, zone_row, state.absolute_board_column(row_id, column), is_monster)
+
+func _clear_action_source(state: SacredDuelState, active: int, packed: int) -> void:
+	var row_id := (packed >> 4) & 15
+	var column := packed & 15
+	if row_id == 4:
+		state.side(active).remove_hand_at(column)
+		return
+	var source := _slot(state, active, packed)
+	if source != null:
+		source.clear()
 
 func _lock_hand_monsters(side: DuelSideState) -> void:
 	for index in range(side.hand.size()):
