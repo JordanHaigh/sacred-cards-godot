@@ -430,6 +430,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		if screen == "duel" and _duel_hand_visible:
 			if event.keycode in [KEY_ENTER, KEY_SPACE, KEY_ESCAPE, KEY_W]:
 				_duel_hand_visible = false
+				if audio_dispatch != null: audio_dispatch.play_game_audio(56)
 				_build_screen()
 			get_viewport().set_input_as_handled()
 			return
@@ -741,6 +742,7 @@ func process_player_duel_code(code: int, duel_state: SacredDuelState) -> Diction
 			_duel_hand_visible = true
 			var opponent_hand_state := duel_state.side(1 - side_id)
 			duel_menus.begin_opponent_hand(opponent_hand_state.hand, opponent_hand_state.hand_flags)
+			if audio_dispatch != null: audio_dispatch.play_game_audio(55)
 			return {"accepted": true, "action": "show_opponent_hand", "cards": duel_menus.opponent_hand_cards()}
 		PlayerDuelController.InputCode.CONFIRM:
 			if player_duel_controller.mode == PlayerDuelController.Mode.PLACE_CARD:
@@ -1792,6 +1794,7 @@ func _draw_duel() -> void:
 		duel_ui.cell_selected.connect(_duel_cell_selected)
 		screen_root.add_child(duel_ui)
 		duel_ui.present(active_duel_state, card_database, player_duel_controller.cursor)
+		duel_ui.terrain_background_path = duel_graphics.current_texture_path() if duel_graphics != null else ""
 		duel_ui.set_inspection_overlays(_duel_stats_visible, duel_menus.opponent_hand_cards(), _duel_hand_visible, duel_menus.opponent_hand_visibility_flags())
 		var effect_overlay_remaining := _pending_duel_effect_until_msec - Time.get_ticks_msec()
 		if effect_overlay_remaining > 0 and not _pending_duel_effect_cards.is_empty():

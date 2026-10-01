@@ -18,6 +18,7 @@ signal cell_selected(row: int, column: int)
 
 var duel_state: SacredDuelState
 var card_database: CardDatabase
+var terrain_background_path := ""
 var stat_rules := CardStatRules.new()
 var summon_rules := SummonRules.new()
 var cursor := Vector2i.ZERO
@@ -58,14 +59,21 @@ func _process(_delta: float) -> void:
 
 func _draw() -> void:
 	if duel_state == null or card_database == null: return
-	draw_rect(Rect2(Vector2.ZERO, size), Color("10171b"), true)
-	_draw_hud()
-	_draw_grid()
-	_draw_details()
+	if opponent_hand_overlay_visible:
+		if ResourceLoader.exists(terrain_background_path):
+			draw_texture_rect(load(terrain_background_path) as Texture2D, Rect2(Vector2.ZERO, size), false)
+		else:
+			draw_rect(Rect2(Vector2.ZERO, size), Color("10171b"), true)
+	else:
+		draw_rect(Rect2(Vector2.ZERO, size), Color("10171b"), true)
+		_draw_hud()
+		_draw_grid()
+		_draw_details()
+		if stats_overlay_visible:
+			_draw_stats_overlay()
 	if opponent_hand_overlay_visible:
 		_draw_opponent_hand_overlay()
-	elif stats_overlay_visible:
-		_draw_stats_overlay()
+		return
 	if effect_overlay_until_msec > 0:
 		_draw_effect_cards_overlay()
 
@@ -90,23 +98,11 @@ func _draw_stats_overlay() -> void:
 			_draw_text("%s %d/%d" % [card.name.left(5).to_upper(), int(stats.attack), int(stats.defense)], at, 5, PAPER)
 
 func _draw_opponent_hand_overlay() -> void:
-	var panel := Rect2(3, 39, 234, 82)
-	draw_rect(panel, Color(0.035, 0.05, 0.055, 0.98), true)
-	draw_rect(panel, Color("d0b46f"), false)
-	_draw_text("RIVAL HAND", Vector2(9, 50), 7, GOLD)
-	var has_cards := false
-	for card_id in opponent_hand_overlay:
-		if card_id != 0:
-			has_cards = true
-			break
-	if not has_cards:
-		_draw_text("EMPTY", Vector2(9, 69), 7, PAPER)
-		return
 	var span := 5 * 42.0
 	var start_x := (size.x - span) * 0.5
 	for index in range(5):
 		var card_id := int(opponent_hand_overlay[index]) if index < opponent_hand_overlay.size() else 0
-		var rect := Rect2(Vector2(start_x + index * 42.0, 62), Vector2(32, 32))
+		var rect := Rect2(Vector2(start_x + index * 42.0, 24), Vector2(32, 32))
 		if card_id == 0:
 			continue
 		var revealed := index < opponent_hand_visibility.size() and (int(opponent_hand_visibility[index]) & 0x10) != 0
