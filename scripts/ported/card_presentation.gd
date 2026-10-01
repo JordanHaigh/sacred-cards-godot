@@ -11,6 +11,7 @@ const PANEL := Color("171817")
 
 var definition: CardDefinition
 var card_art: CardArt
+var language_id := 0
 var pages: Array[String] = []
 var page_index := 0
 var description_locked := false
@@ -66,7 +67,7 @@ func _build_view() -> void:
 	info.size = Vector2(145, 146)
 	info.add_theme_stylebox_override("panel", _panel_style(PANEL))
 	add_child(info)
-	var heading := _text_label(definition.name.to_upper(), Vector2(5, 4), Vector2(135, 12), 7, GOLD)
+	var heading := _text_label(_full_card_title(), Vector2(5, 4), Vector2(135, 12), 7, GOLD)
 	info.add_child(heading)
 	info.add_child(_text_label("ATK %04d   DEF %04d" % [definition.attack, definition.defense], Vector2(5, 19), Vector2(135, 8), 6, PAPER))
 	info.add_child(_text_label("COST %05d" % definition.cost, Vector2(5, 29), Vector2(135, 8), 6, PAPER))
@@ -119,6 +120,16 @@ func _load_locked_description() -> String:
 		push_warning("Recovered locked-card description has an invalid structure.")
 		return ""
 	return str(parsed.english)
+
+func _full_card_title() -> String:
+	if definition == null:
+		return ""
+	var source_name := definition.name
+	if language_id == 0 and definition.id in [364, 670]:
+		# Native DrawFullCardName emits blank glyph 0x4481 at slot 1, then
+		# advances four English source bytes before resuming at slot 2.
+		return source_name.substr(0, 1) + " " + source_name.substr(5, 8)
+	return source_name.substr(0, 10)
 
 func _wrap_locked_description(source: String) -> Array[String]:
 	var lines: Array[String] = []
