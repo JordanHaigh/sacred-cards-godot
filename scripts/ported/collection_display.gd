@@ -7,6 +7,7 @@ const PIXEL_TEXT_SCRIPT := preload("res://scripts/ui/pixel_text.gd")
 const DECK_GRAPHICS_SCRIPT := preload("res://scripts/ported/deck_builder_graphics.gd")
 const ATTRIBUTE_ICON_PATH := "res://decompiled/build/assets/duel/hud-attribute-%d.png"
 const TYPE_ICON_PATH := "res://decompiled/build/assets/duel/hud-type-%d.png"
+const DEFAULT_DETAIL_ATLAS := preload("res://art/ui/deck-builder/detail-mode-0.png")
 const GOLD := Color("ffdc77")
 const PAPER := Color("f5e6c3")
 
@@ -115,10 +116,12 @@ func _render_rows() -> void:
 		var name_glyph_limit := 22 if deck_view else 18
 		var title := localized_name.left(name_glyph_limit)
 		row_panel.add_child(_pixel_text("%04d  %s" % [card_id, title], Vector2(29, 6), GOLD if picked else PAPER, 6))
-		if definition != null:
+		if detail_mode == DeckBuilderGraphics.DETAIL_DEFAULT_ART:
+			_add_default_detail_art(row_panel, row)
+		elif definition != null:
 			if detail_mode == DeckBuilderGraphics.DETAIL_ATTRIBUTE_TYPE:
 				_add_attribute_type_icons(row_panel, definition)
-			elif detail_mode != DeckBuilderGraphics.DETAIL_DEFAULT_ART:
+			else:
 				row_panel.add_child(_pixel_text(_detail_for_card(definition), Vector2(29, 14), Color("c4b68e"), 5))
 		var pick := Button.new()
 		pick.position = Vector2(4, row_y)
@@ -146,6 +149,17 @@ func _add_attribute_type_icons(parent: Control, card: CardDefinition) -> void:
 	var attribute_path := ATTRIBUTE_ICON_PATH % card.attribute
 	_add_detail_icon(parent, type_path, 212.0)
 	_add_detail_icon(parent, attribute_path, 232.0)
+
+func _add_default_detail_art(parent: Control, visible_row: int) -> void:
+	var art := TextureRect.new()
+	art.texture = DEFAULT_DETAIL_ATLAS
+	art.region_enabled = true
+	art.region_rect = Rect2(visible_row * 48, 0, 48, 16)
+	art.position = Vector2(156, 3)
+	art.size = Vector2(48, 16)
+	art.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	parent.add_child(art)
 
 func _add_detail_icon(parent: Control, texture_path: String, right_edge: float) -> void:
 	var texture := load(texture_path) as Texture2D if ResourceLoader.exists(texture_path) else null
