@@ -15,6 +15,7 @@ const PAPER := Color("f5e6c3")
 const GOLD := Color("ffdc77")
 const LARGE_FONT := preload("res://art/ui/font-large.png")
 const DEFAULT_DETAIL_ATLAS := preload("res://art/ui/deck-builder/pre-duel-detail-mode-0.png")
+const SORT_POPUP_BACKGROUND := preload("res://art/ui/pre-duel/sort-popup.png")
 
 signal row_selected(row: int)
 signal popup_selected(choice: int)
@@ -88,9 +89,12 @@ func _draw_scrollbar() -> void:
 
 func _draw_popup() -> void:
 	if menu_state.popup == PreDuelMenuState.PopupKind.NONE: return
-	var box := Rect2(55, 43, 130, 72)
-	draw_rect(box, Color(0.05, 0.06, 0.07, 0.96), true)
-	draw_rect(box, GOLD, false, 1.0)
+	if menu_state.popup == PreDuelMenuState.PopupKind.SORT:
+		draw_texture(SORT_POPUP_BACKGROUND, Vector2.ZERO)
+	else:
+		var box := Rect2(55, 43, 130, 72)
+		draw_rect(box, Color(0.05, 0.06, 0.07, 0.96), true)
+		draw_rect(box, GOLD, false, 1.0)
 	var labels: Array = []
 	match menu_state.popup:
 		PreDuelMenuState.PopupKind.ACTION: labels = ACTION_LABELS
