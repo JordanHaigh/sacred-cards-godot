@@ -437,7 +437,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 			return
 		if screen == "duel" and _duel_hand_visible:
-			if event.keycode in [KEY_ENTER, KEY_SPACE, KEY_ESCAPE, KEY_W]:
+			if event.keycode in [KEY_SPACE, KEY_ESCAPE, KEY_W]:
 				_duel_hand_visible = false
 				if audio_dispatch != null: audio_dispatch.play_game_audio(56)
 				_build_screen()
