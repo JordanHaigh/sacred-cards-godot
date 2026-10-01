@@ -938,8 +938,13 @@ func _on_monster_action_selected(action_id: int, duel_state: SacredDuelState) ->
 	var slot: DuelCardSlot = duel_state.sides[side_id].monster_zones[cell.x]
 	match str(selection.get("action", "cancel")):
 		"attack":
-			if audio_dispatch != null: audio_dispatch.play_game_audio(55)
 			duel_menus.close()
+			if _player_attack_is_restricted(duel_state, side_id):
+				slot.persistent_flags |= 1
+				if audio_dispatch != null: audio_dispatch.play_game_audio(57)
+				_build_screen()
+				return
+			if audio_dispatch != null: audio_dispatch.play_game_audio(55)
 			if player_duel_controller.direct_attack_available(duel_state, 1 - side_id):
 				var direct_result := resolve_player_attack(duel_state, cell.x)
 				if not bool(direct_result.get("accepted", false)): _toast(str(direct_result.get("reason", "Attack failed.")))
@@ -984,6 +989,12 @@ func _on_monster_action_selected(action_id: int, duel_state: SacredDuelState) ->
 			if audio_dispatch != null: audio_dispatch.play_game_audio(56)
 	_finish_duel_if_ended()
 	_build_screen()
+
+func _player_attack_is_restricted(duel_state: SacredDuelState, acting_side: int) -> bool:
+	if duel_state == null or acting_side < 0 or acting_side >= duel_state.auxiliary_flags.size():
+		return true
+	var turn_restrictions := int(duel_state.sides[0].duel_flags) & 0x03 if not duel_state.sides.is_empty() else 0
+	return duel_state.auxiliary_flags[acting_side] == 0 or turn_restrictions != 0
 
 func _finish_duel_if_ended() -> void:
 	if active_duel_state != null and (active_duel_state.has_ended() or active_duel_state.status != SacredDuelState.Status.ACTIVE):
