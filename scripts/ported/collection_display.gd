@@ -5,6 +5,8 @@ extends Control
 
 const PIXEL_TEXT_SCRIPT := preload("res://scripts/ui/pixel_text.gd")
 const DECK_GRAPHICS_SCRIPT := preload("res://scripts/ported/deck_builder_graphics.gd")
+const ATTRIBUTE_ICON_PATH := "res://decompiled/build/assets/duel/hud-attribute-%d.png"
+const TYPE_ICON_PATH := "res://decompiled/build/assets/duel/hud-type-%d.png"
 const GOLD := Color("ffdc77")
 const PAPER := Color("f5e6c3")
 
@@ -114,8 +116,11 @@ func _render_rows() -> void:
 		var title := localized_name.left(name_glyph_limit)
 		row_panel.add_child(_pixel_text("%04d  %s" % [card_id, title], Vector2(29, 6), GOLD if picked else PAPER, 6))
 		if definition != null:
-			var detail_size := 8 if detail_mode == DeckBuilderGraphics.DETAIL_STARS else 5
-			row_panel.add_child(_pixel_text(_detail_for_card(definition), Vector2(29, 14), Color("c4b68e"), detail_size))
+			if detail_mode == DeckBuilderGraphics.DETAIL_ATTRIBUTE_TYPE:
+				_add_attribute_type_icons(row_panel, definition)
+			else:
+				var detail_size := 8 if detail_mode == DeckBuilderGraphics.DETAIL_STARS else 5
+				row_panel.add_child(_pixel_text(_detail_for_card(definition), Vector2(29, 14), Color("c4b68e"), detail_size))
 		var pick := Button.new()
 		pick.position = Vector2(4, row_y)
 		pick.size = Vector2(232, 22)
@@ -136,6 +141,26 @@ func _emit_card_selected(index: int) -> void:
 
 func _detail_for_card(card: CardDefinition) -> String:
 	return deck_graphics.detail_text(card, detail_mode)
+
+func _add_attribute_type_icons(parent: Control, card: CardDefinition) -> void:
+	var type_path := TYPE_ICON_PATH % card.card_type
+	var attribute_path := ATTRIBUTE_ICON_PATH % card.attribute
+	_add_detail_icon(parent, type_path, 212.0)
+	_add_detail_icon(parent, attribute_path, 232.0)
+
+func _add_detail_icon(parent: Control, texture_path: String, right_edge: float) -> void:
+	var texture := load(texture_path) as Texture2D if ResourceLoader.exists(texture_path) else null
+	if texture == null:
+		push_error("Missing recovered deck detail icon: %s" % texture_path)
+		return
+	var icon := TextureRect.new()
+	icon.texture = texture
+	icon.position = Vector2(right_edge - texture.get_width(), 3)
+	icon.size = texture.get_size()
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon.stretch_mode = TextureRect.STRETCH_SCALE
+	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	parent.add_child(icon)
 
 func _pixel_text(value: String, at: Vector2, color: Color, nominal_size: int) -> PixelText:
 	var label: PixelText = PIXEL_TEXT_SCRIPT.new()
