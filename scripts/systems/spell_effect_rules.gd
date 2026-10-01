@@ -201,7 +201,10 @@ func _cursebreaker(state: SacredDuelState, active: int, target: DuelCardSlot, ca
 	return _consume(state, active, target, card_id, 73, suppressed)
 
 func _spy(state: SacredDuelState, active: int, target: DuelCardSlot, card_id: int, suppressed: bool) -> Dictionary:
-	state.side(1 - active).hand_revealed = true
+	var opponent := state.side(1 - active)
+	for hand_index in range(opponent.hand.size()):
+		if opponent.hand[hand_index] != 0:
+			opponent.hand_flags[hand_index] |= 0x10
 	return _consume(state, active, target, card_id, 60, suppressed)
 
 func _draw_two(state: SacredDuelState, active: int, target: DuelCardSlot, card_id: int, suppressed: bool) -> Dictionary:

@@ -18,7 +18,6 @@ var deck_out: bool = false
 var attack_restriction_turns: int = 0
 var defeated: bool = false
 var duel_flags: int = 0
-var hand_revealed: bool = false
 
 func _init(owner_id: int = 0) -> void:
 	side_id = owner_id

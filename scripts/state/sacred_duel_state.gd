@@ -138,7 +138,6 @@ func duplicate_state() -> SacredDuelState:
 		destination.attack_restriction_turns = source.attack_restriction_turns
 		destination.defeated = source.defeated
 		destination.duel_flags = source.duel_flags
-		destination.hand_revealed = source.hand_revealed
 		for column in range(source.monster_zones.size()):
 			destination.monster_zones[column] = _duplicate_slot(source.monster_zones[column])
 			destination.back_row_zones[column] = _duplicate_slot(source.back_row_zones[column])

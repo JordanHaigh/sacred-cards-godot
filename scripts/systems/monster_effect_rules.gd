@@ -316,7 +316,10 @@ func _raise_weak_monsters(state: SacredDuelState, active: int, suppressed: bool)
 	return _shown_pair(90, 90, 73, suppressed)
 
 func _reveal_opponent_hand(state: SacredDuelState, active: int, suppressed: bool) -> Dictionary:
-	state.side(1 - active).hand_revealed = true
+	var opponent := state.side(1 - active)
+	for hand_index in range(opponent.hand.size()):
+		if opponent.hand[hand_index] != 0:
+			opponent.hand_flags[hand_index] |= 0x10
 	return _shown(402, 60, suppressed)
 
 func _duplicate_selected(state: SacredDuelState, active: int, selected: DuelCardSlot, effect_card: int, shown_target: int, sound: int, suppressed: bool) -> Dictionary:
