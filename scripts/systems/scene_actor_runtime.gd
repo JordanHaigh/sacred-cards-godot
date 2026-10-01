@@ -63,9 +63,11 @@ func move_actor(actor_id: int, direction: int, step_count: int, keep_flag: int =
 		return
 	dialogue_hide_requested.emit()
 	actor.orientation = direction
-	for _step in range(maxi(step_count, 0)):
-		actor.position.x += DIRECTION_X[direction]
-		actor.position.y += DIRECTION_Y[direction]
+	for _step in range(step_count & 0xFF):
+		actor.position = Vector2i(
+			(actor.position.x + DIRECTION_X[direction]) & 0xFFFF,
+			(actor.position.y + DIRECTION_Y[direction]) & 0xFFFF
+		)
 		_update_actor_height(actor)
 		_advance_walking_phase(actor)
 		_refresh_actor(actor_id)
@@ -83,7 +85,7 @@ func place_actor(actor_id: int, x: int, y: int, frame: int) -> void:
 	var actor := _actor(actor_id)
 	if actor == null:
 		return
-	actor.position = Vector2i(x, y)
+	actor.position = Vector2i(x & 0xFFFF, y & 0xFFFF)
 	_update_actor_height(actor)
 	actor.flags &= 0xFB
 	var sprite := actor_sprites.get(actor_id) as Sprite2D
@@ -100,7 +102,7 @@ func position_actor(actor_id: int, x: int, y: int) -> void:
 	if actor == null:
 		return
 	dialogue_hide_requested.emit()
-	actor.position = Vector2i(x, y)
+	actor.position = Vector2i(x & 0xFFFF, y & 0xFFFF)
 	_update_actor_height(actor)
 	_refresh_actor(actor_id)
 	actor_frame_changed.emit(actor_id, actor.sprite_id, _frame_index(actor))
@@ -130,7 +132,7 @@ func apply_script_state(actor_id: int, changes: Dictionary) -> void:
 	if actor == null:
 		return
 	if changes.get("position") is Vector2i:
-		actor.position = changes.position
+		actor.position = Vector2i(changes.position.x & 0xFFFF, changes.position.y & 0xFFFF)
 	actor.flags &= ~int(changes.get("clear_flag_mask", 0))
 	actor.palette_index = (actor.flags & 0x1F) >> 3
 	_refresh_actor(actor_id)
@@ -148,6 +150,7 @@ func pose_four(actor_id: int) -> void:
 	await get_tree().create_timer(1.0 / 60.0).timeout
 
 func fade_to_dark(delay_frames: int) -> void:
+	var delay := delay_frames & 0xFF
 	if _fade_layer == null:
 		_fade_layer = CanvasLayer.new()
 		_fade_overlay = ColorRect.new()
@@ -158,8 +161,8 @@ func fade_to_dark(delay_frames: int) -> void:
 		add_child(_fade_layer)
 	for level in range(16):
 		_fade_overlay.color.a = float(level) / 16.0
-		if delay_frames > 0:
-			await get_tree().create_timer(float(delay_frames) / 60.0).timeout
+		if delay > 0:
+			await get_tree().create_timer(float(delay) / 60.0).timeout
 	scene_faded_to_dark.emit()
 
 func change_sprite(actor_id: int, sprite_id: int) -> void:
@@ -177,15 +180,19 @@ func move_actor_to_x(actor_id: int, x: int) -> void:
 	var actor := _actor(actor_id)
 	if actor == null:
 		return
-	var delta := x - actor.position.x
+	var delta := (x & 0xFF) - _signed_u16(actor.position.x)
 	await move_actor(actor_id, 3 if delta >= 0 else 1, absi(delta), 0)
 
 func move_actor_to_y(actor_id: int, y: int) -> void:
 	var actor := _actor(actor_id)
 	if actor == null:
 		return
-	var delta := y - actor.position.y
+	var delta := (y & 0xFF) - _signed_u16(actor.position.y)
 	await move_actor(actor_id, 0 if delta >= 0 else 2, absi(delta), 0)
+
+func _signed_u16(value: int) -> int:
+	var word := value & 0xFFFF
+	return word if word < 0x8000 else word - 0x10000
 
 func actor(actor_id: int) -> SceneActor:
 	return _actor(actor_id)
