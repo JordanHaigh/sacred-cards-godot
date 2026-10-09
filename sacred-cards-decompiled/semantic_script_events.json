@@ -1,0 +1,411 @@
+{
+  "scope": "58 event entry bodies in shared semantic dispatch; transitive menus and duel integration remain dependencies",
+  "entries": [
+    {
+      "index": 0,
+      "address": "0x08032D38",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 0
+    },
+    {
+      "index": 1,
+      "address": "0x08032D9C",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 1
+    },
+    {
+      "index": 2,
+      "address": "0x08032E0C",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 2
+    },
+    {
+      "index": 3,
+      "address": "0x08032E30",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 3
+    },
+    {
+      "index": 4,
+      "address": "0x08032E3C",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 4
+    },
+    {
+      "index": 5,
+      "address": "0x08032E48",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 5
+    },
+    {
+      "index": 6,
+      "address": "0x08032E54",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 6
+    },
+    {
+      "index": 7,
+      "address": "0x08032E60",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 7
+    },
+    {
+      "index": 8,
+      "address": "0x08032E6C",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 8
+    },
+    {
+      "index": 9,
+      "address": "0x08032E80",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 9
+    },
+    {
+      "index": 10,
+      "address": "0x08032E8C",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 10
+    },
+    {
+      "index": 11,
+      "address": "0x08032EA0",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 11
+    },
+    {
+      "index": 12,
+      "address": "0x08032EB4",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 12
+    },
+    {
+      "index": 13,
+      "address": "0x08032F5C",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 13
+    },
+    {
+      "index": 14,
+      "address": "0x08032F80",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 14
+    },
+    {
+      "index": 15,
+      "address": "0x08032FA4",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 15
+    },
+    {
+      "index": 16,
+      "address": "0x08032FC8",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 16
+    },
+    {
+      "index": 17,
+      "address": "0x08033030",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 17
+    },
+    {
+      "index": 18,
+      "address": "0x0803303C",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 18
+    },
+    {
+      "index": 19,
+      "address": "0x080330E0",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 19
+    },
+    {
+      "index": 20,
+      "address": "0x0803311C",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 20
+    },
+    {
+      "index": 21,
+      "address": "0x08033158",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 21
+    },
+    {
+      "index": 22,
+      "address": "0x08033194",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 22
+    },
+    {
+      "index": 23,
+      "address": "0x080331B8",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 23
+    },
+    {
+      "index": 24,
+      "address": "0x080331EC",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 24
+    },
+    {
+      "index": 25,
+      "address": "0x080331FC",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 25
+    },
+    {
+      "index": 26,
+      "address": "0x08033220",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 26
+    },
+    {
+      "index": 27,
+      "address": "0x08033244",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 27
+    },
+    {
+      "index": 28,
+      "address": "0x080332E8",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 28
+    },
+    {
+      "index": 29,
+      "address": "0x0803330C",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 29
+    },
+    {
+      "index": 30,
+      "address": "0x08033330",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 30
+    },
+    {
+      "index": 31,
+      "address": "0x08033354",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 31
+    },
+    {
+      "index": 32,
+      "address": "0x08033378",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 32
+    },
+    {
+      "index": 33,
+      "address": "0x0803339C",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 33
+    },
+    {
+      "index": 34,
+      "address": "0x080333C0",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 34
+    },
+    {
+      "index": 35,
+      "address": "0x080333E4",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 35
+    },
+    {
+      "index": 36,
+      "address": "0x08033408",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 36
+    },
+    {
+      "index": 37,
+      "address": "0x0803340C",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 37
+    },
+    {
+      "index": 38,
+      "address": "0x080334B0",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 38
+    },
+    {
+      "index": 39,
+      "address": "0x08033554",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 39
+    },
+    {
+      "index": 40,
+      "address": "0x08033590",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 40
+    },
+    {
+      "index": 41,
+      "address": "0x080335CC",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 41
+    },
+    {
+      "index": 42,
+      "address": "0x08033608",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 42
+    },
+    {
+      "index": 43,
+      "address": "0x0803362C",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 43
+    },
+    {
+      "index": 44,
+      "address": "0x08033650",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 44
+    },
+    {
+      "index": 45,
+      "address": "0x08033674",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 45
+    },
+    {
+      "index": 46,
+      "address": "0x08033698",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 46
+    },
+    {
+      "index": 47,
+      "address": "0x080336BC",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 47
+    },
+    {
+      "index": 48,
+      "address": "0x080336E0",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 48
+    },
+    {
+      "index": 49,
+      "address": "0x08033704",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 49
+    },
+    {
+      "index": 50,
+      "address": "0x08033728",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 50
+    },
+    {
+      "index": 51,
+      "address": "0x0803374C",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 51
+    },
+    {
+      "index": 52,
+      "address": "0x08033770",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 52
+    },
+    {
+      "index": 53,
+      "address": "0x08033814",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 53
+    },
+    {
+      "index": 54,
+      "address": "0x080338B8",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 54
+    },
+    {
+      "index": 55,
+      "address": "0x080338DC",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 55
+    },
+    {
+      "index": 56,
+      "address": "0x08033900",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 56
+    },
+    {
+      "index": 57,
+      "address": "0x08033A04",
+      "source": "src/script_events.c",
+      "function": "DispatchScriptEvent",
+      "case": 57
+    }
+  ]
+}

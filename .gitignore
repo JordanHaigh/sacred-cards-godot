@@ -1,4 +1,11 @@
 .godot/
+/target/
+/dist/
+/saves/
+/.rust-toolchain/
+/sacred-cards-decompiled/build/
+*.gba
+/decompiled/
 *.uid
 .DS_Store
 export/

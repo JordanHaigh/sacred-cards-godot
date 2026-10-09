@@ -1,0 +1,8 @@
+table_rom_offset,entry_count,family,evidence
+0xFB79C,85,card_metadata_1b_handlers,Dispatcher080285E8 indexes metadata1B; max referenced ID84; an additional pointer follows but has no card reference
+0xFB900,132,card_metadata_1a_handlers,Dispatcher0802B33C indexes metadata1A; max referenced ID131
+0xD349EC,50,dispatch_08009200,08009212 calls through this table; contiguous50 Thumb pointers
+0xD34AB8,795,dispatch_08009B30,08009B60 calls through this table; contiguous795 Thumb pointers
+0xD41A50,54,dispatch_0801FD5C,0801FD62 bounds index at53 before callback
+0x9DF52C,36,m4a_command_callbacks,08037110 copies36 pointers to020247A0; sequencer08037412 dispatches commands and SoundInit patches selected entries
+0x9DF7D4,12,m4a_extended_callbacks,08038D00 dispatches extended commands through12 contiguous Thumb pointers; nonpointer instrument data follows

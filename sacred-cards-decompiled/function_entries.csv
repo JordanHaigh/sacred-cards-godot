@@ -1,0 +1,376 @@
+address,mode,name,evidence
+0x08036A00,thumb,CompareSramCopiedToStack,08036A30 copies48 bytes to stack and calls Thumb address through08038E30
+0x08036ACC,thumb,ReadSramCopiedToRam,08036B98 copies64 bytes to0201EFF8 and stores0201EFF9 at020237DC
+0x08036B4C,thumb,CompareSramCopiedToRam,08036B98 copies76 bytes to0201EF58 and stores0201EF59 at020237E0
+0x08037320,thumb,m4aMPlayMain,08038070 stores08037321 as SoundInfo player callback
+0x080375FC,thumb,m4aNote,08037D30 installs080375FD in SoundInfo note callback
+0x080372D4,thumb,m4aSoundVSync,SoundInfo DMA period servicing routine at080372D4
+0x080384E8,thumb,m4aCgbSound,08037BEC installs080384E9 atSoundInfo+28
+0x08038430,thumb,m4aCgbOscOff,08037BEC installs08038431 atSoundInfo+2C
+0x08038388,thumb,m4aMidiKeyToCgbFreq,08037BEC installs08038389 atSoundInfo+30
+0x08038D00,thumb,m4aExtendedCommand,08037BEC patches02024810 callback to08038D01
+0x08038BA8,thumb,m4aMemoryAccess,08037BEC patches020247C0 callback to08038BA9
+0x08036C80,thumb,m4aSoundMain,SoundInfo mixer entry calls player callback and jumps to relocated ARM mixer
+0x08036D04,thumb,m4aSoundMainRam,08037930 copies0x400 bytes to03000000;08036CE8 jumps to03000001 and copied code switches between Thumb and ARM
+0x08018CE8,thumb,PasswordShowCallback,080184AC installs callback that uploads palettes and enables password display
+0x08018D10,thumb,PasswordIdleCallback,0801827C installs idle password frame callback
+0x08018D24,thumb,PasswordBlankCallback,080184AC installs password display register initialization callback
+0x080161CC,thumb,DescriptionBlankCallback,08015DD8 installs card description display register callback
+0x08016210,thumb,DescriptionShowCallback,08015DD8 installs card description palette and enable callback
+0x080180E4,thumb,DuelMosaicCallback,08017FCC installs duel transition mosaic setup callback
+0x0801811C,thumb,DuelFadePaletteCallback,08017FCC installs duel transition palette upload callback
+0x08028230,thumb,OpponentHandDisplayCallback,Direct VBlank callback pointer from reviewed duel or menu control flow
+0x08003048,thumb,NameEntryDisplayCallback,Direct VBlank callback pointer from reviewed duel or menu control flow
+0x080128EC,thumb,BattleBlankCallback,Direct VBlank callback pointer from reviewed duel or menu control flow
+0x080128F8,thumb,BattleShowCallback,Direct VBlank callback pointer from reviewed duel or menu control flow
+0x08013014,thumb,DestructionOpponentCallback,Direct VBlank callback pointer from reviewed duel or menu control flow
+0x08013030,thumb,DestructionPlayerCallback,Direct VBlank callback pointer from reviewed duel or menu control flow
+0x08013058,thumb,DestructionShowCallback,Direct VBlank callback pointer from reviewed duel or menu control flow
+0x0801307C,thumb,DestructionHideCallback,Direct VBlank callback pointer from reviewed duel or menu control flow
+0x080133E0,thumb,BattleHitShowCallback,Direct VBlank callback pointer from reviewed duel or menu control flow
+0x08013410,thumb,BattleHitFrameCallback,Direct VBlank callback pointer from reviewed duel or menu control flow
+0x08013420,thumb,BattleHitEndCallback,Direct VBlank callback pointer from reviewed duel or menu control flow
+0x0801371C,thumb,LifePointShowCallback,Direct VBlank callback pointer from reviewed duel or menu control flow
+0x0801374C,thumb,LifePointFrameCallback,Direct VBlank callback pointer from reviewed duel or menu control flow
+0x08013758,thumb,LifePointHideCallback,Direct VBlank callback pointer from reviewed duel or menu control flow
+0x08013B24,thumb,AttributeHitShowCallback,Direct VBlank callback pointer from reviewed duel or menu control flow
+0x08013B4C,thumb,AttributeHitFrameCallback,Direct VBlank callback pointer from reviewed duel or menu control flow
+0x08013B5C,thumb,AttributeHitHideCallback,Direct VBlank callback pointer from reviewed duel or menu control flow
+0x0802284C,thumb,TitleBlendCallback,Direct VBlank callback pointer from reviewed duel or menu control flow
+0x08022858,thumb,TitlePaletteCallback,Direct VBlank callback pointer from reviewed duel or menu control flow
+0x08022864,thumb,TitleShowCallback,Direct VBlank callback pointer from reviewed duel or menu control flow
+0x0802288C,thumb,TitleSelectionCallback,Direct VBlank callback pointer from reviewed duel or menu control flow
+0x080228A4,thumb,TitleInitializeCallback,Direct VBlank callback pointer from reviewed duel or menu control flow
+0x0802293C,thumb,TitleOverwriteShowCallback,Direct VBlank callback pointer from reviewed duel or menu control flow
+0x08022960,thumb,TitleOverwriteHideCallback,Direct VBlank callback pointer from reviewed duel or menu control flow
+0x0801ED10,thumb,ShopMovementCallback,Direct VBlank callback pointer from reviewed duel or menu control flow
+0x0801EC50,thumb,ShopPageCallback,Direct VBlank callback pointer from reviewed duel or menu control flow
+0x0801EDC8,thumb,ShopInitializeCallback,Direct VBlank callback pointer from reviewed duel or menu control flow
+0x0801EDB8,thumb,ShopShowCallback,Direct VBlank callback pointer from reviewed duel or menu control flow
+0x0801ED88,thumb,ShopDetailReturnCallback,Direct VBlank callback pointer from reviewed duel or menu control flow
+0x0801EB64,thumb,ShopActionCallback,Direct VBlank callback pointer from reviewed duel or menu control flow
+0x0801EB94,thumb,ShopActionCloseCallback,Direct VBlank callback pointer from reviewed duel or menu control flow
+0x0801EA90,thumb,ShopSortShowCallback,Direct VBlank callback pointer from reviewed duel or menu control flow
+0x0801E940,thumb,ShopSortMoveCallback,Direct VBlank callback pointer from reviewed duel or menu control flow
+0x0801EA38,thumb,ShopSortApplyCallback,Direct VBlank callback pointer from reviewed duel or menu control flow
+0x0801E968,thumb,ShopSortCloseCallback,Direct VBlank callback pointer from reviewed duel or menu control flow
+0x08007930,thumb,WagerActionCallback,Direct VBlank callback pointer from reviewed duel or menu control flow
+0x08007BC4,thumb,NoWagerCallback,Direct VBlank callback pointer from reviewed duel or menu control flow
+0x08005E80,thumb,RestoreCollectionCallback,Menu VBlank callback traced from08005DCC or08008BD0; body recovered in collection_display.c/pre_duel_display.c
+0x08005EAC,thumb,RestoreCollectionPaletteCallback,Menu VBlank callback traced from08005DCC or08008BD0; body recovered in collection_display.c/pre_duel_display.c
+0x08005F48,thumb,InitializeCollectionCallback,Menu VBlank callback traced from08005DCC or08008BD0; body recovered in collection_display.c/pre_duel_display.c
+0x08005FD8,thumb,CollectionNoop2,Menu VBlank callback traced from08005DCC or08008BD0; body recovered in collection_display.c/pre_duel_display.c
+0x08005FE0,thumb,ShowCollectionCallback,Menu VBlank callback traced from08005DCC or08008BD0; body recovered in collection_display.c/pre_duel_display.c
+0x08006008,thumb,CollectionNoop4,Menu VBlank callback traced from08005DCC or08008BD0; body recovered in collection_display.c/pre_duel_display.c
+0x0800603C,thumb,CollectionNoop5,Menu VBlank callback traced from08005DCC or08008BD0; body recovered in collection_display.c/pre_duel_display.c
+0x08006028,thumb,CollectionNoop6,Menu VBlank callback traced from08005DCC or08008BD0; body recovered in collection_display.c/pre_duel_display.c
+0x08006044,thumb,UploadCollectionOamPaletteCallback,Menu VBlank callback traced from08005DCC or08008BD0; body recovered in collection_display.c/pre_duel_display.c
+0x08008E48,thumb,CollectionSortPopupCallback,Menu VBlank callback traced from08005DCC or08008BD0; body recovered in collection_display.c/pre_duel_display.c
+0x08004180,thumb,DeckBuilderPopupCallback,VBlank callback recovered from collection/deck editor or deck-management/status entry; see docs/deck_builder.md
+0x08005D9C,thumb,CollectionEditorSortCallback,VBlank callback recovered from collection/deck editor or deck-management/status entry; see docs/deck_builder.md
+0x08014040,thumb,DeckEditorPopupCallback,VBlank callback recovered from collection/deck editor or deck-management/status entry; see docs/deck_builder.md
+0x08015B08,thumb,DeckEditorSortCallback,VBlank callback recovered from collection/deck editor or deck-management/status entry; see docs/deck_builder.md
+0x08015BEC,thumb,DeckEditorRestoreCallback,VBlank callback recovered from collection/deck editor or deck-management/status entry; see docs/deck_builder.md
+0x08015C18,thumb,DeckEditorRestorePalettesCallback,VBlank callback recovered from collection/deck editor or deck-management/status entry; see docs/deck_builder.md
+0x08015CB4,thumb,DeckEditorInitializeCallback,VBlank callback recovered from collection/deck editor or deck-management/status entry; see docs/deck_builder.md
+0x08015D44,thumb,DeckEditorNoop2,VBlank callback recovered from collection/deck editor or deck-management/status entry; see docs/deck_builder.md
+0x08015D4C,thumb,DeckEditorShowCallback,VBlank callback recovered from collection/deck editor or deck-management/status entry; see docs/deck_builder.md
+0x08015D74,thumb,DeckEditorSpritesPalettesCallback,VBlank callback recovered from collection/deck editor or deck-management/status entry; see docs/deck_builder.md
+0x08015D98,thumb,DeckEditorNoop4,VBlank callback recovered from collection/deck editor or deck-management/status entry; see docs/deck_builder.md
+0x08015DB4,thumb,DeckEditorNoop6,VBlank callback recovered from collection/deck editor or deck-management/status entry; see docs/deck_builder.md
+0x08015DD0,thumb,DeckEditorNoop5,VBlank callback recovered from collection/deck editor or deck-management/status entry; see docs/deck_builder.md
+0x080016B0,thumb,DeckManagementShowCallback,VBlank callback recovered from collection/deck editor or deck-management/status entry; see docs/deck_builder.md
+0x080016CC,thumb,DeckManagementHideWindowCallback,VBlank callback recovered from collection/deck editor or deck-management/status entry; see docs/deck_builder.md
+0x080037D0,thumb,PlayerStatusShowCallback,VBlank callback recovered from collection/deck editor or deck-management/status entry; see docs/deck_builder.md
+0x08003894,thumb,PlayerStatusHideCallback,VBlank callback recovered from collection/deck editor or deck-management/status entry; see docs/deck_builder.md
+0x080007FC,thumb,CreditsFrameCallback,"Reviewed direct callback/IRQ pointer; recovered in credits.c, city_map.c, intro.c or hardware.c"
+0x0800087C,thumb,CreditsShowCallback,"Reviewed direct callback/IRQ pointer; recovered in credits.c, city_map.c, intro.c or hardware.c"
+0x080011E0,thumb,CityMapInitializeCallback,"Reviewed direct callback/IRQ pointer; recovered in credits.c, city_map.c, intro.c or hardware.c"
+0x08019998,thumb,IntroCopyrightCallback,"Reviewed direct callback/IRQ pointer; recovered in credits.c, city_map.c, intro.c or hardware.c"
+0x080199EC,thumb,IntroFirstLogoCallback,"Reviewed direct callback/IRQ pointer; recovered in credits.c, city_map.c, intro.c or hardware.c"
+0x08019A3C,thumb,IntroSecondLogoCallback,"Reviewed direct callback/IRQ pointer; recovered in credits.c, city_map.c, intro.c or hardware.c"
+0x08019A90,thumb,IntroAlternateLogoCallback,"Reviewed direct callback/IRQ pointer; recovered in credits.c, city_map.c, intro.c or hardware.c"
+0x08019AE4,thumb,IntroCombinedLogoCallback,"Reviewed direct callback/IRQ pointer; recovered in credits.c, city_map.c, intro.c or hardware.c"
+0x08019B60,thumb,IntroBlankCallback,"Reviewed direct callback/IRQ pointer; recovered in credits.c, city_map.c, intro.c or hardware.c"
+0x08003B70,thumb,ServiceVBlank,"Reviewed direct callback/IRQ pointer; recovered in credits.c, city_map.c, intro.c or hardware.c"
+0x08019814,thumb,IntroUnusedNoop,Unused startup-logo family reviewed from native instructions and recovered in intro.c
+0x08019818,thumb,SelectIntroAlternateMap,Unused startup-logo family reviewed from native instructions and recovered in intro.c
+0x080198F8,thumb,LoadIntroAlternateGraphics,Unused startup-logo family reviewed from native instructions and recovered in intro.c
+0x080282B8,thumb,sub_080282B8,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x080282C4,thumb,sub_080282C4,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801812C,thumb,sub_0801812C,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08019978,thumb,sub_08019978,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x080220B0,thumb,sub_080220B0,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x080272C4,thumb,sub_080272C4,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08009148,thumb,sub_08009148,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08019EF0,thumb,sub_08019EF0,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801F388,thumb,sub_0801F388,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801F8AC,thumb,sub_0801F8AC,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x080231CC,thumb,sub_080231CC,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08022124,thumb,sub_08022124,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0803440C,thumb,sub_0803440C,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0802432C,thumb,sub_0802432C,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08019DB8,thumb,sub_08019DB8,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08019DDC,thumb,sub_08019DDC,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08019E20,thumb,sub_08019E20,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801F1EC,thumb,sub_0801F1EC,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801F950,thumb,sub_0801F950,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801FA8C,thumb,sub_0801FA8C,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08022984,thumb,sub_08022984,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08008BB4,thumb,sub_08008BB4,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08019D64,thumb,sub_08019D64,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801F9BC,thumb,sub_0801F9BC,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08013DD4,thumb,sub_08013DD4,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801F180,thumb,sub_0801F180,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801F698,thumb,sub_0801F698,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801A124,thumb,sub_0801A124,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801ED48,thumb,sub_0801ED48,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801EE10,thumb,sub_0801EE10,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801FAF4,thumb,sub_0801FAF4,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08022168,thumb,sub_08022168,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08022A00,thumb,sub_08022A00,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08022A10,thumb,sub_08022A10,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08022A94,thumb,sub_08022A94,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x080301F4,thumb,sub_080301F4,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08009130,thumb,sub_08009130,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801679C,thumb,sub_0801679C,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08016A38,thumb,sub_08016A38,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08016C58,thumb,sub_08016C58,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801F02C,thumb,sub_0801F02C,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801F27C,thumb,sub_0801F27C,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801F2F4,thumb,sub_0801F2F4,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x080229F0,thumb,sub_080229F0,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08022C00,thumb,sub_08022C00,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08022D8C,thumb,sub_08022D8C,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x080272B8,thumb,sub_080272B8,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08003A84,thumb,sub_08003A84,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08005EDC,thumb,sub_08005EDC,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08008B94,thumb,sub_08008B94,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x080169A8,thumb,sub_080169A8,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08016CB4,thumb,sub_08016CB4,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08019EC4,thumb,sub_08019EC4,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801A278,thumb,sub_0801A278,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801A470,thumb,sub_0801A470,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801A54C,thumb,sub_0801A54C,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801F6D0,thumb,sub_0801F6D0,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801F6F8,thumb,sub_0801F6F8,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801F8EC,thumb,sub_0801F8EC,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08021EC0,thumb,sub_08021EC0,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08022058,thumb,sub_08022058,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08022070,thumb,sub_08022070,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08022BD4,thumb,sub_08022BD4,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08022CE0,thumb,sub_08022CE0,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08022E9C,thumb,sub_08022E9C,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08030F8C,thumb,sub_08030F8C,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08037B14,thumb,sub_08037B14,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08003AF0,thumb,sub_08003AF0,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08006D2C,thumb,sub_08006D2C,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08006F54,thumb,sub_08006F54,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08007E90,thumb,sub_08007E90,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08007EFC,thumb,sub_08007EFC,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x080116E8,thumb,sub_080116E8,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x080167C0,thumb,sub_080167C0,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08016BCC,thumb,sub_08016BCC,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801A1E0,thumb,sub_0801A1E0,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801A420,thumb,sub_0801A420,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801A488,thumb,sub_0801A488,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801A59C,thumb,sub_0801A59C,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801CB04,thumb,sub_0801CB04,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801ED1C,thumb,sub_0801ED1C,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801EF5C,thumb,sub_0801EF5C,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801EFA4,thumb,sub_0801EFA4,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801F064,thumb,sub_0801F064,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801F48C,thumb,sub_0801F48C,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801F4BC,thumb,sub_0801F4BC,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801F564,thumb,sub_0801F564,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801F704,thumb,sub_0801F704,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801F7D8,thumb,sub_0801F7D8,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801FA2C,thumb,sub_0801FA2C,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x080243F8,thumb,sub_080243F8,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08034518,thumb,sub_08034518,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08037AE8,thumb,sub_08037AE8,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08037B20,thumb,sub_08037B20,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x080035DC,thumb,sub_080035DC,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08003AB4,thumb,sub_08003AB4,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x080131EC,thumb,sub_080131EC,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08019E5C,thumb,sub_08019E5C,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08019F48,thumb,sub_08019F48,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08019F94,thumb,sub_08019F94,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08019FC0,thumb,sub_08019FC0,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801A090,thumb,sub_0801A090,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801A4EC,thumb,sub_0801A4EC,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801BF24,thumb,sub_0801BF24,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801C6EC,thumb,sub_0801C6EC,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801C7DC,thumb,sub_0801C7DC,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801C8CC,thumb,sub_0801C8CC,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801C9BC,thumb,sub_0801C9BC,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801D65C,thumb,sub_0801D65C,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801D6F8,thumb,sub_0801D6F8,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801EFEC,thumb,sub_0801EFEC,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801F45C,thumb,sub_0801F45C,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801F5CC,thumb,sub_0801F5CC,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801F630,thumb,sub_0801F630,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801F758,thumb,sub_0801F758,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08022A54,thumb,sub_08022A54,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08022B34,thumb,sub_08022B34,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08022DB8,thumb,sub_08022DB8,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08022DD4,thumb,sub_08022DD4,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0802441C,thumb,sub_0802441C,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08024450,thumb,sub_08024450,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08037A2C,thumb,sub_08037A2C,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08037A80,thumb,sub_08037A80,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08037AB4,thumb,sub_08037AB4,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08037F64,thumb,sub_08037F64,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x080043F8,thumb,sub_080043F8,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08014174,thumb,sub_08014174,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801452C,thumb,sub_0801452C,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x080167D8,thumb,sub_080167D8,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x080167FC,thumb,sub_080167FC,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08016820,thumb,sub_08016820,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801683C,thumb,sub_0801683C,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08016858,thumb,sub_08016858,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801A024,thumb,sub_0801A024,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801A498,thumb,sub_0801A498,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801A4F8,thumb,sub_0801A4F8,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801F0D4,thumb,sub_0801F0D4,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801F3B4,thumb,sub_0801F3B4,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0801F4D8,thumb,sub_0801F4D8,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08021D74,thumb,sub_08021D74,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08022BA4,thumb,sub_08022BA4,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08022D48,thumb,sub_08022D48,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x080242A0,thumb,sub_080242A0,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08026EA4,thumb,sub_08026EA4,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08027174,thumb,sub_08027174,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08036938,thumb,sub_08036938,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0803695C,thumb,sub_0803695C,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08038934,thumb,sub_08038934,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0803895C,thumb,sub_0803895C,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x080389C4,thumb,sub_080389C4,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08038A38,thumb,sub_08038A38,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08038AC0,thumb,sub_08038AC0,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x08038B34,thumb,sub_08038B34,Code-boundary review of previously untraced Thumb PUSH entry in pre-asset code region; source location recorded in build/research/function-coverage.json; native ABI is not reproduced
+0x0803A1F8,thumb,sub_0803A1F8,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x0803A260,thumb,sub_0803A260,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x0803A8A0,thumb,sub_0803A8A0,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x0803AA00,thumb,sub_0803AA00,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x08039D6C,thumb,sub_08039D6C,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x08039EB4,thumb,sub_08039EB4,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x08039F8C,thumb,sub_08039F8C,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x0803A690,thumb,sub_0803A690,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x0803A984,thumb,sub_0803A984,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x0803ADB8,thumb,sub_0803ADB8,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x0803B14C,thumb,sub_0803B14C,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x0803A228,thumb,sub_0803A228,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x0803A790,thumb,sub_0803A790,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x0803ADE4,thumb,sub_0803ADE4,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x0803B3EC,thumb,sub_0803B3EC,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x0803B410,thumb,sub_0803B410,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x0803AA74,thumb,sub_0803AA74,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x0803AAC4,thumb,sub_0803AAC4,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x0803B428,thumb,sub_0803B428,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x0803B174,thumb,sub_0803B174,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x0803B1BC,thumb,sub_0803B1BC,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x0803B294,thumb,sub_0803B294,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x0803B2DC,thumb,sub_0803B2DC,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x0803A508,thumb,sub_0803A508,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x0803A7BC,thumb,sub_0803A7BC,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x0803A808,thumb,sub_0803A808,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x0803A854,thumb,sub_0803A854,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x0803A8EC,thumb,sub_0803A8EC,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x0803A938,thumb,sub_0803A938,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x0803AE18,thumb,sub_0803AE18,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x0803AF7C,thumb,sub_0803AF7C,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x0803B204,thumb,sub_0803B204,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x0803B24C,thumb,sub_0803B24C,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x0803B384,thumb,sub_0803B384,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x0803AB08,thumb,sub_0803AB08,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x0803ABC0,thumb,sub_0803ABC0,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x0803AC3C,thumb,sub_0803AC3C,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x0803B068,thumb,sub_0803B068,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x0803B324,thumb,sub_0803B324,Reviewed unused floating-point runtime entry; semantic recovery in progress
+0x0803AA9C,thumb,sub_0803AA9C,Runtime pack adapter begins before PUSH with stack allocation
+0x0800436C,thumb,CanAddCollectionCards,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x08004390,thumb,CanRemoveCollectionCards,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x080043B0,thumb,SetCollectionCardCount,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x080047CC,thumb,GetCollectionSortMethod,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x08006B90,thumb,ResetCardMetadata,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x080073F4,thumb,GetAlternateCardNameAddress,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x08008EB4,thumb,Overlay64NonzeroBytes,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x08009C88,thumb,AiUnusedMinimumScore,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x080140C0,thumb,SubtractDeckCapacity,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x080144A8,thumb,AddPlayerDeckCount,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x08016C30,thumb,DrawUnusedStatusCursor,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x0801A634,thumb,GetDuelRecordLabel,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x0801F128,thumb,SelectExternalSerialClock,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x0801F140,thumb,ReadSerialInputBit,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x0801F158,thumb,SetSerialOutputBit,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x0801F168,thumb,ClearSerialOutputBit,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x0801F818,thumb,SetLinkBaud0,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x0801F830,thumb,SetLinkBaud1,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x0801F84C,thumb,SetLinkBaud2,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x08021E3C,thumb,ResetCardSortState,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x080220E4,thumb,ClearLinkTimerFlag,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x080231AC,thumb,GetCardAttributeLabel,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x08024350,thumb,GetPhysicalDuelCard,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x0802436C,thumb,TogglePhysicalDuelDefense,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x08024484,thumb,ClearPhysicalDuelCellBits,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x080244A4,thumb,SetPhysicalDuelAttackRestriction,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x080244BC,thumb,StepPhysicalDuelAttackRestriction,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x08024530,thumb,SetPhysicalDuelSummonFlag,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x08024560,thumb,ClearPhysicalDuelSummonFlag,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x080272F0,thumb,ShowUnusedDuelScreen,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x080276A4,thumb,ResetDuelMenuChoice,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x080276B0,thumb,AdvanceDuelMenuChoice,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x080282D8,thumb,ResetPlayerTurnDone,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x0802B2F4,thumb,AddAbsoluteDuelLifePoints,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x0802B31C,thumb,SubtractAbsoluteDuelLifePoints,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x0803419C,thumb,ClearUnusedOverworldFlags,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x080343F0,thumb,ClearUnusedSceneFlags,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x08037B5C,thumb,SetMusicTemporaryFade,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x08037B7C,thumb,SetMusicFadeIn,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x08037BA4,thumb,ResetPendingMusicTracks,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x08037D04,thumb,BiosSoundBias,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x0800924C,thumb,UnusedNoop_0924C,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x08013B48,thumb,UnusedNoop_13B48,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x08013B58,thumb,UnusedNoop_13B58,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x08013E24,thumb,UnusedNoop_13E24,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x0801899C,thumb,UnusedNoop_1899C,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x08018D20,thumb,UnusedNoop_18D20,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x08018D64,thumb,UnusedNoop_18D64,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x08019F90,thumb,UnusedNoop_19F90,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x0801A46C,thumb,UnusedNoop_1A46C,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x0801EDC4,thumb,UnusedNoop_1EDC4,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x0801F884,thumb,UnusedNoop_1F884,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x080220DC,thumb,UnusedNoop_220DC,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x080220E0,thumb,UnusedNoop_220E0,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x080231F8,thumb,UnusedNoop_231F8,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x080231FC,thumb,UnusedNoop_231FC,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x08023C88,thumb,UnusedNoop_23C88,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x0802B2D0,thumb,UnusedNoop_2B2D0,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x0802B2D4,thumb,UnusedNoop_2B2D4,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x0802B368,thumb,UnusedNoop_2B368,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x08036180,thumb,UnusedNoop_36180,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x080368F4,thumb,UnusedNoop_368F4,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x080378F0,thumb,UnusedNoop_378F0,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x08038E20,thumb,UnusedNoop_38E20,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x08011770,thumb,UnusedReturnZero11770,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x0801814C,thumb,UnusedReturnZero1814C,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x08025C28,thumb,UnusedReturnOne25C28,Manual code-gap review: Thumb body and literal pool inspected; includes unused leaf entries
+0x080000FC,arm,NativeIrqEntry,"Manual code-gap review: original IRQ entry, return-only leaf or register-call veneer"
+0x08003B94,thumb,IdleVBlankCallback,"Manual code-gap review: original IRQ entry, return-only leaf or register-call veneer"
+0x0801F17C,thumb,UnusedReturnZero1F17C,"Manual code-gap review: original IRQ entry, return-only leaf or register-call veneer"
+0x08038E24,thumb,RomCallViaR0,"Manual code-gap review: original IRQ entry, return-only leaf or register-call veneer"
+0x08038E28,thumb,RomCallViaR1,"Manual code-gap review: original IRQ entry, return-only leaf or register-call veneer"
+0x08038E2C,thumb,RomCallViaR2,"Manual code-gap review: original IRQ entry, return-only leaf or register-call veneer"
+0x08038E30,thumb,RomCallViaR3,"Manual code-gap review: original IRQ entry, return-only leaf or register-call veneer"
+0x08038E34,thumb,RomCallViaR4,"Manual code-gap review: original IRQ entry, return-only leaf or register-call veneer"
+0x08038E38,thumb,RomCallViaR5,"Manual code-gap review: original IRQ entry, return-only leaf or register-call veneer"
+0x08038E3C,thumb,RomCallViaR6,"Manual code-gap review: original IRQ entry, return-only leaf or register-call veneer"
+0x08038E40,thumb,RomCallViaR7,"Manual code-gap review: original IRQ entry, return-only leaf or register-call veneer"
+0x08038E44,thumb,RomCallViaR8,"Manual code-gap review: original IRQ entry, return-only leaf or register-call veneer"
+0x08038E48,thumb,RomCallViaR9,"Manual code-gap review: original IRQ entry, return-only leaf or register-call veneer"
+0x08038E4C,thumb,RomCallViaR10,"Manual code-gap review: original IRQ entry, return-only leaf or register-call veneer"
+0x08038E50,thumb,RomCallViaR11,"Manual code-gap review: original IRQ entry, return-only leaf or register-call veneer"
+0x08038E54,thumb,RomCallViaR12,"Manual code-gap review: original IRQ entry, return-only leaf or register-call veneer"
+0x08038E58,thumb,RomCallViaR13,"Manual code-gap review: original IRQ entry, return-only leaf or register-call veneer"
+0x08038E5C,thumb,RomCallViaR14,"Manual code-gap review: original IRQ entry, return-only leaf or register-call veneer"

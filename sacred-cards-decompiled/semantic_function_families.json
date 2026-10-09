@@ -1,0 +1,1852 @@
+{
+  "description": "Reviewed mappings from individual ROM entries to shared or inlined maintained source. Parameterization preserves the original valid-input contracts; this is not a claim of matching instructions or execution comparison.",
+  "families": [
+    {
+      "addresses": [
+        "08000000"
+      ],
+      "source": "src/startup.s",
+      "implementation": "ResetEntry",
+      "notes": "ROM entry branches directly to reset entry at080000C0."
+    },
+    {
+      "addresses": [
+        "08001690"
+      ],
+      "source": "src/deck_management.c",
+      "implementation": "RunDeckManagement cursor update",
+      "notes": "OAM0 hub cursor uses selected item times16 plus56."
+    },
+    {
+      "addresses": [
+        "08001B90"
+      ],
+      "source": "src/name_entry.c",
+      "implementation": "DrawNameEntry and RunNameEntry",
+      "notes": "Six drawing helpers followed by OAM, graphics and palette uploads."
+    },
+    {
+      "addresses": [
+        "08003EB0",
+        "08003EC4",
+        "08003ED8",
+        "08003EEC",
+        "080044CC",
+        "080044FC",
+        "08004528"
+      ],
+      "source": "src/deck_builder_menu.c",
+      "implementation": "MoveCollection and collection loop",
+      "notes": "Parameterized signed step -1,-50,+1,+50; selection wraps once over900 cards."
+    },
+    {
+      "addresses": [
+        "08003F00",
+        "08003F14"
+      ],
+      "source": "src/deck_builder_menu.c",
+      "implementation": "CollectionTransfer",
+      "notes": "Add/remove and graphics redraw; native wrapper tails are shared."
+    },
+    {
+      "addresses": [
+        "08003F28",
+        "08003F48",
+        "08003F5C",
+        "08004630",
+        "080046C8"
+      ],
+      "source": "src/deck_builder_menu.c",
+      "implementation": "RunCollectionEditor and DispatchCollectionStateCommand",
+      "notes": "Exit sound, detail-mode cycle and sort-mode cycle are inlined in the switch."
+    },
+    {
+      "addresses": [
+        "08003F98",
+        "08004034",
+        "08004068",
+        "0800409C",
+        "080040EC",
+        "08004108"
+      ],
+      "source": "src/deck_builder_menu.c",
+      "implementation": "CollectionAction and CollectionTransfer",
+      "notes": "Description, choice movement and transfers retain ROM navigation tables and callbacks."
+    },
+    {
+      "addresses": [
+        "08004124"
+      ],
+      "source": "src/deck_builder_menu.c",
+      "implementation": "CollectionCursor and Cursor",
+      "notes": "Two OAM entries with original coordinate tables, palette and shadow bit."
+    },
+    {
+      "addresses": [
+        "0800465C"
+      ],
+      "source": "src/pre_duel_menu.c",
+      "implementation": "SortWagerList plus editor selection reset",
+      "notes": "The sorting call is shared; the editor caller resets selection to zero."
+    },
+    {
+      "addresses": [
+        "080047B0",
+        "08004878",
+        "08004C9C",
+        "08004D78",
+        "08005330",
+        "08005368",
+        "08005484",
+        "08005580",
+        "0800578C"
+      ],
+      "source": "src/pre_duel_graphics.c",
+      "implementation": "ListCards, Backdrop, Header, ListTiles and DetailRows",
+      "notes": "Collection editor variants use editor=1; detail mode0..3 selects the original row layout."
+    },
+    {
+      "addresses": [
+        "080048D4",
+        "08014760",
+        "08014844"
+      ],
+      "source": "src/pre_duel_display.c",
+      "implementation": "DrawCardListActionPopup and DrawCardListSortPopup",
+      "notes": "Original distinct map/text addresses are passed by collection/deck callers."
+    },
+    {
+      "addresses": [
+        "08005998"
+      ],
+      "source": "src/pre_duel_graphics.c",
+      "implementation": "InitializeCollectionSprites",
+      "notes": "Stage dispatch factors sprite clearing/copying and original empty stages."
+    },
+    {
+      "addresses": [
+        "08005BCC",
+        "08005C1C",
+        "08005C6C",
+        "08005CBC",
+        "08005D0C",
+        "08005D2C",
+        "08005D88"
+      ],
+      "source": "src/deck_builder_menu.c",
+      "implementation": "SortPopup, Cursor and ClearPopupSprites",
+      "notes": "Collection sort navigation tables and sort-confirm branch are parameterized with deck=0."
+    },
+    {
+      "addresses": [
+        "08005EAC",
+        "08005F48",
+        "08005FE0",
+        "08006044"
+      ],
+      "source": "src/collection_display.c",
+      "implementation": "RestorePalettes, Initialize, Show, SpritesAndPalettes",
+      "notes": "VBlank callback family selected by CollectionDisplayFrame."
+    },
+    {
+      "addresses": [
+        "08005FFC"
+      ],
+      "source": "src/menu_graphics.c",
+      "implementation": "UploadMenuGraphics",
+      "notes": "Trampoline to all background and object graphics uploads."
+    },
+    {
+      "addresses": [
+        "0800600C"
+      ],
+      "source": "src/collection_display.c",
+      "implementation": "UploadCollectionFrame",
+      "notes": "Palettes then BG8000/BGC000/object0 then OAM, in that order."
+    },
+    {
+      "addresses": [
+        "08006188",
+        "080061A8"
+      ],
+      "source": "src/save_storage.c",
+      "implementation": "WriteVerified",
+      "notes": "Primary/backup offset and fixed0x80A payload are parameters."
+    },
+    {
+      "addresses": [
+        "0800634C",
+        "08006368",
+        "08006384",
+        "080063A0"
+      ],
+      "source": "src/save_storage.c",
+      "implementation": "SetCommitState",
+      "notes": "Writes marker0/1/2/3 using the same verified SRAM byte path."
+    },
+    {
+      "addresses": [
+        "080063BC"
+      ],
+      "source": "src/save_storage.c",
+      "implementation": "ReadSram in DetectSaveState",
+      "notes": "One-byte commit-state read."
+    },
+    {
+      "addresses": [
+        "080063E0",
+        "080063FC",
+        "08006468",
+        "0800648C"
+      ],
+      "source": "src/save_storage.c",
+      "implementation": "WriteChecksum and ReadChecksum",
+      "notes": "Primary/backup checksum addresses are parameters."
+    },
+    {
+      "addresses": [
+        "08006418",
+        "08006440"
+      ],
+      "source": "src/save_storage.c",
+      "implementation": "DetectSaveState validation branches",
+      "notes": "Each branch loads and unpacks that copy, then compares its payload checksum."
+    },
+    {
+      "addresses": [
+        "080064B0"
+      ],
+      "source": "src/save_storage.c",
+      "implementation": "InitializeSaveStorage signature write",
+      "notes": "Writes exactly15 bytes without the terminator."
+    },
+    {
+      "addresses": [
+        "080064C8"
+      ],
+      "source": "src/save_storage.c",
+      "implementation": "SignatureMatches",
+      "notes": "Read15 bytes and compare in order."
+    },
+    {
+      "addresses": [
+        "08007604",
+        "08007610"
+      ],
+      "source": "src/pre_duel_menu.c",
+      "implementation": "RunPreDuelMenu and LoadWagerList",
+      "notes": "Wager reset and list initialization are inlined."
+    },
+    {
+      "addresses": [
+        "080078D4",
+        "08007B68"
+      ],
+      "source": "src/pre_duel_display.c",
+      "implementation": "DrawSpecialWagerCursor and DrawNoWagerCursor",
+      "notes": "Original two-choice coordinate tables parameterize shared cursor composition."
+    },
+    {
+      "addresses": [
+        "08007E34"
+      ],
+      "source": "src/pre_duel_graphics.c",
+      "implementation": "Backdrop",
+      "notes": "Same original collection/pre-duel backdrop routine, retaining copy counts."
+    },
+    {
+      "addresses": [
+        "08008C78",
+        "08008CC8",
+        "08008D18",
+        "08008D68",
+        "08008E34"
+      ],
+      "source": "src/pre_duel_display.c",
+      "implementation": "RunWagerSortMenu and popup sprite clear",
+      "notes": "Navigation handlers share the bounded four-direction switch."
+    },
+    {
+      "addresses": [
+        "08012868"
+      ],
+      "source": "src/battle_animation.c",
+      "implementation": "PresentBattleAnimation initialization",
+      "notes": "Uploads three banks, clears OAM/offsets and blend registers before showing battle."
+    },
+    {
+      "addresses": [
+        "080128EC",
+        "080128F8"
+      ],
+      "source": "src/battle_animation.c",
+      "implementation": "BlankBattle and ShowBattle",
+      "notes": "Original VBlank display callbacks."
+    },
+    {
+      "addresses": [
+        "08012B3C",
+        "08012DD0"
+      ],
+      "source": "src/battle_animation.c",
+      "implementation": "AnimateBattleDestruction alpha update and loop predicate",
+      "notes": "Three-step ROM alpha cycle and step<18 condition."
+    },
+    {
+      "addresses": [
+        "08013014",
+        "08013030"
+      ],
+      "source": "src/battle_animation.c",
+      "implementation": "UploadOamBlend",
+      "notes": "Shared OAM then blend callback."
+    },
+    {
+      "addresses": [
+        "08013024",
+        "08013040"
+      ],
+      "source": "src/battle_animation.c",
+      "implementation": "UploadPalettes callback",
+      "notes": "Original wrappers call the palette uploader only."
+    },
+    {
+      "addresses": [
+        "0801304C",
+        "08013404",
+        "08013B18"
+      ],
+      "source": "src/battle_animation.c",
+      "implementation": "UploadObjects",
+      "notes": "Shared object tile upload callback."
+    },
+    {
+      "addresses": [
+        "08013058",
+        "080133E0",
+        "08013B24"
+      ],
+      "source": "src/battle_animation.c",
+      "implementation": "ShowObjects",
+      "notes": "Display and object blend configuration shared across effects."
+    },
+    {
+      "addresses": [
+        "0801307C",
+        "08013758",
+        "08013B5C"
+      ],
+      "source": "src/battle_animation.c",
+      "implementation": "HideObjects",
+      "notes": "Disable object display and reset blend configuration."
+    },
+    {
+      "addresses": [
+        "08013410"
+      ],
+      "source": "src/battle_animation.c",
+      "implementation": "UploadOamOffsets",
+      "notes": "OAM and background offsets callback."
+    },
+    {
+      "addresses": [
+        "08013420"
+      ],
+      "source": "src/battle_animation.c",
+      "implementation": "EndHit",
+      "notes": "Original end-of-hit display register updates."
+    },
+    {
+      "addresses": [
+        "0801371C",
+        "0801373C"
+      ],
+      "source": "src/battle_animation.c",
+      "implementation": "ShowLifeObjects and object/blend upload",
+      "notes": "Life-point animation callback setup and frame uploads."
+    },
+    {
+      "addresses": [
+        "0801374C",
+        "08013B4C"
+      ],
+      "source": "src/battle_animation.c",
+      "implementation": "UploadOam callback",
+      "notes": "Original wrappers call only OAM uploader."
+    },
+    {
+      "addresses": [
+        "08013C84"
+      ],
+      "source": "src/deck_builder_menu.c",
+      "implementation": "DeckInput",
+      "notes": "Polls menu-repeat state but reads frame-repeat keys, retaining the native distinction."
+    },
+    {
+      "addresses": [
+        "08013DAC",
+        "08013DC0",
+        "08013DE8",
+        "08013DFC"
+      ],
+      "source": "src/deck_builder_menu.c",
+      "implementation": "RunDeckEditor movement cases",
+      "notes": "MovePlayerDeckSelection step1/10, then stage3 redraw."
+    },
+    {
+      "addresses": [
+        "08013E10",
+        "08013E28",
+        "08013E38",
+        "08013E50"
+      ],
+      "source": "src/deck_builder_menu.c",
+      "implementation": "RunDeckEditor mode/sort/count cases",
+      "notes": "Detail cycle, sort cycle, nonempty predicate and sort-reset are inlined."
+    },
+    {
+      "addresses": [
+        "08013E80",
+        "08013F10",
+        "08013F44",
+        "08013F78",
+        "08013FC8"
+      ],
+      "source": "src/deck_builder_menu.c",
+      "implementation": "DeckAction",
+      "notes": "Native two-choice popup action/description/removal paths."
+    },
+    {
+      "addresses": [
+        "08013FE4"
+      ],
+      "source": "src/deck_builder_menu.c",
+      "implementation": "DeckCursor and Cursor",
+      "notes": "Original deck action coordinate tables."
+    },
+    {
+      "addresses": [
+        "08014294"
+      ],
+      "source": "src/deck_builder_state.c",
+      "implementation": "DispatchDeckStateCommand command6",
+      "notes": "Detail-mode cycle0..3 and sound54."
+    },
+    {
+      "addresses": [
+        "080143C4"
+      ],
+      "source": "src/deck_builder_state.c",
+      "implementation": "AddSelectedCollectionCardToDeck append branch",
+      "notes": "Append at current count, increment count and recompute cost."
+    },
+    {
+      "addresses": [
+        "08014554"
+      ],
+      "source": "src/deck_builder_state.c",
+      "implementation": "SubtractCost",
+      "notes": "Subtract cost with saturation at zero."
+    },
+    {
+      "addresses": [
+        "08014474",
+        "08014480"
+      ],
+      "source": "src/deck_builder_graphics.c",
+      "implementation": "Details and Cards",
+      "notes": "Detail byte access and scroll selection/limit are inlined."
+    },
+    {
+      "addresses": [
+        "08014678"
+      ],
+      "source": "src/deck_builder_menu.c",
+      "implementation": "RunDeckEditor sort-cycle case",
+      "notes": "Mode increments through0..8 then SortPlayerDeck resets selection."
+    },
+    {
+      "addresses": [
+        "080151D0",
+        "08015208",
+        "080152CC",
+        "0801542C",
+        "08015638"
+      ],
+      "source": "src/deck_builder_graphics.c",
+      "implementation": "Details",
+      "notes": "Dispatcher and four detail-row bodies are one mode-dependent loop."
+    },
+    {
+      "addresses": [
+        "08015810"
+      ],
+      "source": "src/deck_builder_state.c",
+      "implementation": "DeckAllowsAnotherCopy",
+      "notes": "One/two/three-copy limits with the native terminated-list semantics."
+    },
+    {
+      "addresses": [
+        "08015938",
+        "08015988",
+        "080159D8",
+        "08015A28",
+        "08015A78",
+        "08015A98",
+        "08015AF4"
+      ],
+      "source": "src/deck_builder_menu.c",
+      "implementation": "SortPopup, Cursor and ClearPopupSprites",
+      "notes": "Deck variant uses original four-direction choice tables and sort-mode reset."
+    },
+    {
+      "addresses": [
+        "08015C18",
+        "08015CB4",
+        "08015D4C",
+        "08015D74"
+      ],
+      "source": "src/collection_display.c",
+      "implementation": "RestorePalettes, Initialize, Show, SpritesAndPalettes",
+      "notes": "Deck callback family shares identical callback bodies with collection editor."
+    },
+    {
+      "addresses": [
+        "08015C48",
+        "08015D84"
+      ],
+      "source": "src/collection_display.c",
+      "implementation": "UploadCollectionList",
+      "notes": "Same three-bank upload order."
+    },
+    {
+      "addresses": [
+        "08015C5C"
+      ],
+      "source": "src/collection_display.c",
+      "implementation": "Windows",
+      "notes": "Same original window and blend register values."
+    },
+    {
+      "addresses": [
+        "08015D68"
+      ],
+      "source": "src/menu_graphics.c",
+      "implementation": "UploadMenuGraphics",
+      "notes": "Original wrapper forwards to graphics upload;16228 uses background banks only, handled separately below."
+    },
+    {
+      "addresses": [
+        "08016234"
+      ],
+      "source": "src/duel_flow.c",
+      "implementation": "ResolveDuelOutcome",
+      "notes": "Win/loss dispatch factors the native outcome check."
+    },
+    {
+      "addresses": [
+        "08017B68"
+      ],
+      "source": "src/text.c",
+      "implementation": "RenderBitmapGlyph and RenderBitmapString bold expansion",
+      "notes": "Seven rows of OR-with-shift glyph boldening are inlined into bitmap renderer."
+    },
+    {
+      "addresses": [
+        "08017EA4"
+      ],
+      "source": "src/duel_flow.c",
+      "implementation": "RunDuel opposing-side message",
+      "notes": "Opponent-selected text pointer; the preceding temporary card lookup has no persistent effect."
+    },
+    {
+      "addresses": [
+        "0801811C"
+      ],
+      "source": "src/duel_flow.c",
+      "implementation": "UploadPalettes callback",
+      "notes": "FadeIntoDuel and FinishDuel directly select the same uploader."
+    },
+    {
+      "addresses": [
+        "080181B0"
+      ],
+      "source": "src/duel_flow.c",
+      "implementation": "InitializeDuel auxiliary-flag clear",
+      "notes": "Both side flags cleared before player actions."
+    },
+    {
+      "addresses": [
+        "080185F8",
+        "08018608",
+        "08018618",
+        "08018650",
+        "08018660",
+        "08018670",
+        "080186A4",
+        "08018900",
+        "08018948",
+        "08018954",
+        "08018D14"
+      ],
+      "source": "src/password.c",
+      "implementation": "Password input, cursor, blink and display helpers",
+      "notes": "State-byte mutations and accesses are inlined into the password screen functions."
+    },
+    {
+      "addresses": [
+        "0801A820",
+        "0801A898",
+        "0801A910",
+        "0801A988",
+        "0801ADE0",
+        "0801AE5C",
+        "0801AED8",
+        "0801AF54"
+      ],
+      "source": "src/shop_menu.c",
+      "implementation": "NavigateShop",
+      "notes": "Four directional wrappers per buy/sell mode share the original ring-buffer navigation."
+    },
+    {
+      "addresses": [
+        "0801AA00",
+        "0801AA78",
+        "0801AAF0",
+        "0801AFD0",
+        "0801B050",
+        "0801B0D0"
+      ],
+      "source": "src/shop_menu.c",
+      "implementation": "PageOrSortShop",
+      "notes": "Buy/sell page movement and sort-cycle wrappers are parameterized."
+    },
+    {
+      "addresses": [
+        "0801B2AC",
+        "0801B2D4",
+        "0801B2FC",
+        "0801BC98",
+        "0801BCC0",
+        "0801BCE8"
+      ],
+      "source": "src/shop_menu.c",
+      "implementation": "RunShopActionMenu",
+      "notes": "Choice movement and confirm dispatch retain native cursor/shadow, callback and sound order."
+    },
+    {
+      "addresses": [
+        "0801B5B0",
+        "0801C1D4"
+      ],
+      "source": "src/shop_menu.c",
+      "implementation": "FillShopRows",
+      "notes": "Five row calls parameterized by selling mode."
+    },
+    {
+      "addresses": [
+        "0801B684",
+        "0801C2F8"
+      ],
+      "source": "src/shop_menu.c",
+      "implementation": "PageOrSortShop sort increment",
+      "notes": "Original sort cycle0..8 then mode-specific sort-table lookup."
+    },
+    {
+      "addresses": [
+        "0801B980",
+        "0801B9D0",
+        "0801BA20",
+        "0801BA70",
+        "0801BAC0",
+        "0801BB64",
+        "0801E6EC",
+        "0801E73C",
+        "0801E78C",
+        "0801E7DC",
+        "0801E82C",
+        "0801E8D0"
+      ],
+      "source": "src/shop_menu.c",
+      "implementation": "RunShopSortMenu and CloseShopSortMenu",
+      "notes": "Buy/sell duplicate popup navigation, apply and close bodies."
+    },
+    {
+      "addresses": [
+        "0801C0CC",
+        "0801C0E0",
+        "0801C0F0",
+        "0801C114",
+        "0801C26C",
+        "0801C288",
+        "0801C2A4",
+        "0801C324",
+        "0801C344",
+        "0801C364"
+      ],
+      "source": "src/shop_menu.c",
+      "implementation": "OffsetShopRow, PhysicalRow, NavigateShop and action menu",
+      "notes": "Small row/ring/choice helpers are inlined with the original single-wrap arithmetic."
+    },
+    {
+      "addresses": [
+        "0801CFD0"
+      ],
+      "source": "src/shop_panel.c",
+      "implementation": "DrawShopSellPanel and DrawPricePanel",
+      "notes": "Sell panel sequences original label/price/count drawing helpers."
+    },
+    {
+      "addresses": [
+        "0801FDB0"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[0]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "0801FDE8"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[1]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "08020098"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[2]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "08020448"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[3]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "08020804"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[4]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "08020BC0"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[5]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "08020F40"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[6]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "080212E8"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[7]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "080216B0"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[8]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "08021738"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[9]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "080217E0"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[10]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "080218B4"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[11]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "0801FE3C"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[12]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "08020110"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[13]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "0802048C"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[14]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "08020848"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[15]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "08020C04"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[16]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "08020F84"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[17]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "08021374"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[18]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "0802193C"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[19]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "0801FEC4"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[20]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "080201C0"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[21]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "08020544"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[22]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "08020900"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[23]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "08020CB0"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[24]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "08021038"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[25]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "08021420"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[26]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "080219E4"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[27]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "0801FF44"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[28]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "08020270"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[29]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "080205FC"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[30]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "080209B8"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[31]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "08020D5C"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[32]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "080210EC"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[33]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "080214CC"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[34]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "08021A8C"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[35]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "0801FFC4"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[36]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "08020320"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[37]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "080206B4"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[38]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "08020A70"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[39]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "08020E08"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[40]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "080211A0"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[41]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "08021C64"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[42]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "08021578"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[43]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "08021B34"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[44]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "08020010"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[45]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "08020398"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[46]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "0802074C"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[47]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "08020B08"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[48]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "08020E94"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[49]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "08021234"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[50]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "08021CEC"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[51]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "08021604"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[52]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "08021BBC"
+      ],
+      "source": "src/card_sort.c",
+      "implementation": "BuildKey / methods[53]",
+      "notes": "Original key-builder table slot; mode table and shared key logic retain the corresponding native flags and fields."
+    },
+    {
+      "addresses": [
+        "080046C4",
+        "08005FD8",
+        "08005FDC",
+        "08006008",
+        "08006028",
+        "0800603C",
+        "0800924C",
+        "080133DC",
+        "08013B14",
+        "08013B48",
+        "08013B58",
+        "08013E24",
+        "080143E8",
+        "08015D44",
+        "08015D48",
+        "08015D98",
+        "08015DB4",
+        "08015DD0",
+        "08015DD4",
+        "08018128",
+        "0801899C",
+        "08018D20",
+        "08019F90",
+        "0801A46C",
+        "0801EDC4",
+        "0801F884",
+        "080220DC",
+        "080220E0",
+        "080231F8",
+        "080231FC",
+        "08023C88",
+        "0802B2D0",
+        "0802B2D4",
+        "0802B368",
+        "08036180",
+        "080368E4",
+        "080368E8",
+        "080368EC",
+        "080368F4",
+        "080378F0"
+      ],
+      "source": "src/unused_helpers.c",
+      "implementation": "RomUnusedNoop",
+      "notes": "Inspected original entry returns immediately; shared no-op is sufficient without native address matching."
+    },
+    {
+      "addresses": [
+        "08011770",
+        "0801814C"
+      ],
+      "source": "src/unused_helpers.c",
+      "implementation": "RomUnusedReturnZero",
+      "notes": "Original mov r0,0; bx lr."
+    },
+    {
+      "addresses": [
+        "08025C28"
+      ],
+      "source": "src/unused_helpers.c",
+      "implementation": "RomUnusedReturnOne",
+      "notes": "Original mov r0,1; bx lr."
+    },
+    {
+      "addresses": [
+        "08022380",
+        "080223A0"
+      ],
+      "source": "src/title_screen.c",
+      "implementation": "RunTitleMenu and DrawTitleChoice",
+      "notes": "SELECT toggles choice then draws; B selects continue. Return value is carried by the caller choice variable."
+    },
+    {
+      "addresses": [
+        "080223EC"
+      ],
+      "source": "src/title_screen.c",
+      "implementation": "LoadTitleGraphics and Frame(InitializeTitleDisplay)",
+      "notes": "Original loader, tile/palette composition and initialization callback sequence."
+    },
+    {
+      "addresses": [
+        "0802240C",
+        "080227AC"
+      ],
+      "source": "src/menu_graphics.c",
+      "implementation": "ClearMenuGraphics",
+      "notes": "Title exit calls shared clear, then uploads palettes in RunTitleScreen."
+    },
+    {
+      "addresses": [
+        "0802280C",
+        "0802282C"
+      ],
+      "source": "src/title_screen.c",
+      "implementation": "DrawOverwriteChoice",
+      "notes": "Two map halfwords select confirm/cancel."
+    },
+    {
+      "addresses": [
+        "0802284C",
+        "0802288C"
+      ],
+      "source": "src/title_screen.c",
+      "implementation": "UploadBlend",
+      "notes": "Equivalent title/selection blend callbacks."
+    },
+    {
+      "addresses": [
+        "08022858"
+      ],
+      "source": "src/scene_graphics.c",
+      "implementation": "UploadPalettes",
+      "notes": "Title callback simply forwards to palette uploader."
+    },
+    {
+      "addresses": [
+        "08022864"
+      ],
+      "source": "src/title_screen.c",
+      "implementation": "ShowTitle",
+      "notes": "Palette upload then display-control0x1800."
+    },
+    {
+      "addresses": [
+        "0802287C"
+      ],
+      "source": "src/title_screen.c",
+      "implementation": "RunTitleMenu initial graphics/OAM uploads",
+      "notes": "Native initial transfer wrapper is inlined."
+    },
+    {
+      "addresses": [
+        "08022898"
+      ],
+      "source": "src/scene_graphics.c",
+      "implementation": "UploadOam",
+      "notes": "Title wrapper forwards only to OAM uploader."
+    },
+    {
+      "addresses": [
+        "0802293C",
+        "08022960"
+      ],
+      "source": "src/title_screen.c",
+      "implementation": "ShowOverwriteWarning and HideOverwriteWarning",
+      "notes": "Original display bits and blend brightness writes."
+    },
+    {
+      "addresses": [
+        "08022B20",
+        "08022B24",
+        "08022B28",
+        "08022B2C",
+        "08022B30"
+      ],
+      "source": "src/link_menu.c",
+      "implementation": "LinkSubmenu direction/confirm/cancel no-ops",
+      "notes": "These five entries are empty in the cartridge."
+    },
+    {
+      "addresses": [
+        "08022B8C"
+      ],
+      "source": "src/link_menu.c",
+      "implementation": "NextLinkMenuChoice",
+      "notes": "Increment only below2."
+    },
+    {
+      "addresses": [
+        "08022EF4",
+        "08022F1C",
+        "08022F40",
+        "08022F64",
+        "08022F88",
+        "08022FAC",
+        "08022FE8",
+        "08022FF8",
+        "0802301C"
+      ],
+      "source": "src/menu_graphics.c",
+      "implementation": "ClearMenuGraphics",
+      "notes": "Four background banks, two object banks and two palette banks cleared by the original halfword fill counts."
+    },
+    {
+      "addresses": [
+        "0802319C"
+      ],
+      "source": "src/unused_helpers.c",
+      "implementation": "GetCardTypeLabel",
+      "notes": "Table lookup at08D4BC3C."
+    },
+    {
+      "addresses": [
+        "080232B0",
+        "08023A48"
+      ],
+      "source": "src/battle.c",
+      "implementation": "AttackAgainstAttack",
+      "notes": "Numeric branch plus attribute override is factored into one helper."
+    },
+    {
+      "addresses": [
+        "0802341C",
+        "08023450"
+      ],
+      "source": "src/battle.c",
+      "implementation": "ResolveBattleNumbers commands4/6",
+      "notes": "Direct attack damage and display result10/15."
+    },
+    {
+      "addresses": [
+        "08023484",
+        "080234CC"
+      ],
+      "source": "src/battle.c",
+      "implementation": "Heal",
+      "notes": "Side A/B variants parameterized; cap9999."
+    },
+    {
+      "addresses": [
+        "080234A4",
+        "080234EC"
+      ],
+      "source": "src/battle.c",
+      "implementation": "Damage",
+      "notes": "Side A/B variants parameterized; zero LP sets owner defeat mask."
+    },
+    {
+      "addresses": [
+        "0802354C",
+        "0802355C"
+      ],
+      "source": "src/battle.c",
+      "implementation": "AttackAgainstAttack destruction flags",
+      "notes": "Original flag bits1/2 are ORed in resolution cases."
+    },
+    {
+      "addresses": [
+        "08023644"
+      ],
+      "source": "src/duel_player.c",
+      "implementation": "PreparePlayerMonsterAttack",
+      "notes": "Selected cell defense bit chooses the original setup routine."
+    },
+    {
+      "addresses": [
+        "08023A84"
+      ],
+      "source": "src/battle.c",
+      "implementation": "AttackAgainstDefense",
+      "notes": "Attribute comparison and its two override paths."
+    },
+    {
+      "addresses": [
+        "08023AC0"
+      ],
+      "source": "src/battle.c",
+      "implementation": "DefenseAgainstAttack",
+      "notes": "Attribute comparison and its two override paths."
+    },
+    {
+      "addresses": [
+        "08023CB4"
+      ],
+      "source": "src/battle.c",
+      "implementation": "Battle result reset",
+      "notes": "Attack/direct cases reset the display result before numerical resolution."
+    },
+    {
+      "addresses": [
+        "08024E8C"
+      ],
+      "source": "src/duel_menus.c",
+      "implementation": "ShowDuelStatsWhileHeld uploads",
+      "notes": "Offsets then88 words from BG87A0 and400 words from BGF000."
+    },
+    {
+      "addresses": [
+        "080257F4"
+      ],
+      "source": "src/duel_flow.c",
+      "implementation": "InitializeDuelDisplay view-mode initialization",
+      "notes": "Set view-mode byte to4; separate reset accessor is provided in unused_helpers.c."
+    },
+    {
+      "addresses": [
+        "08027510",
+        "08027534",
+        "08027558"
+      ],
+      "source": "src/duel_player.c",
+      "implementation": "RunPlayerDuelTurn directional cases",
+      "notes": "Row down clamps4; columns wrap0..4; sound54 precedes movement."
+    },
+    {
+      "addresses": [
+        "08027EEC"
+      ],
+      "source": "src/duel_player.c",
+      "implementation": "CancelDuelSelection mode0",
+      "notes": "Sound55 then RunDuelContextMenu."
+    },
+    {
+      "addresses": [
+        "08027EFC",
+        "08027F28",
+        "08027F54"
+      ],
+      "source": "src/duel_player.c",
+      "implementation": "CancelDuelSelection modes1/2/4",
+      "notes": "Three identical original cancellation routines share one restoration branch."
+    },
+    {
+      "addresses": [
+        "080284A0"
+      ],
+      "source": "src/title_screen.c",
+      "implementation": "UploadBlend",
+      "notes": "Also expressed independently in battle/duel/shop callback families."
+    },
+    {
+      "addresses": [
+        "080284FC",
+        "08028514",
+        "08028530",
+        "0802854C"
+      ],
+      "source": "src/menu_graphics.c",
+      "implementation": "UploadMenuBackgroundGraphics",
+      "notes": "Background bank index0/1/2/3 parameterizes four equal transfer helpers."
+    },
+    {
+      "addresses": [
+        "08028580",
+        "0802859C"
+      ],
+      "source": "src/menu_graphics.c",
+      "implementation": "UploadMenuGraphics object-bank loop",
+      "notes": "Object bank index0/1 parameterizes equal transfer helpers."
+    },
+    {
+      "addresses": [
+        "080285D8"
+      ],
+      "source": "src/duel_flow.c",
+      "implementation": "InitializeDuelDisplay blanking",
+      "notes": "Palette0 and DISPCNT zeroing appears inline in multiple original screen callers."
+    },
+    {
+      "addresses": [
+        "08034658"
+      ],
+      "source": "src/duel_ui.c",
+      "implementation": "CopyMiniaturePalette",
+      "notes": "Native caller-supplied destination is retained; duel wrapper selects gObjectPaletteBuffer."
+    },
+    {
+      "addresses": [
+        "08035AB4"
+      ],
+      "source": "src/duel_ui.c",
+      "implementation": "ComposeDuelMiniatureOam",
+      "notes": "Single-call wrapper."
+    },
+    {
+      "addresses": [
+        "080360A4"
+      ],
+      "source": "src/trap_effects.c",
+      "implementation": "TriggerSpellInList(kind11,gTrapRaigekiSpellIndices,1)",
+      "notes": "Classification and terminated metadata-1A list with sentinelFFFF."
+    },
+    {
+      "addresses": [
+        "08036928",
+        "0803692C",
+        "08036930"
+      ],
+      "source": "src/gba_bios.h",
+      "implementation": "BiosCpuFastSet, BiosCpuSet, BiosHuffmanUnpack",
+      "notes": "Original BIOS SWI veneers retained as inline assembly."
+    },
+    {
+      "addresses": [
+        "08036C74"
+      ],
+      "source": "src/audio_sequence.c",
+      "implementation": "MidiKeyToPcmFrequency high-product operation",
+      "notes": "Native ARM helper returns the high32 bits of unsigned32x32; C uses uint64_t product."
+    },
+    {
+      "addresses": [
+        "08036D10"
+      ],
+      "source": "src/audio_mixer.c",
+      "implementation": "PreparePcmBuffer",
+      "notes": "Copied ARM mixer entry shares registers with36D04; explicit C arguments preserve the operation."
+    },
+    {
+      "addresses": [
+        "08036D92",
+        "08036E9C",
+        "08037084"
+      ],
+      "source": "src/audio_mixer.c",
+      "implementation": "TickPcmEnvelope, MixPcmChannel and m4aSoundMain channel loop",
+      "notes": "These are internal copied-code blocks with shared registers/stack, represented as C helper calls and loop continuation."
+    },
+    {
+      "addresses": [
+        "08037858"
+      ],
+      "source": "src/audio_sequence.c",
+      "implementation": "ReadRawSequenceByte",
+      "notes": "Native returns operand in R3, C returns the byte explicitly."
+    },
+    {
+      "addresses": [
+        "0803895C"
+      ],
+      "source": "src/audio_controls.c",
+      "implementation": "SetMusicVolume and ChangeTracks operation0",
+      "notes": "Player guard, track-mask selection, volume scaling and dirty bits."
+    },
+    {
+      "addresses": [
+        "08038D7C",
+        "08038D90",
+        "08038DA4",
+        "08038DB8",
+        "08038DCC",
+        "08038DE0",
+        "08038DEC",
+        "08038DF8",
+        "08038E0C"
+      ],
+      "source": "src/audio_sequence.c",
+      "implementation": "MusicCommandExtended offsets table",
+      "notes": "Nine byte-assignment callbacks with original distinct track offsets."
+    },
+    {
+      "addresses": [
+        "08033E1C"
+      ],
+      "source": "src/effect_families.c",
+      "implementation": "EquipmentAcceptsCard(1,card)",
+      "notes": "Fixed-mask wrapper: bitset base08175804 +113*equipment; card ID selects bit and byte."
+    },
+    {
+      "addresses": [
+        "08033E38"
+      ],
+      "source": "src/effect_families.c",
+      "implementation": "EquipmentAcceptsCard(2,card)",
+      "notes": "Fixed-mask wrapper: bitset base08175804 +113*equipment; card ID selects bit and byte."
+    },
+    {
+      "addresses": [
+        "08033E54"
+      ],
+      "source": "src/effect_families.c",
+      "implementation": "EquipmentAcceptsCard(3,card)",
+      "notes": "Fixed-mask wrapper: bitset base08175804 +113*equipment; card ID selects bit and byte."
+    },
+    {
+      "addresses": [
+        "08033E70"
+      ],
+      "source": "src/effect_families.c",
+      "implementation": "EquipmentAcceptsCard(4,card)",
+      "notes": "Fixed-mask wrapper: bitset base08175804 +113*equipment; card ID selects bit and byte."
+    },
+    {
+      "addresses": [
+        "08033E8C"
+      ],
+      "source": "src/effect_families.c",
+      "implementation": "EquipmentAcceptsCard(5,card)",
+      "notes": "Fixed-mask wrapper: bitset base08175804 +113*equipment; card ID selects bit and byte."
+    },
+    {
+      "addresses": [
+        "08033EA8"
+      ],
+      "source": "src/effect_families.c",
+      "implementation": "EquipmentAcceptsCard(6,card)",
+      "notes": "Fixed-mask wrapper: bitset base08175804 +113*equipment; card ID selects bit and byte."
+    },
+    {
+      "addresses": [
+        "08033EC4"
+      ],
+      "source": "src/effect_families.c",
+      "implementation": "EquipmentAcceptsCard(7,card)",
+      "notes": "Fixed-mask wrapper: bitset base08175804 +113*equipment; card ID selects bit and byte."
+    },
+    {
+      "addresses": [
+        "08033EE0"
+      ],
+      "source": "src/effect_families.c",
+      "implementation": "EquipmentAcceptsCard(8,card)",
+      "notes": "Fixed-mask wrapper: bitset base08175804 +113*equipment; card ID selects bit and byte."
+    },
+    {
+      "addresses": [
+        "08033EFC"
+      ],
+      "source": "src/effect_families.c",
+      "implementation": "EquipmentAcceptsCard(9,card)",
+      "notes": "Fixed-mask wrapper: bitset base08175804 +113*equipment; card ID selects bit and byte."
+    },
+    {
+      "addresses": [
+        "08033F18"
+      ],
+      "source": "src/effect_families.c",
+      "implementation": "EquipmentAcceptsCard(10,card)",
+      "notes": "Fixed-mask wrapper: bitset base08175804 +113*equipment; card ID selects bit and byte."
+    },
+    {
+      "addresses": [
+        "08033F34"
+      ],
+      "source": "src/effect_families.c",
+      "implementation": "EquipmentAcceptsCard(11,card)",
+      "notes": "Fixed-mask wrapper: bitset base08175804 +113*equipment; card ID selects bit and byte."
+    },
+    {
+      "addresses": [
+        "08033F50"
+      ],
+      "source": "src/effect_families.c",
+      "implementation": "EquipmentAcceptsCard(12,card)",
+      "notes": "Fixed-mask wrapper: bitset base08175804 +113*equipment; card ID selects bit and byte."
+    },
+    {
+      "addresses": [
+        "08033F6C"
+      ],
+      "source": "src/effect_families.c",
+      "implementation": "EquipmentAcceptsCard(13,card)",
+      "notes": "Fixed-mask wrapper: bitset base08175804 +113*equipment; card ID selects bit and byte."
+    },
+    {
+      "addresses": [
+        "08033F88"
+      ],
+      "source": "src/effect_families.c",
+      "implementation": "EquipmentAcceptsCard(14,card)",
+      "notes": "Fixed-mask wrapper: bitset base08175804 +113*equipment; card ID selects bit and byte."
+    },
+    {
+      "addresses": [
+        "08033FA4"
+      ],
+      "source": "src/effect_families.c",
+      "implementation": "EquipmentAcceptsCard(15,card)",
+      "notes": "Fixed-mask wrapper: bitset base08175804 +113*equipment; card ID selects bit and byte."
+    },
+    {
+      "addresses": [
+        "08033FC0"
+      ],
+      "source": "src/effect_families.c",
+      "implementation": "EquipmentAcceptsCard(16,card)",
+      "notes": "Fixed-mask wrapper: bitset base08175804 +113*equipment; card ID selects bit and byte."
+    },
+    {
+      "addresses": [
+        "08033FDC"
+      ],
+      "source": "src/effect_families.c",
+      "implementation": "EquipmentAcceptsCard(17,card)",
+      "notes": "Fixed-mask wrapper: bitset base08175804 +113*equipment; card ID selects bit and byte."
+    },
+    {
+      "addresses": [
+        "08033FF8"
+      ],
+      "source": "src/effect_families.c",
+      "implementation": "EquipmentAcceptsCard(18,card)",
+      "notes": "Fixed-mask wrapper: bitset base08175804 +113*equipment; card ID selects bit and byte."
+    },
+    {
+      "addresses": [
+        "08034014"
+      ],
+      "source": "src/effect_families.c",
+      "implementation": "EquipmentAcceptsCard(19,card)",
+      "notes": "Fixed-mask wrapper: bitset base08175804 +113*equipment; card ID selects bit and byte."
+    },
+    {
+      "addresses": [
+        "08034030"
+      ],
+      "source": "src/effect_families.c",
+      "implementation": "EquipmentAcceptsCard(20,card)",
+      "notes": "Fixed-mask wrapper: bitset base08175804 +113*equipment; card ID selects bit and byte."
+    },
+    {
+      "addresses": [
+        "0803404C"
+      ],
+      "source": "src/effect_families.c",
+      "implementation": "EquipmentAcceptsCard(21,card)",
+      "notes": "Fixed-mask wrapper: bitset base08175804 +113*equipment; card ID selects bit and byte."
+    },
+    {
+      "addresses": [
+        "08034068"
+      ],
+      "source": "src/effect_families.c",
+      "implementation": "EquipmentAcceptsCard(22,card)",
+      "notes": "Fixed-mask wrapper: bitset base08175804 +113*equipment; card ID selects bit and byte."
+    },
+    {
+      "addresses": [
+        "08034084"
+      ],
+      "source": "src/effect_families.c",
+      "implementation": "EquipmentAcceptsCard(23,card)",
+      "notes": "Fixed-mask wrapper: bitset base08175804 +113*equipment; card ID selects bit and byte."
+    },
+    {
+      "addresses": [
+        "080340A0"
+      ],
+      "source": "src/effect_families.c",
+      "implementation": "EquipmentAcceptsCard(24,card)",
+      "notes": "Fixed-mask wrapper: bitset base08175804 +113*equipment; card ID selects bit and byte."
+    },
+    {
+      "addresses": [
+        "080340BC"
+      ],
+      "source": "src/effect_families.c",
+      "implementation": "EquipmentAcceptsCard(25,card)",
+      "notes": "Fixed-mask wrapper: bitset base08175804 +113*equipment; card ID selects bit and byte."
+    },
+    {
+      "addresses": [
+        "080340D8"
+      ],
+      "source": "src/effect_families.c",
+      "implementation": "EquipmentAcceptsCard(26,card)",
+      "notes": "Fixed-mask wrapper: bitset base08175804 +113*equipment; card ID selects bit and byte."
+    },
+    {
+      "addresses": [
+        "080340F4"
+      ],
+      "source": "src/effect_families.c",
+      "implementation": "EquipmentAcceptsCard(27,card)",
+      "notes": "Fixed-mask wrapper: bitset base08175804 +113*equipment; card ID selects bit and byte."
+    },
+    {
+      "addresses": [
+        "08034110"
+      ],
+      "source": "src/effect_families.c",
+      "implementation": "EquipmentAcceptsCard(28,card)",
+      "notes": "Fixed-mask wrapper: bitset base08175804 +113*equipment; card ID selects bit and byte."
+    },
+    {
+      "addresses": [
+        "0803412C"
+      ],
+      "source": "src/effect_families.c",
+      "implementation": "EquipmentAcceptsCard(29,card)",
+      "notes": "Fixed-mask wrapper: bitset base08175804 +113*equipment; card ID selects bit and byte."
+    },
+    {
+      "addresses": [
+        "08034148"
+      ],
+      "source": "src/effect_families.c",
+      "implementation": "EquipmentAcceptsCard(30,card)",
+      "notes": "Fixed-mask wrapper: bitset base08175804 +113*equipment; card ID selects bit and byte."
+    },
+    {
+      "addresses": [
+        "08034164"
+      ],
+      "source": "src/effect_families.c",
+      "implementation": "EquipmentAcceptsCard(31,card)",
+      "notes": "Fixed-mask wrapper: bitset base08175804 +113*equipment; card ID selects bit and byte."
+    },
+    {
+      "addresses": [
+        "0801F17C"
+      ],
+      "source": "src/unused_helpers.c",
+      "implementation": "RomUnusedReturnZero",
+      "notes": "Original mov r0,0; bx lr."
+    },
+    {
+      "addresses": [
+        "08038E24",
+        "08038E28",
+        "08038E2C",
+        "08038E30",
+        "08038E34",
+        "08038E38",
+        "08038E3C",
+        "08038E40",
+        "08038E44",
+        "08038E48",
+        "08038E4C",
+        "08038E50",
+        "08038E54",
+        "08038E58",
+        "08038E5C"
+      ],
+      "source": "src/compiler_thunks.s",
+      "implementation": "RomCallViaR0 through RomCallViaR14",
+      "notes": "Original BX-register veneers retained in assembly, including target-bit0 instruction-set switching."
+    }
+  ]
+}

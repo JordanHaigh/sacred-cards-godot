@@ -1,0 +1,19 @@
+[package]
+name = "sacred-cards"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.88"
+default-run = "sacred-cards"
+description = "A native Rust reconstruction of The Sacred Cards from recovered source and assets"
+
+[dependencies]
+macroquad = { version = "0.4.16", features = ["audio"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+csv = "1"
+
+[profile.dev.package."*"]
+opt-level = 2
+
+[profile.release]
+lto = "thin"

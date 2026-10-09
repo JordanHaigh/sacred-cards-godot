@@ -1,0 +1,41 @@
+branch_address,table_rom_offset,entry_count,target_mode,evidence
+0x08021E6E,0x21E74,5,thumb,Audio category minus1 bounded by4 at21E62
+0x08031DDA,0x31DE0,5,thumb,Interpreter state bounded by4 at31DCE
+0x08031E84,0x31E8C,10,thumb,Hash command digit minus0x30 bounded by9 at31E76
+0x08032044,0x3204C,10,thumb,At command digit minus0x30 bounded by9 at32036
+0x0803216C,0x32174,7,thumb,Caret command digit minus0x30 bounded by6 at3215E
+0x0803223C,0x32244,91,thumb,Character minus0x20 bounded by0x5A at3222E
+0x08006DEA,0x6DF0,5,thumb,Terrain modifier u8 bounded by4 at6DDE
+0x08016DDE,0x16DE4,7,thumb,Language marker minus0x30 bounded by6 at16DD0
+0x08016F62,0x16F68,7,thumb,Language pointer selector marker minus0x30 bounded by6 at16F54
+0x08023234,0x23240,10,thumb,Inspected bounded switch preceding branch; maximum index 9; PC literal resolves table
+0x08035B12,0x35b1c,20,thumb,Inspected bounded switch preceding branch; maximum index 19; PC literal resolves table
+0x0802312A,0x23134,5,thumb,Inspected bounded switch preceding branch; maximum index 4; PC literal resolves table
+0x08035C4A,0x35c54,20,thumb,Inspected bounded switch preceding branch; maximum index 19; PC literal resolves table
+0x08016D44,0x16d4c,5,thumb,Inspected bounded switch preceding branch; maximum index 4; PC literal resolves table
+0x080250AC,0x250b4,6,thumb,Inspected bounded switch preceding branch; maximum index 5; PC literal resolves table
+0x08030804,0x3080c,14,thumb,Inspected bounded switch preceding branch; maximum index 13; PC literal resolves table
+0x08000E6C,0xe74,10,thumb,Inspected bounded switch preceding branch; maximum index 9; PC literal resolves table
+0x0802764E,0x27654,5,thumb,Inspected bounded switch preceding branch; maximum index 4; PC literal resolves table
+0x08007DA6,0x7dac,8,thumb,Inspected bounded switch preceding branch; maximum index 7; PC literal resolves table
+0x08005DE0,0x5de8,9,thumb,Inspected bounded switch preceding branch; maximum index 8; PC literal resolves table
+0x0800442E,0x4434,11,thumb,Inspected bounded switch preceding branch; maximum index 10; PC literal resolves table
+0x08033A2A,0x33a30,58,thumb,Inspected bounded switch preceding branch; maximum index 57; PC literal resolves table
+0x0802483A,0x24848,10,thumb,Inspected bounded switch preceding branch; maximum index 9; PC literal resolves table
+0x0801158C,0x11598,25,thumb,Inspected bounded switch preceding branch; maximum index 24; PC literal resolves table
+0x0801165E,0x11668,25,thumb,Inspected bounded switch preceding branch; maximum index 24; PC literal resolves table
+0x08015E34,0x15e48,8,thumb,Inspected bounded switch preceding branch; maximum index 7; PC literal resolves table
+0x0801253C,0x12548,18,thumb,Inspected bounded switch preceding branch; maximum index 17; PC literal resolves table
+0x08016510,0x16520,16,thumb,Inspected bounded switch preceding branch; maximum index 15; PC literal resolves table
+0x0802514C,0x25154,8,thumb,Inspected bounded switch preceding branch; maximum index 7; PC literal resolves table
+0x08025212,0x25218,91,thumb,Inspected bounded switch preceding branch; maximum index 90; PC literal resolves table
+0x080047EA,0x47f0,8,thumb,Inspected bounded switch preceding branch; maximum index 7; PC literal resolves table
+0x080141B2,0x141b8,9,thumb,Inspected bounded switch preceding branch; maximum index 8; PC literal resolves table
+0x080146E2,0x146e8,8,thumb,Inspected bounded switch preceding branch; maximum index 7; PC literal resolves table
+0x08015B4A,0x15b50,10,thumb,Inspected bounded switch preceding branch; maximum index 9; PC literal resolves table
+0x08018884,0x18890,11,thumb,Inspected bounded switch preceding branch; maximum index 10; PC literal resolves table
+0x08018764,0x18770,11,thumb,Inspected bounded switch preceding branch; maximum index 10; PC literal resolves table
+0x080187F4,0x18800,11,thumb,Inspected bounded switch preceding branch; maximum index 10; PC literal resolves table
+0x080186D4,0x186e0,11,thumb,Inspected bounded switch preceding branch; maximum index 10; PC literal resolves table
+0x0802786A,0x27870,5,thumb,Inspected bounded switch preceding branch; maximum index 4; PC literal resolves table
+0x08038BD4,0x38BDC,18,thumb,MEMACC operation0..17 bounds checked at08038BC6;18 absolute Thumb block targets inspected

@@ -1,0 +1,1133 @@
+{
+  "rom_sha256": "093f986a92d73c48e11de0a83c6678c3620f8def6173f5e69133815301b40d8f",
+  "description": "Native data views mapped from recovered consumers; address overlap is intentional. Types and users are inventoried from compiler declarations. Selected static review evidence is recorded per view; this is not an exhaustive access audit. Native addresses are provenance, not a required host layout.",
+  "views": [
+    {
+      "symbol": "gAbsoluteDuelHands",
+      "native_address": "0x02023200",
+      "kind": "ram_view",
+      "record_type": "Ay7eDuelCell",
+      "record_dimensions": [
+        2,
+        5
+      ],
+      "review_evidence": [
+        "0x08023D68..0x08023D96",
+        "0x08027330..0x0802738E"
+      ]
+    },
+    {
+      "symbol": "gAbsoluteDuelSideState",
+      "native_address": "0x02023254",
+      "kind": "ram_view",
+      "record_type": "Ay7eDuelSide",
+      "record_dimensions": [
+        2
+      ],
+      "review_evidence": [
+        "0x08023DA6..0x08023DFC",
+        "0x080244A4..0x08024574"
+      ]
+    },
+    {
+      "symbol": "gActingSide",
+      "native_address": "0x020237D8",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gActorDrawOrder",
+      "native_address": "0x020236D0",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gActorGraphicsBuffer",
+      "native_address": "0x02010400",
+      "kind": "ram_view",
+      "view_size": 32768
+    },
+    {
+      "symbol": "gAiAction",
+      "native_address": "0x02020C30",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gAiCandidateId",
+      "native_address": "0x02020C28",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gAiMonsterScoreIndex",
+      "native_address": "0x0201CB3C",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gAiScratch",
+      "native_address": "0x08D41B28",
+      "kind": "rom_pointer_view",
+      "pointee_address": "0x02018800",
+      "pointee_size": 17172,
+      "notes": "Original ROM word points to shared scratch at02018800. This source pointer is a resolved ROM view, not an independent mutable RAM slot."
+    },
+    {
+      "symbol": "gAiSpellScoreIndex",
+      "native_address": "0x0201CB34",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gAiTrappedSpellScoreIndex",
+      "native_address": "0x0201CB38",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gAttributeIconDestination",
+      "native_address": "0x0201CB28",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gAttributePaletteDestination",
+      "native_address": "0x0201CB2C",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gBackgroundBuffer",
+      "native_address": "0x02000400",
+      "kind": "ram_view",
+      "view_size": 65536
+    },
+    {
+      "symbol": "gBattleAnimationFlags",
+      "native_address": "0x0201CB40",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gBattleAnimationScratch",
+      "native_address": "0x02018800",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gBattleCalculationBytes",
+      "native_address": "0x02023120",
+      "kind": "ram_view",
+      "record_type": "Ay7eBattleCalculation",
+      "record_dimensions": [],
+      "review_evidence": [
+        "0x08023514..0x0802353C",
+        "0x0802354C..0x08023590"
+      ]
+    },
+    {
+      "symbol": "gBattleDisplayBytes",
+      "native_address": "0x02023140",
+      "kind": "ram_view",
+      "record_type": "Ay7eBattleDisplay",
+      "record_dimensions": [],
+      "review_evidence": [
+        "0x08023C8C..0x08023CAC",
+        "0x08023514..0x0802353C",
+        "0x0802356C..0x08023590"
+      ]
+    },
+    {
+      "symbol": "gBgOffsetsRaw",
+      "native_address": "0x0202344C",
+      "kind": "ram_view",
+      "notes": "22-halfword interleaved offsets/blend state. Only even array indices name distinct native 32-bit-spaced slots.",
+      "review_evidence": [
+        "0x08028438..0x080284B8"
+      ]
+    },
+    {
+      "symbol": "gBlendControl",
+      "native_address": "0x04000050",
+      "kind": "io_alias"
+    },
+    {
+      "symbol": "gBlendY",
+      "native_address": "0x04000054",
+      "kind": "io_alias"
+    },
+    {
+      "symbol": "gBootState",
+      "native_address": "0x02020D20",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gCardCollection",
+      "native_address": "0x02020770",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gCardHandlerInput",
+      "native_address": "0x02023478",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gCardMetadataBytes",
+      "native_address": "0x02020B00",
+      "kind": "ram_view",
+      "record_type": "Ay7eCardMetadata",
+      "record_dimensions": [],
+      "review_evidence": [
+        "0x08006B90..0x08006BB2",
+        "0x08006BE4..0x08006CAC"
+      ]
+    },
+    {
+      "symbol": "gCardSortScratch",
+      "native_address": "0x02018800",
+      "kind": "ram_view",
+      "review_evidence": [
+        "0x0801FB9E..0x0801FBE4"
+      ]
+    },
+    {
+      "symbol": "gCardSortState",
+      "native_address": "0x02023040",
+      "kind": "ram_view",
+      "record_type": "Ay7eCardSortState",
+      "record_dimensions": [],
+      "review_evidence": [
+        "0x0801FB80..0x0801FB94"
+      ]
+    },
+    {
+      "symbol": "gCardTileBackground",
+      "native_address": "0x02020B40",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gCardTileComposed",
+      "native_address": "0x02020BC0",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gCardTileForeground",
+      "native_address": "0x02020B80",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gCityMapOrigin",
+      "native_address": "0x0201FC80",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gCityMapSelection",
+      "native_address": "0x0201FC84",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gCityUnlockProgress",
+      "native_address": "0x0201FC88",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gCollectionMenu",
+      "native_address": "0x0201FCC0",
+      "kind": "ram_view",
+      "record_type": "Ay7eCollectionMenu",
+      "record_dimensions": []
+    },
+    {
+      "symbol": "gCollectionScrollLimit",
+      "native_address": "0x02020AFA",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gCollectionScrollPosition",
+      "native_address": "0x02020AF8",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gCollectionSortedCards",
+      "native_address": "0x0201FCCC",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gCollectionTotals",
+      "native_address": "0x020203E0",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gCreditsScratch",
+      "native_address": "0x02018800",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gCreditsTextRow",
+      "native_address": "0x0201CB20",
+      "kind": "ram_view",
+      "view_size": 2,
+      "notes": "Native halfword counter: STRH zero at 0800043A, LDRH at 0800045E, increment and STRH at 0800048A..0800048E.",
+      "review_evidence": [
+        "0x08000438..0x0800043A",
+        "0x08000458..0x0800048E"
+      ]
+    },
+    {
+      "symbol": "gCurrentOpponent",
+      "native_address": "0x02020D40",
+      "kind": "ram_view",
+      "notes": "Same halfword as gScriptOpponent."
+    },
+    {
+      "symbol": "gDecimalDigitLookahead",
+      "native_address": "0x02020C05",
+      "kind": "ram_view",
+      "notes": "Byte after five decimal digits, read by a legacy price row before formatting; formatter does not set it."
+    },
+    {
+      "symbol": "gDecimalDigits",
+      "native_address": "0x02020C00",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gDeckActionChoice",
+      "native_address": "0x0201CB48",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gDeckCapacity",
+      "native_address": "0x02020C3C",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gDescriptionPage",
+      "native_address": "0x0201CB50",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gDescriptionPageCount",
+      "native_address": "0x0201CB51",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gDescriptionPages",
+      "native_address": "0x0201CB58",
+      "kind": "ram_view",
+      "view_size": 8960,
+      "notes": "Native entry clears two 0x1180-byte pages. All 900 nonempty supplied descriptions begin ^2 in language slots 0..4; slot 5 uses the single-page path. Native parser accepts 2..9 for custom input and does not enforce this observed storage extent."
+    },
+    {
+      "symbol": "gDiagnosticNumber",
+      "native_address": "0x02020D20",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gDialogueMap",
+      "native_address": "0x0200EC00",
+      "kind": "ram_view",
+      "view_size": 1280
+    },
+    {
+      "symbol": "gDialogueTiles",
+      "native_address": "0x0200DC00",
+      "kind": "ram_view",
+      "view_size": 4096
+    },
+    {
+      "symbol": "gDisplayControl",
+      "native_address": "0x04000000",
+      "kind": "io_alias"
+    },
+    {
+      "symbol": "gDuelAuxiliaryFlags",
+      "native_address": "0x02020D88",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gDuelCapacityReward",
+      "native_address": "0x02020D3C",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gDuelCursorColumn",
+      "native_address": "0x02023438",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gDuelCursorState",
+      "native_address": "0x02023438",
+      "kind": "ram_view",
+      "record_type": "Ay7eDuelCursor",
+      "record_dimensions": []
+    },
+    {
+      "symbol": "gDuelDeckRecords",
+      "native_address": "0x02023390",
+      "kind": "ram_view",
+      "record_type": "Ay7eDuelDeck",
+      "record_dimensions": [
+        2
+      ],
+      "review_evidence": [
+        "0x08027300..0x08027328",
+        "0x08027390..0x080273C6"
+      ]
+    },
+    {
+      "symbol": "gDuelLifePoints",
+      "native_address": "0x0202347C",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gDuelMoneyReward",
+      "native_address": "0x02020D30",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gDuelMusic",
+      "native_address": "0x02020D38",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gDuelOutcome",
+      "native_address": "0x02020D59",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gDuelRawCardName",
+      "native_address": "0x0201EE78",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gDuelRecordHeader",
+      "native_address": "0x02020CB0",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gDuelRecords",
+      "native_address": "0x02020CB4",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gDuelResolutionFlag",
+      "native_address": "0x02023158",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gDuelRewardCards",
+      "native_address": "0x02020D42",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gDuelRewardCount",
+      "native_address": "0x02020D58",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gDuelSelectionCopy",
+      "native_address": "0x02023378",
+      "kind": "ram_view",
+      "record_type": "Ay7eDuelCell",
+      "record_dimensions": []
+    },
+    {
+      "symbol": "gDuelSideState",
+      "native_address": "0x02023260",
+      "kind": "ram_view",
+      "notes": "Two pointer slots orient absolute side records for the current acting side."
+    },
+    {
+      "symbol": "gDuelStateBytes",
+      "native_address": "0x02023160",
+      "kind": "ram_view",
+      "notes": "252-byte snapshot overlaps physical board, both hands, terrain and physical side records. These views must share storage.",
+      "record_type": "Ay7eDuelSnapshot",
+      "record_dimensions": [],
+      "review_evidence": [
+        "0x08023CC0..0x08023E0A"
+      ]
+    },
+    {
+      "symbol": "gDuelTextInheritedR8",
+      "native_address": null,
+      "kind": "register_context",
+      "notes": "Explicit emulated register context introduced by source recovery; no original global RAM slot exists."
+    },
+    {
+      "symbol": "gDuelViewMode",
+      "native_address": "0x02023384",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gDuelViewport",
+      "native_address": "0x02023439",
+      "kind": "ram_view",
+      "notes": "Aliases byte1 of gDuelCursorState. Screen scroll offset is a separate table-derived value."
+    },
+    {
+      "symbol": "gDuelVisibleCells",
+      "native_address": "0x020232E0",
+      "kind": "ram_view",
+      "notes": "Display pointer grid, separate from the effect pointer grid; do not conflate their orientations."
+    },
+    {
+      "symbol": "gDuelWrappedCardName",
+      "native_address": "0x0201EEE8",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gDuelistLevel",
+      "native_address": "0x02020C40",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gEffectBoardCells",
+      "native_address": "0x02023270",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gEffectBoardPointerWindow",
+      "native_address": "0x02023270",
+      "kind": "ram_view",
+      "view_size": 100,
+      "notes": "Flat100-byte pointer view of the same25-pointer grid, allowing five-pointer scans from a middle entry."
+    },
+    {
+      "symbol": "gEffectMusicPlayer",
+      "native_address": "0x02024B80",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gEventFlags",
+      "native_address": "0x02023700",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gFollowerTrail",
+      "native_address": "0x02023678",
+      "kind": "ram_view",
+      "record_type": "Ay7eFollowerEntry",
+      "record_dimensions": [
+        10
+      ],
+      "review_evidence": [
+        "0x0803102C..0x0803105A"
+      ]
+    },
+    {
+      "symbol": "gFrameInterruptFlags",
+      "native_address": "0x0201FCB0",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gFullCardMap",
+      "native_address": "0x0201C900",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gFullCardPalette",
+      "native_address": "0x0201C800",
+      "kind": "ram_view",
+      "notes": "256 BYTES:128 RGB555 colors. gFullCardMap starts immediately afterward; palette index255 can read beyond this view in native staging contexts."
+    },
+    {
+      "symbol": "gFullCardTiles",
+      "native_address": "0x02018800",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gInitialDuelLifePoints",
+      "native_address": "0x02020D70",
+      "kind": "ram_view",
+      "notes": "Two halfwords alias gOpponentRecord+0x14/+0x16. Active initializer 08017D3E calls 0802B2D8, which adds 0x40/+0x42 to base 02020D30 before loading; these are not money-reward bytes.",
+      "review_evidence": [
+        "0x0802B2D8..0x0802B2EA",
+        "0x08017D3A..0x08017D42"
+      ]
+    },
+    {
+      "symbol": "gIntroFade",
+      "native_address": "0x0201EE58",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gKeyRepeatTimer",
+      "native_address": "0x0201FCB4",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gKeysHeld",
+      "native_address": "0x0201FCA8",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gKeysPressed",
+      "native_address": "0x0201FCAC",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gKeysRepeated",
+      "native_address": "0x0201FCA4",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gLanguage",
+      "native_address": "0x02020D18",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gLegacyPasswordCursor",
+      "native_address": "0x020237C8",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gLinkDiagnosticCounters",
+      "native_address": "0x0201EE5C",
+      "kind": "ram_view",
+      "notes": "Six32-bit words: three-word96-bit iteration count, total failure count, forward retry failures and reverse retry failures."
+    },
+    {
+      "symbol": "gLinkIncoming",
+      "native_address": "0x02023038",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gLinkMenuAscending",
+      "native_address": "0x02023050",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gLinkMenuChoice",
+      "native_address": "0x02023118",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gLinkMenuDescending",
+      "native_address": "0x020230B4",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gLinkOutgoing",
+      "native_address": "0x02023030",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gLinkPrimaryPayload",
+      "native_address": "0x02022050",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gLinkReceivedPacket",
+      "native_address": "0x02022048",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gLinkSecondaryPayload",
+      "native_address": "0x02022860",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gLinkSendPacket",
+      "native_address": "0x0202204C",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gLinkState",
+      "native_address": "0x02022830",
+      "kind": "ram_view",
+      "record_type": "LinkState",
+      "record_dimensions": []
+    },
+    {
+      "symbol": "gMenuScratch",
+      "native_address": "0x02018800",
+      "kind": "ram_view",
+      "view_size": 17172
+    },
+    {
+      "symbol": "gMetadata1aHandlerInput",
+      "native_address": "0x02023480",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gMiniatureScratch",
+      "native_address": "0x02018800",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gMoney",
+      "native_address": "0x02020DA0",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gMoneyDigits",
+      "native_address": "0x02020C10",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gMonsterInput",
+      "native_address": "0x02023478",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gMusicCallbackA",
+      "native_address": "0x02024828",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gMusicCallbackB",
+      "native_address": "0x0202482C",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gMusicPlayer",
+      "native_address": "0x020249F0",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gMusicSharedMemory",
+      "native_address": "0x02024B70",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gNameEntryScratch",
+      "native_address": "0x02018800",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gOamBuffer",
+      "native_address": "0x02018400",
+      "kind": "ram_view",
+      "record_type": "Ay7eOamEntry",
+      "record_dimensions": [
+        128
+      ],
+      "review_evidence": [
+        "0x080284CC..0x080284DE"
+      ]
+    },
+    {
+      "symbol": "gObjectPaletteBuffer",
+      "native_address": "0x02000200",
+      "kind": "ram_view",
+      "view_size": 512
+    },
+    {
+      "symbol": "gOpponentHandCells",
+      "native_address": "0x02023364",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gOpponentIdentifier",
+      "native_address": "0x02020D5C",
+      "kind": "ram_view",
+      "notes": "Word view of gOpponentRecord+0: low16 bits are identifier, bits16..23 are terrain. The AI tag lookup truncates this word to a halfword."
+    },
+    {
+      "symbol": "gOpponentRecord",
+      "native_address": "0x02020D5C",
+      "kind": "ram_view",
+      "record_type": "Ay7eOpponentRecord",
+      "record_dimensions": [],
+      "notes": "First word contains identifier halfword at+0, terrain byte at+2 and raw byte at+3. Starting-life halfwords at+0x14/+0x16 overlap gInitialDuelLifePoints.",
+      "review_evidence": [
+        "0x08017CAE..0x08017CCC",
+        "0x08023D98..0x08023DA4",
+        "0x0802B2D8..0x0802B2EA"
+      ]
+    },
+    {
+      "symbol": "gPaletteBuffer",
+      "native_address": "0x02000000",
+      "kind": "ram_view",
+      "view_size": 1024
+    },
+    {
+      "symbol": "gPasswordDigits",
+      "native_address": "0x02020D90",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gPasswordMenu",
+      "native_address": "0x02018800",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gPasswordRepeatTimer",
+      "native_address": "0x02020D98",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gPasswordRepeated",
+      "native_address": "0x02020D9C",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gPasswordResult",
+      "native_address": "0x02023740",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gPlayerCellX",
+      "native_address": "0x0202349C",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gPlayerCellY",
+      "native_address": "0x0202349E",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gPlayerDeck",
+      "native_address": "0x02020C5A",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gPlayerDeckState",
+      "native_address": "0x02020C50",
+      "kind": "ram_view",
+      "record_type": "Ay7ePlayerDeckState",
+      "record_dimensions": []
+    },
+    {
+      "symbol": "gPlayerDrawOrder",
+      "native_address": "0x020236EE",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gPlayerHandCells",
+      "native_address": "0x02023350",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gPlayerName",
+      "native_address": "0x0201FC90",
+      "kind": "ram_view",
+      "notes": "19-byte runtime clearing/view; save payload stores only17 bytes."
+    },
+    {
+      "symbol": "gPlayerTurnDone",
+      "native_address": "0x02023444",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gPreviewStage",
+      "native_address": "0x0201CB31",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gPreviewTerrain",
+      "native_address": "0x0201CB30",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gProgressRank",
+      "native_address": "0x02020DA8",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gProgressionFlags",
+      "native_address": "0x02020D5A",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gPsgChannels",
+      "native_address": "0x02024830",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gRandomState",
+      "native_address": "0x020237CC",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gRecordMenuState",
+      "native_address": "0x02018800",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gRewardNormalTable",
+      "native_address": "0x02020D64",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gRewardShopTable",
+      "native_address": "0x02020D68",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gRewardSpecialTable",
+      "native_address": "0x02020D6C",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gRomDoubleInvalidParts",
+      "native_address": "0x0201FC58",
+      "kind": "ram_view",
+      "notes": "RAM view cleared by initialization; no ROM initializer recovered. Bit arithmetic reads this view for invalid operations."
+    },
+    {
+      "symbol": "gRomFloatInvalidParts",
+      "native_address": "0x0201FC70",
+      "kind": "ram_view",
+      "notes": "RAM view cleared by initialization; no ROM initializer recovered. Bit arithmetic reads this view for invalid operations."
+    },
+    {
+      "symbol": "gRuntimeActors",
+      "native_address": "0x02023498",
+      "kind": "ram_view",
+      "view_size": 480,
+      "record_type": "Ay7eRuntimeActor",
+      "record_dimensions": [
+        15
+      ],
+      "review_evidence": [
+        "0x0802FD18..0x080300CC",
+        "0x08030E58..0x08030F2E"
+      ]
+    },
+    {
+      "symbol": "gSceneEntryScript",
+      "native_address": "0x020236C8",
+      "kind": "ram_view",
+      "review_evidence": [
+        "0x0802FD36..0x0802FD56"
+      ]
+    },
+    {
+      "symbol": "gSceneExitScript",
+      "native_address": "0x020236CC",
+      "kind": "ram_view",
+      "review_evidence": [
+        "0x0802FD58..0x0802FD76"
+      ]
+    },
+    {
+      "symbol": "gSceneFlags",
+      "native_address": "0x020236F4",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gSceneGrid",
+      "native_address": "0x020236F0",
+      "kind": "ram_view",
+      "review_evidence": [
+        "0x0802FD22..0x0802FD34"
+      ]
+    },
+    {
+      "symbol": "gSceneId",
+      "native_address": "0x02023490",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gScenePersistentFlags",
+      "native_address": "0x020237C4",
+      "kind": "ram_view",
+      "notes": "Same storage as gUsedBonusPasswords."
+    },
+    {
+      "symbol": "gSceneSpawn",
+      "native_address": "0x02023494",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gSceneVariant",
+      "native_address": "0x02023492",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gScriptOpponent",
+      "native_address": "0x02020D40",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gShopBuyPrice",
+      "native_address": "0x02020B20",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gShopMenuState",
+      "native_address": "0x02021CB2",
+      "kind": "ram_view",
+      "record_type": "Ay7eShopMenu",
+      "record_dimensions": [],
+      "review_evidence": [
+        "0x0801C114..0x0801C17A",
+        "0x0801BFE4..0x0801C068",
+        "0x0801C50E..0x0801C544"
+      ]
+    },
+    {
+      "symbol": "gShopPriceCard",
+      "native_address": "0x02020B30",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gShopPriceStock",
+      "native_address": "0x02020B32",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gShopRowCards",
+      "native_address": "0x0202155C",
+      "kind": "ram_view",
+      "review_evidence": [
+        "0x0801C184..0x0801C1CC"
+      ]
+    },
+    {
+      "symbol": "gShopSellPrice",
+      "native_address": "0x02020B28",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gShopSortedCards",
+      "native_address": "0x020215A2",
+      "kind": "ram_view",
+      "review_evidence": [
+        "0x0801C4C4..0x0801C4E0"
+      ]
+    },
+    {
+      "symbol": "gShopStock",
+      "native_address": "0x02020DB0",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gShopVisibleCards",
+      "native_address": "0x020214D0",
+      "kind": "ram_view",
+      "review_evidence": [
+        "0x0801C184..0x0801C1CC"
+      ]
+    },
+    {
+      "symbol": "gShopWorkingCollection",
+      "native_address": "0x02021CC0",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gShopWorkingStock",
+      "native_address": "0x02021140",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gSoundCommandCallbacks",
+      "native_address": "0x020247A0",
+      "kind": "ram_view",
+      "notes": "36-word RAM dispatch/support table; callbackA/B alias its final two words."
+    },
+    {
+      "symbol": "gSoundInfo",
+      "native_address": "0x03007FF0",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gSoundInfoStorage",
+      "native_address": "0x020237F0",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gSpellInput",
+      "native_address": "0x02023480",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gSramCompareCode",
+      "native_address": "0x0201EF58",
+      "kind": "ram_view",
+      "review_evidence": [
+        "0x08036BD0..0x08036C0E"
+      ]
+    },
+    {
+      "symbol": "gSramCompareEntry",
+      "native_address": "0x020237E0",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gSramReadCode",
+      "native_address": "0x0201EFF8",
+      "kind": "ram_view",
+      "review_evidence": [
+        "0x08036B98..0x08036BCE"
+      ]
+    },
+    {
+      "symbol": "gSramReadEntry",
+      "native_address": "0x020237DC",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gSuppressEffectPresentation",
+      "native_address": "0x02020C38",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gTerrain",
+      "native_address": "0x02023250",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gTitleScratch",
+      "native_address": "0x02018800",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gTrapInput",
+      "native_address": "0x020237D0",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gTributesCommitted",
+      "native_address": "0x02023448",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gUnusedDeckCost",
+      "native_address": "0x02020C50",
+      "kind": "ram_view",
+      "notes": "Aliases first word of gPlayerDeckState."
+    },
+    {
+      "symbol": "gUnusedDeckPreset",
+      "native_address": "0x020233E4",
+      "kind": "ram_view",
+      "notes": "Aliases the first80 bytes of the second physical duel deck record."
+    },
+    {
+      "symbol": "gUnusedOverworldFlags",
+      "native_address": "0x02023743",
+      "kind": "ram_view",
+      "notes": "Aliases bytes3..10 of gPasswordResult."
+    },
+    {
+      "symbol": "gUnusedSceneFlags",
+      "native_address": "0x02023750",
+      "kind": "ram_view",
+      "notes": "Same storage as gUsedCardPasswords."
+    },
+    {
+      "symbol": "gUnusedStatusSelection",
+      "native_address": "0x02020D24",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gUsedBonusPasswords",
+      "native_address": "0x020237C4",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gUsedCardPasswords",
+      "native_address": "0x02023750",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gVBlankCallback",
+      "native_address": "0x0201CB24",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gWageredCard",
+      "native_address": "0x02020B34",
+      "kind": "ram_view"
+    },
+    {
+      "symbol": "gWorldMovementState",
+      "native_address": "0x02020D84",
+      "kind": "ram_view"
+    }
+  ]
+}

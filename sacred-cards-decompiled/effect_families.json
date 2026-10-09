@@ -1,0 +1,475 @@
+[
+  {
+    "address": "0802BE54",
+    "name": "Handler_1a_021_Legendary_Sword",
+    "kind": "equipment",
+    "card_id": 301,
+    "mask": 0,
+    "table": "0x08175804",
+    "check": "08033E00"
+  },
+  {
+    "address": "0802BF30",
+    "name": "Handler_1a_022_Sword_of_Dark_Destruction",
+    "kind": "equipment",
+    "card_id": 302,
+    "mask": 1,
+    "table": "0x08175875",
+    "check": "08033E1C"
+  },
+  {
+    "address": "0802C00C",
+    "name": "Handler_1a_023_Dark_Energy",
+    "kind": "equipment",
+    "card_id": 303,
+    "mask": 2,
+    "table": "0x081758e6",
+    "check": "08033E38"
+  },
+  {
+    "address": "0802C0E8",
+    "name": "Handler_1a_024_Axe_of_Despair",
+    "kind": "equipment",
+    "card_id": 304,
+    "mask": 3,
+    "table": "0x08175957",
+    "check": "08033E54"
+  },
+  {
+    "address": "0802C1C4",
+    "name": "Handler_1a_025_Laser_Cannon_Armor",
+    "kind": "equipment",
+    "card_id": 305,
+    "mask": 4,
+    "table": "0x081759c8",
+    "check": "08033E70"
+  },
+  {
+    "address": "0802C2A0",
+    "name": "Handler_1a_026_Insect_Armor_with_Laser_Cannon",
+    "kind": "equipment",
+    "card_id": 306,
+    "mask": 5,
+    "table": "0x08175a39",
+    "check": "08033E8C"
+  },
+  {
+    "address": "0802C37C",
+    "name": "Handler_1a_027_Elf_s_Light",
+    "kind": "equipment",
+    "card_id": 307,
+    "mask": 6,
+    "table": "0x08175aaa",
+    "check": "08033EA8"
+  },
+  {
+    "address": "0802C458",
+    "name": "Handler_1a_028_Beast_Fangs",
+    "kind": "equipment",
+    "card_id": 308,
+    "mask": 7,
+    "table": "0x08175b1b",
+    "check": "08033EC4"
+  },
+  {
+    "address": "0802C534",
+    "name": "Handler_1a_029_Steel_Shell",
+    "kind": "equipment",
+    "card_id": 309,
+    "mask": 8,
+    "table": "0x08175b8c",
+    "check": "08033EE0"
+  },
+  {
+    "address": "0802C610",
+    "name": "Handler_1a_030_Vile_Germs",
+    "kind": "equipment",
+    "card_id": 310,
+    "mask": 9,
+    "table": "0x08175bfd",
+    "check": "08033EFC"
+  },
+  {
+    "address": "0802C6EC",
+    "name": "Handler_1a_031_Black_Pendant",
+    "kind": "equipment",
+    "card_id": 311,
+    "mask": 10,
+    "table": "0x08175c6e",
+    "check": "08033F18"
+  },
+  {
+    "address": "0802C7C8",
+    "name": "Handler_1a_032_Silver_Bow_and_Arrow",
+    "kind": "equipment",
+    "card_id": 312,
+    "mask": 11,
+    "table": "0x08175cdf",
+    "check": "08033F34"
+  },
+  {
+    "address": "0802C8A4",
+    "name": "Handler_1a_033_Horn_of_Light",
+    "kind": "equipment",
+    "card_id": 313,
+    "mask": 12,
+    "table": "0x08175d50",
+    "check": "08033F50"
+  },
+  {
+    "address": "0802C980",
+    "name": "Handler_1a_034_Horn_of_the_Unicorn",
+    "kind": "equipment",
+    "card_id": 314,
+    "mask": 13,
+    "table": "0x08175dc1",
+    "check": "08033F6C"
+  },
+  {
+    "address": "0802CA5C",
+    "name": "Handler_1a_035_Dragon_Treasure",
+    "kind": "equipment",
+    "card_id": 315,
+    "mask": 14,
+    "table": "0x08175e32",
+    "check": "08033F88"
+  },
+  {
+    "address": "0802CB38",
+    "name": "Handler_1a_036_Electro_Whip",
+    "kind": "equipment",
+    "card_id": 316,
+    "mask": 15,
+    "table": "0x08175ea3",
+    "check": "08033FA4"
+  },
+  {
+    "address": "0802CC14",
+    "name": "Handler_1a_037_Cyber_Shield",
+    "kind": "equipment",
+    "card_id": 317,
+    "mask": 16,
+    "table": "0x08175f14",
+    "check": "08033FC0"
+  },
+  {
+    "address": "0802CCF0",
+    "name": "Handler_1a_038_Mystical_Moon",
+    "kind": "equipment",
+    "card_id": 319,
+    "mask": 17,
+    "table": "0x08175f85",
+    "check": "08033FDC"
+  },
+  {
+    "address": "0802CDCC",
+    "name": "Handler_1a_039_Malevolent_Nuzzler",
+    "kind": "equipment",
+    "card_id": 321,
+    "mask": 18,
+    "table": "0x08175ff6",
+    "check": "08033FF8"
+  },
+  {
+    "address": "0802CEA8",
+    "name": "Handler_1a_040_Violet_Crystal",
+    "kind": "equipment",
+    "card_id": 322,
+    "mask": 19,
+    "table": "0x08176067",
+    "check": "08034014"
+  },
+  {
+    "address": "0802CF84",
+    "name": "Handler_1a_041_Book_of_Secret_Arts",
+    "kind": "equipment",
+    "card_id": 323,
+    "mask": 20,
+    "table": "0x081760d8",
+    "check": "08034030"
+  },
+  {
+    "address": "0802D060",
+    "name": "Handler_1a_042_Invigoration",
+    "kind": "equipment",
+    "card_id": 324,
+    "mask": 21,
+    "table": "0x08176149",
+    "check": "0803404C"
+  },
+  {
+    "address": "0802D13C",
+    "name": "Handler_1a_043_Machine_Conversion_Factory",
+    "kind": "equipment",
+    "card_id": 325,
+    "mask": 22,
+    "table": "0x081761ba",
+    "check": "08034068"
+  },
+  {
+    "address": "0802D218",
+    "name": "Handler_1a_044_Raise_Body_Heat",
+    "kind": "equipment",
+    "card_id": 326,
+    "mask": 23,
+    "table": "0x0817622b",
+    "check": "08034084"
+  },
+  {
+    "address": "0802D2F4",
+    "name": "Handler_1a_045_Follow_Wind",
+    "kind": "equipment",
+    "card_id": 327,
+    "mask": 24,
+    "table": "0x0817629c",
+    "check": "080340A0"
+  },
+  {
+    "address": "0802D3D0",
+    "name": "Handler_1a_046_Power_of_Kaishin",
+    "kind": "equipment",
+    "card_id": 328,
+    "mask": 25,
+    "table": "0x0817630d",
+    "check": "080340BC"
+  },
+  {
+    "address": "0802D814",
+    "name": "Handler_1a_065_Black_Luster_Ritual",
+    "kind": "ritual",
+    "card_id": 670,
+    "material": 38,
+    "result": 364
+  },
+  {
+    "address": "0802D898",
+    "name": "Handler_1a_066_Zera_Ritual",
+    "kind": "ritual",
+    "card_id": 671,
+    "material": 377,
+    "result": 360
+  },
+  {
+    "address": "0802D91C",
+    "name": "Handler_1a_067_War_Lion_Ritual",
+    "kind": "ritual",
+    "card_id": 673,
+    "material": 403,
+    "result": 356
+  },
+  {
+    "address": "0802D9A0",
+    "name": "Handler_1a_068_Beastly_Mirror_Ritual",
+    "kind": "ritual",
+    "card_id": 674,
+    "material": 595,
+    "result": 365
+  },
+  {
+    "address": "0802DBD8",
+    "name": "Handler_1a_070_Commencement_Dance",
+    "kind": "ritual",
+    "card_id": 676,
+    "material": 249,
+    "result": 701
+  },
+  {
+    "address": "0802DC60",
+    "name": "Handler_1a_071_Hamburger_Recipe",
+    "kind": "ritual",
+    "card_id": 677,
+    "material": 295,
+    "result": 702
+  },
+  {
+    "address": "0802DCEC",
+    "name": "Handler_1a_072_Revival_of_Sennen_Genjin",
+    "kind": "ritual",
+    "card_id": 678,
+    "material": 3,
+    "result": 703
+  },
+  {
+    "address": "0802DD78",
+    "name": "Handler_1a_073_Novox_s_Prayer",
+    "kind": "ritual",
+    "card_id": 679,
+    "material": 160,
+    "result": 704
+  },
+  {
+    "address": "0802DE04",
+    "name": "Handler_1a_074_Curse_of_Tri_Horned_Dragon",
+    "kind": "ritual",
+    "card_id": 680,
+    "material": 571,
+    "result": 705
+  },
+  {
+    "address": "0802DE8C",
+    "name": "Handler_1a_075_Revived_Serpent_Night_Dragon",
+    "kind": "ritual",
+    "card_id": 691,
+    "material": 168,
+    "result": 706
+  },
+  {
+    "address": "0802DF7C",
+    "name": "Handler_1a_077_Magical_Labyrinth",
+    "kind": "equipment",
+    "card_id": 652,
+    "mask": 26,
+    "table": "0x0817637e",
+    "check": "080340D8"
+  },
+  {
+    "address": "0802E058",
+    "name": "Handler_1a_078_Salamandra",
+    "kind": "equipment",
+    "card_id": 654,
+    "mask": 27,
+    "table": "0x081763ef",
+    "check": "080340F4"
+  },
+  {
+    "address": "0802E134",
+    "name": "Handler_1a_079_Kunai_with_Chain",
+    "kind": "equipment",
+    "card_id": 651,
+    "mask": 28,
+    "table": "0x08176460",
+    "check": "08034110"
+  },
+  {
+    "address": "0802E210",
+    "name": "Handler_1a_080_Bright_Castle",
+    "kind": "equipment",
+    "card_id": 668,
+    "mask": 29,
+    "table": "0x081764d1",
+    "check": "0803412C"
+  },
+  {
+    "address": "0802E418",
+    "name": "Handler_1a_083_Turtle_Oath",
+    "kind": "ritual",
+    "card_id": 692,
+    "material": 449,
+    "result": 710
+  },
+  {
+    "address": "0802E4A0",
+    "name": "Handler_1a_084_Contract_of_Mask",
+    "kind": "ritual",
+    "card_id": 693,
+    "material": 102,
+    "result": 720
+  },
+  {
+    "address": "0802E52C",
+    "name": "Handler_1a_085_Resurrection_of_Chakra",
+    "kind": "ritual",
+    "card_id": 694,
+    "material": 269,
+    "result": 709
+  },
+  {
+    "address": "0802E5B8",
+    "name": "Handler_1a_086_Puppet_Ritual",
+    "kind": "ritual",
+    "card_id": 695,
+    "material": 166,
+    "result": 715
+  },
+  {
+    "address": "0802E644",
+    "name": "Handler_1a_087_Javelin_Beetle_Pact",
+    "kind": "ritual",
+    "card_id": 696,
+    "material": 52,
+    "result": 717
+  },
+  {
+    "address": "0802E6CC",
+    "name": "Handler_1a_088_Garma_Sword_Oath",
+    "kind": "ritual",
+    "card_id": 697,
+    "material": 621,
+    "result": 716
+  },
+  {
+    "address": "0802E758",
+    "name": "Handler_1a_089_Cosmo_Queen_s_Prayer",
+    "kind": "ritual",
+    "card_id": 698,
+    "material": 638,
+    "result": 708
+  },
+  {
+    "address": "0802E7E4",
+    "name": "Handler_1a_090_Revival_of_Dokurorider",
+    "kind": "ritual",
+    "card_id": 699,
+    "material": 146,
+    "result": 719
+  },
+  {
+    "address": "0802E870",
+    "name": "Handler_1a_091_Fortress_Whale_s_Oath",
+    "kind": "ritual",
+    "card_id": 700,
+    "material": 441,
+    "result": 718
+  },
+  {
+    "address": "0802E8F8",
+    "name": "Handler_1a_092_Curse_of_Millennium_Shield",
+    "kind": "ritual",
+    "card_id": 665,
+    "material": 296,
+    "result": 362
+  },
+  {
+    "address": "0802E97C",
+    "name": "Handler_1a_093_Yamadron_Ritual",
+    "kind": "ritual",
+    "card_id": 666,
+    "material": 29,
+    "result": 357
+  },
+  {
+    "address": "0802EC60",
+    "name": "Handler_1a_098_Megamorph",
+    "kind": "equipment",
+    "card_id": 657,
+    "mask": 30,
+    "table": "0x08176542",
+    "check": "08034148"
+  },
+  {
+    "address": "0802EE50",
+    "name": "Handler_1a_100_Winged_Trumpeter",
+    "kind": "equipment",
+    "card_id": 659,
+    "mask": 31,
+    "table": "0x081765b3",
+    "check": "08034164"
+  },
+  {
+    "address": "0802F618",
+    "name": "Handler_1a_113_Black_Illusion_Ritual",
+    "kind": "ritual",
+    "card_id": 783,
+    "material": 730,
+    "result": 731
+  },
+  {
+    "address": "0802F854",
+    "name": "Handler_1a_118_7_Completed",
+    "kind": "equipment",
+    "card_id": 900,
+    "mask": 32,
+    "table": "0x08176624",
+    "check": "08034180"
+  }
+]

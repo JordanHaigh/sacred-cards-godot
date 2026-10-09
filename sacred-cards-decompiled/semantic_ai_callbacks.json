@@ -1,0 +1,880 @@
+{
+  "scope": "All five top-level callback families: entry bodies recovered; integration and presentation dependencies remain. Card-specific scorers are inventoried in build/semantic/ai_card_scorers.json.",
+  "entries": [
+    {
+      "family": "simulate",
+      "index": 0,
+      "address": "0x08009248",
+      "source": "src/ai_actions.c",
+      "function": "AiActionNone"
+    },
+    {
+      "family": "simulate",
+      "index": 1,
+      "address": "0x08009250",
+      "source": "src/ai_actions.c",
+      "function": "AiActionDiscard"
+    },
+    {
+      "family": "simulate",
+      "index": 2,
+      "address": "0x0800927C",
+      "source": "src/ai_actions.c",
+      "function": "AiActionSummonZero"
+    },
+    {
+      "family": "simulate",
+      "index": 3,
+      "address": "0x080092D0",
+      "source": "src/ai_actions.c",
+      "function": "AiActionSummonOne"
+    },
+    {
+      "family": "simulate",
+      "index": 4,
+      "address": "0x08009338",
+      "source": "src/ai_actions.c",
+      "function": "AiActionSummonTwo"
+    },
+    {
+      "family": "simulate",
+      "index": 5,
+      "address": "0x08009474",
+      "source": "src/ai_actions.c",
+      "function": "AiActionDefense"
+    },
+    {
+      "family": "simulate",
+      "index": 6,
+      "address": "0x080094A8",
+      "source": "src/ai_actions.c",
+      "function": "AiActionAttackPosition"
+    },
+    {
+      "family": "simulate",
+      "index": 7,
+      "address": "0x080094E8",
+      "source": "src/ai_actions.c",
+      "function": "AiActionDirectAttack"
+    },
+    {
+      "family": "simulate",
+      "index": 8,
+      "address": "0x0800953C",
+      "source": "src/ai_actions.c",
+      "function": "AiActionMonsterAttack"
+    },
+    {
+      "family": "simulate",
+      "index": 9,
+      "address": "0x080094E8",
+      "source": "src/ai_actions.c",
+      "function": "AiActionDirectAttack"
+    },
+    {
+      "family": "simulate",
+      "index": 10,
+      "address": "0x0800953C",
+      "source": "src/ai_actions.c",
+      "function": "AiActionMonsterAttack"
+    },
+    {
+      "family": "simulate",
+      "index": 11,
+      "address": "0x080093C8",
+      "source": "src/ai_actions.c",
+      "function": "AiActionSummonThree"
+    },
+    {
+      "family": "simulate",
+      "index": 12,
+      "address": "0x080095B4",
+      "source": "src/ai_actions.c",
+      "function": "AiActionHiddenMonsterAttack"
+    },
+    {
+      "family": "simulate",
+      "index": 13,
+      "address": "0x080095B4",
+      "source": "src/ai_actions.c",
+      "function": "AiActionHiddenMonsterAttack"
+    },
+    {
+      "family": "simulate",
+      "index": 14,
+      "address": "0x08009700",
+      "source": "src/ai_actions.c",
+      "function": "AiActionSetTrap"
+    },
+    {
+      "family": "simulate",
+      "index": 15,
+      "address": "0x08009790",
+      "source": "src/ai_actions.c",
+      "function": "AiActionSetEquipment"
+    },
+    {
+      "family": "simulate",
+      "index": 16,
+      "address": "0x080097D8",
+      "source": "src/ai_actions.c",
+      "function": "AiActionTargetedSpell"
+    },
+    {
+      "family": "simulate",
+      "index": 17,
+      "address": "0x080097D8",
+      "source": "src/ai_actions.c",
+      "function": "AiActionTargetedSpell"
+    },
+    {
+      "family": "simulate",
+      "index": 18,
+      "address": "0x08009870",
+      "source": "src/ai_actions.c",
+      "function": "AiActionSetSpell"
+    },
+    {
+      "family": "simulate",
+      "index": 19,
+      "address": "0x080098B8",
+      "source": "src/ai_actions.c",
+      "function": "AiActionSpell"
+    },
+    {
+      "family": "simulate",
+      "index": 20,
+      "address": "0x080098B8",
+      "source": "src/ai_actions.c",
+      "function": "AiActionSpell"
+    },
+    {
+      "family": "simulate",
+      "index": 21,
+      "address": "0x08009950",
+      "source": "src/ai_actions.c",
+      "function": "AiActionSetRitual"
+    },
+    {
+      "family": "simulate",
+      "index": 22,
+      "address": "0x08009998",
+      "source": "src/ai_actions.c",
+      "function": "AiActionRitual"
+    },
+    {
+      "family": "simulate",
+      "index": 23,
+      "address": "0x0800968C",
+      "source": "src/ai_actions.c",
+      "function": "AiActionMonsterEffect"
+    },
+    {
+      "family": "simulate",
+      "index": 24,
+      "address": "0x08009748",
+      "source": "src/ai_actions.c",
+      "function": "AiActionSetSpecialPiece"
+    },
+    {
+      "family": "execute",
+      "index": 0,
+      "address": "0x08009248",
+      "source": "src/ai_actions.c",
+      "function": "AiActionNone"
+    },
+    {
+      "family": "execute",
+      "index": 1,
+      "address": "0x08009250",
+      "source": "src/ai_actions.c",
+      "function": "AiActionDiscard"
+    },
+    {
+      "family": "execute",
+      "index": 2,
+      "address": "0x0800927C",
+      "source": "src/ai_actions.c",
+      "function": "AiActionSummonZero"
+    },
+    {
+      "family": "execute",
+      "index": 3,
+      "address": "0x080092D0",
+      "source": "src/ai_actions.c",
+      "function": "AiActionSummonOne"
+    },
+    {
+      "family": "execute",
+      "index": 4,
+      "address": "0x08009338",
+      "source": "src/ai_actions.c",
+      "function": "AiActionSummonTwo"
+    },
+    {
+      "family": "execute",
+      "index": 5,
+      "address": "0x08009474",
+      "source": "src/ai_actions.c",
+      "function": "AiActionDefense"
+    },
+    {
+      "family": "execute",
+      "index": 6,
+      "address": "0x080094A8",
+      "source": "src/ai_actions.c",
+      "function": "AiActionAttackPosition"
+    },
+    {
+      "family": "execute",
+      "index": 7,
+      "address": "0x080094E8",
+      "source": "src/ai_actions.c",
+      "function": "AiActionDirectAttack"
+    },
+    {
+      "family": "execute",
+      "index": 8,
+      "address": "0x0800953C",
+      "source": "src/ai_actions.c",
+      "function": "AiActionMonsterAttack"
+    },
+    {
+      "family": "execute",
+      "index": 9,
+      "address": "0x080095C0",
+      "source": "src/ai_actions.c",
+      "function": "AiActionTrappedDirectAttack"
+    },
+    {
+      "family": "execute",
+      "index": 10,
+      "address": "0x08009620",
+      "source": "src/ai_actions.c",
+      "function": "AiActionTrappedMonsterAttack"
+    },
+    {
+      "family": "execute",
+      "index": 11,
+      "address": "0x080093C8",
+      "source": "src/ai_actions.c",
+      "function": "AiActionSummonThree"
+    },
+    {
+      "family": "execute",
+      "index": 12,
+      "address": "0x080095B4",
+      "source": "src/ai_actions.c",
+      "function": "AiActionHiddenMonsterAttack"
+    },
+    {
+      "family": "execute",
+      "index": 13,
+      "address": "0x08009680",
+      "source": "src/ai_actions.c",
+      "function": "AiActionTrappedHiddenAttack"
+    },
+    {
+      "family": "execute",
+      "index": 14,
+      "address": "0x08009700",
+      "source": "src/ai_actions.c",
+      "function": "AiActionSetTrap"
+    },
+    {
+      "family": "execute",
+      "index": 15,
+      "address": "0x08009790",
+      "source": "src/ai_actions.c",
+      "function": "AiActionSetEquipment"
+    },
+    {
+      "family": "execute",
+      "index": 16,
+      "address": "0x080097D8",
+      "source": "src/ai_actions.c",
+      "function": "AiActionTargetedSpell"
+    },
+    {
+      "family": "execute",
+      "index": 17,
+      "address": "0x08009824",
+      "source": "src/ai_actions.c",
+      "function": "AiActionTrappedTargetedSpell"
+    },
+    {
+      "family": "execute",
+      "index": 18,
+      "address": "0x08009870",
+      "source": "src/ai_actions.c",
+      "function": "AiActionSetSpell"
+    },
+    {
+      "family": "execute",
+      "index": 19,
+      "address": "0x080098B8",
+      "source": "src/ai_actions.c",
+      "function": "AiActionSpell"
+    },
+    {
+      "family": "execute",
+      "index": 20,
+      "address": "0x08009910",
+      "source": "src/ai_actions.c",
+      "function": "AiActionTrappedSpell"
+    },
+    {
+      "family": "execute",
+      "index": 21,
+      "address": "0x08009950",
+      "source": "src/ai_actions.c",
+      "function": "AiActionSetRitual"
+    },
+    {
+      "family": "execute",
+      "index": 22,
+      "address": "0x08009998",
+      "source": "src/ai_actions.c",
+      "function": "AiActionRitual"
+    },
+    {
+      "family": "execute",
+      "index": 23,
+      "address": "0x0800968C",
+      "source": "src/ai_actions.c",
+      "function": "AiActionMonsterEffect"
+    },
+    {
+      "family": "execute",
+      "index": 24,
+      "address": "0x08009748",
+      "source": "src/ai_actions.c",
+      "function": "AiActionSetSpecialPiece"
+    },
+    {
+      "family": "score_before",
+      "index": 0,
+      "address": "0x08009CA4",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreNoneBefore"
+    },
+    {
+      "family": "score_before",
+      "index": 1,
+      "address": "0x08009CC4",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreDiscardBefore"
+    },
+    {
+      "family": "score_before",
+      "index": 2,
+      "address": "0x08009E98",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreSummonZeroBefore"
+    },
+    {
+      "family": "score_before",
+      "index": 3,
+      "address": "0x0800A1B0",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreSummonOneBefore"
+    },
+    {
+      "family": "score_before",
+      "index": 4,
+      "address": "0x0800A318",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreSummonTwoBefore"
+    },
+    {
+      "family": "score_before",
+      "index": 5,
+      "address": "0x0800A744",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreDefenseBefore"
+    },
+    {
+      "family": "score_before",
+      "index": 6,
+      "address": "0x0800A764",
+      "source": "src/ai_scoring.c",
+      "function": "AiScorePositionBefore"
+    },
+    {
+      "family": "score_before",
+      "index": 7,
+      "address": "0x0800A8D4",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreDirectBefore"
+    },
+    {
+      "family": "score_before",
+      "index": 8,
+      "address": "0x0800A9B8",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreAttackBefore"
+    },
+    {
+      "family": "score_before",
+      "index": 9,
+      "address": "0x0800ABE0",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreTrappedDirectBefore"
+    },
+    {
+      "family": "score_before",
+      "index": 10,
+      "address": "0x0800ABF8",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreTrappedAttackBefore"
+    },
+    {
+      "family": "score_before",
+      "index": 11,
+      "address": "0x0800A4F8",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreSummonThreeBefore"
+    },
+    {
+      "family": "score_before",
+      "index": 12,
+      "address": "0x0800AB54",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreHiddenBefore"
+    },
+    {
+      "family": "score_before",
+      "index": 13,
+      "address": "0x0800AC10",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreTrappedHiddenBefore"
+    },
+    {
+      "family": "score_before",
+      "index": 14,
+      "address": "0x0800AC28",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreSetTrapBefore"
+    },
+    {
+      "family": "score_before",
+      "index": 15,
+      "address": "0x0800AD74",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreSetEquipmentBefore"
+    },
+    {
+      "family": "score_before",
+      "index": 16,
+      "address": "0x0800D078",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreSpellBefore"
+    },
+    {
+      "family": "score_before",
+      "index": 17,
+      "address": "0x0800ED58",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreTrappedSpellBefore"
+    },
+    {
+      "family": "score_before",
+      "index": 18,
+      "address": "0x0800ADD4",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreSetSpellBefore"
+    },
+    {
+      "family": "score_before",
+      "index": 19,
+      "address": "0x0800D078",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreSpellBefore"
+    },
+    {
+      "family": "score_before",
+      "index": 20,
+      "address": "0x0800ED58",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreTrappedSpellBefore"
+    },
+    {
+      "family": "score_before",
+      "index": 21,
+      "address": "0x0800AE34",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreSetRitualBefore"
+    },
+    {
+      "family": "score_before",
+      "index": 22,
+      "address": "0x0800D078",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreSpellBefore"
+    },
+    {
+      "family": "score_before",
+      "index": 23,
+      "address": "0x080113EC",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreMonsterBefore"
+    },
+    {
+      "family": "score_before",
+      "index": 24,
+      "address": "0x0800AC88",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreSetPieceBefore"
+    },
+    {
+      "family": "score_after",
+      "index": 0,
+      "address": "0x08009CC0",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreNoneAfter"
+    },
+    {
+      "family": "score_after",
+      "index": 1,
+      "address": "0x08009E94",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreDiscardAfter"
+    },
+    {
+      "family": "score_after",
+      "index": 2,
+      "address": "0x0800A178",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreSummonZeroAfter"
+    },
+    {
+      "family": "score_after",
+      "index": 3,
+      "address": "0x0800A2E0",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreSummonOneAfter"
+    },
+    {
+      "family": "score_after",
+      "index": 4,
+      "address": "0x0800A4C0",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreSummonTwoAfter"
+    },
+    {
+      "family": "score_after",
+      "index": 5,
+      "address": "0x0800A760",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreDefenseAfter"
+    },
+    {
+      "family": "score_after",
+      "index": 6,
+      "address": "0x0800A8D0",
+      "source": "src/ai_scoring.c",
+      "function": "AiScorePositionAfter"
+    },
+    {
+      "family": "score_after",
+      "index": 7,
+      "address": "0x0800A95C",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreDirectAfter"
+    },
+    {
+      "family": "score_after",
+      "index": 8,
+      "address": "0x0800AA1C",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreAttackAfter"
+    },
+    {
+      "family": "score_after",
+      "index": 9,
+      "address": "0x0800ABEC",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreTrappedDirectAfter"
+    },
+    {
+      "family": "score_after",
+      "index": 10,
+      "address": "0x0800AC04",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreTrappedAttackAfter"
+    },
+    {
+      "family": "score_after",
+      "index": 11,
+      "address": "0x0800A70C",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreSummonThreeAfter"
+    },
+    {
+      "family": "score_after",
+      "index": 12,
+      "address": "0x0800ABDC",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreHiddenAfter"
+    },
+    {
+      "family": "score_after",
+      "index": 13,
+      "address": "0x0800AC1C",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreTrappedHiddenAfter"
+    },
+    {
+      "family": "score_after",
+      "index": 14,
+      "address": "0x0800AC84",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreSetTrapAfter"
+    },
+    {
+      "family": "score_after",
+      "index": 15,
+      "address": "0x0800ADD0",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreSetEquipmentAfter"
+    },
+    {
+      "family": "score_after",
+      "index": 16,
+      "address": "0x0800D0C8",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreSpellAfter"
+    },
+    {
+      "family": "score_after",
+      "index": 17,
+      "address": "0x0800ED98",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreTrappedSpellAfter"
+    },
+    {
+      "family": "score_after",
+      "index": 18,
+      "address": "0x0800AE30",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreSetSpellAfter"
+    },
+    {
+      "family": "score_after",
+      "index": 19,
+      "address": "0x0800D0C8",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreSpellAfter"
+    },
+    {
+      "family": "score_after",
+      "index": 20,
+      "address": "0x0800ED98",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreTrappedSpellAfter"
+    },
+    {
+      "family": "score_after",
+      "index": 21,
+      "address": "0x0800AE90",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreSetRitualAfter"
+    },
+    {
+      "family": "score_after",
+      "index": 22,
+      "address": "0x0800D0C8",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreSpellAfter"
+    },
+    {
+      "family": "score_after",
+      "index": 23,
+      "address": "0x0801143C",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreMonsterAfter"
+    },
+    {
+      "family": "score_after",
+      "index": 24,
+      "address": "0x0800AD4C",
+      "source": "src/ai_scoring.c",
+      "function": "AiScoreSetPieceAfter"
+    },
+    {
+      "family": "validate",
+      "index": 0,
+      "address": "0x08011774",
+      "source": "src/ai_validation.c",
+      "function": "AiValidNone"
+    },
+    {
+      "family": "validate",
+      "index": 1,
+      "address": "0x08011778",
+      "source": "src/ai_validation.c",
+      "function": "AiValidDiscard"
+    },
+    {
+      "family": "validate",
+      "index": 2,
+      "address": "0x080117C4",
+      "source": "src/ai_validation.c",
+      "function": "AiValidSummonZero"
+    },
+    {
+      "family": "validate",
+      "index": 3,
+      "address": "0x0801184C",
+      "source": "src/ai_validation.c",
+      "function": "AiValidSummonOne"
+    },
+    {
+      "family": "validate",
+      "index": 4,
+      "address": "0x080118C0",
+      "source": "src/ai_validation.c",
+      "function": "AiValidSummonTwo"
+    },
+    {
+      "family": "validate",
+      "index": 5,
+      "address": "0x08011A34",
+      "source": "src/ai_validation.c",
+      "function": "AiValidDefense"
+    },
+    {
+      "family": "validate",
+      "index": 6,
+      "address": "0x08011A88",
+      "source": "src/ai_validation.c",
+      "function": "AiValidAttackPosition"
+    },
+    {
+      "family": "validate",
+      "index": 7,
+      "address": "0x08011AC4",
+      "source": "src/ai_validation.c",
+      "function": "AiValidDirectAttack"
+    },
+    {
+      "family": "validate",
+      "index": 8,
+      "address": "0x08011B48",
+      "source": "src/ai_validation.c",
+      "function": "AiValidMonsterAttack"
+    },
+    {
+      "family": "validate",
+      "index": 9,
+      "address": "0x08011CB0",
+      "source": "src/ai_validation.c",
+      "function": "AiValidTrappedDirectAttack"
+    },
+    {
+      "family": "validate",
+      "index": 10,
+      "address": "0x08011D34",
+      "source": "src/ai_validation.c",
+      "function": "AiValidTrappedMonsterAttack"
+    },
+    {
+      "family": "validate",
+      "index": 11,
+      "address": "0x08011964",
+      "source": "src/ai_validation.c",
+      "function": "AiValidSummonThree"
+    },
+    {
+      "family": "validate",
+      "index": 12,
+      "address": "0x08011BFC",
+      "source": "src/ai_validation.c",
+      "function": "AiValidHiddenAttack"
+    },
+    {
+      "family": "validate",
+      "index": 13,
+      "address": "0x08011DE8",
+      "source": "src/ai_validation.c",
+      "function": "AiValidTrappedHiddenAttack"
+    },
+    {
+      "family": "validate",
+      "index": 14,
+      "address": "0x08011ED8",
+      "source": "src/ai_validation.c",
+      "function": "AiValidSetTrap"
+    },
+    {
+      "family": "validate",
+      "index": 15,
+      "address": "0x08011F68",
+      "source": "src/ai_validation.c",
+      "function": "AiValidSetEquipment"
+    },
+    {
+      "family": "validate",
+      "index": 16,
+      "address": "0x08011FA4",
+      "source": "src/ai_validation.c",
+      "function": "AiValidTargetedSpell"
+    },
+    {
+      "family": "validate",
+      "index": 17,
+      "address": "0x08012030",
+      "source": "src/ai_validation.c",
+      "function": "AiValidTrappedTargetedSpell"
+    },
+    {
+      "family": "validate",
+      "index": 18,
+      "address": "0x080120BC",
+      "source": "src/ai_validation.c",
+      "function": "AiValidSetSpell"
+    },
+    {
+      "family": "validate",
+      "index": 19,
+      "address": "0x080120F8",
+      "source": "src/ai_validation.c",
+      "function": "AiValidSpell"
+    },
+    {
+      "family": "validate",
+      "index": 20,
+      "address": "0x0801214C",
+      "source": "src/ai_validation.c",
+      "function": "AiValidTrappedSpell"
+    },
+    {
+      "family": "validate",
+      "index": 21,
+      "address": "0x080121A0",
+      "source": "src/ai_validation.c",
+      "function": "AiValidSetRitual"
+    },
+    {
+      "family": "validate",
+      "index": 22,
+      "address": "0x080121DC",
+      "source": "src/ai_validation.c",
+      "function": "AiValidRitual"
+    },
+    {
+      "family": "validate",
+      "index": 23,
+      "address": "0x08011E9C",
+      "source": "src/ai_validation.c",
+      "function": "AiValidMonsterEffect"
+    },
+    {
+      "family": "validate",
+      "index": 24,
+      "address": "0x08011F20",
+      "source": "src/ai_validation.c",
+      "function": "AiValidSetSpecialPiece"
+    }
+  ]
+}

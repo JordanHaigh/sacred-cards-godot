@@ -1,0 +1,2176 @@
+{
+  "rom_sha256": "093f986a92d73c48e11de0a83c6678c3620f8def6173f5e69133815301b40d8f",
+  "scope": "Metadata 1A/1B entry bodies only; not all transitive game logic",
+  "entries": [
+    {
+      "field": "metadata_1a",
+      "index": 0,
+      "address": "0x0802B36C",
+      "source": "src/effect_noops.c",
+      "function": "Handler_1a_000_None",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 1,
+      "address": "0x0802B370",
+      "source": "src/effect_noops.c",
+      "function": "Handler_1a_001_Shared",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 2,
+      "address": "0x0802B374",
+      "source": "src/effect_noops.c",
+      "function": "Handler_1a_002_Shared",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 3,
+      "address": "0x0802B378",
+      "source": "src/card_effects.c",
+      "function": "EffectForest",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 4,
+      "address": "0x0802B3D8",
+      "source": "src/card_effects.c",
+      "function": "EffectWasteland",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 5,
+      "address": "0x0802B438",
+      "source": "src/card_effects.c",
+      "function": "EffectMountain",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 6,
+      "address": "0x0802B498",
+      "source": "src/card_effects.c",
+      "function": "EffectSogen",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 7,
+      "address": "0x0802B4F8",
+      "source": "src/card_effects.c",
+      "function": "EffectUmi",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 8,
+      "address": "0x0802B558",
+      "source": "src/card_effects.c",
+      "function": "EffectYami",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 9,
+      "address": "0x0802B5B8",
+      "source": "src/card_effects.c",
+      "function": "EffectMooyanCurry",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 10,
+      "address": "0x0802B66C",
+      "source": "src/card_effects.c",
+      "function": "EffectRedMedicine",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 11,
+      "address": "0x0802B72C",
+      "source": "src/card_effects.c",
+      "function": "EffectGoblinsRemedy",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 12,
+      "address": "0x0802B7E8",
+      "source": "src/card_effects.c",
+      "function": "EffectSoulOfThePure",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 13,
+      "address": "0x0802B8A8",
+      "source": "src/card_effects.c",
+      "function": "EffectDianKeto",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 14,
+      "address": "0x0802B968",
+      "source": "src/card_effects.c",
+      "function": "EffectSparks",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 15,
+      "address": "0x0802BA1C",
+      "source": "src/card_effects.c",
+      "function": "EffectHinotama",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 16,
+      "address": "0x0802BAD0",
+      "source": "src/card_effects.c",
+      "function": "EffectFinalFlame",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 17,
+      "address": "0x0802BB84",
+      "source": "src/card_effects.c",
+      "function": "EffectOokazi",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 18,
+      "address": "0x0802BC40",
+      "source": "src/card_effects.c",
+      "function": "EffectTremendousFire",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 19,
+      "address": "0x0802BD00",
+      "source": "src/spell_effects.c",
+      "function": "EffectDarkHole",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 20,
+      "address": "0x0802BDA0",
+      "source": "src/spell_effects.c",
+      "function": "EffectRaigeki",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 21,
+      "address": "0x0802BE54",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_021_Legendary_Sword",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 22,
+      "address": "0x0802BF30",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_022_Sword_of_Dark_Destruction",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 23,
+      "address": "0x0802C00C",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_023_Dark_Energy",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 24,
+      "address": "0x0802C0E8",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_024_Axe_of_Despair",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 25,
+      "address": "0x0802C1C4",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_025_Laser_Cannon_Armor",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 26,
+      "address": "0x0802C2A0",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_026_Insect_Armor_with_Laser_Cannon",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 27,
+      "address": "0x0802C37C",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_027_Elf_s_Light",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 28,
+      "address": "0x0802C458",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_028_Beast_Fangs",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 29,
+      "address": "0x0802C534",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_029_Steel_Shell",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 30,
+      "address": "0x0802C610",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_030_Vile_Germs",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 31,
+      "address": "0x0802C6EC",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_031_Black_Pendant",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 32,
+      "address": "0x0802C7C8",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_032_Silver_Bow_and_Arrow",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 33,
+      "address": "0x0802C8A4",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_033_Horn_of_Light",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 34,
+      "address": "0x0802C980",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_034_Horn_of_the_Unicorn",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 35,
+      "address": "0x0802CA5C",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_035_Dragon_Treasure",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 36,
+      "address": "0x0802CB38",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_036_Electro_Whip",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 37,
+      "address": "0x0802CC14",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_037_Cyber_Shield",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 38,
+      "address": "0x0802CCF0",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_038_Mystical_Moon",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 39,
+      "address": "0x0802CDCC",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_039_Malevolent_Nuzzler",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 40,
+      "address": "0x0802CEA8",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_040_Violet_Crystal",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 41,
+      "address": "0x0802CF84",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_041_Book_of_Secret_Arts",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 42,
+      "address": "0x0802D060",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_042_Invigoration",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 43,
+      "address": "0x0802D13C",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_043_Machine_Conversion_Factory",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 44,
+      "address": "0x0802D218",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_044_Raise_Body_Heat",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 45,
+      "address": "0x0802D2F4",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_045_Follow_Wind",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 46,
+      "address": "0x0802D3D0",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_046_Power_of_Kaishin",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 47,
+      "address": "0x0802D4AC",
+      "source": "src/effect_noops.c",
+      "function": "Handler_1a_047_Shared",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 48,
+      "address": "0x0802D4B0",
+      "source": "src/spell_effects.c",
+      "function": "EffectStopDefense",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 49,
+      "address": "0x0802D54C",
+      "source": "src/spell_effects.c",
+      "function": "EffectDragonCaptureJar",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 50,
+      "address": "0x0802D5D4",
+      "source": "src/spell_effects.c",
+      "function": "EffectSwordsOfRevealingLight",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 51,
+      "address": "0x0802D648",
+      "source": "src/spell_effects.c",
+      "function": "EffectDarkPiercingLight",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 52,
+      "address": "0x0802D6B8",
+      "source": "src/spell_effects.c",
+      "function": "EffectSpellbindingCircle",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 53,
+      "address": "0x0802D728",
+      "source": "src/spell_effects.c",
+      "function": "EffectElegantEgotist",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 54,
+      "address": "0x0802D7E8",
+      "source": "src/effect_noops.c",
+      "function": "Handler_1a_054_Shared",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 55,
+      "address": "0x0802D7EC",
+      "source": "src/effect_noops.c",
+      "function": "Handler_1a_055_Widespread_Ruin",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 56,
+      "address": "0x0802D7F0",
+      "source": "src/effect_noops.c",
+      "function": "Handler_1a_056_House_of_Adhesive_Tape",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 57,
+      "address": "0x0802D7F4",
+      "source": "src/effect_noops.c",
+      "function": "Handler_1a_057_Eatgaboon",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 58,
+      "address": "0x0802D7F8",
+      "source": "src/effect_noops.c",
+      "function": "Handler_1a_058_Bear_Trap",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 59,
+      "address": "0x0802D7FC",
+      "source": "src/effect_noops.c",
+      "function": "Handler_1a_059_Invisible_Wire",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 60,
+      "address": "0x0802D800",
+      "source": "src/effect_noops.c",
+      "function": "Handler_1a_060_Acid_Trap_Hole",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 61,
+      "address": "0x0802D804",
+      "source": "src/effect_noops.c",
+      "function": "Handler_1a_061_Goblin_Fan",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 62,
+      "address": "0x0802D808",
+      "source": "src/effect_noops.c",
+      "function": "Handler_1a_062_Bad_Reaction_to_Simochi",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 63,
+      "address": "0x0802D80C",
+      "source": "src/effect_noops.c",
+      "function": "Handler_1a_063_Reverse_Trap",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 64,
+      "address": "0x0802D810",
+      "source": "src/effect_noops.c",
+      "function": "Handler_1a_064_Fake_Trap",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 65,
+      "address": "0x0802D814",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_065_Black_Luster_Ritual",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 66,
+      "address": "0x0802D898",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_066_Zera_Ritual",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 67,
+      "address": "0x0802D91C",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_067_War_Lion_Ritual",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 68,
+      "address": "0x0802D9A0",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_068_Beastly_Mirror_Ritual",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 69,
+      "address": "0x0802DA24",
+      "source": "src/spell_effects.c",
+      "function": "EffectUltimateDragon",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 70,
+      "address": "0x0802DBD8",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_070_Commencement_Dance",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 71,
+      "address": "0x0802DC60",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_071_Hamburger_Recipe",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 72,
+      "address": "0x0802DCEC",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_072_Revival_of_Sennen_Genjin",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 73,
+      "address": "0x0802DD78",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_073_Novox_s_Prayer",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 74,
+      "address": "0x0802DE04",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_074_Curse_of_Tri_Horned_Dragon",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 75,
+      "address": "0x0802DE8C",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_075_Revived_Serpent_Night_Dragon",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 76,
+      "address": "0x0802DF18",
+      "source": "src/spell_effects.c",
+      "function": "EffectHarpiesFeatherDuster",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 77,
+      "address": "0x0802DF7C",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_077_Magical_Labyrinth",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 78,
+      "address": "0x0802E058",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_078_Salamandra",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 79,
+      "address": "0x0802E134",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_079_Kunai_with_Chain",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 80,
+      "address": "0x0802E210",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_080_Bright_Castle",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 81,
+      "address": "0x0802E2EC",
+      "source": "src/spell_effects.c",
+      "function": "EffectCrushCard",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 82,
+      "address": "0x0802E3A0",
+      "source": "src/spell_effects.c",
+      "function": "EffectShadowSpell",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 83,
+      "address": "0x0802E418",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_083_Turtle_Oath",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 84,
+      "address": "0x0802E4A0",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_084_Contract_of_Mask",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 85,
+      "address": "0x0802E52C",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_085_Resurrection_of_Chakra",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 86,
+      "address": "0x0802E5B8",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_086_Puppet_Ritual",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 87,
+      "address": "0x0802E644",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_087_Javelin_Beetle_Pact",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 88,
+      "address": "0x0802E6CC",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_088_Garma_Sword_Oath",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 89,
+      "address": "0x0802E758",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_089_Cosmo_Queen_s_Prayer",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 90,
+      "address": "0x0802E7E4",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_090_Revival_of_Dokurorider",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 91,
+      "address": "0x0802E870",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_091_Fortress_Whale_s_Oath",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 92,
+      "address": "0x0802E8F8",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_092_Curse_of_Millennium_Shield",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 93,
+      "address": "0x0802E97C",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_093_Yamadron_Ritual",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 94,
+      "address": "0x0802EA00",
+      "source": "src/spell_effects.c",
+      "function": "EffectGateGuardianRitual",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 95,
+      "address": "0x0802EAE0",
+      "source": "src/spell_effects.c",
+      "function": "EffectWarriorElimination",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 96,
+      "address": "0x0802EB6C",
+      "source": "src/spell_effects.c",
+      "function": "EffectCursebreaker",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 97,
+      "address": "0x0802EBE4",
+      "source": "src/spell_effects.c",
+      "function": "EffectEternalRest",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 98,
+      "address": "0x0802EC60",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_098_Megamorph",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 99,
+      "address": "0x0802ED3C",
+      "source": "src/spell_effects.c",
+      "function": "EffectMetalmorph",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 100,
+      "address": "0x0802EE50",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_100_Winged_Trumpeter",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 101,
+      "address": "0x0802EF2C",
+      "source": "src/spell_effects.c",
+      "function": "EffectStainStorm",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 102,
+      "address": "0x0802EFB4",
+      "source": "src/spell_effects.c",
+      "function": "EffectEradicatingAerosol",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 103,
+      "address": "0x0802F034",
+      "source": "src/spell_effects.c",
+      "function": "EffectBreathOfLight",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 104,
+      "address": "0x0802F0B4",
+      "source": "src/spell_effects.c",
+      "function": "EffectEternalDrought",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 105,
+      "address": "0x0802F130",
+      "source": "src/spell_effects.c",
+      "function": "EffectInexperiencedSpy",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 106,
+      "address": "0x0802F1A4",
+      "source": "src/spell_effects.c",
+      "function": "EffectDarkMagicRitual",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 107,
+      "address": "0x0802F264",
+      "source": "src/spell_effects.c",
+      "function": "EffectPotOfGreed",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 108,
+      "address": "0x0802F2C0",
+      "source": "src/spell_effects.c",
+      "function": "EffectRestructerRevolution",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 109,
+      "address": "0x0802F340",
+      "source": "src/spell_effects.c",
+      "function": "EffectLastDayOfWitch",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 110,
+      "address": "0x0802F3C0",
+      "source": "src/spell_effects.c",
+      "function": "EffectExileOfTheWicked",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 111,
+      "address": "0x0802F440",
+      "source": "src/spell_effects.c",
+      "function": "EffectMultiply",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 112,
+      "address": "0x0802F534",
+      "source": "src/spell_effects.c",
+      "function": "EffectChangeOfHeart",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 113,
+      "address": "0x0802F618",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_113_Black_Illusion_Ritual",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 114,
+      "address": "0x0802F6A4",
+      "source": "src/effect_noops.c",
+      "function": "Handler_1a_114_Anti_Raigeki",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 115,
+      "address": "0x0802F6A8",
+      "source": "src/spell_effects.c",
+      "function": "EffectBrainControl",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 116,
+      "address": "0x0802F78C",
+      "source": "src/spell_effects.c",
+      "function": "EffectMonsterReborn",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 117,
+      "address": "0x0802F850",
+      "source": "src/effect_noops.c",
+      "function": "Handler_1a_117_Infinite_Dismissal",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 118,
+      "address": "0x0802F854",
+      "source": "src/effect_families.c",
+      "function": "Handler_1a_118_7_Completed",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 119,
+      "address": "0x0802F930",
+      "source": "src/spell_effects.c",
+      "function": "EffectBeckonToDarkness",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 120,
+      "address": "0x0802F9A0",
+      "source": "src/effect_noops.c",
+      "function": "Handler_1a_120_Torrential_Tribute",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 121,
+      "address": "0x0802F9A4",
+      "source": "src/spell_effects.c",
+      "function": "EffectGravediggerGhoul",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 122,
+      "address": "0x0802F9F8",
+      "source": "src/spell_effects.c",
+      "function": "EffectHeavyStorm",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 123,
+      "address": "0x0802FAAC",
+      "source": "src/spell_effects.c",
+      "function": "EffectFinalDestiny",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 124,
+      "address": "0x0802FBA8",
+      "source": "src/spell_effects.c",
+      "function": "EffectMessengerOfPeace",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 125,
+      "address": "0x0802FC54",
+      "source": "src/spell_effects.c",
+      "function": "EffectDarknessApproaches",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 126,
+      "address": "0x0802FCF0",
+      "source": "src/effect_noops.c",
+      "function": "Handler_1a_126_Amazon_Archers",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 127,
+      "address": "0x0802FCF4",
+      "source": "src/effect_noops.c",
+      "function": "Handler_1a_127_Destiny_Board",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 128,
+      "address": "0x0802FCF8",
+      "source": "src/effect_noops.c",
+      "function": "Handler_1a_128_Spirit_Message_x81hI_x81h",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 129,
+      "address": "0x0802FCFC",
+      "source": "src/effect_noops.c",
+      "function": "Handler_1a_129_Spirit_Message_x81hN_x81h",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 130,
+      "address": "0x0802FD00",
+      "source": "src/effect_noops.c",
+      "function": "Handler_1a_130_Spirit_Message_x81hA_x81h",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1a",
+      "index": 131,
+      "address": "0x0802FD04",
+      "source": "src/effect_noops.c",
+      "function": "Handler_1a_131_Spirit_Message_x81hL_x81h",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 0,
+      "address": "0x08028614",
+      "source": "src/monster_effects.c",
+      "function": "MonsterEffectNone",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 1,
+      "address": "0x08028618",
+      "source": "src/monster_effects.c",
+      "function": "MonsterReaperOfTheCards",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 2,
+      "address": "0x0802867C",
+      "source": "src/card_effects.c",
+      "function": "EffectFairysGift",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 3,
+      "address": "0x080286C0",
+      "source": "src/monster_effects.c",
+      "function": "MonsterRelinquished",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 4,
+      "address": "0x080287C0",
+      "source": "src/monster_effects.c",
+      "function": "MonsterThousandEyesRestrict",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 5,
+      "address": "0x080288E8",
+      "source": "src/monster_effects.c",
+      "function": "MonsterSkelengel",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 6,
+      "address": "0x08028914",
+      "source": "src/monster_effects.c",
+      "function": "MonsterHarpieLady",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 7,
+      "address": "0x08028960",
+      "source": "src/monster_effects.c",
+      "function": "MonsterHarpieLadySisters",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 8,
+      "address": "0x080289B0",
+      "source": "src/monster_effects.c",
+      "function": "MonsterTimeWizard",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 9,
+      "address": "0x08028A14",
+      "source": "src/monster_effects.c",
+      "function": "MonsterCastleOfDarkIllusions",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 10,
+      "address": "0x08028A9C",
+      "source": "src/monster_effects.c",
+      "function": "MonsterMysticalElf",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 11,
+      "address": "0x08028AF8",
+      "source": "src/monster_effects.c",
+      "function": "MonsterCurseOfDragon",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 12,
+      "address": "0x08028B2C",
+      "source": "src/monster_effects.c",
+      "function": "MonsterFlameSwordsman",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 13,
+      "address": "0x08028B80",
+      "source": "src/monster_effects.c",
+      "function": "MonsterGiantSoldierOfStone",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 14,
+      "address": "0x08028BB4",
+      "source": "src/monster_effects.c",
+      "function": "MonsterBattleOx",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 15,
+      "address": "0x08028C08",
+      "source": "src/monster_effects.c",
+      "function": "MonsterMonsterTamer",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 16,
+      "address": "0x08028C58",
+      "source": "src/monster_effects.c",
+      "function": "MonsterPumpking",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 17,
+      "address": "0x08028CBC",
+      "source": "src/monster_effects.c",
+      "function": "MonsterMammothGraveyard",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 18,
+      "address": "0x08028D04",
+      "source": "src/monster_effects.c",
+      "function": "MonsterCatapultTurtle",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 19,
+      "address": "0x08028DB8",
+      "source": "src/monster_effects.c",
+      "function": "MonsterGoddessOfWhim",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 20,
+      "address": "0x08028E00",
+      "source": "src/monster_effects.c",
+      "function": "MonsterSpiritOfTheMountain",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 21,
+      "address": "0x08028E38",
+      "source": "src/monster_effects.c",
+      "function": "MonsterDragonSeeker",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 22,
+      "address": "0x08028E98",
+      "source": "src/monster_effects.c",
+      "function": "MonsterTrapMaster",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 23,
+      "address": "0x08028F28",
+      "source": "src/monster_effects.c",
+      "function": "MonsterFiendsHand",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 24,
+      "address": "0x08028F90",
+      "source": "src/monster_effects.c",
+      "function": "MonsterIllusionistFacelessMage",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 25,
+      "address": "0x08028FD8",
+      "source": "src/monster_effects.c",
+      "function": "MonsterElectricLizard",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 26,
+      "address": "0x08029024",
+      "source": "src/monster_effects.c",
+      "function": "MonsterDarkMagicianGirl",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 27,
+      "address": "0x080290DC",
+      "source": "src/monster_effects.c",
+      "function": "MonsterWodan",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 28,
+      "address": "0x0802913C",
+      "source": "src/monster_effects.c",
+      "function": "MonsterMWarrior1",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 29,
+      "address": "0x08029184",
+      "source": "src/monster_effects.c",
+      "function": "MonsterMWarrior2",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 30,
+      "address": "0x080291CC",
+      "source": "src/monster_effects.c",
+      "function": "MonsterRedArcheryGirl",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 31,
+      "address": "0x08029220",
+      "source": "src/monster_effects.c",
+      "function": "MonsterLadyOfFaith",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 32,
+      "address": "0x08029260",
+      "source": "src/monster_effects.c",
+      "function": "MonsterFireReaper",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 33,
+      "address": "0x080292A0",
+      "source": "src/monster_effects.c",
+      "function": "MonsterKairyuShin",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 34,
+      "address": "0x080292D4",
+      "source": "src/monster_effects.c",
+      "function": "MonsterGyakutennoMegami",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 35,
+      "address": "0x08029350",
+      "source": "src/monster_effects.c",
+      "function": "MonsterMonsterEye",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 36,
+      "address": "0x0802939C",
+      "source": "src/monster_effects.c",
+      "function": "MonsterDoron",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 37,
+      "address": "0x080293F8",
+      "source": "src/monster_effects.c",
+      "function": "MonsterSwampBattleguard",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 38,
+      "address": "0x08029444",
+      "source": "src/monster_effects.c",
+      "function": "MonsterLavaBattleguard",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 39,
+      "address": "0x08029490",
+      "source": "src/monster_effects.c",
+      "function": "MonsterTrent",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 40,
+      "address": "0x080294C8",
+      "source": "src/monster_effects.c",
+      "function": "MonsterLabyrinthTank",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 41,
+      "address": "0x08029530",
+      "source": "src/monster_effects.c",
+      "function": "MonsterSpiritOfTheBooks",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 42,
+      "address": "0x08029624",
+      "source": "src/monster_effects.c",
+      "function": "MonsterHourglassOfLife",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 43,
+      "address": "0x0802968C",
+      "source": "src/monster_effects.c",
+      "function": "MonsterBeastkingOfTheSwamps",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 44,
+      "address": "0x08029704",
+      "source": "src/monster_effects.c",
+      "function": "MonsterNemuriko",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 45,
+      "address": "0x08029774",
+      "source": "src/monster_effects.c",
+      "function": "MonsterToadMaster",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 46,
+      "address": "0x08029868",
+      "source": "src/monster_effects.c",
+      "function": "MonsterHoshiningen",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 47,
+      "address": "0x080298C8",
+      "source": "src/monster_effects.c",
+      "function": "MonsterInvitationToADarkSleep",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 48,
+      "address": "0x08029914",
+      "source": "src/monster_effects.c",
+      "function": "MonsterWitchsApprentice",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 49,
+      "address": "0x08029974",
+      "source": "src/monster_effects.c",
+      "function": "MonsterMysticLamp",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 50,
+      "address": "0x08029A0C",
+      "source": "src/monster_effects.c",
+      "function": "MonsterLeghul",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 51,
+      "address": "0x08029AA4",
+      "source": "src/monster_effects.c",
+      "function": "MonsterInsectQueen",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 52,
+      "address": "0x08029B50",
+      "source": "src/monster_effects.c",
+      "function": "MonsterObelisk",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 53,
+      "address": "0x08029BB8",
+      "source": "src/monster_effects.c",
+      "function": "MonsterSlifer",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 54,
+      "address": "0x08029C44",
+      "source": "src/monster_effects.c",
+      "function": "MonsterRa",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 55,
+      "address": "0x08029CA8",
+      "source": "src/monster_effects.c",
+      "function": "MonsterUnusedBlueEyesFusion",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 56,
+      "address": "0x08029DE8",
+      "source": "src/monster_effects.c",
+      "function": "MonsterUnusedGateGuardianFusion",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 57,
+      "address": "0x08029FB8",
+      "source": "src/monster_effects.c",
+      "function": "MonsterUnusedMixedFusion",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 58,
+      "address": "0x0802A120",
+      "source": "src/monster_effects.c",
+      "function": "MonsterUnusedNoEffect",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 59,
+      "address": "0x0802A124",
+      "source": "src/monster_effects.c",
+      "function": "MonsterCyberHarpie",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 60,
+      "address": "0x0802A174",
+      "source": "src/monster_effects.c",
+      "function": "MonsterToonDarkMagicianGirl",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 61,
+      "address": "0x0802A22C",
+      "source": "src/monster_effects.c",
+      "function": "MonsterAlphaMagnetWarrior",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 62,
+      "address": "0x0802A374",
+      "source": "src/monster_effects.c",
+      "function": "MonsterBetaMagnetWarrior",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 63,
+      "address": "0x0802A4BC",
+      "source": "src/monster_effects.c",
+      "function": "MonsterGammaMagnetWarrior",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 64,
+      "address": "0x0802A604",
+      "source": "src/monster_effects.c",
+      "function": "MonsterValkyrion",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 65,
+      "address": "0x0802A858",
+      "source": "src/monster_effects.c",
+      "function": "MonsterBeastOfGilfer",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 66,
+      "address": "0x0802A8D0",
+      "source": "src/monster_effects.c",
+      "function": "MonsterDarkNecrofear",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 67,
+      "address": "0x0802A9E4",
+      "source": "src/monster_effects.c",
+      "function": "MonsterZombyra",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 68,
+      "address": "0x0802AA4C",
+      "source": "src/monster_effects.c",
+      "function": "MonsterSharedSlot68",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 69,
+      "address": "0x0802AA74",
+      "source": "src/monster_effects.c",
+      "function": "MonsterGilfordTheLightning",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 70,
+      "address": "0x0802AAC4",
+      "source": "src/monster_effects.c",
+      "function": "MonsterSerket",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 71,
+      "address": "0x0802AB2C",
+      "source": "src/monster_effects.c",
+      "function": "MonsterJinzo",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 72,
+      "address": "0x0802AB90",
+      "source": "src/monster_effects.c",
+      "function": "MonsterBusterBlader",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 73,
+      "address": "0x0802AC0C",
+      "source": "src/monster_effects.c",
+      "function": "MonsterBarrelDragon",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 74,
+      "address": "0x0802AC70",
+      "source": "src/monster_effects.c",
+      "function": "MonsterReflectBounder",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 75,
+      "address": "0x0802AD1C",
+      "source": "src/monster_effects.c",
+      "function": "MonsterParasiteParacide",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 76,
+      "address": "0x0802ADD4",
+      "source": "src/monster_effects.c",
+      "function": "MonsterSkullMarkLadyBug",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 77,
+      "address": "0x0802AE38",
+      "source": "src/monster_effects.c",
+      "function": "MonsterPinchHopper",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 78,
+      "address": "0x0802AF54",
+      "source": "src/monster_effects.c",
+      "function": "MonsterRocketWarrior",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 79,
+      "address": "0x0802AF9C",
+      "source": "src/monster_effects.c",
+      "function": "MonsterRevivalJam",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 80,
+      "address": "0x0802B000",
+      "source": "src/monster_effects.c",
+      "function": "MonsterMasterOfDragonSoldier",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 81,
+      "address": "0x0802B070",
+      "source": "src/monster_effects.c",
+      "function": "MonsterLegendaryFiend",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 82,
+      "address": "0x0802B0B4",
+      "source": "src/monster_effects.c",
+      "function": "MonsterAncientLamp",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 83,
+      "address": "0x0802B1AC",
+      "source": "src/monster_effects.c",
+      "function": "MonsterDesVolstgalph",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    },
+    {
+      "field": "metadata_1b",
+      "index": 84,
+      "address": "0x0802B218",
+      "source": "src/monster_effects.c",
+      "function": "MonsterExarionUniverse",
+      "evidence": "manually reconstructed handler body; native helper and presentation dependencies remain",
+      "execution_compared": false,
+      "compiler_matched": false
+    }
+  ]
+}

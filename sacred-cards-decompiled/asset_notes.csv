@@ -1,0 +1,7 @@
+rom_offset,asset_label,asset_kind,confidence,manual_palette_rom_offset,evidence
+0x56D28,City-map menu background,8bpp background tiles,high,0x5FE3C,Loader0x08000A64; BG3CNT8bpp; 30x20 map5FFBC and palette5FE3C produce city-map layer
+0x6AABC,Unclassified startup data,compressed data,low,,LZ77UnCompWram source referenced at 0x08000B0A; decoded to 0x02014400
+0x70A84,Name-entry background,4bpp background tiles,high,0x774D8,Name-entry handler0x0800181C; BG2CNT4bpp; 30x20 map776D8 and palette774D8
+0x75388,Text and icon tile graphics,likely 4bpp sprite/UI tiles,medium,0x77B88,LZ77UnCompWram source at 0x08001886 to 0x02010400; 512-byte palette block at 0x77B88 copied to 0x02000200 by same setup routine; tiled preview shows glyph-like labels and icons
+0x8BA8C,Card-detail background labels,4bpp background tiles,high,0x8E1D0,Loader0x08006E58; 31x20 map8E2D0; palette8E1D0 loaded at index128
+0x2B26AC,Zero-fill work buffer initializer,compressed zero-data initializer,high,,LZ77UnCompWram sources referenced at 0x08030412 and 0x08031B0E; all 3616 decompressed bytes are zero; destination is 0x0200DC00

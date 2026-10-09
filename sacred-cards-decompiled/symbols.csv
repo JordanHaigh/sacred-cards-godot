@@ -1,0 +1,67 @@
+address,mode,name,evidence
+0x08036928,thumb,BIOS_CpuFastSet_wrapper,svc #0x0c
+0x0803692C,thumb,BIOS_CpuSet_wrapper,svc #0x0b
+0x08036934,thumb,BIOS_LZ77UnCompWram_wrapper,svc #0x11
+0x08036930,thumb,BIOS_HuffUnComp_wrapper,svc #0x13
+0x08009118,thumb,DecompressCardArtHuffman,Huffman wrapper then 0x0800917C with 10 by 10 tiles
+0x0800917C,thumb,UndoTiledRowDeltas,Per-row cumulative sum in 8bpp tiled storage
+0x080073E4,thumb,GetCardName,Returns multilingual string pointer indexed through 0x08D310E0
+0x0803032C,thumb,LoadSceneBackground,Loads 8bpp background tiles palette and tilemap for scene at 0x02023490
+0x08034658,thumb,CopyMiniaturePalette,Copies 160 RGB555 colors from 0x089C54B0 to argument destination
+0x0803466C,thumb,LoadMiniatureObjectPalette,Copies 160 RGB555 colors from 0x089C54B0 to 0x02000200
+0x08034AF8,thumb,LoadFramedMiniature,LZ77 24x24 artwork then frame composition
+0x08034B40,thumb,ComposeMiniCard,Composes 32x32 card with 24x24 artwork at x4 y2 into 16-tile-stride destination
+0x0802FD18,thumb,LoadSceneConfiguration,Reads scene attribute pointer and scene variant actors scripts and selected spawn
+0x080311B0,thumb,ReadSceneCell,Loads u16 grid cell at y times 120 plus x through pointer at 0x020236F0
+0x0803181C,thumb,SceneCellTestBaseFlag,Returns bit0 only when mask 0xFE00 is zero
+0x0803183C,thumb,SceneCellTestBit8,Tests mask 0x0100
+0x08031854,thumb,SceneCellSelectEventClass,Returns 1 for bit9 else 2 for bit10 else zero
+0x08030464,thumb,LoadActorGraphicsAndPalette,Updates frame and selects 16-color actor palette with entity flag bits3..5
+0x08030554,thumb,CopyActorFrame,Tables D511A0 and FBB10 resolve sheet and offset; four 128-byte rows with source stride512 destination stride1024
+0x080305A4,thumb,SelectActorFrame,Orientation0..3 times3 plus phase at D4C71C; special frames at D4C730
+0x08037930,thumb,m4aSoundInit,Initializes mixer with mode0097FC00 and eleven player definitions
+0x080379B4,thumb,m4aSongNumStart,Selects header and player from9F42C0 then calls380E8
+0x080379E0,thumb,m4aSongNumStartOrChange,Checks current header and player status before starting
+0x080380E8,thumb,m4aMPlayStart,Initializes music player from song header
+0x080381CC,thumb,m4aMPlayStop,Stops supplied music player
+0x08021EB0,thumb,GetAudioCategory,Returns byte atD1278 plus u16 song ID times2
+0x08021E50,thumb,PlayGameAudio,Category switch dispatches start start-or-change or stop
+0x08031144,thumb,PlaySceneMusic,Selects scene-variant override atD4C8F4 before default atD4C87C
+0x08031AA8,thumb,LoadScriptNode,Loads payload and two next-node pointers into interpreter state offsets10 14 18
+0x08031D84,thumb,RunSceneScript,At payload terminator chooses next node using byte1E; payload startingZ exits
+0x08031E40,thumb,StepScriptCommand,Dispatches hash at caret commands and language markers before glyph handling
+0x08000A64,thumb,LoadCityMapLayers,Loads 56D28 8bpp tiles and 5FFBC map with palette5FE3C
+0x0800181C,thumb,RunNameEntry,Loads name-entry background and edits persistent name; starts song46
+0x08006BE4,thumb,LoadCardMetadata,Loads card ID stats cost type summon level and metadata into02020B00
+0x08006CB4,thumb,LoadCardWithPreviewStats,Metadata1A equals2 selects terrain at0201CB30 then signed stage at0201CB31
+0x08006D2C,thumb,LoadCardWithDuelStats,Card reference supplies ID and signed stage; terrain at02023250
+0x08006DA0,thumb,ApplyStatStage,Adds signed i8 stage times500 and clamps0..65534
+0x08006DD4,thumb,ApplyTerrainModifier,Five-way modifier switch uses binary64 factors0.7 and1.3
+0x08006E58,thumb,LoadCardDetailBackground,8BA8C tiles 8E2D0 map and palette8E1D0
+0x08014088,thumb,GetDeckCapacity,Returns u32 at02020C3C
+0x08014094,thumb,AddDeckCapacity,Caps at99999 then updates Duelist Level
+0x080140C0,thumb,SubtractDeckCapacity,Clamps subtraction to zero without updating level
+0x080140DC,thumb,InitializeDeckCapacity,Sets02020C3C to1600; called by06314
+0x080140EC,thumb,UpdateDuelistLevel,Repeated threshold checks increment02020C40
+0x08014110,thumb,GetDuelistLevel,Returns02020C40; cost-gated description names DuelistLevel
+0x0801411C,thumb,CanRaiseDuelistLevel,Next-level u16 threshold atB3EC0; sets02020D5A bit0
+0x08014168,thumb,InitializeDuelistLevel,Sets02020C40 to72; called by06314
+0x08014174,thumb,CopyUntracedDeckPreset,Copies40u16 fromB4690 to020233E4; calling context unresolved
+0x08014424,thumb,InitializeDeck,Copies40u16 fromEBAF0 to02020C5A; called by06314
+0x080178B0,thumb,GetBitmapGlyphIndex,Character-code remapping shared by small and large font accessors
+0x08018F44,thumb,LoadFullCardFrame,8192bytes at94681C and map9489A8 with palette selected throughD53584
+0x08019064,thumb,LoadCardSummonIcon,D53668 tiles andD53698 palettes;16x16 8bpp
+0x080190D4,thumb,LoadCardTypeIcon,D535A8 tiles andD53608 palettes; last3 types32x16
+0x0802321C,thumb,ResolveBattleNumbers,Ten resolution cases then LP writeback and display-state copy
+0x080232B0,thumb,ResolveAttackVsAttack,Attack comparison with attribute overrides and LP damage
+0x08023344,thumb,ResolveAttackVsDefense,Attack versus defense with attribute overrides
+0x080233B4,thumb,ResolveDefenseVsAttack,Defense versus attack with attribute overrides
+0x08023A04,thumb,CompareSummonAttributes,TablesD4BD30 andD4BD3C; Divine11 returns neutral
+0x08033D48,thumb,ClearAllEventFlags,Clears50bytes at02023700
+0x08033D64,thumb,SetEventFlag,Bounds ID399 then OR table-selected bit
+0x08033D90,thumb,ClearEventFlag,Unchecked bit clear in02023700 bank
+0x08033DB0,thumb,TestEventFlag,Returns Boolean selected bit from02023700
+0x080285E8,thumb,DispatchMetadata1bHandler,85 referenced metadata indices selectFB79C callbacks
+0x0802B33C,thumb,DispatchMetadata1aHandler,132 metadata indices selectFB900 callbacks
+0x08016DB4,thumb,GetLanguageSegmentOffset,Scans language markers with two-byte glyph skipping
+0x08016F40,thumb,GetLanguageSegmentPointer,Pointer-returning language selection routine

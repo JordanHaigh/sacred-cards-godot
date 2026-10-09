@@ -1,0 +1,39 @@
+table_rom_offset,entry_count,family,evidence
+0xD514D0,58,scene_graphics,0x08030342 indexes LZ77 tiles; next table starts at 0xD515B8
+0xD515B8,58,scene_normal_maps,0x08030368 indexes 2048-byte text maps
+0xD516A0,58,scene_alternate_maps,0x080303C6 indexes alternate maps
+0xD51788,58,scene_palettes,0x08030356 indexes 480-byte palettes copied to palette index 16
+0xD51958,901,card_art,0x08018FCE indexes Huffman streams; 0x08009118 decompresses and undoes tiled row deltas
+0xD5276C,901,card_palettes,0x08018FF2 indexes 64-color RGB555 palettes
+0xD536F0,901,card_miniatures,0x08034B06 indexes 576-byte LZ77 streams; 0x08034B40 frames the 24x24 8bpp art; next data starts at 0xD54504
+0xD310E0,901,card_names,0x080073E4 returns multilingual card name pointers
+0xD536C8,10,miniature_frames,0x08034B16 selects 1024-byte 8bpp frame by card metadata byte at 0x02020B19
+0xE94E78,901,card_descriptions,0x08006CA0 indexes card description pointers; English segment selected by $0 marker
+0xD51870,58,scene_attributes,0x0802FD2A stores grid pointer; 0x080311B0 indexes 120-column u16 grid; consecutive resources have 9600 cells each
+0xD548B8,58,scene_configuration_lists,0x0802FD18 indexes by scene then variant; sublists occupy 0xD54504..0xD548B8 and contain 237 pointers to 428-byte records
+0xD511A0,102,actor_sheets,0x08030554 selects 4bpp sheets; 101 distinct pointers with IDs22 and23 aliased
+0xD51338,102,actor_palettes,0x08030464 selects 16-color banks; eight actors have a second bank
+0xFBB10,18,actor_frame_tile_offsets,0x08030554 indexes u16 offsets then multiplies by32
+0xD4C71C,20,actor_walking_phases,0x080305A4 selects orientation times3 plus phase
+0x9F42C0,225,audio_song_table,0x080379B4 indexes 8-byte records then selects player and starts the header; 134 populated entries
+0x9F423C,11,audio_player_table,0x08037930 initialization reads 12-byte player records; count11 at0x3799C
+0xD1278,225,audio_action_categories,0x08021EB0 indexes two-byte entries; category dispatch in0x08021E50
+0xD4C87C,58,scene_music_defaults,0x08031198 indexes u16 song IDs by scene
+0xD4C8F4,27,scene_music_overrides,0x08031144 searches6-byte scene variant song records until scene-1
+0xD53584,9,card_frame_palettes,18F44 copies40bytes to palette index64
+0xD535A8,24,card_type_icons,190D4 reads typeID and copies16x16 or32x16 8bpp
+0xD53608,24,card_type_palettes,190D4 copies22bytes to palette index93
+0xD53668,12,card_summon_icons,19064 copies16x16 8bpp
+0xD53698,12,card_summon_palettes,19064 copies14bytes to palette index86
+0xD2AAEA,806,small_font,10byte records; bank boundaryD2CA66; rasterizer consumes8rows
+0xD2CA66,806,large_font,18byte records; shared index with small font; inferred806slots
+0x8B533,168,terrain_modifiers,6CB4 and6D2C index terrain times24 plus type
+0xB3EC0,1000,level_capacity_thresholds,1411C indexes next level with current level capped998
+0xB4690,40,untraced_deck_preset,14174 copies to020233E4; no direct caller recovered
+0xEBAF0,40,initial_deck,14424 called by initialization sequence06314 copies to02020C5A
+0xD4EDBC,33,dialogue_portrait_huffman,08031BA4 and08009100: Huffman followed by continuous byte deltas
+0xD4EE40,33,dialogue_portrait_palettes,08031BA4 copies256 RGB555 colors
+0xD4EEC4,33,dialogue_portrait_parts,08031C58 composes OAM groups; up to4 parts each
+0xD1490,13,save_payload_regions,08021F54 and08021FB8 pack/unpack13 regions then NULL terminator
+0xD4C6D0,13,tributes_by_level,08028394 and08028414 signed lookup indexed by card level
+0xD4BD48,24,duel_card_type_classes,08023C34 signed classification indexed by card type
